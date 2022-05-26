@@ -74,8 +74,8 @@ Make sure you have [`git`](https://git-scm.com/) and [`docker`](https://www.dock
 Clone the repository to your server and boot up the services. Change the ports defined in docker-compose.yml as needed.
 
 ``` bash
-git clone https://github.com/FeatureProbe/featureprobe.git
-cd featureprobe
+git clone https://github.com/FeatureProbe/FeatureProbe.git
+cd FeatureProbe
 docker compose up
 ```
 
