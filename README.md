@@ -1,3 +1,10 @@
+![Feature Management Service, FeatureProbe](./pictures/featureprobe_title.png)
+
+
+[![Last Commit](https://img.shields.io/github/last-commit/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe)
+[![Apache-2.0 license](https://img.shields.io/github/license/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe/blob/main/LICENSE)
+[![Join Unleash on Slack](https://img.shields.io/badge/slack-join-blue?logo=slack)](https://join.slack.com/t/featureprobe/shared_invite/zt-18xzy3rld-ciF3b9oNxwskdpfgoi7C4A)
+
 # FeatureProbe
 
 FeatureProbe is our open source **feature management service**. 
