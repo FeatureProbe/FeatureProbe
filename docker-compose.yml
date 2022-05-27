@@ -7,12 +7,12 @@
 version: "3.1"
 services:
   backendAPI:
-    image: feature-probe/api
+    image: featureprobe/api
     ports:
       - "4008:4008"
     environment:
       - spring.datasource.jdbc-url=jdbc:mysql://database:13306/feature_probe?useSSL=false&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&rewriteBatchedStatements=TRUE&useSSL=false&serverTimezone=Asia/Shanghai
-      - spring.profiles.active=test
+      - spring.profiles.active=online
       - server.port=4008
       - TZ=Asia/Shanghai
     networks:
@@ -26,7 +26,7 @@ services:
       retries: 6
 
   serverAPI:
-    image: feature-probe/server:debian
+    image: featureprobe/server
     ports:
       - "4007:4007"
     environment:
@@ -43,7 +43,7 @@ services:
         condition: service_healthy
 
   ui:
-    image: feature-probe/ui
+    image: featureprobe/ui
     ports:
       - "4009:4009"
     environment:
@@ -63,10 +63,8 @@ services:
     networks:
       - featureProbeNet
     environment:
-      - MYSQL_ROOT_PASSWORD=oot
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=feature_probe
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=0oXSt4lMh
       - MYSQL_TCP_PORT=13306
 
   redoc:
