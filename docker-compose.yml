@@ -21,9 +21,9 @@ services:
       - database
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:4008/api/actuator/health"]
-      interval: 10s
       timeout: 5s
-      retries: 6
+      interval: 10s
+      retries: 5
 
   serverAPI:
     image: featureprobe/server
@@ -54,6 +54,7 @@ services:
       - featureProbeNet
     depends_on:
       - backendAPI
+      - serverAPI
       - redoc
 
   database:
