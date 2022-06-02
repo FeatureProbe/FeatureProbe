@@ -4,7 +4,8 @@
 [![Last Commit](https://img.shields.io/github/last-commit/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe)
 [![Docker Pulls](https://img.shields.io/docker/pulls/featureprobe/api)](https://hub.docker.com/u/featureprobe)
 [![Apache-2.0 license](https://img.shields.io/github/license/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe/blob/main/LICENSE)
-[![Join Unleash on Slack](https://img.shields.io/badge/slack-join-blue?logo=slack)](https://join.slack.com/share/enQtMzU3MTg1OTk5ODYzMS01MzY2N2IyYzEwZDkxOGQ3MWQ4MzUzNzAyNDM1Y2U5YzAxMThlMmFmYmNlMWMxNTNkZmU5NDJhM2MxYTk0ZWFh)
+[![Join FeatureProbe on Slack](https://img.shields.io/badge/slack-join-blue?logo=slack)](https://join.slack.com/share/enQtMzU3MTg1OTk5ODYzMS01MzY2N2IyYzEwZDkxOGQ3MWQ4MzUzNzAyNDM1Y2U5YzAxMThlMmFmYmNlMWMxNTNkZmU5NDJhM2MxYTk0ZWFh)
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/FeatureProbe.svg?style=social&label=FeatureProbe)](https://twitter.com/FeatureProbe)
 
 # FeatureProbe
 
