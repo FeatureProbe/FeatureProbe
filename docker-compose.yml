@@ -34,7 +34,7 @@ services:
       - FP_TOGGLES_URL=http://backendAPI:4008/api/server/toggles
       - FP_EVENTS_URL=http://backendAPI:4008/api/server/events
       - FP_KEYS_URL=http://backendAPI:4008/api/server/sdk_keys
-      - FP_REFRESH_SECONDS=10
+      - FP_REFRESH_SECONDS=3
       - TZ=Asia/Shanghai
     networks:
       - featureProbeNet
