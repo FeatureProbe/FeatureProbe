@@ -4,8 +4,10 @@
 [![Last Commit](https://img.shields.io/github/last-commit/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe)
 [![Docker Pulls](https://img.shields.io/docker/pulls/featureprobe/api)](https://hub.docker.com/u/featureprobe)
 [![Apache-2.0 license](https://img.shields.io/github/license/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe/blob/main/LICENSE)
-[![Join FeatureProbe on Slack](https://img.shields.io/badge/slack-join-blue?logo=slack)](https://join.slack.com/share/enQtMzU3MTg1OTk5ODYzMS01MzY2N2IyYzEwZDkxOGQ3MWQ4MzUzNzAyNDM1Y2U5YzAxMThlMmFmYmNlMWMxNTNkZmU5NDJhM2MxYTk0ZWFh)
+[![Join FeatureProbe on Slack](https://img.shields.io/badge/slack-join-blue?logo=slack)](https://join.slack.com/t/featureprobe/shared_invite/zt-1b5qd120x-R~dDbpgL85GgCLTtfNDj0Q)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/FeatureProbe.svg?style=social&label=FeatureProbe)](https://twitter.com/FeatureProbe)
+
+
 
 # FeatureProbe
 
@@ -93,23 +95,28 @@ Remember to update the admin password after your first time login.
 There are two types of SDKs for FeatureProbe. 
 
 The first one is server-side SDK. These SDKs work in server side applications (such as 
-Java [Java SDK](https://github.com/FeatureProbe/server-sdk-java/blob/master/README.md), 
-Rust [Rust SDK](https://github.com/FeatureProbe/server-sdk-rust/blob/master/README.md)
+[Java SDK](https://github.com/FeatureProbe/server-sdk-java/blob/master/README.md), 
+[Rust SDK](https://github.com/FeatureProbe/server-sdk-rust/blob/master/README.md)
 ) and use configuration 
 data fetched from FeatureProbe Server to evaluate the variation results. They are flexible to allow you adding your own 
 configurations or rules on top of the ones from the Server.
 
-The second one is client-side SDK. These SDKs work in client side applications (such as 
-Javascript [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js/blob/master/README.md), 
-iOS or Android [mobile SDK](https://github.com/FeatureProbe/client-sdk-mobile/blob/master/README.md)) and
+The second one is client-side SDK. These SDKs work in client side applications (such as [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js/blob/master/README.md), 
+or [mobile SDK](https://github.com/FeatureProbe/client-sdk-mobile/blob/master/README.md) for iOS and Android) and
 use the evaluation results provided by FeatureProbe Server. The usage is straightforward and only getting evaluation results
 from FeatureProbe Server can guarantee the client side performance and data security.
 
 
 Find out the available coding language-specific SDK here and try them out in your applications.
 
+**Server Side SDK**
 * [Java SDK](https://github.com/FeatureProbe/server-sdk-java)
 * [Rust SDK](https://github.com/FeatureProbe/server-sdk-rust)
+* [Golang SDK](https://github.com/FeatureProbe/server-sdk-go)
+* [Python SDK](coming soon...)
+
+
+**Client Side SDK**
 * [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js)
 * [Android SDK](https://github.com/FeatureProbe/client-sdk-mobile)
 * [iOS SDK](https://github.com/FeatureProbe/client-sdk-mobile)
