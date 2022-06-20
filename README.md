@@ -82,6 +82,7 @@ git clone https://github.com/FeatureProbe/FeatureProbe.git
 cd FeatureProbe
 docker compose up
 ```
+*For users in Mainland China, please refer to [configure mirror](DOCKER_HUB.md) to speed up your download.*
 
 Go to UI/Portal at `localhost:4009` and use the default credentials to log in. 
 Note that you should replace `4009` with your port number if you made any changes previously. 
