@@ -30,6 +30,7 @@ services:
     ports:
       - "4007:4007"
     environment:
+      - RUST_LOG=info
       - FP_SERVER_PORT=4007
       - FP_TOGGLES_URL=http://backendAPI:4008/api/server/toggles
       - FP_EVENTS_URL=http://backendAPI:4008/api/server/events
