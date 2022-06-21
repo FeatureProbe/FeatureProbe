@@ -7,7 +7,7 @@
 version: "3.1"
 services:
   backendAPI:
-    image: featureprobe/api
+    image: featureprobe/api:1.1.0
     ports:
       - "4008:4008"
     environment:
@@ -26,7 +26,7 @@ services:
       retries: 5
 
   serverAPI:
-    image: featureprobe/server
+    image: featureprobe/server:1.0.3
     ports:
       - "4007:4007"
     environment:
@@ -44,7 +44,7 @@ services:
         condition: service_healthy
 
   ui:
-    image: featureprobe/ui
+    image: featureprobe/ui:1.1.1
     ports:
       - "4009:4009"
     environment:
