@@ -13,6 +13,8 @@ services:
     environment:
       - spring.datasource.jdbc-url=jdbc:mysql://database:13306/feature_probe?useSSL=false&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&rewriteBatchedStatements=TRUE&useSSL=false&serverTimezone=Asia/Shanghai
       - spring.profiles.active=online
+      - logging.level.root=INFO
+      - logging.level.org.hibernate.SQL=INFO
       - server.port=4008
       - TZ=Asia/Shanghai
     networks:
