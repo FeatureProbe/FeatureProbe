@@ -15,6 +15,7 @@ services:
       - spring.profiles.active=online
       - logging.level.root=INFO
       - logging.level.org.hibernate.SQL=INFO
+      - logging.level.org.hibernate.type.descriptor.sql.BasicBinder=INFO
       - server.port=4008
       - TZ=Asia/Shanghai
     networks:
