@@ -27,7 +27,7 @@ requests, and writing code which can be incorporated into FeatureProbe itself.
 
 # How to report a bug
 > Remember，if you find a security vulnerability, do NOT open an issue -- malicious attackers can exploit it. Email 
-> report@featureprobe.com instead.
+> support@featureprobe.com instead.
 
 > In order to determine whether you are dealing with a security issue, ask yourself these two questions:
 > * Can I access something that's not mine, or something I shouldn't have access to?
