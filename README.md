@@ -157,7 +157,7 @@ If you want ask open questions about FeatureProbe, feature management or discuss
 
 Or if you prefer to talk in chinese, join our wechat group: 
 
-<img src="https://github.com/FeatureProbe/FeatureProbe/blob/main/pictures/mmexport1656299453613.jpg" width = "250" />
+<img src="https://github.com/FeatureProbe/FeatureProbe/blob/main/pictures/Wechat0715.jpeg" width = "250" />
 
 For Bug report or new feature requirement, create a [GitHub issue](https://github.com/FeatureProbe/FeatureProbe/issues/new/choose) for us.
 
