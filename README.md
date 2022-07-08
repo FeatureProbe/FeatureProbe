@@ -9,7 +9,9 @@
 
 
 
-# FeatureProbe
+# FeatureProbe 
+
+[中文版](https://github.com/FeatureProbe/FeatureProbe/blob/main/README_CN.md)
 
 FeatureProbe is an open source **feature management service**. 
 It allows R&D, SRE and operation teams to launch new features or switch software implementations with confidence and lower risk.
