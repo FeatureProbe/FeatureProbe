@@ -126,7 +126,7 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 
 我们搭建了一个微信社区，帮助新朋友尽快了解FeatureProbe，新老朋友们也可以在社区一起讨论关于『功能』管理相关的任何话题. 扫描以下二维码加入我们。
 
-<img src="https://github.com/FeatureProbe/FeatureProbe/blob/main/pictures/Wechat0715.jpeg" width = "250" />
+<img src="https://github.com/FeatureProbe/FeatureProbe/blob/main/pictures/Wechat0715.jpg" width = "250" />
 
 如果想上报BUG，或者贡献代码，请使用Github的Issue和PR功能： [GitHub issue](https://github.com/FeatureProbe/FeatureProbe/issues/new/choose) 
 
