@@ -75,13 +75,11 @@ Docker images, or by modifying the source code and building/deploying your own v
 
 ### 1. Starting FeatureProbe Service
 
-#### You can use online environment [FeatureProbe Demo](https://featureprobe.io/demo/)
-#### Or you can use docker composer to set your own FeatureProbe service
+**You can use online environment [FeatureProbe Demo](https://featureprobe.io/demo/)**
+**Or you can use docker composer to set your own FeatureProbe service**
 
    * Make sure you have [`git`](https://git-scm.com/) and [`docker`](https://www.docker.com/) installed. 。
-
    * Clone the repository to your server and boot up the services. Change the ports defined in docker-compose.yml as needed.
-
    * For users in Mainland China, please refer to [configure mirror](DOCKER_HUB.md) to speed up your download.
    
 ``` bash
@@ -92,7 +90,6 @@ Docker images, or by modifying the source code and building/deploying your own v
    * Go to UI/Portal at `localhost:4009` and use the default credentials to log in.
    * Note that you should replace `4009` with your port number if you made any changes previously.
    * Remember to update the admin password after your first time login.
-
         - username: `admin`
         - password: `Pass1234`
 
