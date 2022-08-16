@@ -51,8 +51,8 @@ FeatureProbe 由以下各子模块组成：
 
 ### 1. 启动FeatureProbe
 
-####  - 你可以使用在线环境[FeatureProbe Demo](https://featureprobe.io/demo/)
-####  - 或者你可以使用docker composer来设置自己的FeatureProbe服务
+####  _ 你可以使用在线环境[FeatureProbe Demo](https://featureprobe.io/demo/)
+####  _ 或者你可以使用docker composer来设置自己的FeatureProbe服务
 
    * 首先你需要安装好[`git`](https://git-scm.com/) 和 [`docker`](https://www.docker.com/) 。
 
