@@ -67,8 +67,8 @@ FeatureProbe 由以下各子模块组成：
     docker compose up
 ```
  
-     * 如果存在端口冲突，可以在docker-composer.yml文件中先修改一下默认端口
-     * docker启动成功后，打开浏览器，访问：`localhost:4009`（如果你改了默认端口，这里使用修改过的端口），并用以下默认帐号登录试用：
+   * 如果存在端口冲突，可以在docker-composer.yml文件中先修改一下默认端口
+   * docker启动成功后，打开浏览器，访问：`localhost:4009`（如果你改了默认端口，这里使用修改过的端口），并用以下默认帐号登录试用：
 
         - username: `admin`
         - password: `Pass1234`
