@@ -49,8 +49,8 @@ FeatureProbe 由以下各子模块组成：
 对于想要体验一下FeatureProbe的新用户，可以通过我们提供的Docker compose一键启动所有核心服务（包含API Server，Evaluation Server，UI，database），目前来说这是最方便的方法（我们也在努力提供一个SaaS化的试用环境，敬请期待），镜像拉取可能需要一点时间，我们也提供了国内镜像下载的[加速方案](DOCKER_HUB.md) 。所有四个服务也有单独的Docker镜像用于单独部署，或者对于高手来说也可以直接从源码编译运行。
 
 
-### 1. 用Docker Compose启动FeatureProbe
-
+### 1. 启动FeatureProbe
++ 用Docker Compose启动FeatureProbe
 首先你需要安装好[`git`](https://git-scm.com/) 和 [`docker`](https://www.docker.com/) 。
 
 **国内默认链接从docker网站下载会比较慢，请先[配置国内docker镜像](DOCKER_HUB.md)**
@@ -71,6 +71,8 @@ docker启动成功后，打开浏览器，访问：`localhost:4009`（如果你�
   - username: `admin`
   - password: `Pass1234`
 
++ 线上直接体验FeatureProbe
+为了能够让大家快速体验完整的功能服务，我们提供了[`在线立即体验`]（https://featureprobe.io）和[`Demo演示示例`]（https://featureprobe.io/demo/）
 
 ### 2. 在你自己服务代码中调用FeatureProbe SDK，访问FeatureProbe平台上配置的『功能』开关
 
