@@ -73,8 +73,10 @@ Docker images, or by modifying the source code and building/deploying your own v
 
 
 
-### 1. Starting FeatureProbe Service with Docker Compose
+### 1. Starting FeatureProbe Service
 
+  - #### a.You can use online environment [FeatureProbe Demo](https://featureprobe.io/demo/)
+  - #### b.Or you can use docker composer to set your own FeatureProbe service
 Make sure you have [`git`](https://git-scm.com/) and [`docker`](https://www.docker.com/) installed.
 
 Clone the repository to your server and boot up the services. Change the ports defined in docker-compose.yml as needed.
