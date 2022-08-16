@@ -50,7 +50,7 @@ FeatureProbe 由以下各子模块组成：
 
 
 ### 1. 启动FeatureProbe
-+ 用Docker Compose启动FeatureProbe
+#### a.用Docker Compose启动FeatureProbe
 首先你需要安装好[`git`](https://git-scm.com/) 和 [`docker`](https://www.docker.com/) 。
 
 **国内默认链接从docker网站下载会比较慢，请先[配置国内docker镜像](DOCKER_HUB.md)**
@@ -71,7 +71,7 @@ docker启动成功后，打开浏览器，访问：`localhost:4009`（如果你�
    - username: `admin`
    - password: `Pass1234`
 
-+ 线上直接体验FeatureProbe
+#### b.线上直接体验FeatureProbe
 
 为了能够让大家快速体验完整的功能服务，我们提供了[在线立即体验](https://featureprobe.io)环境和[Demo演示示例](https://featureprobe.io/demo/)
 
