@@ -59,19 +59,19 @@ FeatureProbe 由以下各子模块组成：
      * 国内默认链接从docker网站下载会比较慢，请先[配置国内docker镜像](DOCKER_HUB.md)**
 
      * 然后从github clone当前代码目录，按照以下命令启动服务：
-
-
+     * 开发人员在代码中关联开关的key（color_ab_test），设置string类型的variations（颜色分类）对应好定义的参数city
+  
     ``` bash
     git clone https://github.com/FeatureProbe/FeatureProbe.git
     cd FeatureProbe
     docker compose up
     ```
-
-
-     * 如果存在端口冲突，可以在docker-composer.yml文件中先修改一下默认端口*
+ 
+     * 如果存在端口冲突，可以在docker-composer.yml文件中先修改一下默认端口
      * docker启动成功后，打开浏览器，访问：`localhost:4009`（如果你改了默认端口，这里使用修改过的端口），并用以下默认帐号登录试用：
-       - username: `admin`
-       - password: `Pass1234`
+
+        - username: `admin`
+        - password: `Pass1234`
 
 ### 2. 在你自己服务代码中调用FeatureProbe SDK，访问FeatureProbe平台上配置的『功能』开关
 
