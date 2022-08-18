@@ -46,31 +46,31 @@ FeatureProbe 由以下各子模块组成：
  
 ![FeatureProbe Architecture](./pictures/feature_probe_architecture.png)
 
-对于想要体验一下FeatureProbe的新用户，可以通过我们提供的Docker compose一键启动所有核心服务（包含API Server，Evaluation Server，UI，database），目前来说这是最方便的方法（我们也在努力提供一个SaaS化的试用环境，敬请期待），镜像拉取可能需要一点时间，我们也提供了国内镜像下载的[加速方案](DOCKER_HUB.md) 。所有四个服务也有单独的Docker镜像用于单独部署，或者对于高手来说也可以直接从源码编译运行。
+对于想要体验一下FeatureProbe的新用户，我们提供了一个[online](https://featureprobe.io/demo/)的演示环境，也可以通过我们提供的Docker compose一键启动所有核心服务（包含API Server，Evaluation Server，UI，database），镜像拉取可能需要一点时间，我们也提供了国内镜像下载的[加速方案](DOCKER_HUB.md) 。所有四个服务也有单独的Docker镜像用于单独部署，或者对于高手来说也可以直接从源码编译运行。
 
 
-### 1. 启动FeatureProbe
+### 启动FeatureProbe
 
-**你可以使用在线环境[FeatureProbe Demo](https://featureprobe.io/demo/)**
+1. 你可以使用在线环境[FeatureProbe Demo](https://featureprobe.io/demo/)，我们提供一个FeatureProbe的UI环境，以及一个模拟的受FeatureProbe控制的网站应用。你可以在线体验通过FeatureProbe控制网站应用的展示。
 
-**或者你可以使用docker composer来设置自己的FeatureProbe服务**
+2. 也可以使用docker composer来设置自己的FeatureProbe服务
 
    * 首先你需要安装好[`git`](https://git-scm.com/) 和 [`docker`](https://www.docker.com/) 。
    * 国内默认链接从docker网站下载会比较慢，请先[配置国内docker镜像](DOCKER_HUB.md)**
    * 然后从github clone当前代码目录，按照以下命令启动服务：
-  
-``` bash
-    git clone https://github.com/FeatureProbe/FeatureProbe.git
-    cd FeatureProbe
-    docker compose up
-```
+
+   ``` bash
+       git clone https://github.com/FeatureProbe/FeatureProbe.git
+       cd FeatureProbe
+       docker compose up
+   ```
 
    * 如果存在端口冲突，可以在docker-composer.yml文件中先修改一下默认端口
    * docker启动成功后，打开浏览器，访问：`localhost:4009`（如果你改了默认端口，这里使用修改过的端口），并用以下默认帐号登录试用：
         - username: `admin`
         - password: `Pass1234`
 
-### 2. 在你自己服务代码中调用FeatureProbe SDK，访问FeatureProbe平台上配置的『功能』开关
+### 在你自己服务代码中调用FeatureProbe SDK，访问FeatureProbe平台上配置的『功能』开关
 
 FeatureProbe 提供两种类型的SDK：
 
@@ -101,9 +101,12 @@ FeatureProbe 提供两种类型的SDK：
 
 各语言SDK都提供example目录和代码，可以直接运行example代码来体验FeatureProbe平台与SDK的交互。
 
-### 3. API 文档
+### API 文档
 
-所有通过FeatureProbe UI操作的功能，都可以通过OpenAPI直接编程访问，在API服务启动的情况下，打开：`http://localhost:4009/api-docs` 就可以查看所有API的接口和使用方法。
+所有通过FeatureProbe UI操作的功能，都可以通过OpenAPI直接编程访问，Open API的文档可以参考这里：
+
+* 通过online的Demo环境，访问[https://featureprobe.io/api-docs](https://featureprobe.io/api-docs)
+* 通过Docker访问：在API服务启动的情况下，打开：`http://localhost:4009/api-docs` 就可以查看所有API的接口和使用方法。
 
 
 
