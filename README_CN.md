@@ -70,7 +70,7 @@ FeatureProbe 由以下各子模块组成：
         - username: `admin`
         - password: `Pass1234`
 
-### 在你自己服务代码中调用FeatureProbe SDK，访问FeatureProbe平台上配置的『功能』开关
+### 在你自己服务代码中调用FeatureProbe SDK
 
 FeatureProbe 提供两种类型的SDK：
 
