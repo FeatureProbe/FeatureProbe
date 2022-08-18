@@ -64,37 +64,36 @@ FeatureProbe includes several key components, such as
 [API Server](https://github.com/FeatureProbe/feature-probe-api/blob/master/README.md), 
 [Evaluation Server](https://github.com/FeatureProbe/feature-probe-ui/blob/master/README.md), 
  [UI/Portal](https://github.com/FeatureProbe/feature-probe-ui/blob/master/README.md), 
-database and SDKs for 
-different coding languages. 
+database and SDKs for different programming languages. 
 ![FeatureProbe Architecture](./pictures/feature_probe_architecture.png)
-You can boot up all the key components together through Docker compose, which will be sufficient for most use cases.
+We provide a online demo environment for you to get familiar with FeatureProbe. And you can also boot up all the key components together through Docker compose in your own environment, which will be sufficient for most use cases.
 In special circumstance, you may want to boot up these components independently on different servers, by using 
 Docker images, or by modifying the source code and building/deploying your own version. 
 
 
 
-### 1. Starting FeatureProbe Service
+### Starting FeatureProbe Service
 
-**You can use online environment [FeatureProbe Demo](https://featureprobe.io/demo/)**
+1. You can use online environment [FeatureProbe Demo](https://featureprobe.io/demo/), we provide a FeatureProbe service and a Demo Webpage controlled by FeatureProbe, you can try out FeatureProbe functions in this environment.
 
-**Or you can use docker composer to set your own FeatureProbe service**
+1. Or you can use docker composer to set your own FeatureProbe service
 
    * Make sure you have [`git`](https://git-scm.com/) and [`docker`](https://www.docker.com/) installed. 。
    * Clone the repository to your server and boot up the services. Change the ports defined in docker-compose.yml as needed.
    * For users in Mainland China, please refer to [configure mirror](DOCKER_HUB.md) to speed up your download.
    
-``` bash
-    git clone https://github.com/FeatureProbe/FeatureProbe.git
-    cd FeatureProbe
-    docker compose up
-```
+   ``` bash
+       git clone https://github.com/FeatureProbe/FeatureProbe.git
+       cd FeatureProbe
+       docker compose up
+   ```
    * Go to UI/Portal at `localhost:4009` and use the default credentials to log in.
    * Note that you should replace `4009` with your port number if you made any changes previously.
    * Remember to update the admin password after your first time login.
         - username: `admin`
         - password: `Pass1234`
 
-### 2. Importing SDK and Configuring Toggles in Your Code Base
+### Write Your Own Code to use FeatureProbe SDK
 
 There are two types of SDKs for FeatureProbe. 
 
@@ -125,16 +124,12 @@ Find out the available coding language-specific SDK here and try them out in you
 * [Android SDK](https://github.com/FeatureProbe/client-sdk-mobile)
 * [iOS SDK](https://github.com/FeatureProbe/client-sdk-mobile)
 
-### 3. API Endpoints Documentation
+### Open API Endpoints Documentation
 
-Checkout the API endpoints at `http://localhost:4009/api-docs` after you boot up the service locally. You may 
-need to modify the host address and port if you deploy the services in a different way.
+All funcationalities we provide with FeatureProbe UI, are also available by Open API. 
 
-### 4. Examples
-
-We provide several use cases to reflect our practises of using FeatureProbe to carry out feature configurations
-gradually, doing service degradation, and doing A/B testing. Check them out at 
-[User Guide](https://github.com/FeatureProbe/featureprobe/blob/master/USER_GUIDE.md).
+* For our online demo environment, checkout the API doc at `https://featureprobe.io/api-docs`
+* For Docker environment, Checkout the API endpoints at `http://localhost:4009/api-docs` after you boot up the service locally. You may need to modify the host address and port if you deploy the services in a different way.
 
 
 
