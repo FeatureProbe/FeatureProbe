@@ -56,11 +56,11 @@ FeatureProbe 由以下各子模块组成：
 2. 也可以使用docker composer来设置自己的FeatureProbe服务
 
    * 首先你需要安装好[`git`](https://git-scm.com/) 和 [`docker`](https://www.docker.com/) 。
-   * 国内默认链接从docker网站下载会比较慢，请先[配置国内docker镜像](DOCKER_HUB.md)**
+   * 国内默认链接从docker网站下载会比较慢，请先[配置国内docker镜像](DOCKER_HUB.md)
    * 然后从github clone当前代码目录，按照以下命令启动服务：
 
    ``` bash
-       git clone https://github.com/FeatureProbe/FeatureProbe.git
+       git clone https://gitee.com/featureprobe/FeatureProbe.git
        cd FeatureProbe
        docker compose up
    ```
