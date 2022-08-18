@@ -128,8 +128,8 @@ Find out the available coding language-specific SDK here and try them out in you
 
 All funcationalities we provide with FeatureProbe UI, are also available by Open API. 
 
-* For our online demo environment, checkout the API doc at `https://featureprobe.io/api-docs`
-* For Docker environment, Checkout the API endpoints at `http://localhost:4009/api-docs` after you boot up the service locally. You may need to modify the host address and port if you deploy the services in a different way.
+* For our online demo environment, checkout the API doc at [https://featureprobe.io/api-docs](https://featureprobe.io/api-docs)
+* For Docker environment, Checkout the API endpoints at [http://localhost:4009/api-docs](http://localhost:4009/api-docs) after you boot up the service locally. You may need to modify the host address and port if you deploy the services in a different way.
 
 
 
