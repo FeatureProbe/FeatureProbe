@@ -116,8 +116,8 @@ Find out the available coding language-specific SDK here and try them out in you
 * [Java SDK](https://github.com/FeatureProbe/server-sdk-java)
 * [Rust SDK](https://github.com/FeatureProbe/server-sdk-rust)
 * [Golang SDK](https://github.com/FeatureProbe/server-sdk-go)
-* [Python SDK](https://github.com/FeatureProbe/server-sdk-python)
-* [NodeJS SDK](coming soon...)
+* [Python SDK](https://github.com/FeatureProbe/server-sdk-python) by [@HeZean](https://github.com/HeZean)
+* [Node.js SDK](coming soon...)
 
 
 **Client Side SDK**
