@@ -90,7 +90,8 @@ FeatureProbe 提供两种类型的SDK：
 * [Java SDK](https://github.com/FeatureProbe/server-sdk-java)
 * [Rust SDK](https://github.com/FeatureProbe/server-sdk-rust)
 * [Golang SDK](https://github.com/FeatureProbe/server-sdk-go)
-* [Python SDK](coming soon...)
+* [Python SDK](https://github.com/FeatureProbe/server-sdk-python)
+* [NodeJS SDK](coming soon...)
 
 
 **客户端SDK**
