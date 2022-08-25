@@ -38,9 +38,9 @@ FeatureProbe 是一个开源的 **『功能』管理** 服务。它包含灰度�
 
 FeatureProbe 由以下各子模块组成：
 
-1. [API Server](https://github.com/FeatureProbe/feature-probe-api/blob/master/README.md)：提供核心数据管理和对外API。
-2. [Evaluation Server](https://github.com/FeatureProbe/feature-probe-ui/blob/master/README.md)：提供高性能的灰度规则判定引擎。
-3. [UI/Portal](https://github.com/FeatureProbe/feature-probe-ui/blob/master/README.md)：提供用户操作页面
+1. [API Server](https://gitee.com/featureprobe/feature-probe-api/blob/main/README.md)：提供核心数据管理和对外API。
+2. [Evaluation Server](https://gitee.com/FeatureProbe/feature-probe-ui/blob/main/README.md)：提供高性能的灰度规则判定引擎。
+3. [UI/Portal](https://gitee.com/FeatureProbe/feature-probe-ui/blob/main/README.md)：提供用户操作页面
 4. database
 5. 各种语言SDK.
  
@@ -75,30 +75,30 @@ FeatureProbe 由以下各子模块组成：
 FeatureProbe 提供两种类型的SDK：
 
 第一种是服务端SDK(例如：
-[Java SDK](https://github.com/FeatureProbe/server-sdk-java/blob/master/README.md), 
-[Rust SDK](https://github.com/FeatureProbe/server-sdk-rust/blob/master/README.md)
+[Java SDK](https://gitee.com/FeatureProbe/server-sdk-java/blob/main/README.md), 
+[Rust SDK](https://gitee.com/FeatureProbe/server-sdk-rust/blob/main/README.md)
 ) ，这类SDK一般适用于后端服务，SDK从FeatureProbe平台获取开关配置信息，在内存中执行规则进而控制宿主程序的行为，可用做控制灰度的用户属性可以按需添加。
 
 
-另一种是客户端SDK（例如： [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js/blob/master/README.md), 
-或者 iOS，Android使用的  [mobile SDK](https://github.com/FeatureProbe/client-sdk-mobile/blob/master/README.md) ），客户端会连接Evaluation Server获取属于当前用户的开关配置。
+另一种是客户端SDK（例如： [Javascript SDK](https://gitee.com/FeatureProbe/client-sdk-js/blob/main/README.md), 
+或者 iOS，Android使用的  [mobile SDK](https://gitee.com/FeatureProbe/client-sdk-mobile/blob/main/README.md) ），客户端会连接Evaluation Server获取属于当前用户的开关配置。
 
 以下是我们已经支持语言的SDK：
 
 **服务端SDK**
 
-* [Java SDK](https://github.com/FeatureProbe/server-sdk-java)
-* [Rust SDK](https://github.com/FeatureProbe/server-sdk-rust)
-* [Golang SDK](https://github.com/FeatureProbe/server-sdk-go)
-* [Python SDK](https://github.com/FeatureProbe/server-sdk-python) by [@HeZean](https://github.com/HeZean)
+* [Java SDK](https://gitee.com/FeatureProbe/server-sdk-java)
+* [Rust SDK](https://gitee.com/FeatureProbe/server-sdk-rust)
+* [Golang SDK](https://gitee.com/FeatureProbe/server-sdk-go)
+* [Python SDK](https://gitee.com/FeatureProbe/server-sdk-python) by [@HeZean](https://github.com/HeZean)
 * [Node.js SDK](coming soon...)
 
 
 **客户端SDK**
 
-* [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js)
-* [Android SDK](https://github.com/FeatureProbe/client-sdk-mobile)
-* [iOS SDK](https://github.com/FeatureProbe/client-sdk-mobile)
+* [Javascript SDK](https://gitee.com/FeatureProbe/client-sdk-js)
+* [Android SDK](https://gitee.com/FeatureProbe/client-sdk-mobile)
+* [iOS SDK](https://gitee.com/FeatureProbe/client-sdk-mobile)
 
 各语言SDK都提供example目录和代码，可以直接运行example代码来体验FeatureProbe平台与SDK的交互。
 
