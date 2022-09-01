@@ -109,7 +109,9 @@ FeatureProbe 提供两种类型的SDK：
 * 通过online的Demo环境，访问[https://featureprobe.io/api-docs](https://featureprobe.io/api-docs)
 * 通过Docker访问：在API服务启动的情况下，打开：`http://localhost:4009/api-docs` 就可以查看所有API的接口和使用方法。
 
+## 更多信息
 
+请访问我们的[文档服务](https://docs.featureprobe.io/zh-CN/)
 
 ## Contributing
 
