@@ -54,7 +54,7 @@ FeatureProbe 由以下各子模块组成：
 
 1. 你可以使用在线环境[FeatureProbe Demo](https://featureprobe.io/demo/)，我们提供一个FeatureProbe的UI环境，以及一个模拟的受FeatureProbe控制的网站应用。你可以在线体验通过FeatureProbe控制网站应用的展示。见[教程](https://docs.featureprobe.io/zh-CN/tutorials/try_demo)
 
-2. 也可以使用docker composer来设置自己的FeatureProbe服务：详见[教程](http://localhost:3000/zh-CN/tutorials/setup_own_env)
+2. 也可以使用docker composer来设置自己的FeatureProbe服务：详见[教程](https://docs.featureprobe.io/zh-CN/tutorials/setup_own_env)
 
 ### 在你自己服务代码中调用FeatureProbe SDK
 
