@@ -15,6 +15,7 @@ FeatureProbe 是一个开源的 **『功能』管理** 服务。它包含灰度�
 
 『功能』粒度开关管理服务已经是各个互联网大厂的标配平台，我们将互联网大厂内部『功能』开关管理平台的优秀实践与经验融入这个开源项目中。希望推广『功能』管理理念和实践在软件开发社区的普及，携手开源社区，提升软件开发行业的效能。
 
+请访问我们的[文档服务](https://docs.featureprobe.io/zh-CN/)获取更多信息。
 
 ### FeatureProbe适用于哪些场景
 
@@ -51,24 +52,9 @@ FeatureProbe 由以下各子模块组成：
 
 ### 启动FeatureProbe
 
-1. 你可以使用在线环境[FeatureProbe Demo](https://featureprobe.io/demo/)，我们提供一个FeatureProbe的UI环境，以及一个模拟的受FeatureProbe控制的网站应用。你可以在线体验通过FeatureProbe控制网站应用的展示。
+1. 你可以使用在线环境[FeatureProbe Demo](https://featureprobe.io/demo/)，我们提供一个FeatureProbe的UI环境，以及一个模拟的受FeatureProbe控制的网站应用。你可以在线体验通过FeatureProbe控制网站应用的展示。见[教程](https://docs.featureprobe.io/zh-CN/tutorials/try_demo)
 
-2. 也可以使用docker composer来设置自己的FeatureProbe服务
-
-   * 首先你需要安装好[`git`](https://git-scm.com/) 和 [`docker`](https://www.docker.com/) 。
-   * 国内默认链接从docker网站下载会比较慢，请先[配置国内docker镜像](DOCKER_HUB.md)
-   * 然后从github clone当前代码目录，按照以下命令启动服务：
-
-   ``` bash
-       git clone https://gitee.com/featureprobe/FeatureProbe.git
-       cd FeatureProbe
-       docker compose up
-   ```
-
-   * 如果存在端口冲突，可以在docker-composer.yml文件中先修改一下默认端口
-   * docker启动成功后，打开浏览器，访问：`localhost:4009`（如果你改了默认端口，这里使用修改过的端口），并用以下默认帐号登录试用：
-        - username: `admin`
-        - password: `Pass1234`
+2. 也可以使用docker composer来设置自己的FeatureProbe服务：详见[教程](http://localhost:3000/zh-CN/tutorials/setup_own_env)
 
 ### 在你自己服务代码中调用FeatureProbe SDK
 
@@ -109,9 +95,7 @@ FeatureProbe 提供两种类型的SDK：
 * 通过online的Demo环境，访问[https://featureprobe.io/api-docs](https://featureprobe.io/api-docs)
 * 通过Docker访问：在API服务启动的情况下，打开：`http://localhost:4009/api-docs` 就可以查看所有API的接口和使用方法。
 
-## 更多信息
 
-请访问我们的[文档服务](https://docs.featureprobe.io/zh-CN/)
 
 ## Contributing
 
