@@ -4,7 +4,7 @@
 # - the Feature Probe Server
 # - the Feature Probe OpenAPI Document
 
-version: "3.1"
+version: "2.3"
 services:
   backendAPI:
     image: featureprobe/api
