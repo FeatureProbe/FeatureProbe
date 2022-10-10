@@ -124,6 +124,8 @@ Find out the available coding language-specific SDK here and try them out in you
 * [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js)
 * [Android SDK](https://github.com/FeatureProbe/client-sdk-mobile)
 * [iOS SDK](https://github.com/FeatureProbe/client-sdk-mobile)
+* [Mini Program SDK](https://github.com/FeatureProbe/client-sdk-miniprogram)
+
 
 ### Open API Endpoints Documentation
 
