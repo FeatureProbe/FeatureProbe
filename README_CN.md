@@ -85,6 +85,7 @@ FeatureProbe 提供两种类型的SDK：
 * [Javascript SDK](https://gitee.com/FeatureProbe/client-sdk-js)
 * [Android SDK](https://gitee.com/FeatureProbe/client-sdk-mobile)
 * [iOS SDK](https://gitee.com/FeatureProbe/client-sdk-mobile)
+* [Mini Program SDK](https://gitee.com/featureprobe/client-sdk-miniprogram)
 
 各语言SDK都提供example目录和代码，可以直接运行example代码来体验FeatureProbe平台与SDK的交互。
 
