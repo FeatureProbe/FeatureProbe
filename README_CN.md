@@ -79,7 +79,7 @@ FeatureProbe 提供两种类型的SDK：
 * [Rust SDK](https://gitee.com/FeatureProbe/server-sdk-rust)
 * [Golang SDK](https://gitee.com/FeatureProbe/server-sdk-go)
 * [Python SDK](https://gitee.com/FeatureProbe/server-sdk-python) by [@HeZean](https://github.com/HeZean)
-* [Node.js SDK](coming soon...)
+* [Node.js SDK](https://github.com/FeatureProbe/server-sdk-node) by [@HeZean](https://github.com/HeZean)
 
 
 **客户端SDK**
