@@ -1,0 +1,9 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+.ui.labeled.input > .label:not(.corner) {
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 30px;
+}

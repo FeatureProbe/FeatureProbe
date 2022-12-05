@@ -1,0 +1,102 @@
+.list-item {
+  cursor: pointer;
+  outline: 1px solid transparent;
+  border-radius: 8px;
+  height: 72px;
+}
+
+.list-item:hover {
+  outline: 1px solid #556ee6;
+  background: rgba(85, 110, 230, 0.04);
+  border-radius: 8px !important;
+  -moz-outline-radius: 8px;
+}
+
+.toggle-info {
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+}
+
+.toggle-info-name {
+  color: #556ee6;
+  font-size: 15px;
+  font-family: HelveticaNeue-Medium;
+}
+
+.toggle-info-key {
+  margin-left: 8px;
+  height: 16px;
+  line-height: 16px;
+  background: rgba(85, 110, 230, 0.1);
+  border-radius: 4px;
+  font-size: 10px;
+  color: #556ee6;
+  padding: 0 4px;
+}
+
+.toggle-info-key-label {
+  transform: scale(0.9);
+}
+
+.toggle-info-description {
+  margin-top: 10px;
+  max-width: 380px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 24px;
+  font-size: 12px;
+  color: #495057;
+}
+
+.toggle-modified-by {
+  color: #74788d;
+  font-size: 15px;
+}
+
+.toggle-modified-time {
+  color: #495057;
+  font-size: 15px;
+  flex: 1;
+}
+
+.toggle-operation {
+  display: flex;
+  min-width: 100px;
+}
+
+.toggle-operation-item {
+  margin-right: 8px;
+  color: #556ee6;
+  cursor: pointer;
+}
+
+.modal-header-text {
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.modal-content {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 8px;
+  margin-left: 40px;
+  height: 20px;
+  margin-bottom: 20px;
+}
+
+.warning-circle {
+  font-size: 20px !important;
+  color: #f5483b;
+  padding: 0 10px;
+}
+
+.footer {
+  text-align: right;
+}
+
+.btn {
+  margin-right: 8px !important;
+}

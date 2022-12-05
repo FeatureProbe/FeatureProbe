@@ -1,0 +1,136 @@
+.targeting {
+  position: relative;
+  padding: 0 20px;
+  min-width: 1200px;
+}
+
+.menus {
+  display: flex;
+  align-items: center;
+}
+
+.menu {
+  margin: 12px 0 !important;
+  flex: 1;
+}
+
+.put-away {
+  vertical-align: bottom;
+  margin-right: 4px;
+}
+
+.content {
+  display: flex;
+  position: relative;
+  min-height: calc(100vh - 366px);
+}
+
+.content-left {
+  flex: 1;
+}
+
+.content-right {
+  overflow-y: auto;
+  box-shadow: 0 10px 20px 0 rgba(18, 38, 63, 0.03);
+  background: #ffffff;
+  border-radius: 8px 8px 0 0;
+  width: 260px;
+  margin-left: 12px;
+}
+
+.popup {
+  padding: 0 !important;
+  margin-top: 4px !important;
+}
+
+.warning-circle {
+  font-size: 20px !important;
+  color: #ffc300;
+  padding: 0 10px;
+}
+
+.modal-header-text {
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.modal-content {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 8px;
+  margin-left: 40px;
+  width: 320px;
+}
+
+.message-content {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  height: 36px;
+  flex: 1;
+  position: relative;
+}
+
+.icon-warning-circle {
+  color: #ffc300;
+  vertical-align: middle;
+  font-size: 20px;
+}
+
+.message-content-warn {
+  background: #fffae0;
+  color: #592d00;
+}
+
+.message-icon {
+  margin-right: 8px;
+  font-size: 20px;
+  margin-left: 8px;
+}
+
+.message-content-text {
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+.close-icon {
+  position: absolute;
+  right: 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.archived-img {
+  position: fixed;
+  right: -0;
+  top: 310px;
+  width: 160px;
+  z-index: 1;
+}
+
+.permanent-message-box {
+  height: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.permanent-warning-message {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  top: -42px;
+  background-color: #fffae0;
+  border-radius: 8px;
+  height: 33px;
+  font-size: 13px;
+  padding: 0 12px;
+  z-index: 9999;
+}
+
+.warning-icon {
+  display: inline-block;
+  color: #ffc300;
+  margin-right: 8px;
+}

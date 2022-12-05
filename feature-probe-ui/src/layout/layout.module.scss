@@ -1,0 +1,79 @@
+.app {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto !important;
+  background: #ebebf3;
+}
+
+.main {
+  display: flex;
+  height: 100%;
+  flex: 1;
+  overflow-y: auto;
+  background: #ebebf3;
+}
+
+.breadcrumb {
+  font-size: 12px;
+  line-height: 42px !important;
+  padding: 0 24px 0 48px;
+  height: 42px;
+}
+
+.breadcrumb-icon {
+  font-size: 18px !important;
+  top: 2px;
+  position: relative;
+  color: #adb5bc;
+}
+
+.environment-line {
+  height: 4px;
+  margin: 0 20px;
+  background: #556ee6;
+  min-width: 1160px;
+}
+
+.platform-tips {
+  background: #fff5f4;
+  border-radius: 6px;
+  color: #660e16;
+  padding: 7px 12px;
+  margin: 0 20px;
+  z-index: 1000;
+  margin-top: 5px;
+  display: flex;
+}
+
+.platform-tips-text {
+  flex: 1;
+}
+
+.platform-tips-error {
+  color: #f5483b;
+  font-size: 17px !important;
+  margin-right: 10px;
+}
+
+.platform-tips-close {
+  color: #000000;
+  font-size: 12px !important;
+  margin-left: 100px;
+  cursor: pointer;
+}
+
+.project-content {
+  flex-grow: 1;
+  overflow: auto !important;
+}

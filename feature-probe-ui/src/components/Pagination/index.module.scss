@@ -1,0 +1,16 @@
+.pagination {
+  margin: 16px 0;
+  text-align: right;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 24px;
+}
+
+.total {
+  color: #74788d;
+  font-size: 12px;
+}
+
+.total-count {
+  font-size: 14px;
+}

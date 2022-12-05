@@ -1,0 +1,120 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 64px);
+  background-color: #fff;
+  margin: 16px 20px 0;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+}
+
+.title {
+  padding: 12px 24px;
+  font-family: HelveticaNeue-Medium;
+  font-size: 20px;
+  color: #212529;
+  letter-spacing: 0;
+  text-align: justify;
+  line-height: 30px;
+  font-weight: 500;
+}
+
+.action-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 20px 0;
+}
+
+.keywords-field {
+  margin-bottom: 0 !important;
+  width: 280px !important;
+  bottom: 0;
+}
+
+.icon-search {
+  position: absolute;
+  right: 10px;
+  color: #74788d;
+  top: 8px;
+  -webkit-appearance: unset !important;
+}
+
+.add-button {
+  font-size: 13px !important;
+}
+
+.iconfont {
+  font-size: 12px !important;
+  margin-right: 4px;
+}
+
+.table-scroll-box {
+  overflow-x: auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 2px;
+}
+
+.table-box {
+  position: relative;
+  padding: 0 20px;
+  margin-top: 12px;
+  padding-bottom: 2px;
+  flex: 1 1;
+}
+
+.table-header {
+  position: sticky;
+  top: 0;
+  background: #f8f9fa;
+  height: 42px;
+  line-height: 42px;
+  font-size: 13px;
+  z-index: 3;
+
+  :global {
+    th {
+      padding-bottom: 0 !important;
+    }
+  }
+}
+
+.table-body {
+  position: relative;
+  top: 1px;
+}
+
+.column-brief {
+  padding-left: 32px !important;
+}
+
+.lists {
+  margin: 16px 24px 0;
+  padding: 0 1px;
+  flex: 1 1;
+  overflow-x: auto;
+}
+
+.pagination {
+  margin: 16px 0;
+  text-align: right;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 32px;
+}
+
+.total {
+  color: #74788d;
+  font-size: 12px;
+}
+
+.total-count {
+  font-size: 14px;
+}
+
+.load {
+  position: relative;
+  flex: 1 1;
+}

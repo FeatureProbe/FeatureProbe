@@ -1,0 +1,168 @@
+.divider {
+  display: inline-block;
+  width: 5px;
+  background-color: red;
+}
+
+.line {
+  display: flex;
+  margin: 12px 0;
+  color: #212529;
+}
+
+.name {
+  position: relative;
+  top: 30px;
+  margin-right: 12px;
+  // width: 80px;
+}
+
+.name-color {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 5px;
+  border-radius: 4px;
+}
+
+.left {
+  flex: 1;
+}
+
+.variation-value {
+  max-width: 188px;
+}
+
+.drawer-variation-value {
+  max-width: 148px;
+}
+
+.variation-name {
+  max-width: 188px;
+}
+
+.drawer-variation-name {
+  max-width: 148px;
+}
+
+.label-required {
+  color: #ff5f57;
+  font-size: 20px;
+  vertical-align: middle;
+  margin-right: 4px;
+  height: 16px;
+  display: inline-block;
+}
+
+.operation {
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  top: 24px;
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  line-height: 24px;
+  color: #74788d;
+}
+
+.operation:hover {
+  background: rgba(33, 37, 41, 0.04);
+  color: #495057;
+}
+
+.operation-holder {
+  width: 24px;
+}
+
+.variation-add {
+  cursor: pointer;
+  padding-left: 95px;
+}
+
+.variation-add-btn {
+  font-size: 12px;
+}
+
+.angle-down {
+  position: absolute;
+  right: 10px;
+  color: #74788d;
+  top: 8px;
+}
+
+.icon-evaluate {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+}
+
+.error-text {
+  color: #f46a6a;
+  font-size: 12px;
+}
+
+.drawer-error-text {
+  color: #f46a6a;
+  font-size: 12px;
+  transform: scale(0.83);
+  transform-origin: left;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: #212529;
+}
+
+.modal-header-icon {
+  font-size: 16px !important;
+  cursor: pointer;
+  color: #495057;
+}
+
+.modal-content {
+  margin-top: 16px;
+
+  :global {
+    .CodeMirror-scroll {
+      background: rgba(85, 110, 230, 0.04);
+      font-size: 12px;
+      color: rgb(120, 139, 227);
+      margin-bottom: 0;
+      margin-right: 0;
+      padding-bottom: 0;
+      overflow: auto !important;
+      border-radius: 8px;
+      height: 298px;
+    }
+  }
+}
+
+.modal-content-error {
+  margin-top: 16px;
+
+  :global {
+    .CodeMirror-scroll {
+      background: #fffafa;
+      font-size: 12px;
+      color: rgb(120, 139, 227);
+      margin-bottom: 0;
+      margin-right: 0;
+      padding-bottom: 0;
+      overflow: auto !important;
+      border: 1px solid #ff7066;
+      border-radius: 8px;
+    }
+  }
+}
+
+.label {
+  color: #74788d;
+}
+
+.label-text {
+  color: #74788d;
+}

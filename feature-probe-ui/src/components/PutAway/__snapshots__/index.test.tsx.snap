@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PutAway false snapshot 1`] = `
+<body>
+  <div>
+    <div
+      class="put-away"
+    >
+      <div
+        class="put-away-divider"
+      />
+      <span
+        class="iconfont icon-put-away iconfont"
+        customclass="iconfont"
+        type="put-away"
+      />
+      <span
+        class="menu"
+      >
+        Collapse
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`PutAway true snapshot 1`] = `
+<body>
+  <div>
+    <div
+      class="put-away put-away-close"
+    >
+      <div
+        class="put-away-divider put-away-divider-close"
+      />
+      <span
+        class="iconfont icon-put-up iconfont"
+        customclass="iconfont"
+        type="put-up"
+      />
+    </div>
+    <div
+      id="footer"
+      style="left: 100px;"
+    />
+  </div>
+</body>
+`;
+
+exports[`click PutAway 1`] = `
+<DocumentFragment>
+  <div
+    class="put-away put-away-close"
+  >
+    <div
+      class="put-away-divider put-away-divider-close"
+    />
+    <span
+      class="iconfont icon-put-up iconfont"
+      customclass="iconfont"
+      type="put-up"
+    />
+  </div>
+</DocumentFragment>
+`;

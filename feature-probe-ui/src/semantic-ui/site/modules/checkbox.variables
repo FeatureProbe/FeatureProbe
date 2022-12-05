@@ -1,0 +1,25 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+@toggleLaneWidth: 28px;
+@toggleHandleSize: 16px;
+
+@radioActiveBulletColor: #ffffff;
+@checkboxActiveBorderColor: #556ee6;
+@radioActiveBackground: #556ee6;
+@checkboxBorder: 1px solid #adb5bd;
+@checkboxActiveFocusBorderColor: #556ee6;
+@checkboxActiveFocusBackground: #ffffff;
+@radioActiveFocusBackground: #556ee6;
+@radioActiveFocusBulletColor: #ffffff;
+@toggleOnFocusLaneColor: #556ee6;
+
+@checkboxActiveBackground: #556eef;
+@checkboxActiveCheckColor: #ffffff;
+@checkboxBorder: 1px solid #adb5bd;
+@checkboxFocusBackground:  #ffffff;
+@checkboxFocusBorderColor: #adb5bd; 
+@checkboxActiveFocusBackground: #556eef;
+@checkboxActiveFocusBorderColor: transparent;
+@checkboxActiveFocusCheckColor: ffffff;

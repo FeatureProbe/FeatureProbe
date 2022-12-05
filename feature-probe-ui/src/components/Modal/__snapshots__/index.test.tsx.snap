@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Modal snapshot 1`] = `
+<body
+  class="dimmable dimmed"
+>
+  <div />
+  <div
+    class="ui page modals dimmer transition visible active"
+    style="display: flex;"
+  >
+    <div
+      class="ui mini modal transition visible active"
+      style="width: 400px;"
+    >
+      <div
+        class="content"
+      >
+        <div>
+          modal content
+        </div>
+        <div
+          class="footer"
+        >
+          <button
+            class="ui mini basic button btn"
+            type="reset"
+          >
+            Cancel
+          </button>
+          <button
+            class="ui mini primary button"
+            type="submit"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

@@ -1,0 +1,254 @@
+{
+  "content": [
+    {
+      "projectKey": "My_Project",
+      "key": "test3",
+      "comment": "",
+      "disabled": false,
+      "rules": [
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        }
+      ],
+      "version": 12,
+      "createdTime": "2022-11-07T15:26:42.000+08:00",
+      "createdBy": "panchongyang.p@qq.com"
+    },
+    {
+      "projectKey": "My_Project",
+      "key": "test3",
+      "comment": "",
+      "disabled": false,
+      "rules": [
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        }
+      ],
+      "version": 11,
+      "createdTime": "2022-11-07T15:23:24.000+08:00",
+      "createdBy": "panchongyang.p@qq.com"
+    },
+    {
+      "projectKey": "My_Project",
+      "key": "test3",
+      "comment": "",
+      "disabled": false,
+      "rules": [
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        }
+      ],
+      "version": 10,
+      "createdTime": "2022-11-07T15:21:52.000+08:00",
+      "createdBy": "panchongyang.p@qq.com"
+    },
+    {
+      "projectKey": "My_Project",
+      "key": "test3",
+      "comment": "",
+      "disabled": false,
+      "rules": [
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        }
+      ],
+      "version": 9,
+      "createdTime": "2022-11-07T15:21:15.000+08:00",
+      "createdBy": "panchongyang.p@qq.com"
+    },
+    {
+      "projectKey": "My_Project",
+      "key": "test3",
+      "comment": "",
+      "disabled": false,
+      "rules": [
+        {
+          "conditions": [],
+          "name": ""
+        }
+      ],
+      "version": 8,
+      "createdTime": "2022-11-07T15:18:34.000+08:00",
+      "createdBy": "panchongyang.p@qq.com"
+    },
+    {
+      "projectKey": "My_Project",
+      "key": "test3",
+      "comment": "",
+      "disabled": false,
+      "rules": [],
+      "version": 7,
+      "createdTime": "2022-11-07T15:18:27.000+08:00",
+      "createdBy": "panchongyang.p@qq.com"
+    },
+    {
+      "projectKey": "My_Project",
+      "key": "test3",
+      "comment": "",
+      "disabled": false,
+      "rules": [
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        }
+      ],
+      "version": 6,
+      "createdTime": "2022-11-07T15:17:51.000+08:00",
+      "createdBy": "panchongyang.p@qq.com"
+    },
+    {
+      "projectKey": "My_Project",
+      "key": "test3",
+      "comment": "",
+      "disabled": false,
+      "rules": [
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        }
+      ],
+      "version": 5,
+      "createdTime": "2022-11-07T15:12:53.000+08:00",
+      "createdBy": "panchongyang.p@qq.com"
+    },
+    {
+      "projectKey": "My_Project",
+      "key": "test3",
+      "comment": "",
+      "disabled": false,
+      "rules": [
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        }
+      ],
+      "version": 4,
+      "createdTime": "2022-11-07T15:10:00.000+08:00",
+      "createdBy": "panchongyang.p@qq.com"
+    },
+    {
+      "projectKey": "My_Project",
+      "key": "test3",
+      "comment": "",
+      "disabled": false,
+      "rules": [
+        {
+          "conditions": [],
+          "name": ""
+        },
+        {
+          "conditions": [],
+          "name": ""
+        }
+      ],
+      "version": 3,
+      "createdTime": "2022-11-07T15:09:12.000+08:00",
+      "createdBy": "panchongyang.p@qq.com"
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "unsorted": false,
+      "sorted": true,
+      "empty": false
+    },
+    "pageNumber": 0,
+    "pageSize": 10,
+    "offset": 0,
+    "unpaged": false,
+    "paged": true
+  },
+  "last": false,
+  "totalPages": 2,
+  "totalElements": 12,
+  "sort": {
+    "unsorted": false,
+    "sorted": true,
+    "empty": false
+  },
+  "first": true,
+  "numberOfElements": 10,
+  "size": 10,
+  "number": 0,
+  "empty": false
+}

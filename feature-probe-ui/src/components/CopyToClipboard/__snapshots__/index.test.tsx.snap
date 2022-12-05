@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Click CopyToClipboard 1`] = `
+<body>
+  <div>
+    <span>
+      <span>
+        this is a test text
+      </span>
+    </span>
+  </div>
+  <div
+    style="display: flex; position: absolute; left: 0px; top: 0px; bottom: 0px; transform: translate(0px, 0px);"
+  >
+    <div
+      class="ui top center popup transition visible"
+      style="position: initial;"
+    >
+      <span>
+        <span
+          class="iconfont icon-success-circle icon-success"
+          customclass="icon-success"
+          type="success-circle"
+        />
+        Copied successfully
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`Click CopyToClipboard 2`] = `
+<body>
+  <div>
+    <span>
+      <span>
+        this is a test text
+      </span>
+    </span>
+  </div>
+</body>
+`;
+
+exports[`CopyToClipboard hover snapshot 1`] = `
+<body>
+  <div>
+    <span>
+      <span>
+        this is a test text
+      </span>
+    </span>
+  </div>
+  <div
+    style="display: flex; position: absolute; left: 0px; top: 0px; bottom: 0px; transform: translate(0px, 0px);"
+  >
+    <div
+      class="ui top center popup transition visible"
+      style="position: initial;"
+    >
+      <span>
+        Click me to copy
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`CopyToClipboard hover snapshot 2`] = `
+<body>
+  <div>
+    <span>
+      <span>
+        this is a test text
+      </span>
+    </span>
+  </div>
+</body>
+`;
+
+exports[`CopyToClipboard snapshot 1`] = `
+<DocumentFragment>
+  <span>
+    <span>
+      this is a test text
+    </span>
+  </span>
+</DocumentFragment>
+`;

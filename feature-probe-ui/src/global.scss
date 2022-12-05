@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Heiti SC', 'Hiragino Sans GB', 'Microsoft YaHei', sanf-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+:root {
+  --toastify-text-color-info: #0a70f5;
+  --toastify-text-color-success: #00b365;
+  --toastify-text-color-warning: #592d00;
+  --toastify-text-color-error: #660E16;
+
+  --toastify-color-info: #eff8ff;
+  --toastify-color-success: #effcf2;
+  --toastify-color-warning: #fffae0;
+  --toastify-color-error: #fff5f4;
+
+  --toastify-toast-min-height: 36px;
+  --toastify-toast-max-height: 80px;
+
+  --toastify-toast-width: auto;
+}
+
+.Toastify__toast-container--top-center {
+  top: 48px !important;
+}
+  

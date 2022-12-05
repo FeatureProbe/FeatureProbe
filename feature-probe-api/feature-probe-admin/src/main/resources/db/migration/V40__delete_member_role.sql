@@ -1,0 +1,1 @@
+alter table member drop column role;

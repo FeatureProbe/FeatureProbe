@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Key snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="field"
+    >
+      <label>
+        <span
+          class="label-required"
+        >
+          *
+        </span>
+        Key
+        <span
+          class="iconfont icon-question icon-question"
+          customclass="icon-question"
+          type="question"
+        />
+      </label>
+      <div
+        class="field input"
+      >
+        <div
+          class="ui input"
+        >
+          <input
+            name="key"
+            placeholder="Please input key"
+            type="text"
+            value="test"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="tip-text"
+    >
+      Key can only contain letters, numbers, '.', '_' or '-'.
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Key snapshot 2`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="field"
+    >
+      <label>
+        <span
+          class="label-required"
+        >
+          *
+        </span>
+        Key
+        <span
+          class="iconfont icon-question icon-question"
+          customclass="icon-question"
+          type="question"
+        />
+      </label>
+      <div
+        class="error field input"
+      >
+        <div
+          class="ui input"
+        >
+          <input
+            aria-invalid="true"
+            name="key"
+            placeholder="Please input key"
+            type="text"
+            value="test"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="error-text"
+    >
+      error message
+    </div>
+    <div
+      class="tip-text"
+    >
+      Key can only contain letters, numbers, '.', '_' or '-'.
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,0 +1,161 @@
+.login {
+  display: flex;
+  align-items: center;
+  height: calc(100vh);
+  background-image: url('../../images/login.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  min-width: 1440px;
+}
+
+.login-card {
+  width: 470px;
+  height: 560px;
+  background: #ffffff;
+  box-shadow: 0 10px 20px 0 rgba(18,38,63,0.03);
+  border-radius: 16px;
+  position: absolute;
+  right: 140px;
+  padding: 0 41px 0 49px;
+}
+
+.demo-login-card {
+  width: 470px;
+  height: 526px;
+  background: #ffffff;
+  box-shadow: 0 10px 20px 0 rgba(18,38,63,0.03);
+  border-radius: 16px;
+  position: absolute;
+  right: 140px;
+  padding: 0 41px 0 49px;
+}
+
+@media screen and (max-width: 1440px) {
+  .login-card {
+    right: 60px !important;
+  }
+}
+
+.product {
+  font-family: HelveticaNeue-Bold;
+  font-size: 28px;
+  color: rgba(0, 0, 0, 0.84);
+  margin-top: 67px;
+}
+
+.demo-product {
+  font-family: HelveticaNeue-Bold;
+  font-size: 28px;
+  color: rgba(0, 0, 0, 0.84);
+  margin-top: 40px;
+}
+
+.demo-login-text {
+  font-size: 22px;
+  margin-top: 36px;
+}
+
+.demo-login-tip {
+  font-size: 12px;
+  color: #74788d;
+  margin-top: 8px;
+}
+
+.demo-tips {
+  background: #fffae0;
+  line-height: 18px;
+  font-size: 13px;
+  color: #592d00;
+  padding: 7px 20px;
+  border-radius: 8px;
+}
+
+.form {
+  margin-top: 80px;
+
+  :global {
+    .iconfont {
+      font-size: 20px;
+      margin-right: 10px;
+    }
+
+    .ui.form .field {
+      margin-bottom: 0;
+    }
+
+    input {
+      height: 42px !important;
+    }
+  }
+}
+
+.demo-form {
+  margin-top: 33px;
+
+  :global {
+    .iconfont {
+      font-size: 20px;
+      margin-right: 10px;
+    }
+
+    .ui.form .field {
+      margin-bottom: 10px !important;
+    }
+
+    input {
+      height: 42px !important;
+    }
+  }
+}
+
+.field {
+  margin-bottom: 32px !important;
+}
+
+.label {
+  margin-bottom: 13px !important;
+}
+
+.label-text {
+  font-size: 20px;
+  color: #495057;
+  line-height: 20px;
+}
+
+.error-text {
+  color: #f46a6a;
+  font-size: 12px;
+}
+
+.tip-text {
+  color: #74788d;
+  margin-bottom: 15px;
+  font-size: 12px;
+  transform-origin: left center;
+}
+
+.footer {
+  position: absolute;
+  top: 260px;
+  width: 100%;
+}
+
+.demo-footer {
+  margin-top: 60px;
+}
+
+.btn {
+  width: 100%;
+  height: 42px !important;
+  font-size: 16px !important;
+  border-radius: 8px !important;
+}
+
+.demo-btn {
+  width: 100%;
+  height: 52px !important;
+  font-size: 20px !important;
+  border-radius: 8px !important;
+}

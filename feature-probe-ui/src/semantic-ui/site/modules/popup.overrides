@@ -1,0 +1,17 @@
+/*******************************
+        User Overrides
+*******************************/
+
+
+.ui.popup {
+  border: none;
+  box-shadow: 0 -2px 4px 0 rgba(0,0,0,0.02), 0 2px 6px 6px rgba(0,0,0,0.02), 0 2px 6px 0 rgba(0,0,0,0.06);
+  font-size: 13px;
+  color: #495057;
+  padding: 8px 14px;
+  border-radius: 6px;
+}
+
+.ui.popup:before {
+  box-shadow: none;
+}

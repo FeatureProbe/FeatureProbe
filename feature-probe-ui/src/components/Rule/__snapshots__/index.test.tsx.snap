@@ -1,0 +1,509 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Add conditions 1`] = `
+<body>
+  <div>
+    <div
+      data-rbd-droppable-context-id="1"
+      data-rbd-droppable-id="droppable"
+    >
+      <div>
+        <div
+          aria-describedby="rbd-hidden-text-1-hidden-text-3"
+          data-rbd-drag-handle-context-id="1"
+          data-rbd-drag-handle-draggable-id="rule_testId1"
+          data-rbd-draggable-context-id="1"
+          data-rbd-draggable-id="rule_testId1"
+          draggable="false"
+          role="button"
+          tabindex="0"
+        >
+          <div
+            class="rule"
+          >
+            <div
+              class="accordion ui"
+            >
+              <div
+                class="title rule-accordion-title"
+              >
+                <span
+                  class="iconfont icon-angle-right icon-accordion"
+                  customclass="icon-accordion"
+                  type="angle-right"
+                />
+                <div
+                  class="rule-title"
+                >
+                  <div
+                    class="equal width fields rule-title-input"
+                  >
+                    <div
+                      class="field"
+                    >
+                      <div
+                        class="field rule-input"
+                      >
+                        <div
+                          class="ui input"
+                        >
+                          <input
+                            placeholder="Rule 1"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span
+                    class="rule-title-operation"
+                  >
+                    <span
+                      class="iconfont icon-drag icon-drag"
+                      customclass="icon-drag"
+                      type="drag"
+                    />
+                    <span
+                      class="iconfont icon-archive icon-archive"
+                      customclass="icon-archive"
+                      type="archive"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                class="content"
+              >
+                <div
+                  class="rule-content"
+                >
+                  <div
+                    class="rule-item"
+                  >
+                    <span
+                      class="rule-item-prefix rule-item-first"
+                    >
+                      <span
+                        class="rule-item-text"
+                      >
+                        If
+                      </span>
+                    </span>
+                    <div
+                      class="rule-item-type"
+                    >
+                      <div
+                        class="rule-item-type-box"
+                      >
+                        <div
+                          class="rule-item-type-text"
+                        >
+                          string
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="equal width fields rule-item-left"
+                    >
+                      <div
+                        class="field rule-item-subject"
+                      >
+                        <div
+                          aria-expanded="false"
+                          class="ui floating search selection dropdown rule-item-subject-dropdown"
+                          name="test-name-1356"
+                          role="combobox"
+                        >
+                          <input
+                            aria-autocomplete="list"
+                            autocomplete="off"
+                            class="search"
+                            tabindex="0"
+                            type="text"
+                            value=""
+                          />
+                          <div
+                            aria-atomic="true"
+                            aria-live="polite"
+                            class="divider default text"
+                            role="alert"
+                          >
+                            Enter a subject
+                          </div>
+                          <div
+                            class="menu transition"
+                            role="listbox"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="field rule-item-operator"
+                      >
+                        <div
+                          aria-expanded="false"
+                          class="ui floating selection dropdown rule-item-operator-dropdown"
+                          name="test-name-1853"
+                          role="listbox"
+                          tabindex="0"
+                        >
+                          <div
+                            aria-atomic="true"
+                            aria-live="polite"
+                            class="divider default text"
+                            role="alert"
+                          >
+                            Select an operator
+                          </div>
+                          <span
+                            class="iconfont icon-angle-down angle-down"
+                            customclass="angle-down"
+                            type="angle-down"
+                          />
+                          <div
+                            class="menu transition"
+                          >
+                            <div
+                              aria-checked="false"
+                              aria-selected="true"
+                              class="selected item"
+                              role="option"
+                              style="pointer-events: all;"
+                            >
+                              <span
+                                class="text"
+                              >
+                                is one of
+                              </span>
+                            </div>
+                            <div
+                              aria-checked="false"
+                              aria-selected="false"
+                              class="item"
+                              role="option"
+                              style="pointer-events: all;"
+                            >
+                              <span
+                                class="text"
+                              >
+                                is not any of
+                              </span>
+                            </div>
+                            <div
+                              aria-checked="false"
+                              aria-selected="false"
+                              class="item"
+                              role="option"
+                              style="pointer-events: all;"
+                            >
+                              <span
+                                class="text"
+                              >
+                                starts with
+                              </span>
+                            </div>
+                            <div
+                              aria-checked="false"
+                              aria-selected="false"
+                              class="item"
+                              role="option"
+                              style="pointer-events: all;"
+                            >
+                              <span
+                                class="text"
+                              >
+                                does not start with
+                              </span>
+                            </div>
+                            <div
+                              aria-checked="false"
+                              aria-selected="false"
+                              class="item"
+                              role="option"
+                              style="pointer-events: all;"
+                            >
+                              <span
+                                class="text"
+                              >
+                                ends with
+                              </span>
+                            </div>
+                            <div
+                              aria-checked="false"
+                              aria-selected="false"
+                              class="item"
+                              role="option"
+                              style="pointer-events: all;"
+                            >
+                              <span
+                                class="text"
+                              >
+                                does not end with
+                              </span>
+                            </div>
+                            <div
+                              aria-checked="false"
+                              aria-selected="false"
+                              class="item"
+                              role="option"
+                              style="pointer-events: all;"
+                            >
+                              <span
+                                class="text"
+                              >
+                                contains
+                              </span>
+                            </div>
+                            <div
+                              aria-checked="false"
+                              aria-selected="false"
+                              class="item"
+                              role="option"
+                              style="pointer-events: all;"
+                            >
+                              <span
+                                class="text"
+                              >
+                                does not contain
+                              </span>
+                            </div>
+                            <div
+                              aria-checked="false"
+                              aria-selected="false"
+                              class="item"
+                              role="option"
+                              style="pointer-events: all;"
+                            >
+                              <span
+                                class="text"
+                              >
+                                matches regex
+                              </span>
+                            </div>
+                            <div
+                              aria-checked="false"
+                              aria-selected="false"
+                              class="item"
+                              role="option"
+                              style="pointer-events: all;"
+                            >
+                              <span
+                                class="text"
+                              >
+                                does not match regex
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="six wide field"
+                      >
+                        <div
+                          aria-expanded="false"
+                          class="ui floating multiple search selection dropdown"
+                          name="test-name-3839"
+                          role="combobox"
+                        >
+                          <input
+                            aria-autocomplete="list"
+                            autocomplete="off"
+                            class="search"
+                            tabindex="0"
+                            type="text"
+                            value=""
+                          />
+                          <span
+                            class="sizer"
+                          />
+                          <div
+                            aria-atomic="true"
+                            aria-live="polite"
+                            class="divider default text"
+                            role="alert"
+                          >
+                            Enter some values
+                          </div>
+                          <div
+                            aria-multiselectable="true"
+                            class="menu transition"
+                            role="listbox"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <span
+                      class="iconfont icon-minus icon-minus"
+                      customclass="icon-minus"
+                      type="minus"
+                    />
+                  </div>
+                  <div
+                    class="rule-add"
+                  >
+                    <button
+                      class="ui secondary button rule-add-btn"
+                      type="button"
+                    >
+                      <span
+                        class="iconfont icon-add iconfont"
+                        customclass="iconfont"
+                        type="add"
+                      />
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      Í
+    </div>
+  </div>
+  <div
+    aria-atomic="true"
+    aria-live="assertive"
+    id="rbd-announcement-1"
+    style="position: absolute; width: 1px; height: 1px; margin: -1px; border: 0px; padding: 0px; overflow: hidden; clip-path: inset(100%);"
+  />
+  <div
+    id="rbd-hidden-text-1-hidden-text-3"
+    style="display: none;"
+  >
+    
+  Press space bar to start a drag.
+  When dragging you can use the arrow keys to move the item around and escape to cancel.
+  Some screen readers may require you to be in focus mode or to use your pass through key
+
+  </div>
+  <div
+    style="display: flex; position: absolute; left: 0px; top: 0px; right: 0px; transform: translate(0px, 0px);"
+  >
+    <div
+      class="ui bottom right basic popup transition visible popup"
+      style="position: initial;"
+    >
+      <div
+        class="menu"
+      >
+        <div
+          class="menu-item-centering"
+        >
+          string
+        </div>
+        <div
+          class="menu-item-centering"
+        >
+          number
+        </div>
+        <div
+          class="menu-item-centering"
+        >
+          datetime
+        </div>
+        <div
+          class="menu-item-centering"
+        >
+          semver
+        </div>
+        <div
+          class="menu-item-centering"
+        >
+          segment
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`Rule snapshot 1`] = `
+<DocumentFragment>
+  <div
+    data-rbd-droppable-context-id="0"
+    data-rbd-droppable-id="droppable"
+  >
+    <div>
+      <div
+        aria-describedby="rbd-hidden-text-0-hidden-text-0"
+        data-rbd-drag-handle-context-id="0"
+        data-rbd-drag-handle-draggable-id="rule_testId1"
+        data-rbd-draggable-context-id="0"
+        data-rbd-draggable-id="rule_testId1"
+        draggable="false"
+        role="button"
+        tabindex="0"
+      >
+        <div
+          class="rule"
+        >
+          <div
+            class="accordion ui"
+          >
+            <div
+              class="title rule-accordion-title"
+            >
+              <span
+                class="iconfont icon-angle-right icon-accordion"
+                customclass="icon-accordion"
+                type="angle-right"
+              />
+              <div
+                class="rule-title"
+              >
+                <div
+                  class="equal width fields rule-title-input"
+                >
+                  <div
+                    class="field"
+                  >
+                    <div
+                      class="field rule-input"
+                    >
+                      <div
+                        class="ui input"
+                      >
+                        <input
+                          placeholder="Rule 1"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="content"
+            >
+              <div
+                class="rule-content"
+              >
+                <div
+                  class="rule-add-one"
+                >
+                  <button
+                    class="ui secondary button rule-add-btn"
+                    type="button"
+                  >
+                    <span
+                      class="iconfont icon-add iconfont"
+                      customclass="iconfont"
+                      type="add"
+                    />
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    Í
+  </div>
+</DocumentFragment>
+`;

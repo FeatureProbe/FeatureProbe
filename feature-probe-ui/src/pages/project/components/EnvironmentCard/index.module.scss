@@ -1,0 +1,141 @@
+.environment {
+  margin-top: 12px;
+  height: 138px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.environment-line {
+  height: 4px;
+  border-radius: 20px 20px 0 0;
+}
+
+.content {
+  padding: 8px 10px 0;
+  background-color: #ffffff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+
+.title {
+  font-family: HelveticaNeue-Medium;
+  font-size: 14px;
+  color: #495057;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  justify-content: space-between;
+  height: 20px;
+  align-items: center;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.iconfont {
+  font-size: 16px !important;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  line-height: 20px;
+  text-align: center;
+  display: inline-block;
+  color: #74788d;
+  position: relative;
+  z-index: 2;
+}
+
+.iconfont:hover {
+  background: rgba(33, 37, 41, 0.04);
+  color: #495057;
+}
+
+.sdk-key {
+  font-size: 10px;
+  color: #74788d;
+  letter-spacing: 0;
+  line-height: 15px;
+}
+
+.sdk-value {
+  height: 16px;
+  background: #ececf6;
+  border-radius: 4px;
+  font-size: 10px;
+  color: #495057;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.text {
+  width: 120%;
+  transform: scale(0.83, 0.83);
+  font-size: 12px;
+  display: block;
+  transform-origin: left center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 16px;
+}
+
+.popup {
+  padding: 4px 0 !important
+}
+
+.menu {
+  min-width: 120px;
+  color: #212529;
+}
+
+.menu-item {
+  height: 28px;
+  line-height: 28px;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 12px;
+}
+
+.menu-item:hover {
+  background-color: #f8f9fa;
+}
+
+.warning-circle {
+  font-size: 20px !important;
+  color: #f5483b;
+  padding: 0 10px;
+}
+
+.modal-header-text {
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.modal-content {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 8px;
+  margin-left: 40px;
+}
+
+.archived-img {
+  position: absolute;
+  width: 50px;
+  top: 5px;
+  right: 2px;
+  z-index: 1;
+}
+
+.archived-bg {
+  background-image: url('images/archived.png');
+  background-size: cover;
+  width: 242px;
+  height: 28px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}

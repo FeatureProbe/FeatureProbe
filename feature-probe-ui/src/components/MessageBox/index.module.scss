@@ -1,0 +1,29 @@
+.message {
+  padding: 0 12px 0 8px !important;
+
+  :global {
+    .Toastify__toast-icon {
+      margin-inline-end: 5px;
+    }
+  }
+}
+
+.icon-info-circle {
+  color: #0a70f5;
+  vertical-align: middle;
+}
+
+.icon-success-circle {
+  color: #00b365;
+  vertical-align: middle;
+}
+
+.icon-warning-circle {
+  color: #ffc300;
+  vertical-align: middle;
+}
+
+.icon-error-circle {
+  color:  #f5483b;
+  vertical-align: middle;
+}

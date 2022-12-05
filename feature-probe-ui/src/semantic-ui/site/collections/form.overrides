@@ -1,0 +1,85 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+.ui.form .fields {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+}
+
+.ui.form .field.disabled :disabled {
+  opacity: 1;
+  background: #eef2f7;
+  border: 1px solid #ced4da;
+  color: #adb5bc;
+}
+
+.ui.form .field {
+  clear: both;
+  margin: 0 0 16px 0;
+}
+
+.ui.form .field > label {
+  margin: 0;
+}
+
+.ui.form .disabled.fields .field,
+.ui.form .disabled.field,
+.ui.form .field :disabled {
+  pointer-events: inherit;
+  cursor: not-allowed;
+}
+
+.ui.form .fields .wide.field {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.ui.form .fields > .field {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+
+.ui.form input:not([type]),
+.ui.form input[type="date"],
+.ui.form input[type="datetime-local"],
+.ui.form input[type="email"],
+.ui.form input[type="number"],
+.ui.form input[type="password"],
+.ui.form input[type="search"],
+.ui.form input[type="tel"],
+.ui.form input[type="time"],
+.ui.form input[type="text"],
+.ui.form input[type="file"],
+.ui.form input[type="url"] {
+  height: 32px;
+  padding: 0 12px;
+}
+
+.ui.form textarea {
+  min-height: 90px;
+}
+
+
+.ui.form .field.field input:-webkit-autofill {
+  box-shadow: none !important;
+  border-color: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  transition: background-color 50000s ease-in-out 0s !important;
+}
+
+/* Focus */
+.ui.form .field.field input:-webkit-autofill:focus {
+  box-shadow: none !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: #74788d !important;
+  transition: background-color 50000s ease-in-out 0s !important;
+}
+
+.ui.form ::-webkit-input-placeholder {
+  font-size: 12px;
+}

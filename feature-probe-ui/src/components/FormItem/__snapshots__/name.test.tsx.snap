@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Name snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="field"
+    >
+      <label>
+        <span
+          class="label-required"
+        >
+          *
+        </span>
+        Name
+      </label>
+      <div
+        class="field input"
+      >
+        <div
+          class="ui input"
+        >
+          <input
+            name="name"
+            placeholder="Please input name"
+            type="text"
+            value="test"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Name snapshot 2`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="field"
+    >
+      <label>
+        <span
+          class="label-required"
+        >
+          *
+        </span>
+        Name
+      </label>
+      <div
+        class="error field input"
+      >
+        <div
+          class="ui input"
+        >
+          <input
+            aria-invalid="true"
+            name="name"
+            placeholder="Please input name"
+            type="text"
+            value="test"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="error-text"
+    >
+      error message
+    </div>
+  </div>
+</DocumentFragment>
+`;

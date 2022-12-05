@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Key snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="field"
+  >
+    <label>
+      test label
+    </label>
+    test
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Key snapshot 2`] = `
+<DocumentFragment>
+  <div
+    class="field"
+  >
+    <label>
+      <span
+        class="label-required"
+      >
+        *
+      </span>
+      test label
+    </label>
+    <div
+      class="error-text"
+      style="color: pink;"
+    />
+  </div>
+</DocumentFragment>
+`;

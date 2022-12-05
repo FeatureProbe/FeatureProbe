@@ -1,0 +1,24 @@
+.title {
+  display: flex;
+  align-items: center;
+  height: 28px;
+}
+
+.divider {
+  width: 4px;
+  height: 15px;
+  background-color: #556ee6;
+}
+
+.name {
+  margin-left: 12px;
+  font-size: 14px;
+  color: #212529;
+  font-family: HelveticaNeue-Medium;
+}
+
+.icon-question {
+  color: #74788d;
+  vertical-align: middle;
+  margin-left: 4px;
+}

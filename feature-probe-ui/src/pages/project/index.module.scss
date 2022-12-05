@@ -1,0 +1,41 @@
+.header {
+  padding: 24px 20px 16px;
+  display: flex;
+  justify-content: space-between;
+
+  :global {
+    .ui.primary.button {
+      border-radius: 8px;
+    }
+  }
+}
+
+.title {
+  font-family: HelveticaNeue-Medium;
+  font-size: 20px;
+  color: #212529;
+  letter-spacing: 0;
+  text-align: justify;
+  line-height: 32px;
+  flex: 1;
+}
+
+.count {
+  font-size: 20px;
+  color: #495057;
+  margin-left: 10px;
+}
+
+.iconfont {
+  font-size: 14px !important;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 20px;
+  position: relative;
+  min-height: calc(100vh - 120px);
+}

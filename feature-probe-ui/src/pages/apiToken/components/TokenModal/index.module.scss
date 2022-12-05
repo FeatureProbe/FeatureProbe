@@ -1,0 +1,112 @@
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-header-text {
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.header-tips-container {
+  margin-top: 10px;
+  height: 34px;
+}
+
+.warning-circle {
+  color: #ffc300 !important;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.header-tips {
+  display: flex;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  padding: 8px 26px;
+  background: #fffae0;
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #592d00;
+  letter-spacing: 0;
+  text-align: justify;
+  line-height: 18px;
+  font-weight: 400;
+}
+
+.modal-content {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 8px;
+  margin-left: 40px;
+}
+
+.modal-close-icon {
+  cursor: pointer;
+}
+
+.role-title {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.role-desc {
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: normal;
+  color: #74788d;
+}
+
+.role-tips {
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #da9900;
+  letter-spacing: 0;
+  line-height: 14px;
+  font-weight: 400;
+  padding: 3px 0 0 14px;
+  margin-top: -16px;
+}
+
+.footer {
+  margin-top: 32px;
+  text-align: right;
+}
+
+.btn {
+  margin-right: 8px !important;
+}
+
+.form-item-name {
+  margin-top: 16px !important;
+}
+
+.form-item-role {
+  margin-top: -4px !important;
+}
+
+.copy-token {
+  display: flex;
+  height: 66px;
+  line-height: 66px;
+  margin: 24px 0;
+  background-color: #fafafa;
+  justify-content: center;
+  border-radius: 8px;
+
+  & > .token {
+    width: 320px;
+    display: block;
+    outline: none;
+    border: none;
+    background-color: inherit;
+    font-family: HelveticaNeue-Medium;
+    font-size: 13px;
+    color: #495057;
+    letter-spacing: 0;
+    font-weight: 500;
+    margin-left: 8px;
+  }
+}

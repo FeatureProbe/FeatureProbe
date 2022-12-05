@@ -1,0 +1,53 @@
+.list-item {
+  cursor: pointer;
+  outline: 1px solid transparent;
+  border-radius: 8px;
+  height: 52px;
+}
+
+.list-item:hover {
+  outline: 1px solid #556ee6;
+  background: rgba(85, 110, 230, 0.04);
+  border-radius: 8px !important;
+  -moz-outline-radius: 8px;
+}
+
+.webhook-operation-item {
+  margin-right: 8px;
+  color: #556ee6;
+  cursor: pointer;
+}
+
+.webhook-operation {
+  display: flex;
+  min-width: 100px;
+}
+
+.webhook-info-name {
+  display: flex;
+  align-items: center;
+  padding-left: 32px;
+  position: relative;
+  font-size: 15px;
+  font-family: HelveticaNeue-Medium;
+}
+
+.webhook-info-operate {
+  width: 120px;
+}
+
+.webhook-info-url {
+  width: 250px;
+}
+
+.webhook-info-secretKey {
+  width: 100px;
+}
+
+.webhook-info-recent {
+  width: 120px;
+}
+
+.webhook-info-description {
+  max-width: 200px;
+}

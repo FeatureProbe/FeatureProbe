@@ -1,0 +1,156 @@
+.member-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.50);
+  visibility: hidden;
+  transition: all .5s cubic-bezier(0.820, 0.085, 0.395, 0.895);
+
+  :global .ui.multiple.search.dropdown > .text {
+    font-size: 13px !important;
+  }
+
+  :global .ui.dropdown > .text {
+    vertical-align: middle;
+    height: 25px;
+    line-height: 25px;
+    width: 95%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.member-drawer-inactive {
+  visibility: visible;
+}
+
+.member-drawer-form {
+  flex-direction: column;
+  height: 100%;
+  width: 480px !important;
+  padding: 0 !important;
+  background-color: #ffffff;
+  position: absolute !important;
+  right: -500px;
+  box-shadow: 0px 10px 20px 0px rgba(18, 38, 63, 0.03);
+  transition: right .5s cubic-bezier(0.820, 0.085, 0.395, 0.895);
+}
+
+.member-drawer-form-inactive {
+  right: 0 !important;
+}
+
+.member-drawer-form-content {
+  flex: 1;
+  height: 100%;
+  overflow: auto;
+  padding: 16px 20px 76px;
+}
+
+.title {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  color: #495057;
+  font-family: HelveticaNeue-Bold;
+  padding: 0 20px;
+}
+
+.title-left {
+  flex: 1;
+}
+
+.btn-cancel {
+  margin-right: 8px !important;
+}
+
+.divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.13);
+  margin: 0 16px;
+}
+
+.title-close {
+  cursor: pointer;
+  font-size: 16px !important;
+}
+
+.demo-tips {
+  background: #fffae0;
+  line-height: 18px;
+  font-size: 13px;
+  color: #592d00;
+  padding: 7px 20px;
+}
+
+.dropdown {
+  height: 160px !important;
+}
+
+.password {
+  margin-left: 24px;
+  height: 16px;
+  line-height: 16px;
+  background: rgba(85, 110, 230, 0.1);
+  border-radius: 4px;
+  font-size: 10px;
+  color: #556ee6;
+  padding: 0 4px;
+  display: inline-block;
+}
+
+.label-required {
+  color: #ff5f57;
+  font-size: 20px;
+  vertical-align: middle;
+  margin-right: 4px;
+  height: 16px;
+  display: inline-block;
+}
+
+.error-text {
+  color: #f46a6a;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  transform: scale(0.83);
+  transform-origin: left;
+}
+
+.angle-down {
+  position: absolute;
+  right: 10px;
+  color: #74788d;
+  top: 8px;
+}
+
+.icon-question {
+  vertical-align: middle;
+  margin-left: 4px;
+  color: #74788d;
+}
+
+.role-title {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.role-desc {
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: normal;
+  color: #74788d;
+}
+
+.role-tips {
+  font-size: 12px;
+  color: #da9900;
+  margin: -12px 12px 0;
+  font-weight: 400;
+}

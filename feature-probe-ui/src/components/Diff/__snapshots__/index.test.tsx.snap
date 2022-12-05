@@ -1,0 +1,472 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Diff snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="diff"
+    style="max-height: unset;"
+  >
+    <div
+      class="d2h-wrapper"
+    >
+      
+    
+      <div
+        class="d2h-file-wrapper"
+        data-lang=""
+        id="d2h-530617"
+      >
+        
+    
+        <div
+          class="d2h-file-header"
+        >
+          
+      
+          <span
+            class="d2h-file-name-wrapper"
+          >
+            
+    
+            <svg
+              aria-hidden="true"
+              class="d2h-icon"
+              height="16"
+              version="1.1"
+              viewBox="0 0 12 16"
+              width="12"
+            >
+              
+        
+              <path
+                d="M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z"
+              />
+              
+    
+            </svg>
+                
+            <span
+              class="d2h-file-name"
+            >
+              content
+            </span>
+            
+    
+            <span
+              class="d2h-tag d2h-changed d2h-changed-tag"
+            >
+              CHANGED
+            </span>
+          </span>
+          
+
+          <label
+            class="d2h-file-collapse"
+          >
+            
+    
+            <input
+              class="d2h-file-collapse-input"
+              name="viewed"
+              type="checkbox"
+              value="viewed"
+            />
+            
+    Viewed
+
+          </label>
+          
+    
+        </div>
+        
+    
+        <div
+          class="d2h-files-diff"
+        >
+          
+        
+          <div
+            class="d2h-file-side-diff"
+          >
+            
+            
+            <div
+              class="d2h-code-wrapper"
+            >
+              
+                
+              <table
+                class="d2h-diff-table"
+              >
+                
+                    
+                <tbody
+                  class="d2h-diff-tbody"
+                >
+                  
+                    
+                  <tr>
+                    
+    
+                    <td
+                      class="d2h-code-side-linenumber d2h-info"
+                    />
+                    
+    
+                    <td
+                      class="d2h-info"
+                    >
+                      
+        
+                      <div
+                        class="d2h-code-side-line"
+                      >
+                        @@ -1,1 +1,3 @@
+                      </div>
+                      
+    
+                    </td>
+                    
+
+                  </tr>
+                  <tr>
+                    
+    
+                    <td
+                      class="d2h-code-side-linenumber d2h-del d2h-change"
+                    >
+                      
+      1
+    
+                    </td>
+                    
+    
+                    <td
+                      class="d2h-del d2h-change"
+                    >
+                      
+        
+                      <div
+                        class="d2h-code-side-line"
+                      >
+                        
+            
+                        <span
+                          class="d2h-code-line-prefix"
+                        >
+                          -
+                        </span>
+                        
+            
+                        <span
+                          class="d2h-code-line-ctn"
+                        >
+                          {
+                          <del>
+                            }
+                          </del>
+                        </span>
+                        
+        
+                      </div>
+                      
+    
+                    </td>
+                    
+
+                  </tr>
+                  <tr>
+                    
+    
+                    <td
+                      class="d2h-code-side-linenumber d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder"
+                    >
+                      
+      
+    
+                    </td>
+                    
+    
+                    <td
+                      class="d2h-cntx d2h-emptyplaceholder"
+                    >
+                      
+        
+                      <div
+                        class="d2h-code-side-line d2h-code-side-emptyplaceholder"
+                      >
+                        
+            
+                        <span
+                          class="d2h-code-line-prefix"
+                        >
+                           
+                        </span>
+                        
+            
+                        <span
+                          class="d2h-code-line-ctn"
+                        >
+                          <br />
+                        </span>
+                        
+        
+                      </div>
+                      
+    
+                    </td>
+                    
+
+                  </tr>
+                  <tr>
+                    
+    
+                    <td
+                      class="d2h-code-side-linenumber d2h-code-side-emptyplaceholder d2h-cntx d2h-emptyplaceholder"
+                    >
+                      
+      
+    
+                    </td>
+                    
+    
+                    <td
+                      class="d2h-cntx d2h-emptyplaceholder"
+                    >
+                      
+        
+                      <div
+                        class="d2h-code-side-line d2h-code-side-emptyplaceholder"
+                      >
+                        
+            
+                        <span
+                          class="d2h-code-line-prefix"
+                        >
+                           
+                        </span>
+                        
+            
+                        <span
+                          class="d2h-code-line-ctn"
+                        >
+                          <br />
+                        </span>
+                        
+        
+                      </div>
+                      
+    
+                    </td>
+                    
+
+                  </tr>
+                  
+                    
+                </tbody>
+                
+                
+              </table>
+              
+            
+            </div>
+            
+        
+          </div>
+          
+        
+          <div
+            class="d2h-file-side-diff"
+          >
+            
+            
+            <div
+              class="d2h-code-wrapper"
+            >
+              
+                
+              <table
+                class="d2h-diff-table"
+              >
+                
+                    
+                <tbody
+                  class="d2h-diff-tbody"
+                >
+                  
+                    
+                  <tr>
+                    
+    
+                    <td
+                      class="d2h-code-side-linenumber d2h-info"
+                    />
+                    
+    
+                    <td
+                      class="d2h-info"
+                    >
+                      
+        
+                      <div
+                        class="d2h-code-side-line"
+                      />
+                      
+    
+                    </td>
+                    
+
+                  </tr>
+                  <tr>
+                    
+    
+                    <td
+                      class="d2h-code-side-linenumber d2h-ins d2h-change"
+                    >
+                      
+      1
+    
+                    </td>
+                    
+    
+                    <td
+                      class="d2h-ins d2h-change"
+                    >
+                      
+        
+                      <div
+                        class="d2h-code-side-line"
+                      >
+                        
+            
+                        <span
+                          class="d2h-code-line-prefix"
+                        >
+                          +
+                        </span>
+                        
+            
+                        <span
+                          class="d2h-code-line-ctn"
+                        >
+                          {
+                        </span>
+                        
+        
+                      </div>
+                      
+    
+                    </td>
+                    
+
+                  </tr>
+                  <tr>
+                    
+    
+                    <td
+                      class="d2h-code-side-linenumber d2h-ins"
+                    >
+                      
+      2
+    
+                    </td>
+                    
+    
+                    <td
+                      class="d2h-ins"
+                    >
+                      
+        
+                      <div
+                        class="d2h-code-side-line"
+                      >
+                        
+            
+                        <span
+                          class="d2h-code-line-prefix"
+                        >
+                          +
+                        </span>
+                        
+            
+                        <span
+                          class="d2h-code-line-ctn"
+                        >
+                            "name": "test"
+                        </span>
+                        
+        
+                      </div>
+                      
+    
+                    </td>
+                    
+
+                  </tr>
+                  <tr>
+                    
+    
+                    <td
+                      class="d2h-code-side-linenumber d2h-ins"
+                    >
+                      
+      3
+    
+                    </td>
+                    
+    
+                    <td
+                      class="d2h-ins"
+                    >
+                      
+        
+                      <div
+                        class="d2h-code-side-line"
+                      >
+                        
+            
+                        <span
+                          class="d2h-code-line-prefix"
+                        >
+                          +
+                        </span>
+                        
+            
+                        <span
+                          class="d2h-code-line-ctn"
+                        >
+                          }
+                        </span>
+                        
+        
+                      </div>
+                      
+    
+                    </td>
+                    
+
+                  </tr>
+                  
+                    
+                </tbody>
+                
+                
+              </table>
+              
+            
+            </div>
+            
+        
+          </div>
+          
+    
+        </div>
+        
+
+      </div>
+      
+
+    </div>
+  </div>
+</DocumentFragment>
+`;

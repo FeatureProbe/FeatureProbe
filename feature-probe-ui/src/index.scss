@@ -1,0 +1,71 @@
+// common style for form item
+.label-required {
+  color: #ff5f57;
+  font-size: 20px;
+  margin-right: 4px;
+  height: 16px;
+  display: inline-block;
+  position: relative;
+  top: 7px;
+}
+
+.error-text {
+  color: #f46a6a;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  transform: scale(0.83);
+  transform-origin: left;
+}
+
+.error-text-normal {
+  color: #f46a6a;
+  font-size: 12px;
+}
+
+.error-text-transform {
+  color: #f46a6a;
+  // margin-left: 32px;
+  transform: scale(0.83);
+  transform-origin: left center;
+}
+
+// common style for dropdown icon
+.angle-down {
+  position: absolute;
+  right: 10px;
+  color: #74788d;
+  top: 8px;
+}
+
+.angle-down-transform {
+  position: absolute;
+  right: 10px;
+  color: #74788d;
+  top: 6px;
+}
+
+// common style for user guide
+.joyride-title {
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: #212529;
+}
+
+.joyride-item {
+  padding-left: 18px;
+  font-size: 14px;
+  color: #74788d;
+}
+
+.joyride-pagination {
+  position: absolute;
+  bottom: 18px;
+  font-size: 14px;
+  color: #74788d;
+}
+
+// common css for popup opacity 
+.popup-override {
+  opacity: 0.8;
+}

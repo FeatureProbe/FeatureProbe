@@ -1,0 +1,79 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+.ui.button {
+  min-height: 32px;
+  height: 32px;
+  font-size: 12px;
+  border-radius: 6px;
+  padding: 0 16px;
+  margin: 0;
+}
+
+.ui.secondary.buttons .button,
+.ui.secondary.button {
+  background-color: #ffffff;
+  color: #556ee6;
+  border: 1px solid #556ee6;
+}
+
+.ui.secondary.buttons .button:hover,
+.ui.secondary.button:hover {
+  color: #556ee6;
+}
+
+.ui.secondary.buttons .button:active,
+.ui.secondary.button:active {
+  background-color: @secondaryColorHover;
+  color: #556ee6;
+}
+
+.ui.secondary.buttons .button:focus,
+.ui.secondary.button:focus {
+  background-color: transparent;
+  color: #556ee6;
+}
+
+.ui.basic.buttons .button,
+.ui.basic.button {
+  background: #ffffff !important;
+  color: #353a40 !important;
+  box-shadow: none;
+  border: 1px solid #ced4da;
+}
+
+.ui.basic.buttons .button:hover,
+.ui.basic.button:hover {
+  background: #ffffff !important;
+  color: #556ee6 !important;
+  border: 1px solid #556ee6;
+  box-shadow: none;
+}
+.ui.basic.buttons .button:focus,
+.ui.basic.button:focus {
+  background: #ffffff !important;
+  color: #556ee6 !important;
+  box-shadow: none;
+}
+.ui.basic.buttons .button:active,
+.ui.basic.button:active {
+  background: #ffffff !important;
+  color: #556ee6 !important;
+  box-shadow: none;
+}
+.ui.basic.buttons .active.button,
+.ui.basic.active.button {
+  background: #ffffff !important;
+  color: #556ee6 !important;
+  box-shadow: none;
+}
+
+.ui.mini.buttons .button,
+.ui.mini.buttons .or,
+.ui.mini.button {
+  font-size: 13px;
+  height: 27px;
+  padding: 0 8px;
+  min-height: 27px;
+}

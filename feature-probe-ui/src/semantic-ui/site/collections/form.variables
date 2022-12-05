@@ -1,0 +1,20 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+@inputBackground: rgba(33, 37, 41, 0.04);
+@inputBorderRadius: 6px;
+@inputBorder: 1px solid transparent;
+@labelColor: #74788d;
+@labelFontWeight: 'normal';
+@inputFocusBorderColor: #74788d;
+
+@disabledLabelOpacity: 1;
+@disabledOpacity: 1;
+
+@formErrorBackground: #FFFAFA;
+@formErrorBorder: #FF7066;
+@formErrorColor: #495057;
+
+@labelFontSize: 13px;
+@labelColor: #495057;

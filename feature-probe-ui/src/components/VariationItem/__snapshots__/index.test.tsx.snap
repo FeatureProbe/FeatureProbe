@@ -1,0 +1,319 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VariationItem snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="line"
+  >
+    <div
+      class="name"
+    >
+      <span
+        class="name-color"
+        style="background: rgb(255, 156, 27);"
+      />
+    </div>
+    <div
+      class="left"
+    >
+      <div
+        class="equal width fields"
+      >
+        <div
+          class="field drawer-variation-name"
+        >
+          <div
+            class="field"
+          >
+            <span
+              class="label-text"
+            >
+              <span
+                class="label-required"
+              >
+                *
+              </span>
+              name
+            </span>
+            <div
+              class="ui fluid input"
+              customname="name"
+              index="1"
+            >
+              <input
+                name="variation_undefined_name"
+                placeholder="name"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="field drawer-variation-value"
+        >
+          <div
+            class="field status-dropdown"
+          >
+            <span
+              class="label-text"
+            >
+              <span
+                class="label-required"
+              >
+                *
+              </span>
+              value
+            </span>
+            <div
+              aria-expanded="false"
+              class="ui fluid floating selection dropdown"
+              customname="value"
+              name="variation_undefined_normal"
+              role="listbox"
+              tabindex="0"
+            >
+              <div
+                aria-atomic="true"
+                aria-live="polite"
+                class="divider default text"
+                role="alert"
+              >
+                Please select
+              </div>
+              <span
+                class="iconfont icon-angle-down angle-down"
+                customclass="angle-down"
+                type="angle-down"
+              />
+              <div
+                class="menu transition"
+              >
+                <div
+                  aria-checked="false"
+                  aria-selected="true"
+                  class="selected item"
+                  role="option"
+                  style="pointer-events: all;"
+                >
+                  <span
+                    class="text"
+                  >
+                    true
+                  </span>
+                </div>
+                <div
+                  aria-checked="false"
+                  aria-selected="false"
+                  class="item"
+                  role="option"
+                  style="pointer-events: all;"
+                >
+                  <span
+                    class="text"
+                  >
+                    false
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="six wide field"
+        >
+          <div
+            class="field"
+          >
+            <span
+              class="label"
+            >
+              description
+            </span>
+            <div
+              class="ui fluid input"
+              customname="description"
+              index="1"
+            >
+              <input
+                name="description"
+                placeholder="description"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="operation"
+    >
+      <span
+        class="iconfont icon-minus iconfont"
+        customclass="iconfont"
+        type="minus"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`VariationItem snapshot 2`] = `
+<DocumentFragment>
+  <div
+    class="line"
+  >
+    <div
+      class="name"
+    >
+      <span
+        class="name-color"
+        style="background: rgb(255, 156, 27);"
+      />
+    </div>
+    <div
+      class="left"
+    >
+      <div
+        class="equal width fields"
+      >
+        <div
+          class="field variation-name"
+        >
+          <div
+            class="field"
+          >
+            <span
+              class="label-text"
+            >
+              <span
+                class="label-required"
+              >
+                *
+              </span>
+              name
+            </span>
+            <div
+              class="ui fluid input"
+              customname="name"
+              index="1"
+            >
+              <input
+                name="variation_undefined_name"
+                placeholder="name"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="field variation-value"
+        >
+          <div
+            class="field status-dropdown"
+          >
+            <span
+              class="label-text"
+            >
+              <span
+                class="label-required"
+              >
+                *
+              </span>
+              value
+            </span>
+            <div
+              aria-expanded="false"
+              class="ui fluid floating selection dropdown"
+              customname="value"
+              name="variation_undefined_normal"
+              role="listbox"
+              tabindex="0"
+            >
+              <div
+                aria-atomic="true"
+                aria-live="polite"
+                class="divider default text"
+                role="alert"
+              >
+                Please select
+              </div>
+              <span
+                class="iconfont icon-angle-down angle-down"
+                customclass="angle-down"
+                type="angle-down"
+              />
+              <div
+                class="menu transition"
+              >
+                <div
+                  aria-checked="false"
+                  aria-selected="true"
+                  class="selected item"
+                  role="option"
+                  style="pointer-events: all;"
+                >
+                  <span
+                    class="text"
+                  >
+                    true
+                  </span>
+                </div>
+                <div
+                  aria-checked="false"
+                  aria-selected="false"
+                  class="item"
+                  role="option"
+                  style="pointer-events: all;"
+                >
+                  <span
+                    class="text"
+                  >
+                    false
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="six wide field"
+        >
+          <div
+            class="field"
+          >
+            <span
+              class="label"
+            >
+              description
+            </span>
+            <div
+              class="ui fluid input"
+              customname="description"
+              index="1"
+            >
+              <input
+                name="description"
+                placeholder="description"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="operation"
+    >
+      <span
+        class="iconfont icon-minus iconfont"
+        customclass="iconfont"
+        type="minus"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

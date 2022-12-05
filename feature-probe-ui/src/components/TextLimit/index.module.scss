@@ -1,0 +1,8 @@
+.limit-str-container-w {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  line-height: unset !important;
+}
