@@ -1,0 +1,38 @@
+.input {
+  // width: 500px !important;
+  font-size: 13px;
+}
+
+.label-required {
+  color: #ff5f57;
+  font-size: 20px;
+  vertical-align: middle;
+  margin-right: 4px;
+  height: 16px;
+  display: inline-block;
+}
+
+.error-text {
+  color: #f46a6a;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  transform: scale(0.83);
+  transform-origin: left;
+}
+
+
+.tip-text {
+  color: #74788d;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  transform: scale(0.83);
+  transform-origin: left center;
+}
+
+.icon-question {
+  vertical-align: middle;
+  margin-left: 4px;
+  color: #74788d;
+}

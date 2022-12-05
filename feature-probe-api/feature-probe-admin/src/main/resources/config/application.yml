@@ -1,0 +1,45 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+
+  tomcat:
+    accesslog:
+      enabled: true
+      buffered: true
+      file-date-format: .yyyy-MM-dd
+      request-attributes-enabled: false
+      rotate: true
+      suffix: .log
+      pattern: "[access_log] %t %I \"%r\" %h %l %u :%{featureprobe-header-rid}i %s %b %D ref=%{Referer}i ua=%{User-Agent}i  origin=%{origin}i"
+      directory: ./logs/accesslog/
+      max-days: 15
+
+spring:
+  profiles:
+    active: online
+  session:
+    store-type: JDBC
+    jdbc:
+      cleanup-cron: 0 * * * * *
+  messages:
+    basename: i18n/messages
+    cache-seconds: -1
+    encoding: UTF-8
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: GMT+8
+  web:
+    locale: en_US
+  mvc:
+    resources:
+      static-locations: classpath:/static/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, env, metrics, scheduledtasks
+springdoc:
+  default-produces-media-type: application/json

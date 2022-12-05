@@ -1,0 +1,112 @@
+
+.setting {
+  background-color: #ffffff;
+  margin: 0 20px;
+  min-height: calc(100vh - 94px);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-width: 1160px;
+}
+
+.content {
+  flex: 1;
+}
+
+.title {
+  padding: 12px 24px 0;
+  font-family: PingFangSC-Medium;
+  font-size: 20px;
+  color: #212529;
+}
+
+.tips {
+  margin: 15px 24px 0;
+  height: 36px;
+  background: #fffae0;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #592d00;
+  line-height: 34px;
+}
+
+.warning-circle {
+  color: #ffc300;
+  margin-left: 14px;
+  margin-right: 10px;
+  position: relative;
+  top: 2px;
+  font-size: 17px !important;
+}
+
+.approval {
+  margin: 24px 24px 0;
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: #212529;
+}
+
+.approval-status {
+  margin-left: 8px;
+  top: 8px;
+  position: relative;
+  vertical-align: middle;
+}
+
+.approval-form {
+  margin: 16px 24px 0;
+}
+
+.angle-down {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  height: 56px;
+  border-top: 1px solid #ebedef;
+  padding: 0 24px;
+  padding-top: 12px;
+}
+
+.publish-btn {
+  margin-right: 8px !important;
+}
+
+.group {
+  margin-bottom: 16px !important;
+}
+
+.dropdown-remove-icon {
+  font-size: 12px !important;
+  margin-left: 12px;
+  color: #74788d;
+}
+
+.color-square {
+  width: 10px;
+  height: 10px;
+  margin: 0 4px 0 0;
+  border-radius: 4px;
+}
+
+.environment-name-box {
+  display: flex;
+  height: 30px;
+  align-items: center;
+}
+
+.error-text {
+  color: #f46a6a;
+  margin-left: 8px;
+  font-size: 12px;
+  transform: scale(0.83);
+  transform-origin: left;
+}
+
+.approval-reviewers-dropdown-field {
+  cursor: not-allowed !important;
+}

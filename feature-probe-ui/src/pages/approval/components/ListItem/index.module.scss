@@ -1,0 +1,238 @@
+.list-item {
+  color: #495057;
+  font-size: 15px;
+}
+
+.list-item-title {
+  width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 24px;
+}
+
+.column-toggle {
+  padding-left: 20px !important;
+}
+
+.cancel-publish {
+  height: 16px;
+  background: #ececf6;
+  border-radius: 4px;
+  color: #495057;
+  transform: scale(0.9);
+  font-size: 12px;
+  padding: 1px 4px;
+  margin-left: 4px;
+}
+
+.status-pending {
+  color: #556ee6;
+  display: flex;
+  align-items: center;
+}
+
+.status-pass {
+  color: #00b365;
+  display: flex;
+  align-items: center;
+}
+
+.status-revoke {
+  color: #9c9c9c;
+  display: flex;
+  align-items: center;
+}
+
+.status-declined {
+  color: #ff4462;
+  display: flex;
+  align-items: center;
+}
+
+.status-jump {
+  color: #ffc300;
+  display: flex;
+  align-items: center;
+}
+
+.status-circle {
+  width: 6px;
+  height: 6px;
+  border-radius: 100%;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.status-circle-pending {
+  background-color: #556ee6;
+}
+
+.status-circle-pass {
+  background-color: #00b365;
+}
+
+.status-circle-revoke {
+  background-color: #9c9c9c;
+}
+
+.status-circle-declined {
+  background-color: #ff4462;
+}
+
+.status-circle-jump {
+  background-color: #ffc300;
+}
+
+.list-item-toggle {
+  font-size: 15px;
+  color: #556ee6;
+  cursor: pointer;
+  position: relative;
+  padding-left: 30px !important;
+}
+
+.toggle-lock-bg {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  border-radius: 100%;
+  text-align: center;
+  line-height: 24px;
+  top: -2px;
+}
+
+.toggle-lock-bg:hover {
+  background: rgba(33, 37, 41, 0.04);
+}
+
+.toggle-lock {
+  color: #f5483b;
+  font-size: 14px;
+}
+
+.popup-content {
+  max-width: 100px;
+  overflow: auto;
+}
+
+.popup-line {
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #eef2f7;
+}
+
+.popup-line:last-child {
+  margin-bottom: 0;
+}
+
+.list-item-time {
+  font-size: 12px;
+  color: #74788d;
+}
+
+.list-item-reason {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list-operation {
+  width: 200px;
+}
+
+.list-operation-btn {
+  margin-right: 8px;
+  color: #556ee6;
+  cursor: pointer;
+}
+
+.list-status {
+  display: flex;
+  align-items: center;
+}
+
+.list-status-icon {
+  width: 6px;
+  height: 6px;
+  border-radius: 100%;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.list-status-icon-published {
+  background-color: #adb5bc;
+}
+
+.list-status-icon-unpublished {
+  background-color: #556ee6;
+}
+
+.list-status-icon-canceled {
+  background-color: #ff5e1a;
+}
+
+.list-status-canceled-text {
+  color: #ff5e1a;
+}
+
+.icon-info {
+  margin-left: 4px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: #212529;
+}
+
+.modal-header-icon {
+  font-size: 16px !important;
+  cursor: pointer;
+  color: #495057;
+}
+
+.modal-content {
+  margin-top: 15px;
+}
+
+.input {
+  margin-top: 8px !important;
+}
+
+.label {
+  margin-bottom: 8px !important;
+}
+
+.label-required {
+  color: #ff5f57;
+  font-size: 20px;
+  margin-right: 4px;
+  height: 16px;
+  display: inline-block;
+  position: relative;
+  top: 5px;
+}
+
+.error-text {
+  color: #f46a6a;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  transform: scale(0.83);
+  transform-origin: left;
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.btn {
+  margin-right: 8px !important;
+}

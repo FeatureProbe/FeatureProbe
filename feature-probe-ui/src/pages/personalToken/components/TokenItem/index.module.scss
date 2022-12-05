@@ -1,0 +1,32 @@
+.list-item {
+  cursor: pointer;
+  outline: 1px solid transparent;
+  border-radius: 8px;
+  height: 52px;
+}
+
+.list-item:hover {
+  outline: 1px solid #556ee6;
+  background: rgba(85, 110, 230, 0.04);
+  border-radius: 8px !important;
+  -moz-outline-radius: 8px;
+}
+
+.list-item-opt {
+  display: flex;
+  min-width: 100px;
+}
+
+.list-item-last-time {
+  width: 150px;
+}
+
+.token-operation-item {
+  margin-right: 8px;
+  color: #556ee6;
+  cursor: pointer;
+}
+
+.list-item-name {
+  padding-left: 32px;
+}

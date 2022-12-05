@@ -1,0 +1,5 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+@shapeBorderColor: #556ee6 transparent transparent;

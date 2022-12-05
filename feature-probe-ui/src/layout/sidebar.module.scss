@@ -1,0 +1,151 @@
+.sidebar {
+  width: 200px;
+  padding: 0 10px;
+  position: relative;
+  height: calc(100vh - 90px);
+}
+
+.sidebar-close {
+  width: 80px;
+  position: relative;
+  height: calc(100vh - 90px);
+}
+
+.setting-sidebar {
+  width: 200px;
+  padding: 10px;
+}
+
+.setting-sidebar-close {
+  width: 80px;
+}
+
+.project-name {
+  font-size: 16px;
+  color: #212529;
+  line-height: 30px;
+  margin: 14px 0 10px;
+  font-family: HelveticaNeue-Medium;
+  padding: 0 10px;
+  height: 30px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.environment {
+  width: 180px;
+  color: #ffffff;
+  border-radius: 6px;
+
+  :global {
+    .ui.selection.active.dropdown {
+      border-color: transparent !important;
+    }
+
+    .ui.selection.dropdown:focus {
+      border-color: transparent !important;
+    }
+
+    .ui.selection.active.dropdown .menu {
+      border-color: transparent !important;
+    }
+
+    .ui.selection.visible.dropdown > .text:not(.default) {
+      color: #ffffff !important;
+    }
+
+    .ui.dropdown > .text {
+      line-height: unset;
+    }
+  }
+}
+
+.environment-close {
+  width: 60px;
+
+  :global {
+    .ui.left.pointing.dropdown > .menu {
+      width: 140px !important;
+      margin-top: 0 !important;
+      margin-left: 4px !important;
+    }
+    .ui.dropdown > .text {
+      width: 70%;
+    }
+  }
+}
+
+.environment-dropdown {
+  height: 42px !important;
+  color: #ffffff !important;
+  padding: 12px 10px !important;
+  line-height: 1 !important;
+}
+
+.project-menu {
+  background: #ffffff;
+  border-radius: 6px;
+  width: 100%;
+  margin-top: 2px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  padding: 8px 0 0;
+}
+
+.project-menu-item {
+  padding: 0 12px;
+  cursor: pointer;
+  font-size: 13px;
+  height: 42px;
+}
+
+.project-menu :only-child {
+  cursor: pointer;
+}
+
+.project-menu-item-close {
+  :global {
+    div {
+      justify-content: center;
+    }
+  }
+}
+
+.selected {
+  color: #556ee6;
+  font-family: HelveticaNeue-Bold;
+  cursor: pointer;
+}
+
+.project-menu-item:not(last-child) {
+  padding-bottom: 8px;
+}
+
+.project-menu-item:hover {
+  color: #556ee6;
+}
+
+.angle-down {
+  position: absolute;
+  right: 10px;
+}
+
+.warning-circle {
+  font-size: 20px !important;
+  color: #ffc300;
+  padding: 0 10px;
+}
+
+.modal-header-text {
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.modal-content {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 8px;
+  margin-left: 40px;
+}

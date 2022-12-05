@@ -1,0 +1,50 @@
+.not-found {
+  background-color: #ffffff;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  margin-left: 24px;
+  text-align: center;
+}
+
+.image {
+  :global img {
+    width: 320px;
+  }
+}
+
+.description {
+  font-family: PingFangSC-Medium;
+  font-size: 18px;
+  color: #7d7d7d;
+}
+
+.title {
+  font-size: 70px;
+  color: #74788d;
+  line-height: 82px;
+  margin-bottom: 4px;
+}
+
+.btn {
+  width: 120px;
+  margin: 32px auto 0;
+
+  :global {
+    button {
+      width: 100%;
+      font-size: 16px !important;
+      font-weight: normal !important;
+    }
+  }
+}

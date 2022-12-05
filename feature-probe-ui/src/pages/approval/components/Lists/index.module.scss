@@ -1,0 +1,134 @@
+.lists {
+  margin-top: 24px;
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  min-height: 32px;
+}
+
+.tabs {
+  display: flex;
+  height: 32px;
+}
+
+.tabs-item {
+  text-align: center;
+  padding-right: 24px;
+  height: 28px;
+  margin: 2px 0;
+  line-height: 28px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.tabs-item-selected {
+  background: #ffffff;
+  border-radius: 4px;
+  color: #556ee6;
+  font-weight: 500;
+}
+
+.keywords-field {
+  width: 280px !important;
+}
+
+.icon-search {
+  position: absolute;
+  right: 10px;
+  color: #74788d;
+  top: 8px;
+  -webkit-appearance: unset !important;
+}
+
+.content {
+  margin-top: 14px;
+  position: relative;
+  flex: 1;
+}
+
+.table-header {
+  background: #f8f9fa;
+  height: 42px;
+  line-height: 42px;
+  font-size: 13px;
+
+  :global {
+    th {
+      padding-bottom: 0 !important;
+    }
+
+    th:first-child {
+      padding-left: 24px !important;
+      padding-bottom: 0 !important;
+    }
+  }
+}
+
+.column-toggle {
+  padding-left: 50px !important;
+}
+
+.column-title {
+  width: 200px !important;
+}
+
+.column-reviewers {
+  width: 240px !important;
+}
+
+.icon-filter {
+  font-weight: normal !important;
+  color: #919aac !important;
+  margin-left: 4px;
+  position: relative;
+  top: 2px;
+  cursor: pointer;
+}
+
+.filter-menu {
+  width: 150px;
+}
+
+.filter-menu-content {
+  margin-bottom: 8px;
+}
+
+.filter-item {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.filter-item:hover {
+  background: #f8f9fa;
+}
+
+.filter-item-text {
+  margin-left: 8px;
+}
+
+.filter-menu-footer {
+  text-align: right;
+  border-top: 1px solid #E2E5E9;
+  padding-top: 8px;
+}
+
+.filter-btn-confirm {
+  font-size: 13px;
+  color: #556ee6;
+  cursor: pointer;
+}
+
+.filter-btn-clear {
+  font-size: 13px;
+  color: #353a40;
+  margin-right: 12px;
+  cursor: pointer;
+}

@@ -1,0 +1,44 @@
+.put-away {
+  position: absolute;
+  bottom: 10px;
+  font-size: 13px;
+  color: #adb5bc;
+  line-height: 32px;
+  width: 180px;
+  cursor: pointer;
+  padding: 0 20px;
+}
+
+.put-away-close {
+  width: 80px;
+  text-align: center;
+  padding: 0;
+}
+
+.put-away-divider {
+  width: 160px;
+  height: 1px;
+  opacity: 0.2;
+  background-image: linear-gradient(180deg, #74788d 0%, #F4F4F8 100%);
+}
+
+.put-away-divider-close {
+  width: 60px;
+  position: absolute;
+  left: 10px;
+}
+
+.put-away-text {
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+.iconfont {
+  font-size: 18px !important;
+  vertical-align: middle;
+}
+
+.menu {
+  vertical-align: middle;
+  margin-left: 8px;
+}

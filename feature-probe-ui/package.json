@@ -1,0 +1,134 @@
+{
+  "name": "feature-probe-ui",
+  "version": "1.7.0",
+  "description": "FeatureProbe UI/Portal",
+  "license": "Apache-2.0",
+  "keywords": [
+    "FeatureProbe",
+    "feature",
+    "toggle"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:FeatureProbe/feature-probe-ui.git"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "jest": {
+    "resetMocks": false,
+    "collectCoverageFrom": [
+      "src/components/**/*.tsx"
+    ],
+    "coveragePathIgnorePatterns": [
+      "src/components/utils/*",
+      "src/components/EventTracker/*"
+    ]
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/react-test-renderer": "^18.0.0",
+    "chart.js": "^3.7.1",
+    "chartjs-plugin-annotation": "^1.4.0",
+    "classnames": "^2.3.1",
+    "codemirror": "^5.65.3",
+    "dayjs": "^1.11.0",
+    "diff": "^5.0.0",
+    "diff2html": "^3.4.17",
+    "featureprobe-client-sdk-js": "^1.1.3",
+    "json-bigint": "^1.0.0",
+    "jsonlint-mod": "^1.7.6",
+    "less-loader": "^7.3.0",
+    "localforage": "^1.10.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "node-sass": "^7.0.1",
+    "qs": "^6.10.3",
+    "react": "^17.0.0",
+    "react-beautiful-dnd": "^13.1.0",
+    "react-chartjs-2": "^4.1.0",
+    "react-copy-to-clipboard": "^5.0.4",
+    "react-datetime": "^3.1.1",
+    "react-dom": "^17.0.0",
+    "react-ga4": "^1.4.1",
+    "react-hook-form": "^7.29.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-intl": "^5.25.1",
+    "react-joyride": "^2.5.3",
+    "react-router-dom": "^5.3.0",
+    "react-syntax-highlighter": "^15.5.0",
+    "react-toastify": "^9.0.8",
+    "sass-loader": "^13.0.0",
+    "semantic-ui-less": "^2.4.1",
+    "semantic-ui-react": "^2.1.2",
+    "typescript": "^4.4.2",
+    "unstated-next": "^1.1.0",
+    "use-resize-observer": "^9.0.2",
+    "uuid": "^8.3.2"
+  },
+  "scripts": {
+    "start": "semantic-ui-css-patch && craco start",
+    "build": "semantic-ui-css-patch && craco build",
+    "test": "craco test",
+    "test:cov": "craco test --coverage --no-cache --watchAll=false",
+    "test:u": "craco test -u",
+    "eject": "craco eject",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@craco/craco": "^5.9.0",
+    "@semantic-ui-react/craco-less": "^2.0.2",
+    "@semantic-ui-react/css-patch": "^1.0.0",
+    "@testing-library/react": "12.1.5",
+    "@types/codemirror": "^5.60.5",
+    "@types/diff": "^5.0.2",
+    "@types/diff2html": "^3.0.0",
+    "@types/dom-inputevent": "^1.0.7",
+    "@types/jest": "^27.0.1",
+    "@types/json-bigint": "^1.0.1",
+    "@types/lodash": "^4.14.182",
+    "@types/node": "^16.7.13",
+    "@types/qs": "^6.9.7",
+    "@types/react": "^17.0.43",
+    "@types/react-beautiful-dnd": "^13.1.2",
+    "@types/react-copy-to-clipboard": "^5.0.2",
+    "@types/react-dom": "^17.0.9",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/react-syntax-highlighter": "^15.5.3",
+    "@types/uuid": "^8.3.4",
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-check-file": "^1.2.2",
+    "eslint-plugin-import": "^2.26.0",
+    "http-proxy-middleware": "^2.0.6",
+    "prettier": "^2.7.1",
+    "react-scripts": "^5.0.1",
+    "react-test-renderer": "17.0.2",
+    "source-map-explorer": "^2.5.2",
+    "webpack": "^5.72.1",
+    "webpack-filter-warnings-plugin": "^1.2.1"
+  },
+  "resolutions": {
+    "@types/react": "17.0.43"
+  },
+  "proxy": "https://featureprobe.io/"
+}

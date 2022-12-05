@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PutAwayMenu snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="title"
+  >
+    <div
+      class="divider"
+    />
+    <div
+      class="name"
+    >
+      title
+    </div>
+    <span
+      class="iconfont icon-question icon-question"
+      customclass="icon-question"
+      type="question"
+    />
+  </div>
+</DocumentFragment>
+`;

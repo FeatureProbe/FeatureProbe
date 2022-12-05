@@ -1,0 +1,6 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+@invertedBackground: #212B36;
+@invertedColor: #eef2f7;

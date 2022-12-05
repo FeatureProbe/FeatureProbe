@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PutAwayMenu snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="putaway"
+  >
+    <span
+      class="iconfont icon-type iconfont"
+      customclass="iconfont"
+      type="type"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`PutAwayMenu snapshot 2`] = `
+<DocumentFragment>
+  <div
+    class="putaway"
+  >
+    <span
+      class="iconfont icon-type iconfont"
+      customclass="iconfont"
+      type="type"
+    />
+    <span
+      class="menu"
+    >
+      title
+    </span>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`hover PutAwayMenu 1`] = `
+<body>
+  <div>
+    <div
+      class="putaway"
+    >
+      <span
+        class="iconfont icon-type iconfont"
+        customclass="iconfont"
+        type="type"
+      />
+    </div>
+  </div>
+  <div
+    style="display: flex; position: absolute; left: 0px; top: 0px; transform: translate(20px, 0px);"
+  >
+    <div
+      class="ui right center inverted popup transition visible"
+      style="position: initial; opacity: 0.8;"
+    >
+      <div
+        class="content"
+      >
+        title
+      </div>
+    </div>
+  </div>
+</body>
+`;

@@ -1,0 +1,12 @@
+/*******************************
+     User Global Variables
+*******************************/
+@importGoogleFonts: false;
+@pageFont: Helvetica Neue, Helvetica, Arial,  PingFang SC, Heiti SC, Hiragino Sans GB, Microsoft YaHei, sanf-serif;
+@primaryColor: #556ee6;
+@primaryColorHover: #4458B8;
+@primaryColorDown: #4458B8;
+@pageBackground: #f0f1f4;
+@secondaryColorHover: rgba(85, 110, 230, 0.10);
+@trackBackground: transparent;
+@inputPlaceholderColor: #adb5bc;

@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pagination snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="pagination"
+  >
+    <div
+      class="total"
+    >
+      <span
+        class="total-count"
+      >
+         
+      </span>
+       in total
+    </div>
+    <div
+      aria-label="Pagination Navigation"
+      class="ui pagination menu"
+      role="navigation"
+    >
+      <a
+        aria-current="false"
+        aria-disabled="false"
+        class="item"
+        tabindex="0"
+        type="prevItem"
+        value="1"
+      >
+        <span
+          class="iconfont icon-angle-left undefined"
+          type="angle-left"
+        />
+      </a>
+      <a
+        aria-current="false"
+        aria-disabled="false"
+        class="item"
+        tabindex="0"
+        type="pageItem"
+        value="1"
+      >
+        1
+      </a>
+      <a
+        aria-current="false"
+        aria-disabled="false"
+        class="item"
+        tabindex="0"
+        type="pageItem"
+        value="2"
+      >
+        2
+      </a>
+      <a
+        aria-current="false"
+        aria-disabled="false"
+        class="item"
+        tabindex="0"
+        type="pageItem"
+        value="3"
+      >
+        3
+      </a>
+      <a
+        aria-current="false"
+        aria-disabled="false"
+        class="item"
+        tabindex="0"
+        type="pageItem"
+        value="4"
+      >
+        4
+      </a>
+      <a
+        aria-current="false"
+        aria-disabled="false"
+        class="item"
+        tabindex="0"
+        type="pageItem"
+        value="5"
+      >
+        5
+      </a>
+      <a
+        aria-current="false"
+        aria-disabled="true"
+        class="item"
+        tabindex="-1"
+        type="ellipsisItem"
+        value="6"
+      >
+        ...
+      </a>
+      <a
+        aria-current="false"
+        aria-disabled="false"
+        class="item"
+        tabindex="0"
+        type="pageItem"
+        value="10"
+      >
+        10
+      </a>
+      <a
+        aria-current="false"
+        aria-disabled="false"
+        class="item"
+        tabindex="0"
+        type="nextItem"
+        value="1"
+      >
+        <span
+          class="iconfont icon-angle-right undefined"
+          type="angle-right"
+        />
+      </a>
+    </div>
+  </div>
+</DocumentFragment>
+`;

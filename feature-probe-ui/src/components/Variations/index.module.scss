@@ -1,0 +1,75 @@
+.divider {
+  display: inline-block;
+  width: 5px;
+  background-color: red;
+}
+
+.line {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.name {
+  margin-right: 20px;
+  position: relative;
+  top: 35px;
+}
+
+.name-color {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 5px;
+  border-radius: 4px;
+}
+
+.left {
+  flex: 1;
+}
+
+.operation {
+  width: 40px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  top: 35px;
+}
+
+.variation-add-row {
+  padding-left: 86px;
+  padding-right: 16px;
+}
+
+.drawer-variation-add {
+  cursor: pointer;
+  width: 140px;
+  margin-left: 32px;
+}
+
+.variation-add {
+  cursor: pointer;
+  width: 180px;
+  margin-left: 32px;
+}
+
+.variation-add-btn {
+  font-size: 12px;
+  width: 100%;
+}
+
+.variation-add-btn-text {
+  vertical-align: middle;
+}
+
+.iconfont {
+  font-size: 12px !important;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.error-text {
+  color: #f46a6a;
+  margin-left: 32px;
+  transform: scale(0.83);
+  transform-origin: left center;
+}

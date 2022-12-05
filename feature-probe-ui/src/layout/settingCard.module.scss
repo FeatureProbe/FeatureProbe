@@ -1,0 +1,21 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
+  border-radius: 12px 12px 0 0;
+  height: calc(100vh - 64px);
+  margin: 16px 20px 0;
+  padding: 12px 24px 24px;
+  position: relative;
+  overflow-x: auto;
+}
+
+.heading {
+  font-family: HelveticaNeue-Medium;
+  font-size: 20px;
+  color: #212529;
+  letter-spacing: 0;
+  text-align: justify;
+  line-height: 30px;
+}

@@ -1,0 +1,43 @@
+.rules {
+  padding-top: 24px;
+}
+
+.rules-container {
+  margin-top: 12px;
+}
+
+.add {
+  margin-top: 12px;
+  height: 32px;
+  border: 1px dashed #778BEB;
+  border-radius: 6px;
+  text-align: center;
+  line-height: 32px;
+  color: #556ee6;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.add:hover {
+  background: rgba(85, 110, 230, 0.04);
+  border: 1px dashed rgba(119, 139, 235, 1);
+  border-radius: 6px;
+}
+
+.add-disabled {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(85, 110, 230, 0.45);
+  color: rgba(85, 110, 230, 0.45);
+  cursor: not-allowed;
+}
+
+.add-disabled:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(85, 110, 230, 0.45);
+  cursor: not-allowed;
+}
+
+.iconfont {
+  margin-right: 4px;
+  font-size: 12px !important;
+}

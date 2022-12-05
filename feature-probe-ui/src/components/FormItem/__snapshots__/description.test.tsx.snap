@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Key snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="field"
+    >
+      <label>
+        Description
+      </label>
+      <div
+        class="field input"
+      >
+        <textarea
+          placeholder="Please input description"
+          rows="3"
+        >
+          test
+        </textarea>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Key snapshot 2`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="field"
+    >
+      <label>
+        Description
+      </label>
+      <div
+        class="field input"
+      >
+        <textarea
+          placeholder="Please input description"
+          rows="3"
+        >
+          test
+        </textarea>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

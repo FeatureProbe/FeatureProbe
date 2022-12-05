@@ -1,0 +1,37 @@
+.popup {
+  padding: 8px 0 !important;
+  margin-top: 4px !important;
+  min-width: 180px !important;
+}
+
+.popup-footer {
+  border-top: 1px solid #e2e5e9;
+  text-align: right;
+  padding-top: 7px;
+  padding-right: 12px;
+}
+
+.popup-footer-clear {
+  font-size: 13px;
+  color: #353a40;
+  cursor: pointer;
+}
+
+.popup-footer-confirm {
+  font-size: 13px;
+  color: #556ee6;
+  cursor: pointer;
+  margin-left: 12px;
+}
+
+.icon-filter {
+  color: #919aac;
+  margin-left: 8px;
+  position: relative;
+  top: 1px;
+  cursor: pointer;
+}
+
+.icon-filter-selected {
+  color: #556ee6;
+}

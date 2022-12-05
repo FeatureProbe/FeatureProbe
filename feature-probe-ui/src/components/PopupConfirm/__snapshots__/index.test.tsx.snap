@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PopupConFirm snapshot 1`] = `
+<body>
+  <div>
+    <span>
+      this is test text.
+    </span>
+  </div>
+  <div
+    style="display: flex; position: absolute; left: 0px; top: 0px;"
+  >
+    <div
+      class="ui top left flowing popup transition visible popup"
+      style="position: initial;"
+    >
+      <div
+        class="content"
+      >
+        <span
+          class="iconfont icon-error-circle iconfont"
+          customclass="iconfont"
+          type="error-circle"
+        />
+        <span>
+          popup confirm text
+        </span>
+      </div>
+      <div
+        class="btn-group"
+      >
+        <button
+          class="ui mini secondary button btn-cancel"
+        >
+          Cancel
+        </button>
+        <button
+          class="ui mini primary button"
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+`;

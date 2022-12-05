@@ -1,0 +1,6 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+@headerBorder: 2px solid rgba(34, 36, 38, 0.1);
+@headerColor: #212529;

@@ -1,0 +1,7 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+@miniHeaderSize: 16px;
+@contentPadding: 16px;
+@borderRadius: 10px;

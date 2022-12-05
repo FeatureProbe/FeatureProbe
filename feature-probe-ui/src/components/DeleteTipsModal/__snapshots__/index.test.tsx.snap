@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeleteTipsModal snapshot 1`] = `
+<body
+  class="dimmable dimmed"
+>
+  <div />
+  <div
+    class="ui page modals dimmer transition visible active"
+    style="display: flex;"
+  >
+    <div
+      class="ui mini modal transition visible active"
+      style="width: 400px;"
+    >
+      <div
+        class="content"
+      >
+        <div>
+          <div
+            class="modal-header"
+          >
+            <span
+              class="iconfont icon-warning-circle warning-circle"
+              customclass="warning-circle"
+              type="warning-circle"
+            />
+            <span
+              class="modal-header-text"
+            >
+              test title
+            </span>
+          </div>
+          <div
+            class="modal-content"
+          >
+            test content
+          </div>
+          <div
+            class="footer"
+          >
+            <button
+              class="ui mini basic button btn"
+              type="reset"
+            >
+              Cancel
+            </button>
+            <button
+              class="ui mini primary button btn"
+              type="submit"
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DeleteTipsModal snapshot 2`] = `
+<body
+  class="dimmable dimmed"
+>
+  <div />
+  <div
+    class="ui page modals dimmer transition visible active"
+    style="display: flex;"
+  >
+    <div
+      class="ui mini modal transition visible active"
+      style="width: 400px;"
+    >
+      <div
+        class="content"
+      >
+        <div>
+          <div
+            class="modal-header"
+          >
+            <span
+              class="iconfont icon-warning-circle warning-circle"
+              customclass="warning-circle"
+              type="warning-circle"
+            />
+            <span
+              class="modal-header-text"
+            >
+              test title
+            </span>
+          </div>
+          <div
+            class="modal-content"
+          >
+            test content
+          </div>
+          <div
+            class="footer"
+          >
+            <button
+              class="ui mini basic button btn"
+              type="reset"
+            >
+              Cancel
+            </button>
+            <button
+              class="ui mini primary button btn"
+              type="submit"
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

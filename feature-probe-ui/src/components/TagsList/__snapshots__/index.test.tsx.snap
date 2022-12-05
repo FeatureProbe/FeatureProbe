@@ -1,0 +1,104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TagsList snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="tags-list"
+  >
+    <div
+      class="tags"
+    >
+      <span
+        class="tags-text"
+      >
+        test1
+      </span>
+    </div>
+    <div
+      class="tags"
+    >
+      <span
+        class="tags-text"
+      >
+        test2
+      </span>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`click TagsList more 1`] = `
+<body>
+  <div>
+    <div
+      class="tags-list"
+    >
+      <div
+        class="tags"
+      >
+        <span
+          class="tags-text"
+        >
+          test1
+        </span>
+      </div>
+      <span
+        class="tags-more"
+      >
+        +
+        1
+        ...
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`click TagsList more 2`] = `
+<body>
+  <div>
+    <div
+      class="tags-list"
+    >
+      <div
+        class="tags"
+      >
+        <span
+          class="tags-text"
+        >
+          test1
+        </span>
+      </div>
+      <span
+        class="tags-more"
+      >
+        +
+        1
+        ...
+      </span>
+    </div>
+  </div>
+  <div
+    style="display: flex; position: absolute; left: 0px; top: 0px; transform: translate(0px, 0px);"
+  >
+    <div
+      class="ui bottom center basic popup transition visible popup"
+      style="position: initial;"
+    >
+      <div
+        class="popup-list"
+      >
+        <div
+          class="tags"
+        >
+          <span
+            class="tags-text"
+          >
+            test2
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

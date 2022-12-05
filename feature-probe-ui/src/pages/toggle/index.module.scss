@@ -1,0 +1,264 @@
+.toggle {
+  position: relative;
+  padding: 0 20px;
+  min-width: 1200px;
+  overflow-x: auto;
+}
+
+.column-brief {
+  min-width: 320px;
+  padding-left: 32px !important;
+}
+
+.column-publishing-status {
+  min-width: 160px !important;
+}
+
+.column-status {
+  min-width: 80px;
+}
+
+.column-evaluated {
+  min-width: 200px;
+}
+
+.column-tags {
+  min-width: 60px;
+}
+
+.column-modify {
+  min-width: 240px;
+}
+
+.column-operation {
+  min-width: 110px;
+}
+
+.card {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
+  height: calc(100vh - 94px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  font-family: HelveticaNeue-Medium;
+  font-size: 20px;
+  color: #212529;
+  letter-spacing: 0;
+  text-align: justify;
+  line-height: 30px;
+  padding: 12px 24px;
+}
+
+.heading-archive {
+  font-family: HelveticaNeue-Medium;
+  font-size: 20px;
+  color: #212529;
+  letter-spacing: 0;
+  text-align: justify;
+  line-height: 30px;
+  background-image: url('images/archived.png');
+  background-repeat: repeat-x;
+  padding: 12px 24px;
+}
+
+.icon-back {
+  font-size: 20px !important;
+  cursor: pointer;
+  color: #000000;
+}
+
+.divider {
+  display: inline-block;
+  width: 1px;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.12);
+  margin: 0 12px;
+}
+
+.filter-form {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+
+  :global .ui.dropdown > .text {
+    vertical-align: middle;
+    height: 25px;
+    line-height: 25px !important;
+    margin: 0 !important;
+  }
+}
+
+.label {
+  text-align: left;
+  font-size: 13px;
+  color: #74788d;
+}
+
+.evaluation-field {
+  margin: 0 16px 0 0 !important;
+}
+
+.dropdown {
+  width: 170px !important;
+}
+
+.status-field {
+  margin: 0 16px 0 0 !important;
+}
+
+.status-dropdown {
+  width: 140px !important;
+}
+
+.permanent-dropdown {
+  width: 120px !important;
+}
+
+.permanent-field {
+  margin: 0 16px 0 0 !important;
+}
+
+.tags-field { 
+  margin: 0 16px 0 0 !important;
+}
+
+.keywords-field {
+  margin-bottom: 0 !important;
+  width: 280px !important;
+  position: absolute;
+  right: 24px;
+  bottom: 0;
+}
+
+.angle-down {
+  position: absolute;
+  right: 10px;
+  color: #74788d;
+  top: 9px;
+}
+
+.icon-search {
+  position: absolute;
+  right: 10px;
+  color: #74788d;
+  top: 8px;
+  -webkit-appearance: unset !important;
+}
+
+.dropdown-remove-icon {
+  font-size: 12px !important;
+  margin-left: 12px;
+  color: #74788d;
+}
+
+.add {
+  text-align: right;
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 24px;
+}
+
+.add-button {
+  font-size: 13px !important;
+}
+
+.lists {
+  position: relative;
+  margin: 16px 24px 0;
+  padding: 0 1px;
+  flex: 1 1;
+  overflow-x: auto;
+}
+
+.archived-img {
+  position: fixed;
+  right: -0;
+  top: 20px;
+  width: 160px;
+  z-index: 1;
+}
+
+.table-header {
+  position: sticky;
+  top: 0;
+  background: #f8f9fa;
+  height: 42px;
+  line-height: 42px;
+  font-size: 13px;
+  z-index: 1;
+
+  :global {
+    th {
+      padding-bottom: 0 !important
+    }
+  }
+}
+
+.table-body {
+  position: relative;
+  top: 1px;
+}
+
+.iconfont {
+  font-size: 12px !important;
+  margin-right: 4px;
+}
+
+.toggle-menu {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background: #556ee6;
+  border-radius: 6px;
+  color: #ffffff;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 32px;
+  margin-left: 4px;
+  cursor: pointer;
+}
+
+.toggle-menu:hover {
+  background-color: #4458B8;
+}
+
+.menu-angle-down {
+  font-size: 24px !important;
+}
+
+
+.popup {
+  padding: 8px 0 !important;
+  margin-top: 4px !important;
+  min-width: 180px !important;
+}
+
+.menu {
+  color: #212529;
+}
+
+.menu-item {
+  height: 32px;
+  line-height: 32px;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 12px;
+
+  :global {
+    .checkbox {
+      width: 100%;
+    }
+  }
+}
+
+.menu-item:hover {
+  background-color: #f8f9fa;
+}

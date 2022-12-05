@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NoData snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="no-data"
+  >
+    <div>
+      <img
+        alt="no-data"
+        class="no-data-image"
+        src="no-data.png"
+      />
+    </div>
+    <div>
+      No Data
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,0 +1,86 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+
+
+.ui.pagination.menu {
+  margin: 0em;
+  display: inline-flex;
+  vertical-align: middle;
+  border: none;
+  box-shadow: none;
+  min-height: 0;
+}
+
+.ui.pagination.menu .item::before{
+  background: transparent
+}
+
+.ui.pagination.menu .item:last-child {
+  border-radius: 0
+}
+.ui.compact.menu .item:last-child {
+  border-radius: 0
+}
+.ui.pagination.menu .item:last-child:before {
+  display: none;
+}
+
+.ui.pagination.menu .item {
+  min-width: 0;
+  text-align: center;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px
+}
+
+.ui.link.menu .item:hover,
+.ui.menu .dropdown.item:hover,
+.ui.menu .link.item:hover,
+.ui.menu a.item:hover {
+  cursor: pointer;
+  background: #556ee6;
+  color: #ffffff;
+  border-radius: 100%;
+}
+
+.ui.pagination.menu .icon.item i.icon {
+  vertical-align: top;
+}
+
+.ui.pagination.menu .item:last-child {
+  border-radius: 100%;
+}
+
+/* Active */
+.ui.pagination.menu .active.item {
+  box-shadow: none;
+  background: #556ee6;
+  border: 1px solid #556ee6;
+  border-radius: 100%;
+  color: #ffffff;
+  padding: 0;
+}
+
+
+.ui.secondary.pointing.menu {
+  border-bottom: none;
+}
+
+.ui.secondary.pointing.menu .active.item {
+  background-color: transparent;
+  box-shadow: none;
+  border-color: #556ee6;
+  color: #556ee6;
+  border-bottom-width: 2px;
+}
+
+.ui.secondary.menu .item {
+  padding: 12px 0 !important;
+  margin-right: 24px !important;
+}

@@ -1,0 +1,93 @@
+{
+  "content": [
+    {
+      "projectKey": "My_First_Project",
+      "environmentKey": "jianggangkey",
+      "toggleKey": "json_test2",
+      "comment": "test",
+      "content": {
+        "rules": [],
+        "disabledServe": {
+          "select": 0
+        },
+        "defaultServe": {
+          "select": 0
+        },
+        "variations": [
+          {
+            "value": "{}",
+            "name": "variation1",
+            "description": ""
+          },
+          {
+            "value": "{}",
+            "name": "variation2",
+            "description": ""
+          }
+        ]
+      },
+      "disabled": false,
+      "version": 2,
+      "createdTime": "2022-11-16T10:22:29.000+08:00",
+      "createdBy": "Admin",
+      "approvalStatus": "PASS",
+      "approvalBy": "Admin",
+      "approvalTime": "2022-11-16T10:22:20.000+08:00",
+      "approvalComment": "test"
+    },
+    {
+      "projectKey": "My_First_Project",
+      "environmentKey": "jianggangkey",
+      "toggleKey": "json_test2",
+      "comment": "",
+      "content": {
+        "rules": [],
+        "disabledServe": {
+          "select": 0
+        },
+        "defaultServe": {},
+        "variations": [
+          {
+            "value": "{}",
+            "name": "variation1",
+            "description": ""
+          },
+          {
+            "value": "{}",
+            "name": "variation2",
+            "description": ""
+          }
+        ]
+      },
+      "disabled": true,
+      "version": 1,
+      "createdTime": "2022-11-15T17:07:07.000+08:00",
+      "createdBy": "Admin"
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "sorted": true,
+      "unsorted": false,
+      "empty": false
+    },
+    "pageNumber": 0,
+    "pageSize": 10,
+    "offset": 0,
+    "paged": true,
+    "unpaged": false
+  },
+  "totalPages": 1,
+  "last": true,
+  "totalElements": 2,
+  "sort": {
+    "sorted": true,
+    "unsorted": false,
+    "empty": false
+  },
+  "first": true,
+  "numberOfElements": 2,
+  "size": 10,
+  "number": 0,
+  "empty": false
+}

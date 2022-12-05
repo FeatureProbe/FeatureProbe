@@ -1,0 +1,65 @@
+.member {
+  background: #ffffff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
+  border-radius: 12px 12px 0 0;
+  height: calc(100vh - 64px);
+  margin: 16px 20px 0;
+  padding: 12px 24px 24px;
+  min-height: 730px;
+  position: relative;
+  min-width: 1200px;
+  overflow-x: auto;
+}
+
+.heading {
+  font-family: HelveticaNeue-Medium;
+  font-size: 20px;
+  color: #212529;
+  letter-spacing: 0;
+  text-align: justify;
+  line-height: 30px;
+}
+
+.add {
+  text-align: right;
+  margin-top: 16px;
+}
+
+.add-button {
+  font-size: 13px !important;
+}
+
+.iconfont {
+  font-size: 12px !important;
+  margin-right: 4px;
+}
+
+.lists {
+  margin-top: 16px;
+}
+
+.table-header {
+  background: #f8f9fa;
+  height: 42px;
+  line-height: 42px;
+  font-size: 13px;
+  
+  :global {
+    th {
+      padding-bottom: 0 !important;
+    }
+
+    th:first-child {
+      padding-left: 24px !important;
+      padding-bottom: 0 !important;
+    }
+  }
+}
+
+.table-header > .ui.table thead th {
+  padding: 0 !important
+}
+
+.total-count {
+  font-size: 14px;
+}

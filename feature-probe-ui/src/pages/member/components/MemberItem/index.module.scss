@@ -1,0 +1,66 @@
+.list-item {
+  cursor: pointer;
+  outline: 1px solid transparent;
+  height: 52px;
+}
+
+.list-item:hover {
+  outline: 1px solid #556ee6;
+  background: rgba(85, 110, 230, 0.04);
+  border-radius: 8px !important;
+  -moz-outline-radius: 8px;
+}
+
+.member-name {
+  padding-left: 24px;
+  font-family: HelveticaNeue-Medium;
+  font-size: 15px;
+  color: #495057;
+}
+
+.member-created-by {
+  font-size: 15px;
+  color: #495057;
+}
+
+.member-last-seen {
+  font-size: 15px;
+  color: #495057;
+}
+
+.member-operation {
+  display: flex;
+  min-width: 100px;
+  margin-right: 24px;
+}
+
+.member-operation-item {
+  color: #556ee6;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.member-operation-item:first-child {
+  margin-right: 32px;
+}
+
+.warning-circle {
+  font-size: 24px !important;
+  color: #ffc300;
+  padding: 0 10px;
+  vertical-align: middle;
+}
+
+.modal-header-text {
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.87);
+  vertical-align: middle;
+}
+
+.modal-content {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 8px;
+  margin-left: 40px;
+}

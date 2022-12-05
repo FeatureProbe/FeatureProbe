@@ -1,0 +1,16 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+.ui.mini.input {
+  font-size: 13px;
+}
+
+.ui.mini.input  >  input {
+  height: 27px !important;
+  padding: 0 12px;
+}
+
+.ui.input > input::-webkit-input-placeholder {
+  font-size: 12px;
+}

@@ -1,0 +1,18 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+.ui.breadcrumb a {
+  color: #74788d;
+}
+.ui.breadcrumb a:hover {
+  color: @linkHoverColor;
+}
+
+.ui.breadcrumb {
+  font-size: 12px;
+}
+
+.ui.breadcrumb .active.section {
+  color: #495057;
+}

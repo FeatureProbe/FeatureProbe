@@ -1,0 +1,29 @@
+.popup {
+  width: 300px;
+}
+
+.content {
+  font-family: HelveticaNeue-Medium;
+  font-size: 16px;
+  color: rgba(0,0,0,0.87);
+  line-height: 24px;
+  display: flex;
+  padding: 8px 10px 0;
+}
+
+.iconfont {
+  color: #f5483b;
+  font-size: 20px !important;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.btn-group {
+  margin-top: 16px;
+  text-align: right;
+  padding: 0 10px 8px;
+}
+
+.btn-cancel {
+  margin-right: 8px !important;
+}

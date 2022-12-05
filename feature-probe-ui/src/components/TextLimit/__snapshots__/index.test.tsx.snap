@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextLimit snapshot 1`] = `
+<DocumentFragment>
+  <span
+    class="limit-str-container-n"
+    style="max-width: 100%;"
+  >
+    These a...
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TextLimit snapshot 2`] = `
+<DocumentFragment>
+  <span
+    class="limit-str-container-w"
+    style="max-width: 40px;"
+  >
+    These are test words.
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TextLimit snapshot 3`] = `
+<DocumentFragment>
+  <span
+    class="limit-str-container-n"
+    style="max-width: 100%;"
+  >
+    These are test words.
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TextLimit snapshot 4`] = `
+<DocumentFragment>
+  <span
+    class="limit-str-container-w"
+    style="max-width: 1000px;"
+  >
+    These are test words.
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TextLimit text maxLenth test 1`] = `
+<body>
+  <div>
+    <span
+      class="limit-str-container-n"
+      style="max-width: 100%;"
+    >
+      This is...
+    </span>
+  </div>
+  <div
+    style="display: flex; position: absolute; left: 0px; top: 0px; bottom: 0px; transform: translate(0px, 0px);"
+  >
+    <div
+      class="ui top left very wide inverted popup transition visible popup-override"
+      style="position: initial;"
+    >
+      <div
+        class="content"
+      >
+        This is a test text.
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`TextLimit text maxWidth test 1`] = `
+<body>
+  <div>
+    <span
+      class="limit-str-container-w"
+      style="max-width: 50px;"
+    >
+      This is a test text.
+    </span>
+  </div>
+</body>
+`;

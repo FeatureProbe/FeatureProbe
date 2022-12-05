@@ -1,0 +1,161 @@
+.segments {
+  position: relative;
+  padding: 0 20px;
+  min-width: 1220px;
+  height: calc(100vh - 94px);
+  overflow: auto;
+}
+
+.column-name {
+  min-width: 380px;
+  padding-bottom: 0 !important;
+  padding-left: 24px !important;
+}
+
+.column-modify-by {
+  min-width: 240px;
+  padding-bottom: 0 !important;
+}
+
+.column-modify-time {
+  min-width: 240px;
+  padding-bottom: 0 !important;
+}
+
+.column-operation {
+  min-width: 110px;
+  padding-bottom: 0 !important;
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 12px 24px 24px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
+  min-height: calc(100vh - 94px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 12px 12px 0 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  font-family: HelveticaNeue-Medium;
+  font-size: 20px;
+  color: #212529;
+  letter-spacing: 0;
+  text-align: justify;
+  line-height: 30px;
+}
+
+.filter-form {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+
+  :global .ui.dropdown > .text {
+    vertical-align: middle;
+    height: 25px;
+    line-height: 25px !important;
+    margin: 0 !important;
+  }
+}
+
+.label {
+  text-align: left;
+  font-size: 13px;
+  color: #74788d;
+}
+
+.evaluation-field {
+  margin: 0 16px 0 0 !important;
+}
+
+.dropdown {
+  width: 170px !important;
+}
+
+.status-field {
+  margin: 0 16px 0 0 !important;
+}
+
+.status-dropdown {
+  width: 140px !important;
+}
+
+.tags-field { 
+  margin: 0 16px 0 0 !important;
+}
+
+.keywords-field {
+  margin-bottom: 0 !important;
+  width: 280px !important;
+}
+
+.angle-down {
+  position: absolute;
+  right: 10px;
+  color: #74788d;
+  top: 9px;
+}
+
+.icon-search {
+  position: absolute;
+  right: 10px;
+  color: #74788d;
+  top: 8px;
+  -webkit-appearance: unset !important;
+}
+
+.dropdown-remove-icon {
+  font-size: 12px !important;
+  margin-left: 12px;
+  color: #74788d;
+}
+
+.add {
+  text-align: right;
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.add-button {
+  font-size: 13px !important;
+}
+
+.lists {
+  margin-top: 16px;
+  flex: 1;
+  position: relative;
+
+  & > .table-box {
+    overflow-x: auto;
+  }
+}
+
+.table {
+  padding: 0 1px;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+}
+
+.table-header {
+  background: #f8f9fa;
+  height: 42px;
+  line-height: 42px;
+  font-size: 13px;
+}
+
+.table-header > .ui.table thead th {
+  padding: 0 !important
+}
+
+.iconfont {
+  font-size: 12px !important;
+  margin-right: 4px;
+}

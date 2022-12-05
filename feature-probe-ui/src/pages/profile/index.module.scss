@@ -1,0 +1,67 @@
+.profile {
+  background: #ffffff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
+  border-radius: 12px 12px 0 0;
+  min-height: calc(100vh - 64px);
+  margin: 16px 20px 0;
+  padding: 12px 24px 24px;
+  min-width: 600px;
+  overflow-x: auto;
+}
+
+.heading {
+  font-family: HelveticaNeue-Medium;
+  font-size: 20px;
+  color: #212529;
+  letter-spacing: 0;
+  text-align: justify;
+  line-height: 30px;
+}
+
+.section {
+  margin: 12px 0 24px;
+  width: 536px;
+}
+
+.field {
+  margin-top: 12px !important;
+}
+
+.label {
+  color: #74788d !important;
+  padding-left: 8px;
+}
+
+.btn {
+  width: 160px !important;
+}
+
+.tip-text {
+  color: #74788d;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  transform: scale(0.83);
+  transform-origin: left center;
+  padding-left: 12px;
+}
+
+.error-text {
+  color: #f46a6a;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  transform: scale(0.83);
+  transform-origin: left;
+  padding-left: 12px;
+}
+
+.demo-tips {
+  margin-top: 12px;
+  background: #fffae0;
+  line-height: 18px;
+  font-size: 13px;
+  color: #592d00;
+  padding: 7px 20px;
+  border-radius: 8px;
+}

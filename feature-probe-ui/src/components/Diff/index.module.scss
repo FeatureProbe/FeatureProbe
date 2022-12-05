@@ -1,0 +1,126 @@
+:global {
+  .diff {
+    height: 100%;
+  }
+
+  .d2h-file-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    &::before {
+      display: block;
+      flex-grow: 1;
+      content: 'Before';
+      color: #212529;
+      padding: 0 24px;
+    }
+
+    &::after {
+      display: block;
+      flex-grow: 1;
+      content: 'After';
+      color: #212529;
+      padding: 0 24px;
+    }
+  }
+
+  .d2h-file-name-wrapper {
+    display: none !important;
+  }
+
+  .d2h-wrapper {
+    height: 100%;
+  }
+
+  .d2h-info {
+    display: none;
+  }
+
+  .d2h-files-diff {
+    height: calc(100% - 35px);
+  }
+
+  .d2h-file-wrapper {
+    height: 100%;
+    border-top: 1px solid rgba(206, 212, 218, 0.6) !important;
+    border-bottom: 1px solid rgba(206, 212, 218, 0.6) !important;
+    border-radius: 0;
+    margin-bottom: 0 !important;
+  }
+
+  .d2h-diff-tbody {
+    border-spacing: 0;
+  }
+
+  .d2h-del {
+    background-color: #fff5f4 !important;
+  }
+
+  .d2h-code-line del,
+  .d2h-code-side-line del {
+    background-color: #ffd4d0 !important;
+  }
+
+  .d2h-ins {
+    background-color: #effcf2 !important;
+  }
+
+  .d2h-code-line ins,
+  .d2h-code-side-line ins {
+    background-color: #c2f6ce !important;
+  }
+
+  .d2h-code-side-linenumber {
+    position: sticky !important;
+    left: 0;
+    display: table-cell !important;
+    padding-left: 2.2em !important;
+    padding-right: 0.5em !important;
+    border: 0 !important;
+    color: #303a51 !important;
+  }
+
+  .d2h-code-side-line {
+    padding: 0 !important;
+    width: unset !important;
+  }
+
+  .d2h-change {
+    width: 100%;
+  }
+
+  .d2h-code-line-prefix {
+    display: inline-block;
+    margin: 0 5px;
+    font-size: 14px;
+  }
+
+  .d2h-file-side-diff {
+    height: 100%;
+    width: 100%;
+    margin-right: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    flex-grow: 1;
+
+    &:first-child {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      width: calc(50% - 10px);
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    & > .d2h-code-wrapper {
+      overflow-x: auto !important;
+      width: 100%;
+
+      & .d2h-code-side-linenumber {
+        background-color: #f8f9fa;
+      }
+    }
+  }
+}
