@@ -48,8 +48,10 @@ jobs:
             --output "type=image,push=true" \
             --tag featureprobe/api:${GITHUB_REF#refs/tags/} \
             --tag featureprobe/api:latest \
-            --file ./feature-probe-api/Dockerfile ./
+            --file ./Dockerfile ./
+        working-directory: ./feature-probe-api
       -
         name: Inspect image
         run: |
           docker buildx imagetools inspect featureprobe/api
+        working-directory: ./feature-probe-api
