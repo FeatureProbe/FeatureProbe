@@ -20,6 +20,6 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B verify --file /feature-probe-api/pom.xml
+      run: mvn -B verify --file ./feature-probe-api/pom.xml
     - name: Upload coverage reports to Codecov with GitHub Action
       uses: codecov/codecov-action@v2
