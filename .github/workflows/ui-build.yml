@@ -25,12 +25,16 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cd feature-probe-ui
     - run: yarn install --frozen-lockfile
+      working-directory: ./feature-probe-ui
     - run: yarn build
+      working-directory: ./feature-probe-ui
     - run: yarn test:cov
+      working-directory: ./feature-probe-ui
     
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: "./feature-probe-ui/coverage/lcov.info"
+        
