@@ -25,6 +25,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+    - run: cd feature-probe-ui
     - run: yarn install --frozen-lockfile
     - run: yarn build
     - run: yarn test:cov
