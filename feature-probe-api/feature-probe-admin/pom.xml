@@ -275,8 +275,17 @@
                             <goal>install-node-and-yarn</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v16.9.1</nodeVersion>
+                            <nodeVersion>v16.13.1</nodeVersion>
                             <yarnVersion>v1.22.19</yarnVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>yarn config</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>config set ignore-engines true</arguments>
                         </configuration>
                     </execution>
                     <execution>
