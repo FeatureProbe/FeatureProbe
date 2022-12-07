@@ -106,7 +106,7 @@
   "common.user.text": "用户",
   "common.tokens.text": "Access Tokens",
   "common.token.text": "Access Token",
-  "common.secret.key.text": "密钥",
+  "common.secret.key.text": "密钥",  
   
   "header.getuser.error.text": "无法获取用户信息!",
 
@@ -323,6 +323,7 @@
   "targeting.view.more": "查看更多",
   "targeting.semver.explain": "什么是语义版本？",
   "targeting.semver.more": "查看详情",
+  "targeting.rule.not.empty": "请添加至少一个规则条件",
 
   "targeting.approval.tips": "支持为该项目统一设置审批人",
   "targeting.approval.operation.skip.approval": "跳过审批并发布",

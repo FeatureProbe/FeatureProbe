@@ -323,6 +323,8 @@
   "targeting.view.more": "Load more",
   "targeting.semver.explain": "What is semver?",
   "targeting.semver.more": "Learn more",
+  "targeting.rule.not.empty": "Please add a rule condition",
+
 
   "targeting.approval.tips": "Owner can set approval reviewers for this environment.",
   "targeting.approval.operation.skip.approval": "Skip Approval and Publish",
