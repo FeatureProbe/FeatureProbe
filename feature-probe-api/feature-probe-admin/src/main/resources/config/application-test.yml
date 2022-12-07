@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    jdbc-url: jdbc:mysql://127.0.0.1:3306/feature_probe?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&rewriteBatchedStatements=TRUE&useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
-    password: root
+    jdbc-url: jdbc:mysql://10.179.79.60:4859/feature_probe?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&rewriteBatchedStatements=TRUE&useSSL=false&serverTimezone=Asia/Shanghai
+    username: didi_CUxV
+    password: 7HmeTHLIw
     type: com.zaxxer.hikari.HikariDataSource
     initialization-mode: always
     continue-on-error: true
@@ -17,7 +17,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL57InnoDBDialect
@@ -33,7 +33,9 @@ logging:
     org.hibernate.type.descriptor.sql.BasicBinder: info
   config: classpath:logback/logback.xml
   file:
-    path: ./logs
+#    path: /logs
+
+
 
 app:
   toggle-deadline: 30
@@ -46,8 +48,6 @@ app:
       private-key-passphrase: password
       exclude-tenant-uri:
         - /api/server/**
-        - /actuator/health
-        - /api/login
-        - /api/guestLogin
       guest-disabled: true
       guest-default-password: Guest_12345
+

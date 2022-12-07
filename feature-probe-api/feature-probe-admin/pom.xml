@@ -280,15 +280,6 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>yarn config</id>
-                        <goals>
-                            <goal>yarn</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>config set ignore-engines true</arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>yarn install</id>
                         <goals>
                             <goal>yarn</goal>
