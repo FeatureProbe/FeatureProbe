@@ -1,6 +1,6 @@
-import { useCallback, SyntheticEvent, useEffect } from 'react';
+import { useCallback, SyntheticEvent, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Form, InputOnChangeData } from 'semantic-ui-react';
+import { Form, InputOnChangeData, Modal } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useForm } from 'react-hook-form';
 import Button from 'components/Button';
@@ -16,6 +16,9 @@ import { IUserInfo } from 'interfaces/member';
 import styles from './index.module.scss';
 
 const Login = () => {
+  const [ left, saveLeft ] = useState<number>((document.body.clientWidth - 655) / 2);
+  const [ videoOpen, setVideoOpen ] = useState<boolean>(false);
+
   const history = useHistory();
   const intl = useIntl();
   const location = useLocation();
@@ -27,6 +30,18 @@ const Login = () => {
     setValue,
     trigger,
   } = useForm();
+
+  useEffect(() => {
+    const handleResize = () => {
+      saveLeft((document.body.clientWidth - 655) / 2);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     EventTrack.pageView(location.pathname);
@@ -91,6 +106,36 @@ const Login = () => {
 
 	return (
 		<div className={styles.login}>
+      <Modal
+        closeIcon={
+          <span className={styles['modal-close']}>
+            <Icon type='close' customclass={styles['icon-close']} />
+          </span>
+        }
+        onClose={() => setVideoOpen(false)}
+        onOpen={() => setVideoOpen(true)}
+        open={videoOpen}
+        className={styles['video-modal']}
+        trigger={
+          <div className={styles['player']} style={{left: left}}>
+            <div className={styles['player-box']}>
+              <img src={require('images/play.png')} alt='play' className={styles['player-image']} />
+            </div>
+          </div>
+        }
+      >
+        <div className={styles['modal-content']}>
+          <iframe
+            width={'100%'}
+            height={'100%'}
+            title='featureprobe'
+            src="//player.bilibili.com/player.html?bvid=BV1GG4y1R7oH&page=1" 
+            scrolling="no" 
+            frameBorder="no" 
+            allowFullScreen={true}
+          />
+        </div>
+      </Modal>
       <div className={`${styles['login-card']} login-card`}>
         <div className={styles.product}>
           <img className={styles.logo} src={logo} alt='logo' />
