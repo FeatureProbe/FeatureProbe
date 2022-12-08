@@ -42,7 +42,7 @@ const Diff: React.FC<DiffProps> = (props) => {
   }, [ref, props.maxHeight]);
 
   return (
-    <div>
+    <div className={styles.box}>
       <div className={styles.tips}>
         <Icon type="warning-circle" customclass={styles['warning-circle']} />
         <FormattedMessage id="common.diff.tips" />
