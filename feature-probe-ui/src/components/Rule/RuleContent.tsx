@@ -8,6 +8,7 @@ import Condition from './condition';
 import { IRule, ICondition, IOption } from 'interfaces/targeting';
 import { IContainer } from 'interfaces/provider';
 import { STRING_TYPE, NUMBER_TYPE, SEMVER_TYPE, DATETIME_TYPE, SEGMENT_TYPE } from './constants';
+import { useFormErrorScrollIntoView } from 'hooks';
 import styles from './index.module.scss';
 
 interface IProps {
@@ -36,6 +37,11 @@ const RuleContent = (props: IProps) => {
   } = props;
 
   const intl = useIntl();
+  const { registerErrorName } = useFormErrorScrollIntoView();
+
+  const {
+    formState: { errors },
+  } = hooksFormContainer.useContainer();
 
   let variations;
 
@@ -54,6 +60,15 @@ const RuleContent = (props: IProps) => {
     },
     {
       [styles['rule-add-one']]: rule.conditions.length === 0
+    }
+  );
+
+  const btnCls = classNames(
+    {
+      [styles['rule-add-btn']]: true
+    },
+    {
+      [styles['rule-add-btn-error']]: !!errors[`rule_${rule.id}_add`]
     }
   );
 
@@ -80,7 +95,12 @@ const RuleContent = (props: IProps) => {
         })
       }
 
-      <div className={ruleAddCls}>
+      <div 
+        {
+          ...registerErrorName(`rule_${rule.id}_add`)
+        } 
+        className={ruleAddCls}
+      >
         <Popup
           basic
           hoverable
@@ -88,10 +108,18 @@ const RuleContent = (props: IProps) => {
           position='bottom right'
           className={styles.popup}
           trigger={
-            <Button type='button' secondary className={styles['rule-add-btn']} disabled={disabled}>
-              <Icon type='add' customclass={styles.iconfont} />
-              <FormattedMessage id='common.add.text' />
-            </Button>
+            <div>
+              <Button type='button' secondary className={btnCls} disabled={disabled}>
+                <Icon type='add' customclass={styles.iconfont} />
+                <FormattedMessage id='common.add.text' />
+              </Button>
+              {
+                errors[`rule_${rule.id}_add`] &&
+                  <div className={`error-text-normal ${styles['rule-add-error']}`}>
+                    { intl.formatMessage({id: 'targeting.rule.not.empty'}) }
+                  </div>
+              }
+            </div>
           }
         >
           <div className={styles['menu']}>
@@ -117,7 +145,6 @@ const RuleContent = (props: IProps) => {
           </div>
         </Popup>
       </div>
-
       {
         variations && (
           <Serve
