@@ -47,5 +47,7 @@ app:
       exclude-tenant-uri:
         - /api/server/**
         - /actuator/health
+        - /api/login
+        - /api/guestLogin
       guest-disabled: true
       guest-default-password: Guest_12345

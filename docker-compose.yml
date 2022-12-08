@@ -24,7 +24,7 @@ services:
     depends_on:
       - database
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:4008/api/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:4008/actuator/health"]
       timeout: 5s
       interval: 10s
       retries: 10
