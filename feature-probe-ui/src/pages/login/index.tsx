@@ -107,6 +107,7 @@ const Login = () => {
 	return (
 		<div className={styles.login}>
       <Modal
+        closeOnDimmerClick={false}
         closeIcon={
           <span className={styles['modal-close']}>
             <Icon type='close' customclass={styles['icon-close']} />
@@ -118,9 +119,11 @@ const Login = () => {
         className={styles['video-modal']}
         trigger={
           <div className={styles['player']} style={{left: left}}>
-            <div className={styles['player-box']}>
-              <img src={require('images/play.png')} alt='play' className={styles['player-image']} />
-            </div>
+            <EventTracker category='login' action='play-video'>
+              <div className={styles['player-box']}>
+                <img src={require('images/play.png')} alt='play' className={styles['player-image']} />
+              </div>
+            </EventTracker>
           </div>
         }
       >
