@@ -152,6 +152,8 @@
   "members.defalut.password": "默认密码",
   "members.owner.auth.text": "成员可以阅读和修改平台的所有内容。",
   "members.writer.auth.text": "成员可以阅读所有内容并对平台进行更改，但无法管理项目、环境及帐户成员信息。",
+  "members.card.writer.tips": "Writer可以阅读所有内容并对平台进行更改，但无法管理项目、环境及帐户成员信息。",
+  "members.card.owner.tips": "Owner可以阅读和修改平台的所有内容，且拥有所有开关审批的「撤回」和「放弃变更」的权限",
 
   "profile.my.profile": "我的账户",
   "profile.change.password": "修改密码",
@@ -373,6 +375,7 @@
   "segments.delete.success": "人群组删除成功",
   "segments.delete.error": "人群组删除失败，请重试",
   "segments.label.name.text": "人群组名称",
+  "segments.card.tips": "常用人群可以设立单独的用户组，方便在开关配置中反复选用",
   
   "toggle.connect": "连接SDK",
   "connect.description": "将应用程序连接到FeatureProbe！",
