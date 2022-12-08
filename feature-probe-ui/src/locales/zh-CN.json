@@ -106,7 +106,8 @@
   "common.user.text": "用户",
   "common.tokens.text": "Access Tokens",
   "common.token.text": "Access Token",
-  "common.secret.key.text": "密钥",
+  "common.secret.key.text": "密钥",  
+  "common.diff.tips": "以下为本次变更内容的前后对比，仅用于展示，无须进行其他操作。",
   
   "header.getuser.error.text": "无法获取用户信息!",
 
@@ -152,8 +153,6 @@
   "members.defalut.password": "默认密码",
   "members.owner.auth.text": "成员可以阅读和修改平台的所有内容。",
   "members.writer.auth.text": "成员可以阅读所有内容并对平台进行更改，但无法管理项目、环境及帐户成员信息。",
-  "members.card.writer.tips": "Writer可以阅读所有内容并对平台进行更改，但无法管理项目、环境及帐户成员信息。",
-  "members.card.owner.tips": "Owner可以阅读和修改平台的所有内容，且拥有所有开关审批的「撤回」和「放弃变更」的权限",
 
   "profile.my.profile": "我的账户",
   "profile.change.password": "修改密码",
@@ -480,6 +479,8 @@
   "guide.global.step1.enter": "切换查看不同项目「开关列表」的入口",
   "guide.global.step2.title": "切换环境",
   "guide.global.step2.env": "点击可切换环境，查看不同环境下的开关信息",
+  "guide.global.step3.title": "人群组",
+  "guide.global.step3.env": "常用人群可以设立为单独的人群组，方便在开关配置的「规则」中反复选用",
   
   "guide.creat.toggle.step1.title": "客户端SDK",
   "guide.creat.toggle.step1.sdk1": "如果该开关后续会用到客户端SDK，请选择“使用”",

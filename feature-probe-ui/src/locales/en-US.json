@@ -107,6 +107,7 @@
   "common.tokens.text": "Access tokens", 
   "common.token.text": "Access token", 
   "common.secret.key.text": "Secret key",
+  "common.diff.tips": "The following is a before and after comparison of this change and is for demonstration purposes only, no other action is required.",
 
   "header.getuser.error.text": "Error getting user profile",
 
@@ -152,8 +153,6 @@
   "members.defalut.password": "Default password",
   "members.owner.auth.text": "Members can read and modify all contents of the platform.",
   "members.writer.auth.text": "Members can read all content and make changes to the platform, but cannot manage project, environment, and account member information.",
-  "members.card.writer.tips": "Writer can read all content and make changes to the platform, but cannot manage project, environment, and account member information.",
-  "members.card.owner.tips": "Owner read and modify all content on the platform and has the right to 'withdraw' and 'abandon changes' to all switch approvals",
 
   "profile.my.profile": "My profile",
   "profile.change.password": "Change password",
@@ -375,7 +374,7 @@
   "segments.delete.success": "Segment deleted successfully",
   "segments.delete.error": "Error, segment was not deleted, please retry!",
   "segments.label.name.text": "Segment name",
-  "segments.card.tips": "Separate user groups can be set up for frequently used groups, making it easy to select them repeatedly in the switch configuration",
+  "segments.card.tips": "Commonly used members can be set up as segment, which can be repeatedly selected in the 'rules' of the switch configuration",
 
   "toggle.connect": "Connect SDK",
   "connect.description": "Connect your application to FeatureProbe!",
@@ -480,6 +479,8 @@
   "guide.global.step1.enter": "Switch the entry for viewing the toggles of different projects",
   "guide.global.step2.title": "Switch environment",
   "guide.global.step2.env": "Click to switch the environment and view the toggles information in different environments",
+  "guide.global.step3.title": "Segment",
+  "guide.global.step3.env": "Commonly used members can be set up as segment, which can be repeatedly selected in the 'rules' of the switch configuration",
   
   "guide.creat.toggle.step1.title": "Client SDK",
   "guide.creat.toggle.step1.sdk1": "If this toggle will later use the client SDK, please select [Yes]",

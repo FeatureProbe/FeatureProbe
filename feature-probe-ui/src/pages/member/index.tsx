@@ -83,8 +83,8 @@ const Member = () => {
                 <div className={styles['card-tips']}>
                 <Icon type="warning-circle" customclass={styles['warning-circle']} />
                 <div className={styles['text']}>
-                  <div><FormattedMessage id='members.card.writer.tips' /></div>
-                  <div><FormattedMessage id='members.card.owner.tips' /></div>
+                  <div>Writer<FormattedMessage id='members.writer.auth.text' /></div>
+                  <div>Owner<FormattedMessage id='members.owner.auth.text' /></div>
                 </div>
               </div>
                 {

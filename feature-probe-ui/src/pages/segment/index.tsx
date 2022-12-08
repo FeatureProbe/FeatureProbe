@@ -165,53 +165,55 @@ const Segment = () => {
                 <Loading />
               </div>
             ) : (
-              <div className={styles.lists}>
-                <div className={styles['table-box']}>
-                  <Table className={styles.table} basic="very" unstackable>
-                    <Table.Header className={styles['table-header']}>
-                      <Table.Row>
-                        <Table.HeaderCell className={styles['column-name']}>
-                          <FormattedMessage id="common.name.text" />
-                        </Table.HeaderCell>
-                        <Table.HeaderCell className={styles['column-modify-by']}>
-                          <FormattedMessage id="common.key.text" />
-                        </Table.HeaderCell>
-                        <Table.HeaderCell className={styles['column-modify-time']}>
-                          <FormattedMessage id="common.description.text" />
-                        </Table.HeaderCell>
-                        <Table.HeaderCell className={styles['column-operation']}>
-                          <FormattedMessage id="common.operation.text" />
-                        </Table.HeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    {segmentList.length !== 0 && (
-                      <Table.Body>
-                        {segmentList?.map((segment: ISegment) => {
-                          return (
-                            <SegmentItem
-                              key={segment.key}
-                              segment={segment}
-                              fetchSegmentLists={fetchSegmentLists}
-                              handleEdit={handleEdit}
-                              handleClickItem={handleClickItem}
-                            />
-                          );
-                        })}
-                      </Table.Body>
-                    )}
-                  </Table>
-                  {segmentList.length !== 0 ? (
-                    <Pagination
-                      total={total}
-                      text={intl.formatMessage({ id: 'segments.total' })}
-                      pagination={pagination}
-                      handlePageChange={handlePageChange}
-                    />
-                  ) : (
-                    <NoData />
-                  )}
+              <>
+                <div className={styles.lists}>
+                  <div className={styles['table-box']}>
+                    <Table className={styles.table} basic="very" unstackable>
+                      <Table.Header className={styles['table-header']}>
+                        <Table.Row>
+                          <Table.HeaderCell className={styles['column-name']}>
+                            <FormattedMessage id="common.name.text" />
+                          </Table.HeaderCell>
+                          <Table.HeaderCell className={styles['column-modify-by']}>
+                            <FormattedMessage id="common.key.text" />
+                          </Table.HeaderCell>
+                          <Table.HeaderCell className={styles['column-modify-time']}>
+                            <FormattedMessage id="common.description.text" />
+                          </Table.HeaderCell>
+                          <Table.HeaderCell className={styles['column-operation']}>
+                            <FormattedMessage id="common.operation.text" />
+                          </Table.HeaderCell>
+                        </Table.Row>
+                      </Table.Header>
+                      {segmentList.length !== 0 && (
+                        <Table.Body>
+                          {segmentList?.map((segment: ISegment) => {
+                            return (
+                              <SegmentItem
+                                key={segment.key}
+                                segment={segment}
+                                fetchSegmentLists={fetchSegmentLists}
+                                handleEdit={handleEdit}
+                                handleClickItem={handleClickItem}
+                              />
+                            );
+                          })}
+                        </Table.Body>
+                      )}
+                    </Table>
+                  </div>
                 </div>
-              </div>
+                {segmentList.length !== 0 ? (
+                  <Pagination
+                    total={total}
+                    text={intl.formatMessage({ id: 'segments.total' })}
+                    pagination={pagination}
+                    handlePageChange={handlePageChange}
+                  />
+                ) : (
+                  <NoData />
+                )}
+              </>
             )}
           </div>
           <SegmentDrawer

@@ -128,17 +128,22 @@
 
 .lists {
   margin-top: 16px;
-  flex: 1;
   position: relative;
+  overflow-x: auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 2px;
 
   & > .table-box {
-    overflow-x: auto;
+    position: relative;
+    padding: 2px 1px;
+    margin-top: 12px;
+    flex: 1 1;
   }
 }
 
 .table {
-  padding: 0 1px;
-
   &::-webkit-scrollbar {
     width: 10px;
   }
