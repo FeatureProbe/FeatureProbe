@@ -28,7 +28,7 @@
 }
 
 .card {
-  background-color: #ffffff;
+  background-color: #fff;
   padding: 12px 24px 24px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
   min-height: calc(100vh - 94px);
@@ -47,6 +47,24 @@
   letter-spacing: 0;
   text-align: justify;
   line-height: 30px;
+}
+
+.card-tips {
+  display: flex;
+  line-height: 20px;
+  background: #fffae0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 12px;
+
+  & > .text {
+    font-family: PingFangSC-Regular, Arial;
+    font-size: 13px;
+    color: #592d00;
+    flex: 1 1;
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
 }
 
 .filter-form {
@@ -163,24 +181,6 @@
 .iconfont {
   font-size: 12px !important;
   margin-right: 4px;
-}
-
-.card-tips {
-  display: flex;
-  line-height: 20px;
-  background: #fffae0;
-  border-radius: 8px;
-  padding: 8px 12px;
-  margin-top: 12px;
-
-  & > .text {
-    font-family: PingFangSC-Regular;
-    font-size: 13px;
-    color: #592d00;
-    flex: 1 1;
-    overflow: hidden;
-    overflow-wrap: break-word;
-  }
 }
 
 .warning-circle {
