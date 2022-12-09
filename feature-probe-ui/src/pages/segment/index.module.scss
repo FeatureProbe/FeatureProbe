@@ -41,7 +41,7 @@
 }
 
 .heading {
-  font-family: HelveticaNeue-Medium;
+  font-family: HelveticaNeue-Medium, Arial, Helvetica, sans-serif;
   font-size: 20px;
   color: #212529;
   letter-spacing: 0;
@@ -58,7 +58,7 @@
   margin-top: 12px;
 
   & > .text {
-    font-family: PingFangSC-Regular, Arial;
+    font-family: PingFangSC-Regular, Arial, Helvetica, sans-serif;
     font-size: 13px;
     color: #592d00;
     flex: 1 1;
