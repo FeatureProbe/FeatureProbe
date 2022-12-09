@@ -107,7 +107,7 @@
   "common.tokens.text": "Access Tokens",
   "common.token.text": "Access Token",
   "common.secret.key.text": "密钥",  
-  "common.diff.tips": "以下为本次变更内容的前后对比，仅用于展示，无须进行其他操作。",
+  "common.diff.tips": "以下为本次变更内容的前后对比。",
   
   "header.getuser.error.text": "无法获取用户信息!",
 

@@ -13,7 +13,7 @@ exports[`Diff snapshot 1`] = `
         customclass="warning-circle"
         type="warning-circle"
       />
-      The following is a before and after comparison of this change and is for demonstration purposes only, no other action is required.
+      The following is a before and after comparison of this change.
     </div>
     <div
       class="diff"

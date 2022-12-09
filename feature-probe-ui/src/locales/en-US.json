@@ -107,7 +107,7 @@
   "common.tokens.text": "Access tokens", 
   "common.token.text": "Access token", 
   "common.secret.key.text": "Secret key",
-  "common.diff.tips": "The following is a before and after comparison of this change and is for demonstration purposes only, no other action is required.",
+  "common.diff.tips": "The following is a before and after comparison of this change.",
 
   "header.getuser.error.text": "Error getting user profile",
 
