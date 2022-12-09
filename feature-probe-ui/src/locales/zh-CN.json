@@ -530,7 +530,7 @@
   "token.visited.time": "最后使用时间",
   "token.delete.tips.title": "确定删除该Token？",
   "token.delete.tips.content": "删除后，该Token将失效",
-  "token.application.create.text": "创建应用Token",
+  "token.application.create.text": "创建共享Token",
   "token.personal.create.text": "创建个人Token",
   "token.form.name.text": "Token名称",
   "token.copy.text": "复制Token",
@@ -541,6 +541,6 @@
   "token.delete.success": "删除Token成功",
   "token.delete.error": "删除Token失败",
   "token.list.error": "查询Token列表失败",
-  "token.card.application.description": "用于访问 OpenAPI。应用token不与个人绑定，一经创建不可变更，且永久生效。",
+  "token.card.application.description": "用于访问 OpenAPI。共享token不与个人绑定，一经创建不可变更，且永久生效。",
   "token.card.personal.description": "用于访问 OpenAPI。个人Token具有与创建人相同的权限，且会随着创建人的权限同步变化，如果创建人被删除，他的Token也将失效。"
 }

@@ -531,7 +531,7 @@
   "token.visited.time": "Last used",
   "token.delete.tips.title": "Sure to delete this token?",
   "token.delete.tips.content": "Token will be invalid after deleted.",
-  "token.application.create.text": "Create application token",
+  "token.application.create.text": "Create shared token",
   "token.personal.create.text": "Create personal token",
   "token.form.name.text": "Token name",
   "token.copy.text": "Copy Token",
