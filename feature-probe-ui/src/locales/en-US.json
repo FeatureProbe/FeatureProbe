@@ -535,7 +535,7 @@
   "token.personal.create.text": "Create personal token",
   "token.form.name.text": "Token name",
   "token.copy.text": "Copy Token",
-  "token.created.modal.title": "{name} token created",
+  "token.created.modal.title": "{name} created",
   "token.copy.tips": "Copy and save this token now. You won't be able to see it again!",
   "token.create.success": "Token created successfully",
   "token.create.error": "Error creating token",
