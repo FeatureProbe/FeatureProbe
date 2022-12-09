@@ -290,7 +290,6 @@
   "targeting.rule.delete.text": "确认删除规则?",
   "targeting.rule.subject.placeholder": "输入属性值",
   "targeting.rule.subject.required": "输入一个属性值",
-  "targeting.rule.operator.type.empty": "",
   "targeting.rule.operator.type.string": "字符串",
   "targeting.rule.operator.type.number": "数值",
   "targeting.rule.operator.type.datetime": "时间",

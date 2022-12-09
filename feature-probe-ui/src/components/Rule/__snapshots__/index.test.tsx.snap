@@ -340,18 +340,21 @@ exports[`Add conditions 1`] = `
                   </div>
                   <div
                     class="rule-add"
+                    name="rule_testId1_add"
                   >
-                    <button
-                      class="ui secondary button rule-add-btn"
-                      type="button"
-                    >
-                      <span
-                        class="iconfont icon-add iconfont"
-                        customclass="iconfont"
-                        type="add"
-                      />
-                      Add
-                    </button>
+                    <div>
+                      <button
+                        class="ui secondary button rule-add-btn"
+                        type="button"
+                      >
+                        <span
+                          class="iconfont icon-add iconfont"
+                          customclass="iconfont"
+                          type="add"
+                        />
+                        Add
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -484,18 +487,21 @@ exports[`Rule snapshot 1`] = `
               >
                 <div
                   class="rule-add-one"
+                  name="rule_testId1_add"
                 >
-                  <button
-                    class="ui secondary button rule-add-btn"
-                    type="button"
-                  >
-                    <span
-                      class="iconfont icon-add iconfont"
-                      customclass="iconfont"
-                      type="add"
-                    />
-                    Add
-                  </button>
+                  <div>
+                    <button
+                      class="ui secondary button rule-add-btn"
+                      type="button"
+                    >
+                      <span
+                        class="iconfont icon-add iconfont"
+                        customclass="iconfont"
+                        type="add"
+                      />
+                      Add
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

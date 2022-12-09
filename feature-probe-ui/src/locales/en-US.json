@@ -292,7 +292,6 @@
   "targeting.rule.subject.required": "Please enter a subject",
   "targeting.rule.operator.placeholder": "Select an operator",
   "targeting.rule.operator.required": "Please select an operator",
-  "targeting.rule.operator.type.empty": "",
   "targeting.rule.operator.type.string": "string",
   "targeting.rule.operator.type.number": "number",
   "targeting.rule.operator.type.datetime": "datetime",

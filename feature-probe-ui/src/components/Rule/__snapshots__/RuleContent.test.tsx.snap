@@ -80,18 +80,21 @@ exports[`RuleContent opt 1`] = `
                 >
                   <div
                     class="rule-add-one"
+                    name="rule_testId1_add"
                   >
-                    <button
-                      class="ui secondary button rule-add-btn"
-                      type="button"
-                    >
-                      <span
-                        class="iconfont icon-add iconfont"
-                        customclass="iconfont"
-                        type="add"
-                      />
-                      Add
-                    </button>
+                    <div>
+                      <button
+                        class="ui secondary button rule-add-btn"
+                        type="button"
+                      >
+                        <span
+                          class="iconfont icon-add iconfont"
+                          customclass="iconfont"
+                          type="add"
+                        />
+                        Add
+                      </button>
+                    </div>
                   </div>
                   <div
                     class="serve"
@@ -919,18 +922,21 @@ exports[`RuleContent opt 2`] = `
                   </div>
                   <div
                     class="rule-add"
+                    name="rule_testId1_add"
                   >
-                    <button
-                      class="ui secondary button rule-add-btn"
-                      type="button"
-                    >
-                      <span
-                        class="iconfont icon-add iconfont"
-                        customclass="iconfont"
-                        type="add"
-                      />
-                      Add
-                    </button>
+                    <div>
+                      <button
+                        class="ui secondary button rule-add-btn"
+                        type="button"
+                      >
+                        <span
+                          class="iconfont icon-add iconfont"
+                          customclass="iconfont"
+                          type="add"
+                        />
+                        Add
+                      </button>
+                    </div>
                   </div>
                   <div
                     class="serve"
@@ -955,7 +961,7 @@ exports[`RuleContent opt 2`] = `
                         <div
                           aria-expanded="false"
                           class="ui floating selection dropdown serve-dropdown"
-                          name="test-name-9475"
+                          name="test-name-9510"
                           role="listbox"
                           style="width: 308px;"
                           tabindex="0"
@@ -1108,18 +1114,21 @@ exports[`RuleContent snapshot 1`] = `
               >
                 <div
                   class="rule-add-one"
+                  name="rule_testId1_add"
                 >
-                  <button
-                    class="ui secondary button rule-add-btn"
-                    type="button"
-                  >
-                    <span
-                      class="iconfont icon-add iconfont"
-                      customclass="iconfont"
-                      type="add"
-                    />
-                    Add
-                  </button>
+                  <div>
+                    <button
+                      class="ui secondary button rule-add-btn"
+                      type="button"
+                    >
+                      <span
+                        class="iconfont icon-add iconfont"
+                        customclass="iconfont"
+                        type="add"
+                      />
+                      Add
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1193,20 +1202,23 @@ exports[`RuleContent snapshot 2`] = `
               >
                 <div
                   class="rule-add-one"
+                  name="rule_testId1_add"
                 >
-                  <button
-                    class="ui secondary disabled button rule-add-btn"
-                    disabled=""
-                    tabindex="-1"
-                    type="button"
-                  >
-                    <span
-                      class="iconfont icon-add iconfont"
-                      customclass="iconfont"
-                      type="add"
-                    />
-                    Add
-                  </button>
+                  <div>
+                    <button
+                      class="ui secondary disabled button rule-add-btn"
+                      disabled=""
+                      tabindex="-1"
+                      type="button"
+                    >
+                      <span
+                        class="iconfont icon-add iconfont"
+                        customclass="iconfont"
+                        type="add"
+                      />
+                      Add
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
