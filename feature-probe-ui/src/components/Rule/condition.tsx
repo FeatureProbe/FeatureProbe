@@ -197,7 +197,7 @@ const RuleContent = (props: IProps) => {
               {
                 condition.type === SEMVER_TYPE && (
                   <Popup
-                    basic
+                    inverted
                     open={popupOpen}
                     on='click'
                     position='top center'
