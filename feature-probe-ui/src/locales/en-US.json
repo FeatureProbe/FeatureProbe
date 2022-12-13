@@ -151,8 +151,8 @@
   "members.delete.modal.content": "this user is going to be deleted",
   "members.add.dulplicate.error.text": "this account already exists",
   "members.defalut.password": "Default password",
-  "members.owner.auth.text": "Members can read and modify all contents of the platform.",
-  "members.writer.auth.text": "Members can read all content and make changes to the platform, but cannot manage project, environment, and account member information.",
+  "members.owner.auth.text": " Members can read and modify all contents of the platform.",
+  "members.writer.auth.text": " Members can read all content and make changes to the platform, but cannot manage project, environment, and account member information.",
 
   "profile.my.profile": "My profile",
   "profile.change.password": "Change password",

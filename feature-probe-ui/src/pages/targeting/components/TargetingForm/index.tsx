@@ -171,7 +171,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       getFromDictionary<IDictionary>(USER_GUIDE_TARGETING), 
     ]).then(res => {
       // After finishing layout user guide, then show targeting user guide
-      if (res[0].success && res[0].data && parseInt(JSON.parse(res[0].data.value)) === 2) {
+      if (res[0].success && res[0].data && parseInt(JSON.parse(res[0].data.value)) === 3) {
         const { success, data } = res[1];
         if (success && data) {
           const savedData = JSON.parse(data.value);

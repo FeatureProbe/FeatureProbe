@@ -374,7 +374,7 @@
   "segments.delete.success": "人群组删除成功",
   "segments.delete.error": "人群组删除失败，请重试",
   "segments.label.name.text": "人群组名称",
-  "segments.card.tips": "常用人群可以设立单独的用户组，方便在开关配置中反复选用",
+  "segments.card.tips": "常用人群可以设立为单独的人群组，方便在开关配置的规则中反复选用",
   
   "toggle.connect": "连接SDK",
   "connect.description": "将应用程序连接到FeatureProbe！",
