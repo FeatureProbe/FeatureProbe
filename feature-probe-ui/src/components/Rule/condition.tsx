@@ -193,11 +193,11 @@ const RuleContent = (props: IProps) => {
         <div className={styles['rule-item-type']}>
           <div className={styles['rule-item-type-box']}>
             <div className={styles['rule-item-type-text']}>
-              {intl.formatMessage({id: `targeting.rule.operator.type.${condition.type ?? 'empty'}`})}
+              {condition.type ? intl.formatMessage({id: `targeting.rule.operator.type.${condition.type}`}) : ''}
               {
                 condition.type === SEMVER_TYPE && (
                   <Popup
-                    basic
+                    inverted
                     open={popupOpen}
                     on='click'
                     position='top center'

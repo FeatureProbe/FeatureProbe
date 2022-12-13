@@ -1,9 +1,11 @@
 import { render } from '@testing-library/react';
 import JSONbig from 'json-bigint';
 import { createPatch } from 'diff';
+import { IntlWrapper } from 'components/utils/wrapper';
 import { html } from 'diff2html/lib/diff2html';
-import '@testing-library/jest-dom';
 import Diff from '.';
+import '@testing-library/jest-dom';
+
 
 it('Diff snapshot', (done) => {
   (async () => {
@@ -16,7 +18,9 @@ it('Diff snapshot', (done) => {
       diffStyle: 'word',
       drawFileList: false,
     });
-    const { asFragment } = render(<Diff content={content} />);
+    const { asFragment } = render(<Diff content={content} />, {
+      wrapper: IntlWrapper,
+    });
 
     expect(asFragment()).toMatchSnapshot();
 
@@ -35,7 +39,9 @@ it('Diff opt', (done) => {
       diffStyle: 'word',
       drawFileList: false,
     });
-    const { rerender } = render(<Diff key={1} maxHeight={500} height={500} content={content} />);
+    const { rerender } = render(<Diff key={1} maxHeight={500} height={500} content={content} />, {
+      wrapper: IntlWrapper
+    });
     const diffSides = document.getElementsByClassName('d2h-file-side-diff');
     diffSides[0].setAttribute('style', 'height: 600px;');
     diffSides[1].setAttribute('style', 'height: 600px;');

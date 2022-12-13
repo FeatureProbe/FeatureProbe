@@ -158,7 +158,6 @@
       width: 180px !important;
     }
   }
-
 }
 
 .rule-add {
@@ -177,6 +176,15 @@
   font-size: 12px;
   width: 100%;
   padding: 0 12px !important;
+}
+
+.rule-add-btn-error {
+  border: 1px solid #ff7066 !important;
+  background-color: #fffafa;
+}
+
+.rule-add-error {
+  width: 400px;
 }
 
 .icon-archive {
@@ -311,12 +319,13 @@
 }
 
 .rule-popup {
+  opacity: 0.8;
   padding: 4px 0 !important;
 }
 
 .rule-popup-content {
   min-width: 68px;
-  color: #495057;
+  color: #ffffff;
   padding: 0 20px;
   height: 24px;
   line-height: 24px;

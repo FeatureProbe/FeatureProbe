@@ -206,7 +206,7 @@ const TokenModal: React.FC<IProps> = (props) => {
                 type="submit"
                 primary
               >
-                <FormattedMessage id="common.confirm.text" />
+                <FormattedMessage id="common.create.text" />
               </Button>
             </div>
           </Form>

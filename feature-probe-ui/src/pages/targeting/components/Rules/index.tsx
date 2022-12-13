@@ -41,11 +41,14 @@ const Rules = (props: IProps) => {
     handleAddRule, 
   } = ruleContainer.useContainer();
 
+  const { 
+    clearErrors
+  } = hooksFormContainer.useContainer();
+
   const onDragEnd = useCallback((result: DropResult) => {
     if (!result.destination) {
       return;
     }
-
     const copyRules = cloneDeep(rules);
     const [removed] = copyRules.splice(result.source.index, 1);
     copyRules.splice(result.destination.index, 0, removed);
@@ -76,10 +79,13 @@ const Rules = (props: IProps) => {
             });
           }
         });
+        if (rule.conditions.length > 0) {
+          clearErrors(`rule_${rule.id}_add`);
+        }
       }
     });
     saveSubjectOptions(cloneDeep(subjectOptions));
-  }, [rules]);
+  }, [rules, clearErrors]);
 
 	return (
 		<div className={styles.rules}>
