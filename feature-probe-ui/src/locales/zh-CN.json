@@ -125,9 +125,9 @@
   "login.signin": "登录",
   "login.error.message": "登录错误，请重试!",
   "login.error.text": "用户名或密码错误, 请重试!",
-  "login.demo.text": "访问 FeatureProbe 演示实例",
+  "login.demo.text": "FeatureProbe 演示环境",
   "login.demo.tip": "无须进一步提供其它数据",
-  "login.demo.password.tip": "快速试用环境提供免密登录，开源版支持密码自定义",
+  "login.demo.password.tip": "演示环境登录免密码，开源版支持密码验证",
   "login.email.invalid.text": "无效的邮箱地址",
 
   "members.role": "角色",
@@ -257,7 +257,7 @@
   "toggles.permanent.type.tips": "FeatureProbe非常关心代码质量，技术债务会随着时间的推移而逐渐增加。非“永久性”开关周期是30天，超时我们会及时提示您清理。如果希望将其作为长期开关保留在代码中，可以标记为“永久性”开关，我们不会提示您处理。",
   "toggles.permanent.tips": "该开关是临时开关，已使用{useDays}天，建议及时清理",
 
-  "toggles.settings.tips": "支持统一对该项目下的开关配置变更进行审批设置，设置完成后，将对该环境内的所有开关生效",
+  "toggles.settings.tips": "对项目下开关变更进行审批设置，审批设置对环境内的所有开关变更都生效",
   "toggles.settings.approval.reviewers": "审批人",
   "toggles.settings.approval.reviewers.placeholder": "请选择审批人",
   "toggles.settings.approval.enable": "开启审批",
@@ -518,7 +518,7 @@
   "webhook.status.code.text": "状态码",
   "webhook.create.text": "创建Webhook",
   "webhook.edit.text": "编辑Webhook",
-  "webhook.total": "Webhook总数",
+  "webhook.total": "总数",
 
   "token.application.title": "第三方应用 API Tokens",
   "token.personal.title": "个人 API Tokens",
