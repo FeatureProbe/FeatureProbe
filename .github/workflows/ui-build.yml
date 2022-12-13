@@ -6,8 +6,12 @@ name: Build
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'feature-probe-ui/**'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'feature-probe-ui/**'
 
 jobs:
   build:
