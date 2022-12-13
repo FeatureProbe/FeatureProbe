@@ -126,9 +126,9 @@
   "login.signin": "Sign in",
   "login.error.message": "Error, please retry!",
   "login.error.text": "account or password is incorrect, please retry!",
-  "login.demo.text": "Access FeatureProbe demo instance",
+  "login.demo.text": "FeatureProbe demo environment",
   "login.demo.tip": "No further data required",
-  "login.demo.password.tip": "The quick trial environment provides password free login, and the open source version supports password customization",
+  "login.demo.password.tip": "The demo environment login do not check password, the Open Source version supports password checking.",
   "login.email.invalid.text": "Invalid email address",
 
   "members.role": "Role",
