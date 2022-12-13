@@ -31,10 +31,4 @@ jobs:
       working-directory: ./feature-probe-ui
     - run: yarn test:cov
       working-directory: ./feature-probe-ui
-    
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: "./feature-probe-ui/coverage/lcov.info"
         
