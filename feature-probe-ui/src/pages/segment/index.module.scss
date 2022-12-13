@@ -28,7 +28,7 @@
 }
 
 .card {
-  background-color: #ffffff;
+  background-color: #fff;
   padding: 12px 24px 24px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
   min-height: calc(100vh - 94px);
@@ -41,12 +41,30 @@
 }
 
 .heading {
-  font-family: HelveticaNeue-Medium;
+  font-family: HelveticaNeue-Medium, Arial, Helvetica, sans-serif;
   font-size: 20px;
   color: #212529;
   letter-spacing: 0;
   text-align: justify;
   line-height: 30px;
+}
+
+.card-tips {
+  display: flex;
+  line-height: 20px;
+  background: #fffae0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 12px;
+
+  & > .text {
+    font-family: PingFangSC-Regular, Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #592d00;
+    flex: 1 1;
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
 }
 
 .filter-form {
@@ -84,7 +102,7 @@
   width: 140px !important;
 }
 
-.tags-field { 
+.tags-field {
   margin: 0 16px 0 0 !important;
 }
 
@@ -116,7 +134,7 @@
 
 .add {
   text-align: right;
-  margin-top: 16px;
+  margin-top: 12px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -128,17 +146,22 @@
 
 .lists {
   margin-top: 16px;
-  flex: 1;
   position: relative;
+  overflow-x: auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 2px;
 
   & > .table-box {
-    overflow-x: auto;
+    position: relative;
+    padding: 2px 1px;
+    margin-top: 12px;
+    flex: 1 1;
   }
 }
 
 .table {
-  padding: 0 1px;
-
   &::-webkit-scrollbar {
     width: 10px;
   }
@@ -152,10 +175,16 @@
 }
 
 .table-header > .ui.table thead th {
-  padding: 0 !important
+  padding: 0 !important;
 }
 
 .iconfont {
   font-size: 12px !important;
   margin-right: 4px;
+}
+
+.warning-circle {
+  color: #ffc300;
+  padding: 0 10px;
+  font-size: 17px;
 }

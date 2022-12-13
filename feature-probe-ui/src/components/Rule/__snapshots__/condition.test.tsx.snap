@@ -3173,9 +3173,7 @@ exports[`RuleContent snapshot 1`] = `
         >
           <div
             class="rule-item-type-text"
-          >
-            targeting.rule.operator.type.empty
-          </div>
+          />
         </div>
       </div>
       <div
@@ -3311,9 +3309,7 @@ exports[`RuleContent snapshot 2 1`] = `
         >
           <div
             class="rule-item-type-text"
-          >
-            targeting.rule.operator.type.empty
-          </div>
+          />
         </div>
       </div>
       <div

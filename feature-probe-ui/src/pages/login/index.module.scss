@@ -13,7 +13,7 @@
 .login-card {
   width: 470px;
   height: 560px;
-  background: #ffffff;
+  background: #fff;
   box-shadow: 0 10px 20px 0 rgba(18,38,63,0.03);
   border-radius: 16px;
   position: absolute;
@@ -24,12 +24,65 @@
 .demo-login-card {
   width: 470px;
   height: 526px;
-  background: #ffffff;
+  background: #fff;
   box-shadow: 0 10px 20px 0 rgba(18,38,63,0.03);
   border-radius: 16px;
   position: absolute;
   right: 140px;
   padding: 0 41px 0 49px;
+}
+
+.player {
+  position: absolute;
+}
+
+.player-box {
+  width: 90px;
+  height: 90px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.player-image {
+  width: 34px;
+  height: 38px;
+  margin-top: 26px;
+}
+
+.video-modal {
+  width: 1008px;
+  height: 567px;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:global {
+  .ui.modal > :last-child {
+    height: 100%;
+  }
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  color: #fff;
+  text-align: center;
+  line-height: 32px;
+  cursor: pointer;
+  z-index: 2000;
+}
+
+.icon-close {
+  font-size: 20px !important;
+  color: #fff;
 }
 
 @media screen and (max-width: 1440px) {

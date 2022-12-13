@@ -171,7 +171,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       getFromDictionary<IDictionary>(USER_GUIDE_TARGETING), 
     ]).then(res => {
       // After finishing layout user guide, then show targeting user guide
-      if (res[0].success && res[0].data && parseInt(JSON.parse(res[0].data.value)) === 2) {
+      if (res[0].success && res[0].data && parseInt(JSON.parse(res[0].data.value)) === 3) {
         const { success, data } = res[1];
         if (success && data) {
           const savedData = JSON.parse(data.value);
@@ -336,8 +336,19 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     });
   }, [newRegister, approvalInfo]);
 
-  const onSubmit = useCallback(() => {
+  const validateForm = useCallback(() => {
     let isError = false;
+
+    const copyRules: IRule[] = cloneDeep(rules);
+    copyRules.forEach((rule: IRule) => {
+      if (rule.conditions.length === 0) {
+        setError(`rule_${rule.id}_add`, {
+          message: intl.formatMessage({id: 'common.input.placeholder'}),
+        });
+        isError = true;
+      }
+    });
+
     const clonevariations: IVariation[] = cloneDeep(variations);
     clonevariations.forEach((variation: IVariation) => {
       const res = replaceSpace(variation);
@@ -348,7 +359,14 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
         isError = true;
       }
     });
-    if (isError) return;
+
+    return isError;
+  }, [intl, rules, setError, variations]);
+
+  const onSubmit = useCallback(() => {
+    if (validateForm()) {
+      return;
+    }
 
     const before = JSONbig.stringify(initialTargeting, null, 2);
     const after = JSONbig.stringify(publishTargeting, null, 2);
@@ -362,11 +380,12 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
 
     setDiffContent(content);
     setOpen(true);
-  }, [intl, publishTargeting, initialTargeting, variations, setError]);
+  }, [validateForm, initialTargeting, publishTargeting]);
 
-  const onError = () => {
+  const onError = useCallback(() => {
+    validateForm();
     scrollToError();
-  };
+  }, [scrollToError, validateForm]);
 
   const handlePublishCancel = useCallback(() => {
     setOpen(false);

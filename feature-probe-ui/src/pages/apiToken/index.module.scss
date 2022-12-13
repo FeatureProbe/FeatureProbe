@@ -1,16 +1,7 @@
 .action-line {
-  margin-top: 16px;
+  margin-top: 12px;
   display: flex;
   justify-content: flex-end;
-}
-
-.add {
-  text-align: right;
-  margin-top: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 0 24px;
 }
 
 .add-button,
@@ -86,4 +77,28 @@
 .loading-box {
   position: relative;
   flex: 1 1;
+}
+
+.card-tips {
+  display: flex;
+  line-height: 20px;
+  background: #fffae0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 12px;
+
+  & > .text {
+    font-family: PingFangSC-Regular;
+    font-size: 13px;
+    color: #592d00;
+    flex: 1 1;
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
+}
+
+.warning-circle {
+  color: #ffc300;
+  padding: 0 10px;
+  font-size: 17px;
 }

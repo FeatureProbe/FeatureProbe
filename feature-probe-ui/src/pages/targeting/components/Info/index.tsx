@@ -20,8 +20,8 @@ import { updateApprovalStatus, publishTargetingDraft, cancelTargetingDraft } fro
 import { getTargeting, getTargetingDiff } from 'services/toggle';
 import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, IContent } from 'interfaces/targeting';
 import { IRouterParams } from 'interfaces/project';
-import styles from './index.module.scss';
 import { OWNER } from 'constants/auth';
+import styles from './index.module.scss';
 
 interface IProps {
   toggleInfo?: IToggleInfo;

@@ -177,7 +177,6 @@ const WebHook = () => {
                   }}
                   handlePageChange={handlePageChange}
                   total={pagination.totalItems}
-                  text={intl.formatMessage({ id: 'webhook.total' })}
                 />
               )}
             </>

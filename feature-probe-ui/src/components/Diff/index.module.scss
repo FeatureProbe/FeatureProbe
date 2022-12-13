@@ -7,6 +7,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    border-bottom: 0 !important;
 
     &::before {
       display: block;
@@ -43,9 +44,7 @@
 
   .d2h-file-wrapper {
     height: 100%;
-    border-top: 1px solid rgba(206, 212, 218, 0.6) !important;
-    border-bottom: 1px solid rgba(206, 212, 218, 0.6) !important;
-    border-radius: 0;
+    border: 0 !important;
     margin-bottom: 0 !important;
   }
 
@@ -79,6 +78,8 @@
     padding-right: 0.5em !important;
     border: 0 !important;
     color: #303a51 !important;
+    text-overflow: unset !important;
+    line-height: 0;
   }
 
   .d2h-code-side-line {
@@ -123,4 +124,25 @@
       }
     }
   }
+}
+
+.warning-circle {
+  color: #0a70f5;
+  margin-right: 8px;
+}
+
+.tips {
+  display: flex;
+  padding: 6px 24px;
+  font-family: PingFangSC-Regular, Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #0a70f5;
+  line-height: 18px;
+  background-color: #eff8ff;
+}
+
+.box {
+  margin: 0 24px;
+  border-radius: 8px;
+  overflow: hidden;
 }

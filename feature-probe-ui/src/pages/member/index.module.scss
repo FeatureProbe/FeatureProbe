@@ -1,5 +1,5 @@
 .member {
-  background: #ffffff;
+  background: #fff;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
   border-radius: 12px 12px 0 0;
   height: calc(100vh - 64px);
@@ -12,7 +12,7 @@
 }
 
 .heading {
-  font-family: HelveticaNeue-Medium;
+  font-family: HelveticaNeue-Medium, Arial, Helvetica, sans-serif;
   font-size: 20px;
   color: #212529;
   letter-spacing: 0;
@@ -22,7 +22,7 @@
 
 .add {
   text-align: right;
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .add-button {
@@ -62,4 +62,28 @@
 
 .total-count {
   font-size: 14px;
+}
+
+.card-tips {
+  display: flex;
+  line-height: 20px;
+  background: #fffae0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 12px;
+
+  & > .text {
+    font-family: PingFangSC-Regular, Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #592d00;
+    flex: 1 1;
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
+}
+
+.warning-circle {
+  color: #ffc300;
+  padding: 0 10px;
+  font-size: 17px;
 }

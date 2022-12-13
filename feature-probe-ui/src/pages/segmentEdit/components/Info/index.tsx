@@ -87,6 +87,7 @@ const Info = () => {
   const {
     formState: { errors },
     setValue,
+    setError,
     handleSubmit,
   } = hooksFormContainer.useContainer();
 
@@ -283,12 +284,35 @@ const Info = () => {
     });
   }, [projectKey, segmentKey, searchParams, initialSegment, publishSegment, intl]);
 
-  const onSubmit = useCallback(async () => {
-    setLoading(true);
+  const validateForm = useCallback(() => {
+    let isError = false;
+    const copyRules: IRule[] = cloneDeep(rules);
+    copyRules.forEach((rule: IRule) => {
+      if (rule.conditions.length === 0) {
+        setError(`rule_${rule.id}_add`, {
+          message: intl.formatMessage({id: 'common.input.placeholder'}),
+        });
+        isError = true;
+      }
+    });
 
+    return isError;
+  }, [intl, rules, setError]);
+
+  const onSubmit = useCallback(async () => {
+    if (validateForm()) {
+      return;
+    }
+
+    setLoading(true);
     await fetchToggleList();
     setOpen(true);
-  }, [fetchToggleList]);
+  }, [validateForm, fetchToggleList]);
+
+  const onError = useCallback(() => {
+    validateForm();
+    scrollToError();
+  }, [scrollToError, validateForm]);
 
   const handlePageChange = useCallback((e: SyntheticEvent, data: PaginationProps) => {
     setSearchParams({
@@ -387,10 +411,6 @@ const Info = () => {
       });
     });
   }, [setBeforeScrollCallback, rules, saveRules]);
-
-  const onError = () => {
-    scrollToError();
-  };
 
 	return (
     <>

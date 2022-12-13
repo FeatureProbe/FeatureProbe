@@ -20,17 +20,8 @@ interface IProps {
 
 const WebHookItem = (props: IProps) => {
   const { webhook, handleEdit, refresh, saveList, index } = props;
-  const [visible, setVisible] = useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const intl = useIntl();
-
-  const handleMouseEnter = useCallback(() => {
-    setVisible(true);
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    setVisible(false);
-  }, []);
 
   const handleDelete = useCallback(() => {
     (async () => {
@@ -72,8 +63,6 @@ const WebHookItem = (props: IProps) => {
     <>
       <Table.Row
         className={styles['list-item']}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
         onClick={() => ''}
       >
         <Table.Cell>
@@ -133,26 +122,24 @@ const WebHookItem = (props: IProps) => {
         </Table.Cell>
         <Table.Cell>
           <div className={styles['webhook-info-operate']}>
-            {visible && (
-              <div className={styles['webhook-operation']}>
-                <div
-                  className={styles['webhook-operation-item']}
-                  onClick={() => {
-                    handleEdit(webhook.id);
-                  }}
-                >
-                  <FormattedMessage id="common.edit.text" />
-                </div>
-                <div
-                  className={styles['webhook-operation-item']}
-                  onClick={() => {
-                    setDeleteModalOpen(true);
-                  }}
-                >
-                  <FormattedMessage id="common.delete.text" />
-                </div>
+            <div className={styles['webhook-operation']}>
+              <div
+                className={styles['webhook-operation-item']}
+                onClick={() => {
+                  handleEdit(webhook.id);
+                }}
+              >
+                <FormattedMessage id="common.edit.text" />
               </div>
-            )}
+              <div
+                className={styles['webhook-operation-item']}
+                onClick={() => {
+                  setDeleteModalOpen(true);
+                }}
+              >
+                <FormattedMessage id="common.delete.text" />
+              </div>
+            </div>
           </div>
         </Table.Cell>
       </Table.Row>
