@@ -20,7 +20,7 @@ public interface MetricsCacheRepository extends JpaRepository<MetricsCache, Long
                                                                                  MetricsCacheTypeEnum type);
 
     @Modifying
-    @Query(value = "delete from user where sdk_key =:sdkKey AND toggle_key=:toggleKey",nativeQuery = true)
+    @Query(value = "delete from metrics_cache where sdk_key =:sdkKey AND toggle_key=:toggleKey",nativeQuery = true)
     void deleteBySdkKeyAndToggleKey(String sdkKey, String toggleKey);
 
 }

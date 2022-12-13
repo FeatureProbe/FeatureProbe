@@ -24,6 +24,7 @@ import com.featureprobe.api.server.CacheServerDataSource
 import com.featureprobe.sdk.server.model.Segment
 import com.featureprobe.sdk.server.model.Toggle
 import org.hibernate.internal.SessionImpl
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import spock.lang.Specification
@@ -38,6 +39,7 @@ class CacheServerDataSourceSpec extends Specification {
     ToggleRepository toggleRepository
     TargetingRepository targetingRepository
     DictionaryRepository dictionaryRepository
+    ApplicationEventPublisher eventPublisher
     EntityManager entityManager
 
     ICache<String, byte[]> cache
@@ -72,9 +74,10 @@ class CacheServerDataSourceSpec extends Specification {
         entityManager = Mock(SessionImpl)
         cache = Mock(MemoryCache)
         publishMessageRepository = Mock(PublishMessageRepository)
+        eventPublisher = Mock()
         baseServerService = new BaseServerService(environmentRepository, segmentRepository, toggleRepository,
                 targetingRepository, dictionaryRepository, entityManager)
-        cacheServerDataSource = new CacheServerDataSource(cache, publishMessageRepository, baseServerService)
+        cacheServerDataSource = new CacheServerDataSource(cache, publishMessageRepository, baseServerService, eventPublisher)
         serverToggle = Mock(ServerToggleEntity)
         serverSegment = Mock(ServerSegmentEntity)
         serverToggleList = [serverToggle]

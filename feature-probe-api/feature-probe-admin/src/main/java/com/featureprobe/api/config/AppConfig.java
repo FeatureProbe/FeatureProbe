@@ -16,4 +16,6 @@ public class AppConfig {
     private Long toggleDeadline;
 
     private String serverDataSource;
+
+    private String[] serverBaseUrls;
 }

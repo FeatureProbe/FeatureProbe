@@ -7,6 +7,7 @@ import com.featureprobe.api.dao.entity.PublishMessage;
 import com.featureprobe.api.dao.repository.PublishMessageRepository;
 import com.featureprobe.api.dto.SdkKeyResponse;
 import com.featureprobe.api.dto.ServerResponse;
+import com.featureprobe.api.event.ToggleChangeEvent;
 import com.featureprobe.api.service.BaseServerService;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
@@ -35,6 +37,8 @@ public class CacheServerDataSource extends AbstractCacheServerDataSource {
     private PublishMessageRepository publishMessageRepository;
 
     private BaseServerService baseServerService;
+
+    private ApplicationEventPublisher eventPublisher;
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(
             new ThreadFactoryBuilder()
@@ -116,6 +120,7 @@ public class CacheServerDataSource extends AbstractCacheServerDataSource {
                 cache.put(serverSdkKey,
                         JsonMapper.toJSONString(baseServerService.queryServerTogglesByServerSdkKey(serverSdkKey))
                                 .getBytes());
+                eventPublisher.publishEvent(new ToggleChangeEvent(serverSdkKey, this));
                 break;
             case DELETE:
                 cache.invalidate(serverSdkKey);
