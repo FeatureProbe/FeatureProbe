@@ -51,5 +51,6 @@ app:
         - /actuator/health
         - /api/login
         - /api/guestLogin
+        - /v3/api-docs.yaml
       guest-disabled: true
       guest-default-password: Guest_12345
