@@ -54,6 +54,14 @@ const ProjectSiderbar = (props: IProps) => {
     }
   );
 
+  const segmentCls = classNames(
+    'joyride-segment',
+    styles['project-menu-item'],
+    {
+      [styles['project-menu-item-close']]: isPutAway
+    }
+  );
+
   useEffect(() => {
     const { path } = match;
     if (path === TOGGLE_PATH || path === TARGETING_PATH || path === GET_STARTED_PATH) {
@@ -144,7 +152,7 @@ const ProjectSiderbar = (props: IProps) => {
               </div>
             </div>
 
-            <div className={`${selectedItem ==='segments' && styles.selected} ${menuCls}`} onClick={gotoSegments}>
+            <div className={`${selectedItem ==='segments' && styles.selected} ${segmentCls}`} onClick={gotoSegments}>
               <PutAwayMemu
                 type='member'
                 isPutAway={isPutAway}

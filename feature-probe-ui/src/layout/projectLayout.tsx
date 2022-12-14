@@ -48,7 +48,7 @@ const STEPS: Step[] = [
           <li><FormattedMessage id='guide.global.step1.env' /></li>
           <li><FormattedMessage id='guide.global.step1.enter' /></li>
         </ul>
-        <div className='joyride-pagination'>1/2</div>
+        <div className='joyride-pagination'>1/3</div>
       </div>
     ),
     placement: 'bottom',
@@ -65,12 +65,29 @@ const STEPS: Step[] = [
         <ul className='joyride-item'>
           <li><FormattedMessage id='guide.global.step2.env' /></li>
         </ul>
-        <div className='joyride-pagination'>2/2</div>
+        <div className='joyride-pagination'>2/3</div>
       </div>
     ),
     placement: 'right',
     spotlightPadding: 4,
     target: '.joyride-environment',
+    ...commonConfig
+  },
+  {
+    content: (
+      <div>
+        <div className='joyride-title'>
+          <FormattedMessage id='guide.global.step3.title' />
+        </div>
+        <ul className='joyride-item'>
+          <li><FormattedMessage id='guide.global.step3.env' /></li>
+        </ul>
+        <div className='joyride-pagination'>3/3</div>
+      </div>
+    ),
+    placement: 'right',
+    spotlightPadding: 4,
+    target: '.joyride-segment',
     ...commonConfig
   },
 ];

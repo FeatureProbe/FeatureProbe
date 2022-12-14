@@ -107,6 +107,7 @@
   "common.tokens.text": "Access tokens", 
   "common.token.text": "Access token", 
   "common.secret.key.text": "Secret key",
+  "common.diff.tips": "The following is a before and after comparison of this change.",
 
   "header.getuser.error.text": "Error getting user profile",
 
@@ -125,9 +126,9 @@
   "login.signin": "Sign in",
   "login.error.message": "Error, please retry!",
   "login.error.text": "account or password is incorrect, please retry!",
-  "login.demo.text": "Access FeatureProbe demo instance",
+  "login.demo.text": "FeatureProbe demo environment",
   "login.demo.tip": "No further data required",
-  "login.demo.password.tip": "The quick trial environment provides password free login, and the open source version supports password customization",
+  "login.demo.password.tip": "The demo environment login do not check password, the Open Source version supports password checking.",
   "login.email.invalid.text": "Invalid email address",
 
   "members.role": "Role",
@@ -150,8 +151,8 @@
   "members.delete.modal.content": "this user is going to be deleted",
   "members.add.dulplicate.error.text": "this account already exists",
   "members.defalut.password": "Default password",
-  "members.owner.auth.text": "Members can read and modify all contents of the platform.",
-  "members.writer.auth.text": "Members can read all content and make changes to the platform, but cannot manage project, environment, and account member information.",
+  "members.owner.auth.text": " Members can read and modify all contents of the platform.",
+  "members.writer.auth.text": " Members can read all content and make changes to the platform, but cannot manage project, environment, and account member information.",
 
   "profile.my.profile": "My profile",
   "profile.change.password": "Change password",
@@ -291,7 +292,6 @@
   "targeting.rule.subject.required": "Please enter a subject",
   "targeting.rule.operator.placeholder": "Select an operator",
   "targeting.rule.operator.required": "Please select an operator",
-  "targeting.rule.operator.type.empty": "",
   "targeting.rule.operator.type.string": "string",
   "targeting.rule.operator.type.number": "number",
   "targeting.rule.operator.type.datetime": "datetime",
@@ -323,6 +323,8 @@
   "targeting.view.more": "Load more",
   "targeting.semver.explain": "What is semver?",
   "targeting.semver.more": "Learn more",
+  "targeting.rule.not.empty": "Please add a rule condition",
+
 
   "targeting.approval.tips": "Owner can set approval reviewers for this environment.",
   "targeting.approval.operation.skip.approval": "Skip Approval and Publish",
@@ -373,6 +375,7 @@
   "segments.delete.success": "Segment deleted successfully",
   "segments.delete.error": "Error, segment was not deleted, please retry!",
   "segments.label.name.text": "Segment name",
+  "segments.card.tips": "Commonly used members can be set up as segment, which can be repeatedly selected in the 'rules' of the switch configuration",
 
   "toggle.connect": "Connect SDK",
   "connect.description": "Connect your application to FeatureProbe!",
@@ -477,6 +480,8 @@
   "guide.global.step1.enter": "Switch the entry for viewing the toggles of different projects",
   "guide.global.step2.title": "Switch environment",
   "guide.global.step2.env": "Click to switch the environment and view the toggles information in different environments",
+  "guide.global.step3.title": "Segment",
+  "guide.global.step3.env": "Commonly used members can be set up as segment, which can be repeatedly selected in the 'rules' of the switch configuration",
   
   "guide.creat.toggle.step1.title": "Client SDK",
   "guide.creat.toggle.step1.sdk1": "If this toggle will later use the client SDK, please select [Yes]",
@@ -525,11 +530,11 @@
   "token.visited.time": "Last used",
   "token.delete.tips.title": "Sure to delete this token?",
   "token.delete.tips.content": "Token will be invalid after deleted.",
-  "token.application.create.text": "Create application token",
+  "token.application.create.text": "Create shared token",
   "token.personal.create.text": "Create personal token",
   "token.form.name.text": "Token name",
   "token.copy.text": "Copy Token",
-  "token.created.modal.title": "{name} token created",
+  "token.created.modal.title": "{name} created",
   "token.copy.tips": "Copy and save this token now. You won't be able to see it again!",
   "token.create.success": "Token created successfully",
   "token.create.error": "Error creating token",

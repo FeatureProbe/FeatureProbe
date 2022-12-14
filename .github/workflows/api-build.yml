@@ -1,10 +1,14 @@
-name: Build & Tests
+name: API Build & Tests
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'feature-probe-api/**'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'feature-probe-api/**'
 
 jobs:
   build:

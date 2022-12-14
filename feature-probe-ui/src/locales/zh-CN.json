@@ -106,7 +106,8 @@
   "common.user.text": "用户",
   "common.tokens.text": "Access Tokens",
   "common.token.text": "Access Token",
-  "common.secret.key.text": "密钥",
+  "common.secret.key.text": "密钥",  
+  "common.diff.tips": "以下为本次变更内容的前后对比。",
   
   "header.getuser.error.text": "无法获取用户信息!",
 
@@ -125,9 +126,9 @@
   "login.signin": "登录",
   "login.error.message": "登录错误，请重试!",
   "login.error.text": "用户名或密码错误, 请重试!",
-  "login.demo.text": "访问 FeatureProbe 演示实例",
+  "login.demo.text": "FeatureProbe 演示环境",
   "login.demo.tip": "无须进一步提供其它数据",
-  "login.demo.password.tip": "快速试用环境提供免密登录，开源版支持密码自定义",
+  "login.demo.password.tip": "演示环境登录免密码，开源版支持密码验证",
   "login.email.invalid.text": "无效的邮箱地址",
 
   "members.role": "角色",
@@ -257,7 +258,7 @@
   "toggles.permanent.type.tips": "FeatureProbe非常关心代码质量，技术债务会随着时间的推移而逐渐增加。非“永久性”开关周期是30天，超时我们会及时提示您清理。如果希望将其作为长期开关保留在代码中，可以标记为“永久性”开关，我们不会提示您处理。",
   "toggles.permanent.tips": "该开关是临时开关，已使用{useDays}天，建议及时清理",
 
-  "toggles.settings.tips": "支持统一对该项目下的开关配置变更进行审批设置，设置完成后，将对该环境内的所有开关生效",
+  "toggles.settings.tips": "对项目下开关变更进行审批设置，审批设置对环境内的所有开关变更都生效",
   "toggles.settings.approval.reviewers": "审批人",
   "toggles.settings.approval.reviewers.placeholder": "请选择审批人",
   "toggles.settings.approval.enable": "开启审批",
@@ -289,7 +290,6 @@
   "targeting.rule.delete.text": "确认删除规则?",
   "targeting.rule.subject.placeholder": "输入属性值",
   "targeting.rule.subject.required": "输入一个属性值",
-  "targeting.rule.operator.type.empty": "",
   "targeting.rule.operator.type.string": "字符串",
   "targeting.rule.operator.type.number": "数值",
   "targeting.rule.operator.type.datetime": "时间",
@@ -323,6 +323,7 @@
   "targeting.view.more": "查看更多",
   "targeting.semver.explain": "什么是语义版本？",
   "targeting.semver.more": "查看详情",
+  "targeting.rule.not.empty": "请添加至少一个规则条件",
 
   "targeting.approval.tips": "支持为该项目统一设置审批人",
   "targeting.approval.operation.skip.approval": "跳过审批并发布",
@@ -373,6 +374,7 @@
   "segments.delete.success": "人群组删除成功",
   "segments.delete.error": "人群组删除失败，请重试",
   "segments.label.name.text": "人群组名称",
+  "segments.card.tips": "常用人群可以设立为单独的人群组，方便在开关配置的规则中反复选用",
   
   "toggle.connect": "连接SDK",
   "connect.description": "将应用程序连接到FeatureProbe！",
@@ -477,6 +479,8 @@
   "guide.global.step1.enter": "切换查看不同项目「开关列表」的入口",
   "guide.global.step2.title": "切换环境",
   "guide.global.step2.env": "点击可切换环境，查看不同环境下的开关信息",
+  "guide.global.step3.title": "人群组",
+  "guide.global.step3.env": "常用人群可以设立为单独的人群组，方便在开关配置的「规则」中反复选用",
   
   "guide.creat.toggle.step1.title": "客户端SDK",
   "guide.creat.toggle.step1.sdk1": "如果该开关后续会用到客户端SDK，请选择“使用”",
@@ -518,14 +522,14 @@
   "webhook.status.code.text": "状态码",
   "webhook.create.text": "创建Webhook",
   "webhook.edit.text": "编辑Webhook",
-  "webhook.total": "Webhook总数",
+  "webhook.total": "总数",
 
-  "token.application.title": "第三方应用 API Tokens",
-  "token.personal.title": "个人 API Tokens",
+  "token.application.title": "共享 access tokens",
+  "token.personal.title": "个人 access tokens",
   "token.visited.time": "最后使用时间",
   "token.delete.tips.title": "确定删除该Token？",
   "token.delete.tips.content": "删除后，该Token将失效",
-  "token.application.create.text": "创建应用Token",
+  "token.application.create.text": "创建共享Token",
   "token.personal.create.text": "创建个人Token",
   "token.form.name.text": "Token名称",
   "token.copy.text": "复制Token",
@@ -536,6 +540,6 @@
   "token.delete.success": "删除Token成功",
   "token.delete.error": "删除Token失败",
   "token.list.error": "查询Token列表失败",
-  "token.card.application.description": "用于访问 OpenAPI。应用token不与个人绑定，一经创建不可变更，且永久生效。",
-  "token.card.personal.description": "用于访问 OpenAPI。个人Token具有与创建人相同的权限，且会随着创建人的权限同步变化，如果创建人被删除，他的Token也将失效。"
+  "token.card.application.description": "用于访问 OpenAPI。共享 access token 不与创建人生命周期绑定。",
+  "token.card.personal.description": "用于访问 OpenAPI。个人access token具有与创建人相同的权限，且会随着创建人的权限同步变化。如果创建人被删除，他的Token也将失效。"
 }

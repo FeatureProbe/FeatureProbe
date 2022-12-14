@@ -1,13 +1,17 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Build
+name: UI Build & Test
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'feature-probe-ui/**'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'feature-probe-ui/**'
 
 jobs:
   build:
@@ -25,16 +29,16 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn install --frozen-lockfile
+    - name: yarn install
+      run: yarn install --frozen-lockfile
       working-directory: ./feature-probe-ui
-    - run: yarn build
+    - name: yarn build
+      run: yarn build
       working-directory: ./feature-probe-ui
-    - run: yarn test:cov
+    - name: unit test
+      run: yarn test:cov
       working-directory: ./feature-probe-ui
-    
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: "./feature-probe-ui/coverage/lcov.info"
+    - name: Upload coverage reports to Codecov with GitHub Action
+      uses: codecov/codecov-action@v3
+
         

@@ -80,6 +80,13 @@ const Member = () => {
                 <div className={styles.heading}>
                   <FormattedMessage id='common.members.text' />
                 </div>
+                <div className={styles['card-tips']}>
+                <Icon type="warning-circle" customclass={styles['warning-circle']} />
+                <div className={styles['text']}>
+                  <div>Writer<FormattedMessage id='members.writer.auth.text' /></div>
+                  <div>Owner<FormattedMessage id='members.owner.auth.text' /></div>
+                </div>
+              </div>
                 {
                   OWNER.includes(userInfo.role) && (
                     <div className={styles.add}>
