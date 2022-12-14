@@ -79,7 +79,7 @@ services:
     ports:
       - "4010:4010" 
     environment:
-      - SPEC_URL=/v3/api-docs.yaml
+      - SPEC_URL=/api/v3/api-docs.yaml
       - PORT=4010
       - PAGE_TITLE=Feature Probe OpenAPI
     networks:
