@@ -42,4 +42,6 @@ management:
       exposure:
         include: health, info, env, metrics, scheduledtasks
 springdoc:
+  api-docs:
+    path: /api/v3/api-docs.yaml
   default-produces-media-type: application/json
