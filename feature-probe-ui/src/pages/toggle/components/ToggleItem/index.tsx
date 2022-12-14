@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState, useCallback } from 'react';
+import { SyntheticEvent, useState, useCallback, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { v4 as uuidv4 } from 'uuid';
@@ -118,6 +118,12 @@ const ToggleItem = (props: IProps) => {
       message.error(intl.formatMessage({id: 'toggles.restore.error'}));
     }
   }, [toggle.key, projectKey, intl, refreshToggleList]);
+
+  useEffect(() => {
+    if(toggle.visitedTime) {
+      console.log(dayjs(toggle.visitedTime).diff(Date.now(), 'week'));
+    }
+  }, [toggle]);
 
 	return (
     <Table.Row
@@ -269,18 +275,39 @@ const ToggleItem = (props: IProps) => {
       <Table.Cell>
         {
           toggle.visitedTime ? (
-            <div className={styles['toggle-evaluated']}>
-              <div>
-                <Icon type='evaluate' customclass={styles['icon-evaluate']} />
-                <span>
-                  {
-                    intl.formatMessage({id: 'toggles.evaluated.text'}, {
-                      time: dayjs(toggle?.visitedTime).format('YYYY-MM-DD HH:mm:ss')
-                    })
-                  }
-                </span>
-              </div>
-            </div> 
+            dayjs(toggle.visitedTime).diff(Date.now(), 'week') < 1 ? (
+              <div className={styles['toggle-evaluated']}>
+                <div>
+                  <FormattedMessage id='toggles.filter.evaluated.last.seven.days' />
+                </div>
+                <div>
+                  <Icon type='evaluate' customclass={styles['icon-evaluate']} />
+                  <span>
+                    {
+                      intl.formatMessage({id: 'toggles.evaluated.text'}, {
+                        time: dayjs(toggle?.visitedTime).format('YYYY-MM-DD HH:mm:ss')
+                      })
+                    }
+                  </span>
+                </div>
+              </div> 
+            ) : (
+              <div className={styles['toggle-evaluated']}>
+                <div>
+                  <FormattedMessage id='toggles.filter.evaluated.not.last.seven.days' />
+                </div>
+                <div>
+                  <Icon type='evaluate' customclass={styles['icon-evaluate']} />
+                  <span>
+                    {
+                      intl.formatMessage({id: 'toggles.evaluated.text'}, {
+                        time: dayjs(toggle?.visitedTime).format('YYYY-MM-DD HH:mm:ss')
+                      })
+                    }
+                  </span>
+                </div>
+              </div> 
+            )
           ) : (
             <div className={styles['toggle-evaluated']}>
               <div>

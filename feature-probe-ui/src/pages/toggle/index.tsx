@@ -626,7 +626,6 @@ const Toggle = () => {
                         toggleList.length !== 0 ? (
                           <Pagination
                             total={total}
-                            text={intl.formatMessage({id: 'toggles.total'})}
                             pagination={pagination}
                             handlePageChange={handlePageChange}
                           />

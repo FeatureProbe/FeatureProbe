@@ -34,8 +34,10 @@
   margin-right: 4px;
 }
 
-.lists {
+.scroll-box {
+  overflow-x: auto;
   margin-top: 16px;
+  padding: 0 1px 1px;
 }
 
 .table-header {
@@ -86,4 +88,12 @@
   color: #ffc300;
   padding: 0 10px;
   font-size: 17px;
+}
+
+.column-lastseen {
+  min-width: 180px;
+}
+
+.column-createdby {
+  min-width: 120px;
 }

@@ -240,7 +240,7 @@
   "toggles.edit.success": "Toggle updated successfully",
   "toggles.edit.error": "Error editing toggle",
   "toggles.evaluated.text": "Evaluated at {time}",
-  "toggles.evaluated.novisit": "no recent visit",
+  "toggles.evaluated.novisit": "No visit",
   "toggles.evaluated.link.sdk": "Please connect SDK",
   "toggles.info.error.text": "Error getting toggle information",
   "toggles.targeting.error.text": "Error getting toggle targeting",
