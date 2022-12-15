@@ -28,6 +28,7 @@ jobs:
         name: 'gcloud'
         run: |-
           gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+          gcloud config set project tranquil-post-357802 
           gcloud services list
         
       - id: 'compute-ssh'
