@@ -33,6 +33,7 @@ services:
     image: featureprobe/server
     ports:
       - "4007:4007"
+      - "4011:4011"
     environment:
       - RUST_LOG=info
       - FP_SERVER_PORT=4007
