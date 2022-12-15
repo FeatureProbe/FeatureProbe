@@ -38,7 +38,8 @@ public class ToggleChangeEventListener implements ApplicationListener<ToggleChan
 
     @Override
     public void onApplicationEvent(ToggleChangeEvent event) {
-        String[] serverBaseUrls = appConfig.getServerBaseUrls();
+        String[] serverBaseUrls = Objects.isNull(appConfig.getServerBaseUrls()) ? null :
+                appConfig.getServerBaseUrls().split(",");
         if (Objects.nonNull(serverBaseUrls) && serverBaseUrls.length > 0) {
             for(String serverUrl : serverBaseUrls) {
                 pushChange(serverUrl + CHANGE_API_PATH + "?sdk_key=" + event.getServerSdkKey());
@@ -54,7 +55,6 @@ public class ToggleChangeEventListener implements ApplicationListener<ToggleChan
                     .put(body)
                     .build();
             Response response = httpClient.newCall(request).execute();
-            log.info("--------{}", response);
             return response.isSuccessful();
         } catch (IOException e) {
             log.error("Toggle change server notice error", e);
