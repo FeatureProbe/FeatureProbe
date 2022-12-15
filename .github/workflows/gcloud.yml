@@ -22,3 +22,17 @@ jobs:
           create_credentials_file: true
           workload_identity_provider: 'projects/363590592857/locations/global/workloadIdentityPools/github-action/providers/github'
           service_account: '363590592857-compute@developer.gserviceaccount.com'
+          
+      - id: 'compute-ssh'
+        uses: 'google-github-actions/ssh-compute@v0'
+        with:
+          instance_name: 'featureprobe'
+          zone: 'asia-east1-a'
+          ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
+          command: 'echo Hello world'
+
+    # Example of using the output
+      - id: 'test'
+        run: |-
+          echo '${{ steps.compute-ssh.outputs.stdout }}'
+          echo '${{ steps.compute-ssh.outputs.stderr }}'
