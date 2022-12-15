@@ -65,9 +65,11 @@ jobs:
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --platform linux/amd64,linux/arm64 \
             --output "type=image,push=true" \
-            --tag featureprobe/api:${inputs.tag} \
+            --tag featureprobe/api:$DOCKER_TAG \
             --tag featureprobe/api:latest \
             --file ./Dockerfile ./
+        env:
+          DOCKER_TAG: ${{ inputs.tag }}
         working-directory: ./feature-probe-api
       - name: Inspect image
         run: |
@@ -119,8 +121,10 @@ jobs:
             --platform linux/amd64,linux/arm64 \
             --output "type=image,push=true" \
             --tag featureprobe/ui:latest \
-            --tag featureprobe/ui:${inputs.tag} \
+            --tag featureprobe/ui:$DOCKER_TAG \
             --file ./Dockerfile ./
+        env:
+          DOCKER_TAG: ${{ inputs.tag }}
         working-directory: ./feature-probe-ui    
         
       - name: Inspect image
