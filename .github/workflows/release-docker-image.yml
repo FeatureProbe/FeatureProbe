@@ -30,15 +30,6 @@ jobs:
         run: mvn -B package --file ./feature-probe-api/pom.xml
       - name: Set up Docker Buildx
         uses: crazy-max/ghaction-docker-buildx@v3
-        
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        id: cache
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
             
       - name: Login to DockerHub
         uses: docker/login-action@v1
@@ -85,15 +76,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: crazy-max/ghaction-docker-buildx@v3
-        
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        id: cache
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
             
       - name: Login to DockerHub
         uses: docker/login-action@v1
