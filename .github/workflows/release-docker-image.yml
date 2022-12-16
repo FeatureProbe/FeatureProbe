@@ -10,6 +10,15 @@ on:
         required: true
         default: 'alpha'
         type: string
+      build_select:
+        description: 'Which submodule to build'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - api
+        - ui
 
 permissions:
   contents: read
@@ -17,6 +26,7 @@ permissions:
 jobs:
   release_api:
     name: Release API
+    if: ${{ github.event_name == 'release' || inputs.build_select != 'ui' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -72,6 +82,7 @@ jobs:
   
   release_ui:
     name: Release UI
+    if: ${{ github.event_name == 'release' || inputs.build_select != 'api' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
