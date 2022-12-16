@@ -25,20 +25,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+        
     - name: yarn install
       run: yarn install --frozen-lockfile
       working-directory: ./feature-probe-ui
+      
     - name: yarn build
       run: yarn build
       working-directory: ./feature-probe-ui
+      
     - name: unit test
       run: yarn test:cov
       working-directory: ./feature-probe-ui
-    - name: Upload coverage reports to Codecov with GitHub Action
+      
+    - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
 
-        
