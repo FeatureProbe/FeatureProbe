@@ -6,12 +6,12 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Release Tag'
+        description: 'Docker image tag'
         required: true
         default: 'alpha'
         type: string
       build_select:
-        description: 'Which submodule to build'
+        description: 'Submodule to release'
         required: true
         default: 'all'
         type: choice
