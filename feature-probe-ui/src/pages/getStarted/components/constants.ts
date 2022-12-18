@@ -378,11 +378,11 @@ export const getMiniProgramCode = (options: IOption) => {
     {
       title: intl.formatMessage({id: 'getstarted.miniprogram.second.step.title'}),
       code:
-`import { featureProbeClient, FPUser} from "featureprobe-client-sdk-miniprogram";
+`import { initialize, FPUser } from "featureprobe-client-sdk-miniprogram";
 
 const user = new FPUser();
 ${userWithCode}
-featureProbeClient.init({
+const featureProbeClient = initialize({
     remoteUrl: "${remoteUrl}",
     clientSdkKey: "${clientSdkKey}",
     user,
