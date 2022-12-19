@@ -92,6 +92,7 @@ const MemberDrawer = (props: IParams) => {
     }
     clearErrors();
     setValue('role', 'WRITER');
+    saveRole('WRITER');
   }, [visible, setValue, clearErrors]);
 
   useEffect(() => {
