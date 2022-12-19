@@ -61,7 +61,7 @@ public class AccessTokenService {
             MemberCreateRequest memberCreateRequest = new MemberCreateRequest();
             String account = "api:" + token.getName();
             memberCreateRequest.setAccounts(Lists.newArrayList(account));
-            memberCreateRequest.setPassword("DEFAULT_PASSWORD");
+            memberCreateRequest.setPassword("WITHOUT_PASSWORD");
             memberCreateRequest.setSource("ACCESS_TOKEN");
             memberCreateRequest.setRole(createRequest.getRole());
             memberService.create(memberCreateRequest);
@@ -75,6 +75,12 @@ public class AccessTokenService {
     public AccessTokenResponse delete(Long tokenId) {
         AccessToken accessToken = getAccessTokenById(tokenId);
         accessToken.setDeleted(true);
+        if (accessToken.getMemberId() != null && accessToken.getType() == AccessTokenType.APPLICATION) {
+            Member member = memberService.findById(accessToken.getMemberId()).orElse(null);
+            if (member != null) {
+                memberService.delete(member.getAccount());
+            }
+        }
         return AccessTokenMapper.INSTANCE.entityToResponse(accessTokenRepository.save(accessToken));
     }
 

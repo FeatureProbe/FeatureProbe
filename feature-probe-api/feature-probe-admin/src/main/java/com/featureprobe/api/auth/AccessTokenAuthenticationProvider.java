@@ -46,7 +46,7 @@ public class AccessTokenAuthenticationProvider implements AuthenticationProvider
             log.warn("API Access token member not exists, userid: {}", token.getMemberId());
             return null;
         }
-        OperationLog log = new OperationLog(OperationType.LOGIN.name(), token.getName());
+        OperationLog log = new OperationLog(OperationType.LOGIN.name() + "_" + "AccessToken", token.getName());
         if (member.isPresent()) {
             TenantContext.setCurrentTenant(token.getOrganizationId().toString());
             memberService.updateVisitedTime(member.get().getAccount());

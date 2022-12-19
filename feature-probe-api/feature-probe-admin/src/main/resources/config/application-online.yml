@@ -38,8 +38,7 @@ logging:
 app:
   toggle-deadline: 30
   server-data-source: MEMORY # DB
-  server-base-urls:
-    - http://127.0.0.1:4007
+  server-base-urls: http://127.0.0.1:4007 # , split
   security:
     jwt:
       keystore-location: keys/keystore.jks
@@ -51,5 +50,6 @@ app:
         - /actuator/health
         - /api/login
         - /api/guestLogin
+        - /api/v3/api-docs.yaml
       guest-disabled: true
       guest-default-password: Guest_12345

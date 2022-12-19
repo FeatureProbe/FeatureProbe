@@ -19,7 +19,7 @@ import java.io.IOException;
 public class UiFilter implements Filter {
 
     private String passUri = "/static/css/**;/static/js/**;/static/media/**;/api/**;" +
-            "/favicon.ico;/asset-manifest.json;/actuator/health";
+            "/favicon.ico;/asset-manifest.json;/actuator/health;";
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)

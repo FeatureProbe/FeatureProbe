@@ -97,10 +97,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/api/login")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/server/**", "/api/login", "/api/guestLogin")
+                .antMatchers("/api/server/**", "/api/login", "/api/guestLogin", "/api/v3/api-docs.yaml")
                 .permitAll()
-                .antMatchers("/api/projects/**").hasAnyAuthority(OrganizationRoleEnum.OWNER.name(),
-                        OrganizationRoleEnum.WRITER.name())
+//                .antMatchers("/api/projects/**").hasAnyAuthority(OrganizationRoleEnum.OWNER.name(),
+//                        OrganizationRoleEnum.WRITER.name())
                 .antMatchers("/api/**").authenticated()
                 .and()
                 .exceptionHandling()
