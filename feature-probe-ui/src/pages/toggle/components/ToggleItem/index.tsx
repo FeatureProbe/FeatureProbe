@@ -269,18 +269,39 @@ const ToggleItem = (props: IProps) => {
       <Table.Cell>
         {
           toggle.visitedTime ? (
-            <div className={styles['toggle-evaluated']}>
-              <div>
-                <Icon type='evaluate' customclass={styles['icon-evaluate']} />
-                <span>
-                  {
-                    intl.formatMessage({id: 'toggles.evaluated.text'}, {
-                      time: dayjs(toggle?.visitedTime).format('YYYY-MM-DD HH:mm:ss')
-                    })
-                  }
-                </span>
-              </div>
-            </div> 
+            dayjs(toggle.visitedTime).diff(Date.now(), 'week') < 1 ? (
+              <div className={styles['toggle-evaluated']}>
+                <div>
+                  <FormattedMessage id='toggles.filter.evaluated.last.seven.days' />
+                </div>
+                <div>
+                  <Icon type='evaluate' customclass={styles['icon-evaluate']} />
+                  <span>
+                    {
+                      intl.formatMessage({id: 'toggles.evaluated.text'}, {
+                        time: dayjs(toggle?.visitedTime).format('YYYY-MM-DD HH:mm:ss')
+                      })
+                    }
+                  </span>
+                </div>
+              </div> 
+            ) : (
+              <div className={styles['toggle-evaluated']}>
+                <div>
+                  <FormattedMessage id='toggles.filter.evaluated.not.last.seven.days' />
+                </div>
+                <div>
+                  <Icon type='evaluate' customclass={styles['icon-evaluate']} />
+                  <span>
+                    {
+                      intl.formatMessage({id: 'toggles.evaluated.text'}, {
+                        time: dayjs(toggle?.visitedTime).format('YYYY-MM-DD HH:mm:ss')
+                      })
+                    }
+                  </span>
+                </div>
+              </div> 
+            )
           ) : (
             <div className={styles['toggle-evaluated']}>
               <div>

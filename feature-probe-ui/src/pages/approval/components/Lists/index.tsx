@@ -214,7 +214,6 @@ const Lists = () => {
               approvalList.length === 0 ? <NoData /> : (
                 <Pagination
                   total={total}
-                  text={intl.formatMessage({id: 'approvals.total'})}
                   pagination={pagination}
                   handlePageChange={handlePageChange}
                 />

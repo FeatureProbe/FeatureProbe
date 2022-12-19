@@ -13,6 +13,7 @@ import Pagination from 'components/Pagination';
 import { getMemberList } from 'services/member';
 import { IMemberList, IMember, IUser } from 'interfaces/member';
 import { HeaderContainer } from 'layout/hooks';
+import SettingCard from 'layout/settingCard';;
 import { OWNER } from 'constants/auth';
 import styles from './index.module.scss';
 
@@ -73,13 +74,10 @@ const Member = () => {
 	return (
     <SettingLayout>
       <>
-        <div className={styles.member}>
+        <SettingCard title={<FormattedMessage id='common.members.text' />}>
           {
             isLoading ? <Loading /> : (
               <>
-                <div className={styles.heading}>
-                  <FormattedMessage id='common.members.text' />
-                </div>
                 <div className={styles['card-tips']}>
                 <Icon type="warning-circle" customclass={styles['warning-circle']} />
                 <div className={styles['text']}>
@@ -100,54 +98,55 @@ const Member = () => {
                     </div>
                   )
                 }
-                <div className={styles.lists}>
-                  <Table basic='very' unstackable>
-                    <Table.Header className={styles['table-header']}>
-                      <Table.Row>
-                        <Table.HeaderCell>
-                          <FormattedMessage id='common.account.text' />
-                        </Table.HeaderCell>
-                        <Table.HeaderCell>
-                          <FormattedMessage id='members.role' />
-                        </Table.HeaderCell>
-                        <Table.HeaderCell>
-                          <FormattedMessage id='members.createdby' />
-                        </Table.HeaderCell>
-                        <Table.HeaderCell>
-                          <FormattedMessage id='members.lastseen' />
-                        </Table.HeaderCell>
-                        <Table.HeaderCell className={styles['column-operation']}>
-                          <FormattedMessage id='common.operation.text' />
-                        </Table.HeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    {
-                      memberList?.length !== 0 && (
-                        <Table.Body>
-                          {
-                            memberList?.map((member: IMember) => {
-                              return (
-                                <MemberItem 
-                                  key={member?.account}
-                                  member={member} 
-                                  setIsAdd={setIsAdd}
-                                  setEditUser={setEditUser}
-                                  setDrawerVisible={setDrawerVisible}
-                                  refreshMemberList={fetchMemberList}
-                                />
-                              );
-                            })
-                          }
-                        </Table.Body>
-                      )
-                    }
-                  </Table>
+                <div className={styles['scroll-box']}>
+                  <div className={styles.lists}>
+                    <Table basic='very' unstackable>
+                      <Table.Header className={styles['table-header']}>
+                        <Table.Row>
+                          <Table.HeaderCell>
+                            <FormattedMessage id='common.account.text' />
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
+                            <FormattedMessage id='members.role' />
+                          </Table.HeaderCell>
+                          <Table.HeaderCell className={styles['column-createdby']}>
+                            <FormattedMessage id='members.createdby' />
+                          </Table.HeaderCell>
+                          <Table.HeaderCell className={styles['column-lastseen']}>
+                            <FormattedMessage id='members.lastseen' />
+                          </Table.HeaderCell>
+                          <Table.HeaderCell className={styles['column-operation']}>
+                            <FormattedMessage id='common.operation.text' />
+                          </Table.HeaderCell>
+                        </Table.Row>
+                      </Table.Header>
+                      {
+                        memberList?.length !== 0 && (
+                          <Table.Body>
+                            {
+                              memberList?.map((member: IMember) => {
+                                return (
+                                  <MemberItem 
+                                    key={member?.account}
+                                    member={member} 
+                                    setIsAdd={setIsAdd}
+                                    setEditUser={setEditUser}
+                                    setDrawerVisible={setDrawerVisible}
+                                    refreshMemberList={fetchMemberList}
+                                  />
+                                );
+                              })
+                            }
+                          </Table.Body>
+                        )
+                      }
+                    </Table>
+                  </div>
                 </div>
                 {
                   memberList?.length !== 0 ? (
                     <Pagination 
                       total={total}
-                      text={intl.formatMessage({id: 'members.total'})}
                       pagination={pagination}
                       handlePageChange={handlePageChange}
                     />
@@ -156,7 +155,7 @@ const Member = () => {
               </>
             )
           }
-        </div>
+        </SettingCard>
         <MemberDrawer 
           isAdd={isAdd}
           visible={drawerVisible}

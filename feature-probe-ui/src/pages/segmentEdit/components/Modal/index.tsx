@@ -217,7 +217,6 @@ const ConfirmModal = (props: IProps) => {
                       total={total}
                       pagination={pagination}
                       hideTotal={true}
-                      text={intl.formatMessage({id: 'segments.total'})}
                       handlePageChange={handlePageChange}
                     />
                   ) : <NoData />
