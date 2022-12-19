@@ -35,6 +35,7 @@ const RuleTitle = (props: IProps) => {
   } = ruleContainer.useContainer();
 
   const {
+    formState: { errors },
     unregister,
     clearErrors,
     getValues,
@@ -55,8 +56,14 @@ const RuleTitle = (props: IProps) => {
         clearErrors(key);
       }
     }
+
+    for(const key in errors) {
+      if (key.startsWith(`rule_${ruleId}_`)) {
+        clearErrors(key);
+      }
+    }
     handleDeleteRule(index);
-  }, [unregister, clearErrors, getValues, handleDeleteRule]);
+  }, [unregister, clearErrors, getValues, handleDeleteRule, errors]);
 
   const handleInputClick = useCallback((e: SyntheticEvent) => {
     e.stopPropagation();
