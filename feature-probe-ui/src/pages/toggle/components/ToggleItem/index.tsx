@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState, useCallback, useEffect } from 'react';
+import { SyntheticEvent, useState, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { v4 as uuidv4 } from 'uuid';
