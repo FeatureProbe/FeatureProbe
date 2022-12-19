@@ -119,12 +119,6 @@ const ToggleItem = (props: IProps) => {
     }
   }, [toggle.key, projectKey, intl, refreshToggleList]);
 
-  useEffect(() => {
-    if(toggle.visitedTime) {
-      console.log(dayjs(toggle.visitedTime).diff(Date.now(), 'week'));
-    }
-  }, [toggle]);
-
 	return (
     <Table.Row
       className={styles['list-item']}
