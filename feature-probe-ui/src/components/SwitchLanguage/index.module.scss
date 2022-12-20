@@ -1,0 +1,30 @@
+.popup {
+  padding: 4px 0 !important;
+  margin-top: 0 !important;
+}
+
+.language-popup {
+  margin-right: 32px;
+  white-space: pre;
+}
+
+.angle-down {
+  position: absolute;
+}
+
+.menu {
+  min-width: 120px;
+  color: #212529;
+}
+
+.menu-item {
+  height: 28px;
+  line-height: 28px;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 12px;
+}
+
+.menu-item:hover {
+  background-color: #f8f9fa;
+}

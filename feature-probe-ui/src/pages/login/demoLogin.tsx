@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import message from 'components/MessageBox';
+import SwitchLanguage from 'components/SwitchLanguage';
 import EventTracker from 'components/EventTracker';
 import { demoLogin } from 'services/user';
 import { getRedirectUrl } from 'utils/getRedirectUrl';
@@ -90,6 +91,9 @@ const DemoLogin = () => {
 
 	return (
 		<div className={styles.login}>
+      <div className={styles['switch-language']}>
+        <SwitchLanguage />
+      </div>
       <Modal
         closeOnDimmerClick={false}
         closeIcon={

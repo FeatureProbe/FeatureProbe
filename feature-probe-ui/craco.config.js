@@ -6,7 +6,9 @@ module.exports = {
   ],
   webpack: {
     configure: {
-      output: { filename: 'static/js/[name].[chunkhash:8].chunk.js' },
+      output: { 
+        filename: 'static/js/[name].[chunkhash:8].chunk.js',
+      },
       optimization: {
         splitChunks: {
           chunks: 'all',

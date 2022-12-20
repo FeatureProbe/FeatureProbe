@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Switch language snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="language-popup"
+  >
+    English
+    <span
+      class="iconfont icon-angle-down angle-down"
+      customclass="angle-down"
+      type="angle-down"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`click language 1`] = `
+<body>
+  <div>
+    <div
+      class="language-popup"
+    >
+      English
+      <span
+        class="iconfont icon-angle-down angle-down"
+        customclass="angle-down"
+        type="angle-down"
+      />
+    </div>
+  </div>
+  <div
+    style="display: flex; position: absolute; left: 0px; top: 0px; right: 0px; transform: translate(0px, 0px);"
+  >
+    <div
+      class="ui bottom right basic popup transition visible popup"
+      style="position: initial;"
+    >
+      <div
+        class="menu"
+      >
+        <div
+          class="menu-item"
+        >
+          English
+        </div>
+        <div
+          class="menu-item"
+        >
+          中文
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`select language 1`] = `
+<body>
+  <div>
+    <div
+      class="language-popup"
+    >
+      中文
+      <span
+        class="iconfont icon-angle-down angle-down"
+        customclass="angle-down"
+        type="angle-down"
+      />
+    </div>
+  </div>
+</body>
+`;
