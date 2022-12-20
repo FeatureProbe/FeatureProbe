@@ -161,7 +161,7 @@ const Segment = () => {
               </EventTracker>
             </div>
             {isLoading ? (
-              <div className={styles.lists}>
+               <div className={styles['loading-box']}>
                 <Loading />
               </div>
             ) : (

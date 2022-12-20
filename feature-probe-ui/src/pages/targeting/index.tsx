@@ -161,7 +161,8 @@ const Targeting = () => {
         message.error(res.message || intl.formatMessage({id: 'toggles.targeting.error.text'}));
       }
     });
-  }, [projectKey, environmentKey, toggleKey, intl]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectKey, environmentKey, toggleKey]);
 
   // get specific history versions
   const getVersionsByVersion = useCallback(async () => {
@@ -207,7 +208,8 @@ const Targeting = () => {
     } else {
       message.error(res.message || intl.formatMessage({id: 'targeting.get.versions.error'}));
     }
-  }, [currentVersion, projectKey, environmentKey, toggleKey, intl]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentVersion, projectKey, environmentKey, toggleKey]);
 
   useEffect(() => {
     if (currentVersion) {
