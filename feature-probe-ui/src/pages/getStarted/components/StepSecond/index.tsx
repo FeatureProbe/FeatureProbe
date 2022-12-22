@@ -8,6 +8,8 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
 import { IRouterParams } from 'interfaces/project';
+import { IApplicationSetting } from 'interfaces/applicationSetting';
+import { getApplicationSettings } from 'services/application';
 import {
   ToggleReturnType,
   getAndroidCode,
@@ -83,10 +85,13 @@ const StepSecond = (props: IProps) => {
     }
   );
 
-  // useEffect(() => {
-  //   const remoteUrl = window.FP.stringValue('remote_url', '');
-  //   saveRemoteUrl(remoteUrl);
-  // }, []);
+  useEffect(() => {
+    getApplicationSettings<IApplicationSetting>().then(res => {
+      if (res.success && res.data) {
+        saveRemoteUrl(res.data.serverURI);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (currentSDK) {
