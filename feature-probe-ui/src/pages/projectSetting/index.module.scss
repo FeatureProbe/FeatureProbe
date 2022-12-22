@@ -7,6 +7,7 @@
   flex-direction: column;
   position: relative;
   min-width: 1160px;
+  border-radius: 12px 12px 0 0;
 }
 
 .content {
@@ -15,9 +16,10 @@
 
 .title {
   padding: 12px 24px 0;
-  font-family: PingFangSC-Medium;
+  font-family: HelveticaNeue-Medium, Arial, Helvetica, sans-serif;
   font-size: 20px;
   color: #212529;
+  line-height: 30px;
 }
 
 .tips {
