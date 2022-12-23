@@ -29,5 +29,4 @@ jobs:
         run: |-
           gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
           gcloud config set project tranquil-post-357802 
-          gcloud compute ssh featureprobe --zone=asia-east1-a --command="sudo whoami"
-        
+          gcloud compute ssh featureprobe --zone=asia-east1-a --command="wget --header 'Authorization: token ${{ secrets.GH_API_TOKEN }}' https://raw.githubusercontent.com/FeatureProbe/internal_script/main/io/start.sh -O start.sh;sudo ./start.sh"
