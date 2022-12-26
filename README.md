@@ -111,7 +111,7 @@ if (fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)) {
 }
 ~~~
 
-There are two types of SDKs for FeatureProbe choose one for the programming language you use. 
+We have SDKs for the following program languages, choose one for your application.
 
 ##### 💻 **Server Side SDK**
 
