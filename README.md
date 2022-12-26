@@ -101,31 +101,28 @@ The overall architecture of FeatureProbe is shown in the following figure
 
 #### 2️⃣ Use FeatureProbe SDK in your application
 
-There are two types of SDKs for FeatureProbe. 
+Import FeatureProbe SDK in your app, and check the Feature Toggle status in your code like the following pseudo-code:
 
-**Server Side SDK**
-These SDKs work in server side applications (such as 
-[Java SDK](https://github.com/FeatureProbe/server-sdk-java/blob/master/README.md), 
-[Rust SDK](https://github.com/FeatureProbe/server-sdk-rust/blob/master/README.md)
-) and use configuration 
-data fetched from FeatureProbe Server to evaluate the variation results. They are flexible to allow you adding your own 
-configurations or rules on top of the ones from the Server.
+~~~ java
+if (fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)) {
+  // Do some new thing;
+} else {
+  // Do the default thing;
+}
+~~~
 
-The available Server Side SDKs are:
+There are two types of SDKs for FeatureProbe choose one for the programming language you use. 
+
+##### 💻 **Server Side SDK**
+
 * [Java SDK](https://github.com/FeatureProbe/server-sdk-java)
 * [Rust SDK](https://github.com/FeatureProbe/server-sdk-rust)
 * [Golang SDK](https://github.com/FeatureProbe/server-sdk-go)
 * [Python SDK](https://github.com/FeatureProbe/server-sdk-python) by [@HeZean](https://github.com/HeZean)
 * [Node.js SDK](https://github.com/FeatureProbe/server-sdk-node) by [@HeZean](https://github.com/HeZean)
 
+##### 📲 **Client Side SDK**
 
-**Client Side SDK**
-These SDKs work in client side applications (such as [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js/blob/master/README.md), 
-or [mobile SDK](https://github.com/FeatureProbe/client-sdk-mobile/blob/master/README.md) for iOS and Android) and
-use the evaluation results provided by FeatureProbe Server. The usage is straightforward and only getting evaluation results
-from FeatureProbe Server can guarantee the client side performance and data security.
-
-The available Client Side SDKs are:
 * [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js)
 * [Android SDK](https://github.com/FeatureProbe/client-sdk-mobile)
 * [iOS SDK](https://github.com/FeatureProbe/client-sdk-mobile)
@@ -166,7 +163,7 @@ Or if you prefer to talk in chinese, join our wechat group:
 
 For Bug report or new feature requirement, create a [GitHub issue](https://github.com/FeatureProbe/FeatureProbe/issues/new/choose) for us.
 
-##🎢 Star History
+## 🎢 Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=FeatureProbe/FeatureProbe&type=Date)](https://star-history.com/#FeatureProbe/FeatureProbe&Date)
 
