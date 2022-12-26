@@ -3,10 +3,12 @@ package com.featureprobe.api.service;
 import com.featureprobe.api.auth.TokenHelper;
 import com.featureprobe.api.base.enums.OrganizationRoleEnum;
 import com.featureprobe.api.base.model.BaseRule;
+import com.featureprobe.api.base.model.SegmentRuleModel;
 import com.featureprobe.api.base.model.TargetingContent;
 import com.featureprobe.api.base.model.ToggleRule;
 import com.featureprobe.api.base.model.Variation;
 import com.featureprobe.api.base.tenant.TenantContext;
+import com.featureprobe.api.dao.entity.Segment;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
 import com.featureprobe.api.dao.utils.PageRequestUtil;
 import com.featureprobe.api.dto.AfterTargetingVersionResponse;
@@ -59,6 +61,7 @@ import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -564,4 +567,44 @@ public class TargetingService {
                 projectKey + "-" + environmentKey + "-" + toggleKey));
     }
 
+    public List<String> attributes(String projectKey, String environmentKey, String toggleKey) {
+        List<String> res = new ArrayList<>();
+        Targeting targeting = targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey,
+                environmentKey, toggleKey).orElseThrow(() -> new ResourceNotFoundException(ResourceType.TARGETING,
+                projectKey + "-" + environmentKey + "-" + toggleKey));
+        TargetingContent targetingContent = JsonMapper.toObject(targeting.getContent(), TargetingContent.class);
+        List<ToggleRule> rules = targetingContent.getRules();
+        if (CollectionUtils.isEmpty(rules)) return res;
+        for (ToggleRule rule : rules) {
+            List<ConditionValue> conditions = rule.getConditions();
+            if (CollectionUtils.isEmpty(conditions)) break;
+            for (ConditionValue condition : conditions) {
+                if ("segment".equals(condition.getType())) {
+                    res.addAll(getSegmentAttributes(projectKey, condition.getObjects()));
+                } else {
+                    res.add(condition.getSubject());
+                }
+            }
+        }
+        return res.stream().distinct().collect(Collectors.toList());
+    }
+
+    private List<String> getSegmentAttributes(String projectKey, List<String> keys) {
+        List<String> res = new ArrayList<>();
+        if (CollectionUtils.isEmpty(keys)) return res;
+        for (String key : keys) {
+            Segment segment = segmentRepository.findByProjectKeyAndKey(projectKey, key).orElseThrow(() ->
+                    new ResourceNotFoundException(ResourceType.SEGMENT, projectKey + "_" + key));
+            List<SegmentRuleModel> segmentRules = JsonMapper.toListObject(segment.getRules(), SegmentRuleModel.class);
+            if (CollectionUtils.isEmpty(segmentRules)) return res;
+            for (SegmentRuleModel rule : segmentRules) {
+                List<ConditionValue> conditions = rule.getConditions();
+                if (CollectionUtils.isEmpty(conditions)) break;
+                for (ConditionValue condition : conditions) {
+                    res.add(condition.getSubject());
+                }
+            }
+        }
+        return res;
+    }
 }

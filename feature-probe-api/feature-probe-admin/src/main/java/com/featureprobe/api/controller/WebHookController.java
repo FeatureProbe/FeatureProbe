@@ -8,6 +8,7 @@ import com.featureprobe.api.base.doc.PatchApiResponse;
 import com.featureprobe.api.base.hook.Action;
 import com.featureprobe.api.base.hook.Hook;
 import com.featureprobe.api.base.hook.Resource;
+import com.featureprobe.api.dto.SecretKeyResponse;
 import com.featureprobe.api.dto.WebHookCreateRequest;
 import com.featureprobe.api.dto.WebHookItemResponse;
 import com.featureprobe.api.dto.WebHookListRequest;
@@ -72,6 +73,13 @@ public class WebHookController {
     @Operation(summary = "Query WebHook", description = "Query a WebHook.")
     public WebHookItemResponse query(@PathVariable(name = "id") Long id) {
         return webHookService.query(id);
+    }
+
+    @GetApiResponse
+    @GetMapping("/secretKey")
+    @Operation(summary = "Get WebHook SecretKey", description = "Get a WebHook SecretKey.")
+    public SecretKeyResponse secretKey() {
+        return webHookService.secretKey();
     }
 
     @GetApiResponse

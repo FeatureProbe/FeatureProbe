@@ -7,6 +7,7 @@ import com.featureprobe.api.dao.exception.ResourceConflictException;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
 import com.featureprobe.api.dao.repository.WebHookSettingsRepository;
 import com.featureprobe.api.dao.utils.PageRequestUtil;
+import com.featureprobe.api.dto.SecretKeyResponse;
 import com.featureprobe.api.dto.WebHookCreateRequest;
 import com.featureprobe.api.dto.WebHookItemResponse;
 import com.featureprobe.api.dto.WebHookListRequest;
@@ -51,10 +52,9 @@ public class WebHookService {
         checkUrl(createRequest.getUrl());
         WebHookSettings webHookSettings = WebHookMapper.INSTANCE.requestToEntity(createRequest);
         webHookSettings.setType(CallbackType.COMMON);
-        webHookSettings.setSecretKey(DigestUtils.sha1Hex(UUID.randomUUID().toString()
-                .getBytes(StandardCharsets.UTF_8)));
         return WebHookMapper.INSTANCE.entityToResponse(webHookSettingsRepository.save(webHookSettings));
     }
+
 
     @Transactional(rollbackFor = Exception.class)
     public WebHookResponse update(Long id, WebHookUpdateRequest updateRequest) {
@@ -66,6 +66,11 @@ public class WebHookService {
         checkUrl(updateRequest.getUrl());
         WebHookMapper.INSTANCE.mapEntity(updateRequest, webHookSettings);
         return WebHookMapper.INSTANCE.entityToResponse(webHookSettingsRepository.save(webHookSettings));
+    }
+
+    public SecretKeyResponse secretKey() {
+        return new SecretKeyResponse(DigestUtils.sha1Hex(UUID.randomUUID().toString()
+                .getBytes(StandardCharsets.UTF_8)));
     }
 
     @Transactional(rollbackFor = Exception.class)
