@@ -55,11 +55,8 @@ Discover all the amazing things FeatureProbe can accomplish.
 
 ![FeatureProbe screenshot](./pictures/toggles.png) 
 
-## 💡 Core Concepts
 
-Introduction of FeatureProbe architecture and how to use it.
-
-### 🧩 Architecture of FeatureProbe
+# 🧩 Architecture of FeatureProbe
 
 The overall architecture of FeatureProbe is shown in the following figure
 
@@ -76,30 +73,27 @@ The overall architecture of FeatureProbe is shown in the following figure
    * Server-Side SDKs
 
 
-### 🍭 Try FeatureProbe in 2 Steps
+# 🍭 Get Started in 2 Steps
 
-#### 1️⃣ Start FeatureProbe Central Service
+## 1️⃣ Start FeatureProbe Central Service
 
-1. We provide a online try-out FeatureProbe Service, so you don't have to deploy by yourself, just visit [Here](https://featureprobe.io).
+1. We provide a online try-out FeatureProbe Service, so you don't have to deploy by yourself, just visit it [Here](https://featureprobe.io).
 
 1. Or you can use docker composer to set your own FeatureProbe service
 
    * Make sure you have [`git`](https://git-scm.com/) and [`docker`](https://www.docker.com/) installed. 。
    * Clone the repository to your server and boot up the services. Change the ports defined in docker-compose.yml as needed.
-   * For users in Mainland China, please refer to [configure mirror](DOCKER_HUB.md) to speed up your download.
    
    ``` bash
        git clone https://github.com/FeatureProbe/FeatureProbe.git
        cd FeatureProbe
        docker compose up
    ```
-   * Go to UI/Portal at `localhost:4009` and use the default credentials to log in.
-   * Note that you should replace `4009` with your port number if you made any changes previously.
-   * Remember to update the admin password after your first time login.
+   * Visit the service on [http://localhost:4009](http://localhost:4009) with a browser and use the default credentials to log in.
         - username: `admin`
         - password: `Pass1234`
 
-#### 2️⃣ Use FeatureProbe SDK in your application
+## 2️⃣ Use FeatureProbe SDK in your application
 
 Import FeatureProbe SDK in your app, and check the Feature Toggle status in your code like the following pseudo-code:
 
@@ -113,7 +107,7 @@ if (fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)) {
 
 We have SDKs for the following program languages, choose one for your application.
 
-##### 💻 **Server Side SDK**
+### 💻 **Server Side SDK**
 
 * [Java SDK](https://github.com/FeatureProbe/server-sdk-java)
 * [Rust SDK](https://github.com/FeatureProbe/server-sdk-rust)
@@ -121,7 +115,7 @@ We have SDKs for the following program languages, choose one for your applicatio
 * [Python SDK](https://github.com/FeatureProbe/server-sdk-python) by [@HeZean](https://github.com/HeZean)
 * [Node.js SDK](https://github.com/FeatureProbe/server-sdk-node) by [@HeZean](https://github.com/HeZean)
 
-##### 📲 **Client Side SDK**
+### 📲 **Client Side SDK**
 
 * [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js)
 * [Android SDK](https://github.com/FeatureProbe/client-sdk-mobile)
@@ -132,11 +126,11 @@ We have SDKs for the following program languages, choose one for your applicatio
 > We also provide a online [FeatureProbe Demo](https://featureprobe.io/demo/) application, with FeatureProbe Javascript SDK embeded, controlled by FeatureProbe [online try-out service](https://featureprobe.io), you can try out FeatureProbe functions on this demo website.
 
 
-## 📚 More information
+# 📚 More information
 
 Please visit our [Documentation](https://docs.featureprobe.io/)
 
-## 🙌 Contributing
+# 🙌 Contributing
 
 We are working on continue evolving FeatureProbe core, making it flexible and easier to use. 
 Development of FeatureProbe happens in the open on GitHub, and we are grateful to the 
@@ -146,12 +140,12 @@ Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, 
 taking part in improving FeatureProbe.
 
 
-## 📜 License
+# 📜 License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
 
 
-## 🌈 Community and Sharing
+# 🌈 Community and Sharing
 
 We are growing a community to help newcomer to learn FeatureProbe. Don't hesitate to reach out for help.
 
@@ -163,7 +157,7 @@ Or if you prefer to talk in chinese, join our wechat group:
 
 For Bug report or new feature requirement, create a [GitHub issue](https://github.com/FeatureProbe/FeatureProbe/issues/new/choose) for us.
 
-## 🎢 Star History
+# 🎢 Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=FeatureProbe/FeatureProbe&type=Date)](https://star-history.com/#FeatureProbe/FeatureProbe&Date)
 
