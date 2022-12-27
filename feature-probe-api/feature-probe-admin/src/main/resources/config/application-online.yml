@@ -46,7 +46,7 @@ app:
       key-alias: jwtsigning
       private-key-passphrase: password
       exclude-tenant-uri:
-        - /api/server/**
+        - /internal/**
         - /actuator/health
         - /api/login
         - /api/guestLogin
