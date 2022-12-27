@@ -384,7 +384,7 @@ tester_c@company.com see nothing
 1. 进入人群组qa_email的编辑页面
 2. 将email帐号test_b删除，添加email帐号test_c
 
-![tutorial_segment_after_update_cn.png](/asegment_after_update_cn.png)
+![tutorial_segment_after_update_cn.png](/tutorial_segment_after_update_cn.png)
 
 3. 发布人群组
 
