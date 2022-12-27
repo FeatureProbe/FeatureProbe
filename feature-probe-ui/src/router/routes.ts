@@ -32,8 +32,6 @@ export const WEBHOOK_LIST_PATH = '/settings/webhooks/list';
 export const APPROVAL_PATH = '/approvals/:navigation';
 export const APITOKEN_PATH = '/settings/tokens';
 
-
-
 const isDemo = localStorage.getItem('isDemo') === 'true';
 
 export const headerRoutes = [

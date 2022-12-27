@@ -17,7 +17,8 @@ const ToggleURI = {
   toggleExistURI: `${origin}/projects/:projectKey/toggles/exists`,
   environmentExistURI: `${origin}/projects/:projectKey/environments/exists`,
   targetingVersionsURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/targeting/versions`,
-  targetingVersionsByVersionURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/targeting/versions/:version`
+  targetingVersionsByVersionURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/targeting/versions/:version`,
+  getAttributesURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/targeting/attributes`,
 };
 
 export default ToggleURI;

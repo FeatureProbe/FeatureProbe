@@ -270,7 +270,7 @@ const Info = (props: IProps) => {
                   )
                 }
                 <div className={styles['info-toggle-name']}>
-                  <TextLimit text={toggleInfo?.name ?? ''} maxWidth={250} />
+                  <TextLimit text={toggleInfo?.name ?? ''} maxWidth={220} />
                 </div>
                 {
                   enableApproval && toggleStatus === 'PENDING' && (

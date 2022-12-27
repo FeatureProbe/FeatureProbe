@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import Button from 'components/Button';
+import SwitchLanguage from 'components/SwitchLanguage';
 import { getRedirectUrl } from 'utils/getRedirectUrl';
 import { EventTrack } from 'utils/track';
 import styles from './index.module.scss';
@@ -30,6 +31,9 @@ const NotFound = () => {
 
 	return (
 		<div className={styles['not-found']}>
+      <div className={styles['switch-language']}>
+        <SwitchLanguage />
+      </div>
       <div className={styles.content}>
         <div className={styles.image}>
           <img src={require('images/not-found.png')}  alt='404' />

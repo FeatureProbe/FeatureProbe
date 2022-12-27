@@ -7,6 +7,7 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import message from 'components/MessageBox';
 import EventTracker from 'components/EventTracker';
+import SwitchLanguage from 'components/SwitchLanguage';
 import { login } from 'services/user';
 import { getRedirectUrl } from 'utils/getRedirectUrl';
 import { FORBIDDEN } from 'constants/httpCode';
@@ -106,6 +107,9 @@ const Login = () => {
 
 	return (
 		<div className={styles.login}>
+      <div className={styles['switch-language']}>
+        <SwitchLanguage />
+      </div>
       <Modal
         closeOnDimmerClick={false}
         closeIcon={
