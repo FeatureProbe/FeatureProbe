@@ -5,7 +5,7 @@ sidebar_position: 4
 # MiniProgram SDK
 
 :::tip
-This SDK is only applicable to WeChat mini program, other mini programs including Alipay, Baidu, DingDing and TouTiao are preparing, will be released soon.
+This SDK is only applicable to WeChat mini program, other mini programs including Alipay, Baidu, DingDing and TouTiao are preparing, will be released soon. To provide a better integration for use in mini program applications, MiniProgram SDK builds on JavaScript SDK. Much of the JavaScript SDK functionality is also available for the MiniProgram SDK to use. Please reference [JavaScript SDK](./javascript-sdk.md).
 :::
 
 ## Try Out Demo Code
@@ -23,10 +23,6 @@ cd client-sdk-miniprogram
 
 3. Find the Demo code in [example](https://github.com/FeatureProbe/client-sdk-miniprogram/tree/main/example),
 do some change and run the program again.
-
-<!-- ```
-// open example/index.html in browser
-``` -->
 
 ## Step-by-Step Guide
 
@@ -108,12 +104,6 @@ This SDK takes the following options:
 
 API Docs: [SDK API](https://featureprobe.github.io/client-sdk-js/)
 
-## SDK Events
-
-- **ready** - Emit `ready` event after successfully fetching toggles from `Server`
-- **cache_ready** - Emit `cache_ready` event after successfully fetching toggles from `LocalStorage`
-- **error** - Emit `error` event when error fetching toggles from `Server` and timeout exceeded
-- **update** - Emit `update` event every time successfully fetching toggles from `Server`, except for the first time (Emit `ready` event first time)
 
 ## Testing
 

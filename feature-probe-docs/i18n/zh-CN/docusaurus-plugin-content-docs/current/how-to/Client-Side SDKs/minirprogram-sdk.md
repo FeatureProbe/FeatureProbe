@@ -5,7 +5,7 @@ sidebar_position: 4
 # 小程序SDK
 
 :::tip
-此SDK仅适用于微信小程序，其他小程序包括：支付宝、百度、钉钉、今日头条正在准备中。
+小程序SDK目前仅适用于微信小程序，其他小程序包括：支付宝、百度、钉钉、今日头条正在准备中。小程序SDK是在 JavaScript SDK的基础上进行的封装，主要为了提升在小程序项目中的使用体验。JavaScript SDK中的大部分方法在React SDK中也同样适用，详见[JavaScript SDK](./javascript-sdk.md)。
 :::
 
 :::note SDK quick links
@@ -36,9 +36,6 @@ cd client-sdk-miniprogram
 3.找到Demo代码 [example](https://github.com/FeatureProbe/client-sdk-miniprogram/tree/main/example),
 做一些改变并再次运行程序。
 
-<!-- ```
-// open example/index.html in browser
-``` -->
 
 ## 分步指南
 
@@ -116,14 +113,6 @@ featureProbeClient.on("ready", function() {
 ## SDK的API文档
 
 查看API文档：[SDK API](https://featureprobe.github.io/client-sdk-miniprogram/)
-
-
-## SDK发布的事件
-
-- **ready** - SDK成功从`Server端`获取开关后发布`ready`事件 
-- **cache_ready** - SDK成功从本地缓存`LocalStorage`中获取缓存开关后发布`cache_ready`事件，`cache_ready`发布时不会关心SDK是否成功`ready`
-- **error** - SDK无法从`Server端`成功获取开关，且超过超时时间，将发布`error`事件
-- **update** - 除了首次从`Server端`获取开关外，SDK后续通过定期轮询的方式从`Server端`成功获取开关后发布`update`事件
 
 
 ## 集成测试
