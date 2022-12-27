@@ -76,7 +76,7 @@ The overall architecture of FeatureProbe is shown in the following figure
    * Server-Side SDKs
 
 
-### 🍭 Try FeatureProbe in 2 Steps
+### 🍭 Get Started in 2 Steps
 
 #### 1️⃣ Start FeatureProbe Central Service
 
