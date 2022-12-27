@@ -80,22 +80,19 @@ The overall architecture of FeatureProbe is shown in the following figure
 
 #### 1️⃣ Start FeatureProbe Central Service
 
-1. We provide a online try-out FeatureProbe Service, so you don't have to deploy by yourself, just visit [Here](https://featureprobe.io).
+1. We provide a online try-out FeatureProbe Service, so you don't have to deploy by yourself, just visit it [Here](https://featureprobe.io).
 
 1. Or you can use docker composer to set your own FeatureProbe service
 
    * Make sure you have [`git`](https://git-scm.com/) and [`docker`](https://www.docker.com/) installed. 。
    * Clone the repository to your server and boot up the services. Change the ports defined in docker-compose.yml as needed.
-   * For users in Mainland China, please refer to [configure mirror](DOCKER_HUB.md) to speed up your download.
    
    ``` bash
        git clone https://github.com/FeatureProbe/FeatureProbe.git
        cd FeatureProbe
        docker compose up
    ```
-   * Go to UI/Portal at `localhost:4009` and use the default credentials to log in.
-   * Note that you should replace `4009` with your port number if you made any changes previously.
-   * Remember to update the admin password after your first time login.
+   * Visit the service on [http://localhost:4009](http://localhost:4009) with a browser and use the default credentials to log in.
         - username: `admin`
         - password: `Pass1234`
 
