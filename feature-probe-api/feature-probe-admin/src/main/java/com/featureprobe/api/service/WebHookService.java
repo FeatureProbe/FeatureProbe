@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -85,6 +86,11 @@ public class WebHookService {
         WebHookSettings webHookSettings = webHookSettingsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(ResourceType.WEBHOOK, String.valueOf(id)));
         return WebHookMapper.INSTANCE.entityToItemResponse(webHookSettings);
+    }
+
+    public List<String> queryByUrl(String url) {
+        List<WebHookSettings> webHookSettingsList = webHookSettingsRepository.findByUrl(url);
+        return webHookSettingsList.stream().map(WebHookSettings::getName).collect(Collectors.toList());
     }
 
     public Page<WebHookItemResponse> list(WebHookListRequest listRequest) {

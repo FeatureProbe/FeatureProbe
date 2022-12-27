@@ -4,9 +4,11 @@ import com.featureprobe.api.base.hook.HookSettingsStatus
 import com.featureprobe.api.dao.entity.WebHookSettings
 import com.featureprobe.api.dao.exception.ResourceConflictException
 import com.featureprobe.api.dao.repository.WebHookSettingsRepository
+import com.featureprobe.api.dto.SecretKeyResponse
 import com.featureprobe.api.dto.WebHookCreateRequest
 import com.featureprobe.api.dto.WebHookListRequest
 import com.featureprobe.api.dto.WebHookUpdateRequest
+import org.apache.commons.lang3.StringUtils
 import org.hibernate.internal.SessionImpl
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -138,6 +140,23 @@ class WebHookServiceSpec extends Specification {
                 status: HookSettingsStatus.ENABLE,  url: "http://127.0.0.1:8080/test", description: "This is a demo WenHook")],
                 Pageable.ofSize(1), 1)
         1 == list.content.size()
+    }
+
+    def "get a secretKey"() {
+        when:
+        def secretKey = webHookService.secretKey()
+        then:
+        StringUtils.isNotBlank(secretKey.getSecretKey())
+    }
+
+    def "query webhook names by url"() {
+        given:
+        def url = "http://127.0.0.1:8080/test"
+        when:
+        def names = webHookService.queryByUrl(url)
+        then:
+        1 * webHookSettingsRepository.findByUrl(url) >> [new WebHookSettings(name: "Test")]
+        1 == names.size()
     }
 }
 

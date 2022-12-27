@@ -9,10 +9,10 @@ import StepSecond, { SdkLanguage } from '../StepSecond';
 import StepThird from '../StepThird';
 import { saveDictionary, getFromDictionary } from 'services/dictionary';
 import { getSdkVersion } from 'services/misc';
-import { getToggleAccess, getToggleInfo, getTargeting, editToggle } from 'services/toggle';
+import { getToggleAccess, getToggleInfo, editToggle, getToggleAttributes } from 'services/toggle';
 import { getProjectInfo } from 'services/project';
 import { getEnvironment } from 'services/project';
-import { IDictionary, IToggleInfo, IContent, IRule } from 'interfaces/targeting';
+import { IDictionary, IToggleInfo } from 'interfaces/targeting';
 import { IProject, IEnvironment, IRouterParams } from 'interfaces/project';
 import { ToggleReturnType } from '../constants';
 import styles from './index.module.scss';
@@ -67,14 +67,17 @@ const Steps = () => {
   const [ isInfoLoading, saveIsInfoLoading ] = useState<boolean>(true);
   const [ isStepLoading, saveIsStepLoading ] = useState<boolean>(true);
   const [ clientAvailability, saveClientAvailability ] = useState<boolean>(false);
-  const [ rules, saveRules ] = useState<IRule[]>([]);
+  const [ attributes, saveAttributes ] = useState<string[]>([]);
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
 
   const init = useCallback(async() => {
     const key = PREFIX + projectKey + '_' + environmentKey + '_' + toggleKey;
 
-    Promise.all([getFromDictionary<IDictionary>(key), getTargeting<IContent>(projectKey, environmentKey, toggleKey)]).then(res => {
+    Promise.all([
+      getFromDictionary<IDictionary>(key), 
+      getToggleAttributes<string[]>(projectKey, environmentKey, toggleKey)
+     ]).then(res => {
       saveIsStepLoading(false);
       if (res[0].success && res[0].data) {
         const savedData = JSON.parse(res[0].data.value);
@@ -90,8 +93,7 @@ const Steps = () => {
       }
 
       if (res[1].success && res[1].data) {
-        const { content } = res[1].data;
-        saveRules(content?.rules || []);
+        saveAttributes(res[1].data);
       }
     });
 
@@ -262,7 +264,7 @@ const Steps = () => {
                 enableClientSideSDK={enableClientSideSDK}
               />
               <StepSecond 
-                rules={rules}
+                attributes={attributes}
                 currentStep={currentStep}
                 currentSDK={currentSDK}
                 returnType={returnType}

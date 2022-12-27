@@ -38,9 +38,9 @@ services:
       - RUST_LOG=info
       - FP_SERVER_PORT=4007
       - FP_REALTIME_PORT=4011
-      - FP_TOGGLES_URL=http://backendAPI:4008/api/server/toggles
-      - FP_EVENTS_URL=http://backendAPI:4008/api/server/events
-      - FP_KEYS_URL=http://backendAPI:4008/api/server/sdk_keys
+      - FP_TOGGLES_URL=http://backendAPI:4008/internal/server/toggles
+      - FP_EVENTS_URL=http://backendAPI:4008/internal/server/events
+      - FP_KEYS_URL=http://backendAPI:4008/internal/server/sdk_keys
       - FP_REFRESH_SECONDS=3
       - TZ=Asia/Shanghai
     networks:

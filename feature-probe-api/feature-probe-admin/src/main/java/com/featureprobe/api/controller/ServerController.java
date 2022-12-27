@@ -30,7 +30,7 @@ import java.util.Objects;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/server/")
+@RequestMapping("/internal/server/")
 @AllArgsConstructor
 @Hidden
 public class ServerController {

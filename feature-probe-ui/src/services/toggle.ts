@@ -284,3 +284,19 @@ export const getTargetingDiff = async<T> (projectKey: string, environmentKey: st
     },
   });
 };
+
+export const getToggleAttributes = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
+  const url = `${
+    API.getAttributesURI
+      .replace(':projectKey', projectKey)
+      .replace(':environmentKey', environmentKey)
+      .replace(':toggleKey', toggleKey)
+  }`;
+  
+  return request<T>(url, {
+    method: 'GET',
+    headers: {
+      ...ApplicationJson()
+    },
+  });
+};
