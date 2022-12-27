@@ -39,6 +39,7 @@ app:
   toggle-deadline: 30
   server-data-source: MEMORY # DB
   server-base-urls: http://127.0.0.1:4007 # , split
+  get-started-server-url: http://127.0.0.1:4007
   security:
     jwt:
       keystore-location: keys/keystore.jks
