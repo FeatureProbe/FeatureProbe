@@ -52,5 +52,6 @@ app:
         - /api/login
         - /api/guestLogin
         - /api/v3/api-docs.yaml
+        - /api/application/**
       guest-disabled: true
       guest-default-password: Guest_12345
