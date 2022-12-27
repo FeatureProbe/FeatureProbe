@@ -2,16 +2,18 @@
 
 
 [![Last Commit](https://img.shields.io/github/last-commit/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe)
+[![Last Release](https://img.shields.io/github/v/release/featureprobe/featureprobe)](https://github.com/FeatureProbe/FeatureProbe/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/featureprobe/api)](https://hub.docker.com/u/featureprobe)
 [![Apache-2.0 license](https://img.shields.io/github/license/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe/blob/main/LICENSE)
 [![Join FeatureProbe on Slack](https://img.shields.io/badge/slack-join-blue?logo=slack)](https://join.slack.com/t/featureprobe/shared_invite/zt-1b5qd120x-R~dDbpgL85GgCLTtfNDj0Q)
+[![EN doc](https://img.shields.io/badge/Docs-English-blue.svg)](https://docs.featureprobe.io/)
+[![CN doc](https://img.shields.io/badge/文档-中文版-blue.svg)](https://docs.featureprobe.io/zh-CN/)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/FeatureProbe.svg?style=social&label=FeatureProbe)](https://twitter.com/FeatureProbe)
 
 # 跳转到[国内中文版](https://gitee.com/featureprobe/FeatureProbe/blob/main/README_CN.md)
 
-# FeatureProbe 
 
-
+# 💎 FeatureProbe 
 
 FeatureProbe is an open source **feature management service**. 
 It allows R&D, SRE and operation teams to launch new features or switch software implementations with confidence and lower risk.
@@ -25,7 +27,7 @@ through the acceleration of daily development tasks. It also supports our millio
 
 Now we are making this project open source to help more developers and operation people and contribute to the programming society. 
 
-### Why you should use FeatureProbe
+## 🚀 Why you should use FeatureProbe
 
 FeatureProbe brings about value to our daily development and operations in these aspects:
 
@@ -51,95 +53,85 @@ sales performance.
 6. **And more!** 
 Discover all the amazing things FeatureProbe can accomplish. 
 
-
-
-
 ![FeatureProbe screenshot](./pictures/toggles.png) 
 
 
+# 🧩 Architecture of FeatureProbe
 
-## Getting Started
+The overall architecture of FeatureProbe is shown in the following figure
 
-FeatureProbe includes several key components, such as 
-[API Server](https://github.com/FeatureProbe/feature-probe-api/blob/master/README.md), 
-[Evaluation Server](https://github.com/FeatureProbe/feature-probe-ui/blob/master/README.md), 
- [UI/Portal](https://github.com/FeatureProbe/feature-probe-ui/blob/master/README.md), 
-database and SDKs for different programming languages. 
 ![FeatureProbe Architecture](./pictures/feature_probe_architecture.png)
-We provide a online demo environment for you to get familiar with FeatureProbe. And you can also boot up all the key components together through Docker compose in your own environment, which will be sufficient for most use cases.
-In special circumstance, you may want to boot up these components independently on different servers, by using 
-Docker images, or by modifying the source code and building/deploying your own version. 
+
+* Management Center
+   * front-end: [Admin UI](https://github.com/FeatureProbe/FeatureProbe/tree/main/feature-probe-ui), 
+   * back-end: [API](https://github.com/FeatureProbe/FeatureProbe/tree/main/feature-probe-api), 
+
+* FeatureProbe [Server](https://github.com/FeatureProbe/feature-probe-server)
+
+* SDKs
+   * Client-Side SDKs
+   * Server-Side SDKs
 
 
+# 🍭 Get Started in 2 Steps
 
-### Starting FeatureProbe Service
+## 1️⃣ Start FeatureProbe Central Service
 
-1. You can use online environment [FeatureProbe Demo](https://featureprobe.io/demo/), we provide a FeatureProbe service and a Demo Webpage controlled by FeatureProbe, you can try out FeatureProbe functions in this environment.
+1. We provide a online try-out FeatureProbe Service, so you don't have to deploy by yourself, just visit it [Here](https://featureprobe.io).
 
 1. Or you can use docker composer to set your own FeatureProbe service
 
    * Make sure you have [`git`](https://git-scm.com/) and [`docker`](https://www.docker.com/) installed. 。
    * Clone the repository to your server and boot up the services. Change the ports defined in docker-compose.yml as needed.
-   * For users in Mainland China, please refer to [configure mirror](DOCKER_HUB.md) to speed up your download.
    
    ``` bash
        git clone https://github.com/FeatureProbe/FeatureProbe.git
        cd FeatureProbe
        docker compose up
    ```
-   * Go to UI/Portal at `localhost:4009` and use the default credentials to log in.
-   * Note that you should replace `4009` with your port number if you made any changes previously.
-   * Remember to update the admin password after your first time login.
+   * Visit the service on [http://localhost:4009](http://localhost:4009) with a browser and use the default credentials to log in.
         - username: `admin`
         - password: `Pass1234`
 
-### Write Your Own Code to use FeatureProbe SDK
+## 2️⃣ Use FeatureProbe SDK in your application
 
-There are two types of SDKs for FeatureProbe. 
+Import FeatureProbe SDK in your app, and check the Feature Toggle status in your code like the following pseudo-code:
 
-The first one is server-side SDK. These SDKs work in server side applications (such as 
-[Java SDK](https://github.com/FeatureProbe/server-sdk-java/blob/master/README.md), 
-[Rust SDK](https://github.com/FeatureProbe/server-sdk-rust/blob/master/README.md)
-) and use configuration 
-data fetched from FeatureProbe Server to evaluate the variation results. They are flexible to allow you adding your own 
-configurations or rules on top of the ones from the Server.
+~~~ java
+if (fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)) {
+  // Do some new thing;
+} else {
+  // Do the default thing;
+}
+~~~
 
-The second one is client-side SDK. These SDKs work in client side applications (such as [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js/blob/master/README.md), 
-or [mobile SDK](https://github.com/FeatureProbe/client-sdk-mobile/blob/master/README.md) for iOS and Android) and
-use the evaluation results provided by FeatureProbe Server. The usage is straightforward and only getting evaluation results
-from FeatureProbe Server can guarantee the client side performance and data security.
+We have SDKs for the following program languages, choose one for your application.
 
+### 💻 **Server Side SDK**
 
-Find out the available coding language-specific SDK here and try them out in your applications.
-
-**Server Side SDK**
 * [Java SDK](https://github.com/FeatureProbe/server-sdk-java)
 * [Rust SDK](https://github.com/FeatureProbe/server-sdk-rust)
 * [Golang SDK](https://github.com/FeatureProbe/server-sdk-go)
 * [Python SDK](https://github.com/FeatureProbe/server-sdk-python) by [@HeZean](https://github.com/HeZean)
 * [Node.js SDK](https://github.com/FeatureProbe/server-sdk-node) by [@HeZean](https://github.com/HeZean)
 
+### 📲 **Client Side SDK**
 
-**Client Side SDK**
 * [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js)
 * [Android SDK](https://github.com/FeatureProbe/client-sdk-mobile)
 * [iOS SDK](https://github.com/FeatureProbe/client-sdk-mobile)
 * [Mini Program SDK](https://github.com/FeatureProbe/client-sdk-miniprogram)
 * [React SDK](https://github.com/FeatureProbe/client-sdk-react)
 
+> We also provide a online [FeatureProbe Demo](https://featureprobe.io/demo/) application, with FeatureProbe Javascript SDK embeded, controlled by FeatureProbe [online try-out service](https://featureprobe.io), you can try out FeatureProbe functions on this demo website.
 
-### Open API Endpoints Documentation
 
-All funcationalities we provide with FeatureProbe UI, are also available by Open API. 
-
-* For our online demo environment, checkout the API doc at [https://featureprobe.io/api-docs](https://featureprobe.io/api-docs)
-* For Docker environment, Checkout the API endpoints at [http://localhost:4009/api-docs](http://localhost:4009/api-docs) after you boot up the service locally. You may need to modify the host address and port if you deploy the services in a different way.
-
-## More information
+# 📚 More information
 
 Please visit our [Documentation](https://docs.featureprobe.io/)
 
-## Contributing
+# 🙌 Contributing
+
 We are working on continue evolving FeatureProbe core, making it flexible and easier to use. 
 Development of FeatureProbe happens in the open on GitHub, and we are grateful to the 
 community for contributing bugfixes and improvements.
@@ -148,12 +140,12 @@ Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, 
 taking part in improving FeatureProbe.
 
 
-## License
+# 📜 License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
 
 
-## Community and Sharing
+# 🌈 Community and Sharing
 
 We are growing a community to help newcomer to learn FeatureProbe. Don't hesitate to reach out for help.
 
@@ -165,7 +157,7 @@ Or if you prefer to talk in chinese, join our wechat group:
 
 For Bug report or new feature requirement, create a [GitHub issue](https://github.com/FeatureProbe/FeatureProbe/issues/new/choose) for us.
 
-## Star History
+# 🎢 Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=FeatureProbe/FeatureProbe&type=Date)](https://star-history.com/#FeatureProbe/FeatureProbe&Date)
 

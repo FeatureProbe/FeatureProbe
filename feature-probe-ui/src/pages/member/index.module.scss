@@ -11,6 +11,11 @@
   overflow-x: auto;
 }
 
+.loading-box {
+  position: relative;
+  flex: 1 1;
+}
+
 .heading {
   font-family: HelveticaNeue-Medium, Arial, Helvetica, sans-serif;
   font-size: 20px;

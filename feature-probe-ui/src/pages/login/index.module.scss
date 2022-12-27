@@ -85,6 +85,13 @@
   color: #fff;
 }
 
+.switch-language {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 1440px) {
   .login-card {
     right: 60px !important;

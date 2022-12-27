@@ -1,0 +1,30 @@
+name: Update SDK version info to the latest release
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 10 * * *'
+
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+      - run: |
+          pip install requests
+          python3 .github/sdk_version_updater.py
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          author: GitHub Actions <41898282+github-actions[bot]@users.noreply.github.com>
+          commit-message: "chore: update sdk version"
+          title: "chore: update sdk version"
+          body: Update the sdk version in docs to the latest release.
+          branch: sdk-version

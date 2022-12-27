@@ -50,6 +50,7 @@
   margin-top: 14px;
   position: relative;
   flex: 1;
+  overflow-x: auto;
 }
 
 .table-header {
@@ -78,8 +79,16 @@
   width: 200px !important;
 }
 
+.column-status {
+  min-width: 100px !important;
+}
+
 .column-reviewers {
   width: 240px !important;
+}
+
+.column-comment {
+  min-width: 100px !important;
 }
 
 .icon-filter {

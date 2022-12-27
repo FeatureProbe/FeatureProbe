@@ -8,7 +8,8 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
 import { IRouterParams } from 'interfaces/project';
-import { ICondition, IRule } from 'interfaces/targeting';
+import { IApplicationSetting } from 'interfaces/applicationSetting';
+import { getApplicationSettings } from 'services/application';
 import {
   ToggleReturnType,
   getAndroidCode,
@@ -39,7 +40,7 @@ export type SdkLanguage =
     | 'React';
 
 interface IProps {
-  rules: IRule[]
+  attributes: string[];
   currentStep: number;
   currentSDK: SdkLanguage;
   returnType: ToggleReturnType;
@@ -60,7 +61,7 @@ const CURRENT = 2;
 
 const StepSecond = (props: IProps) => {
   const {
-    rules,
+    attributes,
     currentStep, 
     currentSDK, 
     serverSdkKey, 
@@ -85,27 +86,21 @@ const StepSecond = (props: IProps) => {
   );
 
   useEffect(() => {
-    const remoteUrl = window.FP.stringValue('remote_url', '');
-    saveRemoteUrl(remoteUrl);
+    getApplicationSettings<IApplicationSetting>().then(res => {
+      if (res.success && res.data) {
+        saveRemoteUrl(res.data.serverURI);
+      }
+    });
   }, []);
 
   useEffect(() => {
     if (currentSDK) {
-      const result: string[] = [];
       let userWithCode = '';
-
-      rules.forEach((rule: IRule) => {
-        rule.conditions.forEach((condition: ICondition) => {
-          if (condition.subject && !result.includes(condition.subject)) {
-            result.push(condition.subject);
-          }
-        });
-      });
 
       switch (currentSDK) {
         case 'Java':
           saveLanguage('java');
-          result.forEach(item => {
+          attributes.forEach(item => {
             userWithCode += `.with("${item}", /* ${item} */)`;
           });
           saveOptions(
@@ -122,7 +117,7 @@ const StepSecond = (props: IProps) => {
           break;
         case 'Python':
           saveLanguage('python');
-          result.forEach(item => {
+          attributes.forEach(item => {
             userWithCode += `user['${item}'] = 'value for ${item}'  # or use 'user.with_attr(key, value)'\n    `;
           });
           saveOptions(
@@ -139,7 +134,7 @@ const StepSecond = (props: IProps) => {
           break;
         case 'Rust': 
           saveLanguage('rust');
-          result.forEach(item => {
+          attributes.forEach(item => {
             userWithCode += `let user = user.with("${item}", /* ${item} */);\n`;
           });
           saveOptions(
@@ -156,7 +151,7 @@ const StepSecond = (props: IProps) => {
           break;
         case 'Go': 
           saveLanguage('go');
-          result.forEach(item => {
+          attributes.forEach(item => {
             userWithCode += `user.With("${item}", /* ${item} */)\n`;
           });
           saveOptions(
@@ -172,7 +167,7 @@ const StepSecond = (props: IProps) => {
           break;
         case 'Node.js':
           saveLanguage('javascript');
-          result.forEach(item => {
+          attributes.forEach(item => {
             userWithCode += `.with('${item}', /* ${item} */)`;
           });
           saveOptions(
@@ -189,7 +184,7 @@ const StepSecond = (props: IProps) => {
 
         case 'Android': 
           saveLanguage('java');
-          result.forEach(item => {
+          attributes.forEach(item => {
             userWithCode += `user.with("${item}", /* ${item} */)\n`;
           });
           saveOptions(
@@ -206,7 +201,7 @@ const StepSecond = (props: IProps) => {
           break;
         case 'Swift': 
           saveLanguage('swift');
-          result.forEach(item => {
+          attributes.forEach(item => {
             userWithCode += `user.with("${item}", /* ${item} */)\n`;
           });
           saveOptions(getSwiftCode({
@@ -220,7 +215,7 @@ const StepSecond = (props: IProps) => {
           break;
         case 'Objective-C':
           saveLanguage('objectivec');
-          result.forEach(item => {
+          attributes.forEach(item => {
             userWithCode += `[user withKey:@"${item}" value:/* ${item} */];\n`;
           });
           saveOptions(getObjCCode({
@@ -234,7 +229,7 @@ const StepSecond = (props: IProps) => {
           break;
         case 'JavaScript':
           saveLanguage('javascript');
-          result.forEach(item => {
+          attributes.forEach(item => {
             userWithCode += `user.with("${item}", /* ${item} */);\n`;
           });
           saveOptions(getJSCode({
@@ -248,7 +243,7 @@ const StepSecond = (props: IProps) => {
           break;
         case 'Mini Program':
           saveLanguage('javascript');
-          result.forEach(item => {
+          attributes.forEach(item => {
             userWithCode += `user.with("${item}", /* ${item} */);\n`;
           });
           saveOptions(getMiniProgramCode({
@@ -261,22 +256,22 @@ const StepSecond = (props: IProps) => {
           }));
           break;
         case 'React':
-            saveLanguage('javascript');
-            result.forEach(item => {
-              userWithCode += `user.with("${item}", /* ${item} */);\n  `;
-            });
-            saveOptions(getReactCode({
-              clientSdkKey,
-              toggleKey,
-              returnType,
-              intl,
-              userWithCode,
-              remoteUrl,
-            }));
-            break;
+          saveLanguage('javascript');
+          attributes.forEach(item => {
+            userWithCode += `user.with("${item}", /* ${item} */);\n  `;
+          });
+          saveOptions(getReactCode({
+            clientSdkKey,
+            toggleKey,
+            returnType,
+            intl,
+            userWithCode,
+            remoteUrl,
+          }));
+          break;
       }
     }
-  }, [rules, sdkVersion, currentSDK, clientSdkKey, serverSdkKey, toggleKey, returnType, intl, remoteUrl]);
+  }, [attributes, sdkVersion, currentSDK, clientSdkKey, serverSdkKey, toggleKey, returnType, intl, remoteUrl]);
 
   return (
     <div className={styles.step}>

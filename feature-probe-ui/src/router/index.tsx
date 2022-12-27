@@ -1,14 +1,12 @@
 import { useEffect, useCallback, useState, Suspense } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import { FPUser, FeatureProbe } from 'featureprobe-client-sdk-js';
 import { headerRoutes, blankRoutes } from './routes';
+import { getApplicationSettings } from 'services/application';
 import Loading from 'components/Loading';
 import { getRedirectUrl } from 'utils/getRedirectUrl';
 import BasicLayout from 'layout/BasicLayout';
 import { EventTrack } from 'utils/track';
-
-let USER: FPUser;
-let FP: FeatureProbe;
+import { IApplicationSetting } from 'interfaces/applicationSetting';
 
 const Router = () => {
   const [ redirectUrl, setRedirectUrl ] = useState<string>('');
@@ -27,35 +25,15 @@ const Router = () => {
   }, []);
 
   const init = useCallback(async() => {
-    if (!USER) {
-      USER = new FPUser();
+    const res = await getApplicationSettings<IApplicationSetting>();
+
+    if (res.success && res.data && res.data.loginMode === 'GUEST') {
+      localStorage.setItem('isDemo', 'true');
+    } else {
+      localStorage.setItem('isDemo', 'false');
     }
-
-    if (!FP) {
-      FP = new FeatureProbe({
-        togglesUrl: window.location.origin + '/server/api/client-sdk/toggles',
-        eventsUrl:  window.location.origin + '/server/api/events',
-        clientSdkKey: 'client-29765c7e03e9cb49c0e96357b797b1e47e7f2dee',
-        user: USER,
-        refreshInterval: 500000,
-      });
-
-      window.FP = FP;
-
-      FP.on('ready', () => {
-        const result = FP.boolValue('demo_features', false);
-        localStorage.setItem('isDemo', result.toString());
-        setIsLoading(false);
-        initRedirectUrl();
-      });
-
-      FP.on('error', () => {
-        setIsLoading(false);
-        initRedirectUrl();
-      });
-
-      FP.start();
-    }
+    setIsLoading(false);
+    initRedirectUrl();
   }, [initRedirectUrl]);
 
   useEffect(() => {
