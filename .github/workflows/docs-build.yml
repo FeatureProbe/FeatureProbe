@@ -23,6 +23,7 @@ jobs:
       with:
         node-version: 16
         cache: npm
+        cache-dependency-path: feature-probe-docs/
 
     - name: Install dependencies
       run: npm ci
