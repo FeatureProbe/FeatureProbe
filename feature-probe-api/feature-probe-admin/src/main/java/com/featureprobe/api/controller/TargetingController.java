@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @Slf4j
 @Tag(name = "Targeting", description = "The user targeting rules")
@@ -149,4 +150,11 @@ public class TargetingController {
         return targetingService.diff(projectKey, environmentKey, toggleKey);
     }
 
+    @GetApiResponse
+    @GetMapping("/attributes")
+    public List<String> attributes(@PathVariable("projectKey") String projectKey,
+                                   @PathVariable("environmentKey") String environmentKey,
+                                   @PathVariable("toggleKey") String toggleKey) {
+        return targetingService.attributes(projectKey, environmentKey, toggleKey);
+    }
 }
