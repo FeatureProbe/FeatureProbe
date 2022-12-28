@@ -274,25 +274,35 @@ const ConditionModifyContent: React.FC<ConditionContentProps> = (props) => {
         </Table.Header>
         <Table.Body>
           {diffContent &&
-            renderFieldsItems<ICondition>(diffContent, type, (value, diffType, type, index) => {
-              if (diffType === 'remove' && type === 'before') {
-                return (
-                  <ConditiondiffRemoveItem type={type} value={value as ICondition & StringField} first={index === 1} />
-                );
-              } else if (diffType === 'add' && type === 'after') {
-                return (
-                  <ConditiondiffAddItem type={type} value={value as ICondition & StringField} first={index === 1} />
-                );
-              } else if (diffType === 'modify') {
-                return (
-                  <ConditiondiffModifyItem type={type} value={value as ArrayChange<DiffResult>} first={index === 1} />
-                );
-              } else if (diffType === 'same') {
-                return <ConditiondiffSameItem value={value as ICondition & StringField} first={index === 0} />;
-              } else {
-                return <ConditiondiffEmptyItem value={value as ICondition & StringField} first={index === 0} />;
-              }
-            })}
+            (() => {
+              let emptyCount = 0;
+              return renderFieldsItems<ICondition>(diffContent, type, (value, diffType, type, index) => {
+                if (diffType === 'remove' && type === 'before') {
+                  return (
+                    <ConditiondiffRemoveItem
+                      type={type}
+                      value={value as ICondition & StringField}
+                      first={index - emptyCount === 1}
+                    />
+                  );
+                } else if (diffType === 'add' && type === 'after') {
+                  return (
+                    <ConditiondiffAddItem type={type} value={value as ICondition & StringField} first={index - emptyCount === 1} />
+                  );
+                } else if (diffType === 'modify') {
+                  return (
+                    <ConditiondiffModifyItem type={type} value={value as ArrayChange<DiffResult>} first={index - emptyCount === 1} />
+                  );
+                } else if (diffType === 'same') {
+                  return <ConditiondiffSameItem value={value as ICondition & StringField} first={index - emptyCount === 1} />;
+                } else {
+                  if(emptyCount >= 0) {
+                    emptyCount++;
+                  }
+                  return <ConditiondiffEmptyItem value={value as ICondition & StringField} first={index === 0} />;
+                }
+              });
+            })()}
           {serve && <DiffServeContent diffType="modify" content={serve} type={type} />}
         </Table.Body>
       </Table>
@@ -319,8 +329,10 @@ const ConditionRemoveContent: React.FC<ConditionRemoveContentProps> = (props) =>
         </Table.Header>
         <Table.Body>
           {content &&
-            content.map((item) => {
-              return <ConditiondiffRemoveItem value={item as ICondition & StringField} type="before" />;
+            content.map((item, index) => {
+              return (
+                <ConditiondiffRemoveItem first={index === 0} value={item as ICondition & StringField} type="before" />
+              );
             })}
           {serve && <DiffServeContent diffType="remove" content={serve} type="before" />}
         </Table.Body>
@@ -342,8 +354,8 @@ const ConditionAddContent: React.FC<ConditionRemoveContentProps> = (props) => {
         </Table.Header>
         <Table.Body>
           {content &&
-            content.map((item) => {
-              return <ConditiondiffAddItem value={item as ICondition & StringField} type="after" />;
+            content.map((item, index) => {
+              return <ConditiondiffAddItem first={index === 0} value={item as ICondition & StringField} type="after" />;
             })}
           {serve && <DiffServeContent diffType="add" content={serve} type="after" />}
         </Table.Body>
@@ -369,8 +381,8 @@ const ConditionSameContent: React.FC<ConditionSameContentProps> = (props) => {
         </Table.Header>
         <Table.Body>
           {content &&
-            content.map((item) => {
-              return <ConditiondiffSameItem value={item as ICondition & StringField} />;
+            content.map((item, index) => {
+              return <ConditiondiffSameItem first={index === 0} value={item as ICondition & StringField} />;
             })}
           {serve && <DiffServeContent diffType="same" type={type} content={serve} />}
         </Table.Body>
