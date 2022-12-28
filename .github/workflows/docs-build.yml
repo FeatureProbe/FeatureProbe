@@ -1,4 +1,4 @@
-name: Build Docs
+name: Build & Deploy Docs
 
 on:
   push:
@@ -37,10 +37,12 @@ jobs:
       working-directory: ./feature-probe-docs/
       
     - name: pack website tarball
+      if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
       run: tar -czvf ./feature-probe-docs/docs.tar.gz ./feature-probe-docs/build
 
 
     - id: 'auth'
+      if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
       name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v0.3.1'
       with:
@@ -51,9 +53,9 @@ jobs:
 
     - id: 'gcloud'
       if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-      name: 'upload to gcloud'
+      name: 'Deploy to gcloud'
       run: |-
         gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
         gcloud config set project tranquil-post-357802 
         gcloud compute scp ./feature-probe-docs/docs.tar.gz  featureprobe:~ --zone=asia-east1-a
-        gcloud compute ssh featureprobe --zone=asia-east1-a --command="echo '★★★★★★★★★★★★★★★★[Start Deploy docs]★★★★★★★★★★★★★★★★';sudo rm -Rf /data/www/docs/*;sudo tar -xzvf ~/docs.tar.gz -C /data/www/docs/ --strip-components=1"
+        gcloud compute ssh featureprobe --zone=asia-east1-a --command="echo '★★★★★★★★★★★★★★★★[Start Deploy docs]★★★★★★★★★★★★★★★★';sudo rm -Rf /data/www/docs/*;sudo tar -xzvf ~/docs.tar.gz -C /data/www/docs/ --strip-components=3"
