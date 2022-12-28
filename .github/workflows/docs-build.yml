@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'feature-probe-docs/**'
+      - 'docs/**'
   pull_request:
     branches: [ main ]
     paths:
-      - 'feature-probe-docs/**'
+      - 'docs/**'
   workflow_dispatch:
 
 jobs:
@@ -25,26 +25,26 @@ jobs:
       with:
         node-version: 16
         cache: npm
-        cache-dependency-path: feature-probe-docs/
+        cache-dependency-path: docs/
 
     - name: Install dependencies
       run: npm ci
-      working-directory: ./feature-probe-docs/
+      working-directory: ./docs/
 
       
     - name: Build website
       run: npm run build
-      working-directory: ./feature-probe-docs/
+      working-directory: ./docs/
       
     - name: pack website tarball
       if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-      run: tar -czvf ./feature-probe-docs/docs.tar.gz ./feature-probe-docs/build
+      run: tar -czvf ./docs/docs.tar.gz ./docs/build
 
 
     - id: 'auth'
       if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
       name: 'Authenticate to Google Cloud'
-      uses: 'google-github-actions/auth@v0.3.1'
+      uses: 'google-github-actions/auth@v1'
       with:
         create_credentials_file: true
         workload_identity_provider: 'projects/363590592857/locations/global/workloadIdentityPools/github-action/providers/github'
@@ -57,5 +57,5 @@ jobs:
       run: |-
         gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
         gcloud config set project tranquil-post-357802 
-        gcloud compute scp ./feature-probe-docs/docs.tar.gz  featureprobe:~ --zone=asia-east1-a
+        gcloud compute scp ./docs/docs.tar.gz  featureprobe:~ --zone=asia-east1-a
         gcloud compute ssh featureprobe --zone=asia-east1-a --command="echo '★★★★★★★★★★★★★★★★[Start Deploy docs]★★★★★★★★★★★★★★★★';sudo rm -Rf /data/www/docs/*;sudo tar -xzvf ~/docs.tar.gz -C /data/www/docs/ --strip-components=3"
