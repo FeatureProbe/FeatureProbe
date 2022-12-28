@@ -35,7 +35,7 @@ const DiffSection: React.FC<DiffSectionProps> = (props) => {
   if(diffContent && diffContent.length === 1 && diffContent[0].modified) {
     let count = 0;
     diffContent[0].value.forEach((item) => {
-      if((item as ArrayChange<unknown>).value.length === 1) {
+      if((item as ArrayChange<unknown>).value && (item as ArrayChange<unknown>).value.length === 1) {
         count++;
       }
     });
