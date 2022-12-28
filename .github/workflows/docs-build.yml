@@ -49,6 +49,7 @@ jobs:
         create_credentials_file: true
         workload_identity_provider: 'projects/363590592857/locations/global/workloadIdentityPools/github-action/providers/github'
         service_account: '363590592857-compute@developer.gserviceaccount.com'
+        project_id: tranquil-post-357802 
 
 
     - id: 'gcloud'
