@@ -56,4 +56,4 @@ jobs:
         gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
         gcloud config set project tranquil-post-357802 
         gcloud compute scp ./feature-probe-docs/docs.tar.gz  featureprobe:~ --zone=asia-east1-a
-        
+        gcloud compute ssh featureprobe --zone=asia-east1-a --command="echo '★★★★★★★★★★★★★★★★[Start Deploy docs]★★★★★★★★★★★★★★★★';sudo rm -Rf /data/www/docs/*;sudo tar -xzvf ~/docs.tar.gz -C /data/www/docs/ --strip-components=1"
