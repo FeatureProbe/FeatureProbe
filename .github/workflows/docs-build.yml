@@ -37,7 +37,7 @@ jobs:
       working-directory: ./feature-probe-docs/
       
     - name: pack website tarball
-      run: tar -cfzv docs.tar.gz ./feature-probe-docs/build
+      run: tar -czvf ./feature-probe-docs/docs.tar.gz ./feature-probe-docs/build
 
 
     - id: 'auth'
