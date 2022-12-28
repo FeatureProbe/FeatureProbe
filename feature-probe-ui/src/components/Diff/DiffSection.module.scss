@@ -1,0 +1,43 @@
+.diff-section {
+  padding-top: 16px;
+
+  & > .head-line {
+    display: flex;
+    flex-grow: 1;
+
+    & > .before,
+    & > .after {
+      width: 50%;
+      margin-left: 24px;
+
+      & > .title {
+        display: flex;
+        align-items: center;
+        font-family: HelveticaNeue-Medium;
+        font-size: 14px;
+        color: #212529;
+        letter-spacing: 0;
+        text-align: justify;
+        line-height: 28px;
+        font-weight: 500;
+
+        &::before {
+          display: block;
+          content: ' ';
+          width: 3px;
+          height: 14px;
+          background-color: #5664ff;
+          margin-right: 8px;
+        }
+      }
+    }
+
+    & > .before {
+      border-right: 1px solid #fff;
+    }
+  }
+
+  & > .content {
+    background-color: #fff;
+  }
+}

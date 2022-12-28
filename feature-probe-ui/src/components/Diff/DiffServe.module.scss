@@ -1,0 +1,17 @@
+.serve-diff {
+  display: flex;
+  background-color: #f8f9fa;
+
+  & > * {
+    width: 100%;
+    margin-left: 24px;
+    overflow-x: auto;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    
+    & > * {
+        margin-right: 12px;
+    }
+  }
+}
