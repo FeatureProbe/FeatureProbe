@@ -55,5 +55,5 @@ jobs:
       run: |-
         gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
         gcloud config set project tranquil-post-357802 
-        gcloud compute copy-files featureprobe:/home/ docs.tar.gz --zone=asia-east1-a
+        gcloud compute copy-files featureprobe:/home/ ./feature-probe-docs/docs.tar.gz --zone=asia-east1-a
         
