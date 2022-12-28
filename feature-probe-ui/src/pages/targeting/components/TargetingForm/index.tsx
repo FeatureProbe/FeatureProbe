@@ -645,7 +645,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                   <DiffSection
                     before={initialTargeting?.content.variations}
                     after={publishTargeting?.content.variations}
-                    title="Variations"
+                    title={intl.formatMessage({ id: 'common.variations.text' })}
                     renderContent={(content) => {
                       return <VariationsDiffContent content={content} />;
                     }}
@@ -653,7 +653,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                   <DiffSection
                     before={initialTargeting?.content.rules}
                     after={publishTargeting?.content.rules}
-                    title="Rules"
+                    title={intl.formatMessage({id: 'common.rules.text'})}
                     renderContent={(content) => {
                       return <RulesDiffContent content={content} />;
                     }}
@@ -662,14 +662,14 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                   <DiffSection
                     before={initialTargeting?.content.defaultServe}
                     after={publishTargeting?.content.defaultServe}
-                    title="Default serve"
+                    title={intl.formatMessage({id: 'targeting.default.rule'})}
                     renderContent={(content) => {
                       return <DiffServe content={content} />;
                     }}
                     beforeDiff={beforeServeDiff}
                   />
                   <DiffSection
-                    title="Disabled serve"
+                    title={intl.formatMessage({id: 'targeting.disabled.return.value'})}
                     before={initialTargeting?.content.disabledServe}
                     after={publishTargeting?.content.disabledServe}
                     renderContent={(content) => {

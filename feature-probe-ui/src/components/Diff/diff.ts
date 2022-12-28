@@ -24,8 +24,10 @@ const compared = (obj1: DiffObj | ArrayObj, obj2: DiffObj | ArrayObj) => {
         return diffObj(obj1.__value as DiffObj, obj2.__value as DiffObj).length === 1;
       }
       return obj1.__value === obj2.__value;
+    } else if((obj1 as DiffObj)['conditions']) {
+      return false;
     }
-    return diffObj(obj1 as ArrayObj[], obj2 as ArrayObj[]).length === 1;
+    return diffObj(obj1 as DiffObj, obj2 as DiffObj).length === 1;
   } else {
     return obj1 === obj2;
   }

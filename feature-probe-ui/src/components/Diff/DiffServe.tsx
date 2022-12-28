@@ -2,11 +2,11 @@ import { ArrayChange } from 'diff';
 import { Table } from 'semantic-ui-react';
 import { ArrayObj, DiffResult } from './diff';
 import { DiffFieldValue } from './DiffFieldValue';
-import { renderField } from './renderDiff';
+import { renderField, renderFieldsItems } from './renderDiff';
 import conditionStyles from './RulesDiffContent.module.scss';
-import { ReactNode } from 'react';
 import styles from './DiffServe.module.scss';
 import fieldStyles from './fields.module.scss';
+import { FormattedMessage } from 'react-intl';
 
 interface DiffServeContentProps {
   map?: Map<string, string>;
@@ -25,7 +25,7 @@ export const DiffServeContent: React.FC<DiffServeContentProps> = (props) => {
   const { content, type, diffType } = props;
   return (
     <Table.Row className={`${fieldStyles[`diff-item-${diffType}`]} ${conditionStyles['condition-diff-item']}`}>
-      <Table.Cell>Serve</Table.Cell>
+      <Table.Cell><FormattedMessage id='common.serve.text' /></Table.Cell>
       <Table.Cell colSpan="5">
         {(() => {
           if (content instanceof Array) {
@@ -42,29 +42,25 @@ export const DiffServeContent: React.FC<DiffServeContentProps> = (props) => {
               }
               if (value.get('split')) {
                 const split = value.get('split');
-                if(split && split.value instanceof Array && typeof split.value[0] === 'string') {
+                if (split && split.value instanceof Array && typeof split.value[0] !== 'object') {
                   return <DiffFieldValue type={split.type} value={split.value} />;
                 } else {
-                  return renderField(split?.value as ArrayChange<ArrayObj>[], type, (map) => {
-                    const res: ReactNode[] = [];
-                    map.forEach((value) => {
-                      if (value?.type === 'add' && type === 'after') {
-                        res.push(<DiffFieldValue type="add" value={value.value as string} />);
-                      } else if (value?.type === 'remove' && type === 'before') {
-                        res.push(<DiffFieldValue type="remove" value={value.value as string} />);
-                      } else if (value?.type === 'same') {
-                        res.push(
-                          <DiffFieldValue
-                            style={{
-                              background: 'rgba(33,37,41,0.08)',
-                            }}
-                            type="same"
-                            value={value.value as string}
-                          />
-                        );
-                      }
-                    });
-                    return res;
+                  return renderFieldsItems(split?.value as ArrayChange<ArrayObj>[], type, (value, diffType) => {
+                    if (diffType === 'add' && type === 'after') {
+                      return <DiffFieldValue type="add" value={value as string} />;
+                    } else if (diffType === 'remove' && type === 'before') {
+                      return <DiffFieldValue type="remove" value={value as string} />;
+                    } else if (diffType === 'same') {
+                      return (
+                        <DiffFieldValue
+                          style={{
+                            background: 'rgba(33,37,41,0.08)',
+                          }}
+                          type="same"
+                          value={value as string}
+                        />
+                      );
+                    }
                   });
                 }
               }
@@ -74,7 +70,7 @@ export const DiffServeContent: React.FC<DiffServeContentProps> = (props) => {
               return <DiffFieldValue value={content.select} />;
             }
             if (content.split !== undefined) {
-              return <DiffFieldValue value={content.split.map((item) => item / 100 + '')} />;
+              return <DiffFieldValue value={content.split as unknown as string[]} />;
             }
           }
         })()}

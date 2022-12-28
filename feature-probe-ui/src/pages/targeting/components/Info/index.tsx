@@ -5,9 +5,7 @@ import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { cloneDeep } from 'lodash';
 import { useForm } from 'react-hook-form';
-import JSONbig from 'json-bigint';
-import { createPatch } from 'diff';
-import { html } from 'diff2html/lib/diff2html';
+import Diff from 'components/Diff';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
@@ -18,10 +16,14 @@ import Loading from 'components/Loading';
 import { HeaderContainer } from 'layout/hooks';
 import { updateApprovalStatus, publishTargetingDraft, cancelTargetingDraft } from 'services/approval';
 import { getTargeting, getTargetingDiff } from 'services/toggle';
-import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, IContent } from 'interfaces/targeting';
+import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, IContent, ITarget } from 'interfaces/targeting';
 import { IRouterParams } from 'interfaces/project';
 import { OWNER } from 'constants/auth';
 import styles from './index.module.scss';
+import DiffSection from 'components/Diff/DiffSection';
+import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
+import { RulesDiffContent } from 'components/Diff/RulesDiffContent';
+import { DiffServe } from 'components/Diff/DiffServe';
 
 interface IProps {
   toggleInfo?: IToggleInfo;
@@ -44,7 +46,14 @@ const Info = (props: IProps) => {
   const [ isReEdit, saveIsREdit ] = useState<boolean>(true);
   const [ comment, saveComment ] = useState<string>('');
   const [ toggleStatus, saveToggleStatus ] = useState<string>(approvalInfo?.status || '');
-  const [ diffContent, setDiffContent ] = useState<string>('');
+  const [before, saveBefore] = useState<{
+      disable: boolean;
+      content: ITarget;
+  }>();
+  const [after, saveAfter] = useState<{
+      disable: boolean;
+      content: ITarget;
+  }>();
   const [ isDiffLoading, saveIsDiffLoading ] = useState<boolean>(false);
   const [ approvePublishLoading, setApprovePublishLoading ] = useState<boolean>(false);
 
@@ -209,26 +218,17 @@ const Info = (props: IProps) => {
     const targetingDiff = res.data;
     if (targetingDiff) {
       const { currentContent, oldContent, oldDisabled, currentDisabled } = targetingDiff;
-
-      const before = JSONbig.stringify({
-        disabled: oldDisabled,
+      const before = {
+        disable: oldDisabled,
         content: oldContent
-      }, null, 2);
-
-      const after = JSONbig.stringify({
-        disabled: currentDisabled,
+      };
+      const after = {
+        disable: currentDisabled,
         content: currentContent
-      }, null, 2);
+      };
+      saveAfter(after);
+      saveBefore(before);
 
-      const result = createPatch('content', before.replace(/\\n/g, '\n'), after.replace(/\\n/g, '\n'));
-
-      const content = html(result, {
-        matching: 'lines',
-        outputFormat: 'side-by-side',
-        diffStyle: 'word',
-        drawFileList: false,
-      });
-      setDiffContent(content);
       saveDiffOpen(true);
     }
   }, [projectKey, environmentKey, toggleKey]);
@@ -621,7 +621,45 @@ const Info = (props: IProps) => {
             <Icon customclass={styles['diff-modal-close-icon']} type='close' onClick={() => { saveDiffOpen(false); }} />
           </div>
           <div className={styles['diff-modal-content']}>
-            <div className="diff" dangerouslySetInnerHTML={{ __html: diffContent }} />
+            <Diff
+              sections={
+                <>
+                  <DiffSection
+                    before={before?.content.variations}
+                    after={after?.content.variations}
+                    title="Variations"
+                    renderContent={(content) => {
+                      return <VariationsDiffContent content={content} />;
+                    }}
+                  />
+                  <DiffSection
+                    before={before?.content.rules}
+                    after={after?.content.rules}
+                    title="Rules"
+                    renderContent={(content) => {
+                      return <RulesDiffContent content={content} />;
+                    }}
+                  />
+                  <DiffSection
+                    before={before?.content.defaultServe}
+                    after={after?.content.defaultServe}
+                    title="Default serve"
+                    renderContent={(content) => {
+                      return <DiffServe content={content} />;
+                    }}
+                  />
+                  <DiffSection
+                    title="Disabled serve"
+                    before={before?.content.disabledServe}
+                    after={after?.content.disabledServe}
+                    renderContent={(content) => {
+                      return <DiffServe content={content} />;
+                    }}
+                  />
+                </>
+              }
+              maxHeight={341}
+            />
           </div>
         </div>
       </Modal>
