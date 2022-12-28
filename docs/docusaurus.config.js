@@ -44,13 +44,13 @@ const config = {
       ({
         docs: {
           routeBasePath: '/',
-          editUrl: 'https://github.com/FeatureProbe/FeatureProbe/blob/main/feature-probe-docs',
+          editUrl: 'https://github.com/FeatureProbe/FeatureProbe/blob/main/docs',
           editLocalizedFiles: true,
           showLastUpdateTime: true,
         },
         blog: {
           showReadingTime: true,
-          editUrl: 'https://github.com/FeatureProbe/FeatureProbe/blob/main/feature-probe-docs',
+          editUrl: 'https://github.com/FeatureProbe/FeatureProbe/blob/main/docs',
           editLocalizedFiles: true,
         },
         theme: {
