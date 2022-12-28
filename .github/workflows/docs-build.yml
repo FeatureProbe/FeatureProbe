@@ -37,7 +37,6 @@ jobs:
       working-directory: ./feature-probe-docs/
       
     - name: pack website tarball
-      working-directory: ./feature-probe-docs/
       run: tar -cfzv docs.tar.gz ./feature-probe-docs/build
 
 
