@@ -13,17 +13,18 @@ import Modal from 'components/Modal';
 import message from 'components/MessageBox';
 import TextLimit from 'components/TextLimit';
 import Loading from 'components/Loading';
-import { HeaderContainer } from 'layout/hooks';
-import { updateApprovalStatus, publishTargetingDraft, cancelTargetingDraft } from 'services/approval';
-import { getTargeting, getTargetingDiff } from 'services/toggle';
-import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, IContent, ITarget } from 'interfaces/targeting';
-import { IRouterParams } from 'interfaces/project';
-import { OWNER } from 'constants/auth';
-import styles from './index.module.scss';
 import DiffSection from 'components/Diff/DiffSection';
 import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
 import { RulesDiffContent } from 'components/Diff/RulesDiffContent';
 import { DiffServe } from 'components/Diff/DiffServe';
+import { variationContainer } from 'pages/targeting/provider';
+import { HeaderContainer } from 'layout/hooks';
+import { updateApprovalStatus, publishTargetingDraft, cancelTargetingDraft } from 'services/approval';
+import { getTargeting, getTargetingDiff } from 'services/toggle';
+import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, IContent, ITarget, IServe, IRule } from 'interfaces/targeting';
+import { IRouterParams } from 'interfaces/project';
+import { OWNER } from 'constants/auth';
+import styles from './index.module.scss';
 
 interface IProps {
   toggleInfo?: IToggleInfo;
@@ -56,7 +57,7 @@ const Info = (props: IProps) => {
   }>();
   const [ isDiffLoading, saveIsDiffLoading ] = useState<boolean>(false);
   const [ approvePublishLoading, setApprovePublishLoading ] = useState<boolean>(false);
-
+  const { variations } = variationContainer.useContainer();
   const { userInfo } = HeaderContainer.useContainer();
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
@@ -237,6 +238,61 @@ const Info = (props: IProps) => {
   const handleChangeComment = useCallback((e: SyntheticEvent, detail: TextAreaProps) => {
     saveComment(detail.value as string);
   }, []);
+
+  const preDiffServe = useCallback(
+    (serve?: IServe) => {
+      if (!serve) {
+        return;
+      }
+      const obj: {
+        select?: string;
+        split?: string[];
+      } = {};
+      if (serve.select !== undefined && typeof serve.select === 'number') {
+        obj.select = variations[serve.select].name;
+      }
+      if (serve.split !== undefined) {
+        obj.split = serve.split.map((item: number, index: number) => {
+          return `${variations[index].name}: ${item / 100}%`;
+        });
+      }
+
+      return obj;
+    },
+    [variations]
+  );
+
+  const beforeServeDiff = useCallback(
+    (before, after) => {
+      const left: IServe = before;
+      const right: IServe = after;
+
+      return [preDiffServe(left), preDiffServe(right)];
+    },
+    [preDiffServe]
+  );
+
+  const beforeRuleDiff = useCallback(
+    (before, after) => {
+      const left = before;
+      const right = after;
+      return [
+        left.map((item: IRule) => {
+          return {
+            ...item,
+            serve: preDiffServe(item.serve),
+          };
+        }),
+        right.map((item: IRule) => {
+          return {
+            ...item,
+            serve: preDiffServe(item.serve),
+          };
+        }),
+      ];
+    },
+    [preDiffServe]
+  );
 
 	return (
     <div className={styles.info}>
@@ -627,7 +683,7 @@ const Info = (props: IProps) => {
                   <DiffSection
                     before={before?.content.variations}
                     after={after?.content.variations}
-                    title="Variations"
+                    title={intl.formatMessage({ id: 'common.variations.text' })}
                     renderContent={(content) => {
                       return <VariationsDiffContent content={content} />;
                     }}
@@ -635,26 +691,29 @@ const Info = (props: IProps) => {
                   <DiffSection
                     before={before?.content.rules}
                     after={after?.content.rules}
-                    title="Rules"
+                    title={intl.formatMessage({id: 'common.rules.text'})}
                     renderContent={(content) => {
                       return <RulesDiffContent content={content} />;
                     }}
+                    beforeDiff={beforeRuleDiff}
                   />
                   <DiffSection
                     before={before?.content.defaultServe}
                     after={after?.content.defaultServe}
-                    title="Default serve"
+                    title={intl.formatMessage({id: 'targeting.default.rule'})}
                     renderContent={(content) => {
                       return <DiffServe content={content} />;
                     }}
+                    beforeDiff={beforeServeDiff}
                   />
                   <DiffSection
-                    title="Disabled serve"
+                    title={intl.formatMessage({id: 'targeting.disabled.return.value'})}
                     before={before?.content.disabledServe}
                     after={after?.content.disabledServe}
                     renderContent={(content) => {
                       return <DiffServe content={content} />;
                     }}
+                    beforeDiff={beforeServeDiff}
                   />
                 </>
               }
