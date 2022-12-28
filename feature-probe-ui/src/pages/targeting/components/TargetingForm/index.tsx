@@ -56,6 +56,7 @@ import {
   IDictionary,
   IOption,
   IRule,
+  IServe,
   ITarget,
   ITargeting,
   IToggleInfo,
@@ -496,30 +497,60 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     }
   }, []);
 
-  const beforeServeDiff = useCallback((before, after) => {
-    const left = before;
-    const right = after;
+  const preDiffServe = useCallback(
+    (serve?: IServe) => {
+      if (!serve) {
+        return;
+      }
+      const obj: {
+        select?: string;
+        split?: string[];
+      } = {};
+      if (serve.select !== undefined && typeof serve.select === 'number') {
+        obj.select = variations[serve.select].name;
+      }
+      if (serve.split !== undefined) {
+        obj.split = serve.split.map((item: number, index: number) => {
+          return `${variations[index].name}: ${item / 100}%`;
+        });
+      }
 
-    
-    if(left.select !== undefined && typeof left.select === 'number') {
-      left.select = variations[left.select].name;
-    }
-    if(right.select !== undefined && typeof right.select === 'number') {
-      right.select = variations[right.select].name;
-    }
-    if(left.split !== undefined) {
-      left.split = left.split.map((item: number, index: number) => {
-        return `${variations[index].name}: ${item / 100}%`;
-      });
-    }
-    if(right.split !== undefined) {
-      right.split = right.split.map((item: number, index: number) => {
-        return `${variations[index].name}: ${item / 100}%`;
-      });
-    }
+      return obj;
+    },
+    [variations]
+  );
 
-    return [left, right];
-  }, [variations]);
+  const beforeServeDiff = useCallback(
+    (before, after) => {
+      const left = before;
+      const right = after;
+
+      return [preDiffServe(left), preDiffServe(right)];
+    },
+    [preDiffServe]
+  );
+
+  const beforeRuleDiff = useCallback(
+    (before, after) => {
+      const left = before;
+      const right = after;
+      return [
+        left.map((item: IRule) => {
+          return {
+            ...item,
+            serve: preDiffServe(item.serve),
+          };
+        }),
+        right.map((item: IRule) => {
+          return {
+            ...item,
+            serve: preDiffServe(item.serve),
+          };
+        }),
+      ];
+    },
+    [preDiffServe]
+  );
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} autoComplete="off" ref={formRef}>
@@ -626,6 +657,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                     renderContent={(content) => {
                       return <RulesDiffContent content={content} />;
                     }}
+                    beforeDiff={beforeRuleDiff}
                   />
                   <DiffSection
                     before={initialTargeting?.content.defaultServe}
