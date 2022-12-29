@@ -159,57 +159,59 @@ const Lists = () => {
             <Loading />
           </div>
         ) : (
-          <div className={styles.content}>
-            <Table basic='very' unstackable>
-              <Table.Header className={styles['table-header']}>
-                <Table.Row>
-                  <Table.HeaderCell className={styles['column-title']}>
-                    <FormattedMessage id='targeting.publish.modal.comment' />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell className={styles['column-toggle']}>
-                    <FormattedMessage id='common.toggle.text' />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <FormattedMessage id='approvals.table.header.status' />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <FormattedMessage id='common.project.text' />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <FormattedMessage id='common.environment.text' />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <FormattedMessage id='approvals.table.header.request' />
-                  </Table.HeaderCell>
+          <>
+            <div className={styles.content}>
+              <Table basic='very' unstackable>
+                <Table.Header className={styles['table-header']}>
+                  <Table.Row>
+                    <Table.HeaderCell className={styles['column-title']}>
+                      <FormattedMessage id='targeting.publish.modal.comment' />
+                    </Table.HeaderCell>
+                    <Table.HeaderCell className={styles['column-toggle']}>
+                      <FormattedMessage id='common.toggle.text' />
+                    </Table.HeaderCell>
+                    <Table.HeaderCell className={styles['column-status']}>
+                      <FormattedMessage id='approvals.table.header.status' />
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      <FormattedMessage id='common.project.text' />
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      <FormattedMessage id='common.environment.text' />
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      <FormattedMessage id='approvals.table.header.request' />
+                    </Table.HeaderCell>
+                    {
+                      type === 'APPLY' && (
+                        <Table.HeaderCell className={styles['column-reviewers']}>
+                          <FormattedMessage id='toggles.settings.approval.reviewers' />
+                        </Table.HeaderCell>
+                      )
+                    }
+                    <Table.HeaderCell>
+                      <FormattedMessage id='approvals.table.header.review' />
+                    </Table.HeaderCell>
+                    <Table.HeaderCell className={styles['column-comment']}>
+                      <FormattedMessage id='approvals.table.header.comment' />
+                    </Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
                   {
-                    type === 'APPLY' && (
-                      <Table.HeaderCell className={styles['column-reviewers']}>
-                        <FormattedMessage id='toggles.settings.approval.reviewers' />
-                      </Table.HeaderCell>
-                    )
+                    approvalList?.map((approval: IApproval) => {
+                      return (
+                        <ListItem
+                          key={approval.createdTime}
+                          type={type}
+                          approval={approval}
+                        />
+                      );
+                    })
                   }
-                  <Table.HeaderCell>
-                    <FormattedMessage id='approvals.table.header.review' />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <FormattedMessage id='approvals.table.header.comment' />
-                  </Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {
-                  approvalList?.map((approval: IApproval) => {
-                    return (
-                      <ListItem
-                        key={approval.createdTime}
-                        type={type}
-                        approval={approval}
-                      />
-                    );
-                  })
-                }
-              </Table.Body>
-            </Table>
+                </Table.Body>
+              </Table>
+            </div>
             {
               approvalList.length === 0 ? <NoData /> : (
                 <Pagination
@@ -219,7 +221,7 @@ const Lists = () => {
                 />
               )
             }
-          </div>
+          </>
         )
       }
     </div>

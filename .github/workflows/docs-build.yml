@@ -1,0 +1,62 @@
+name: Build & Deploy Docs
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+        id-token: write
+        contents: read
+        
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+        cache: npm
+        cache-dependency-path: docs/
+
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ./docs/
+
+      
+    - name: Build website
+      run: npm run build
+      working-directory: ./docs/
+      
+    - name: pack website tarball
+      if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+      run: tar -czvf ./docs/docs.tar.gz ./docs/build
+
+
+    - id: 'auth'
+      if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        create_credentials_file: true
+        workload_identity_provider: 'projects/363590592857/locations/global/workloadIdentityPools/github-action/providers/github'
+        service_account: '363590592857-compute@developer.gserviceaccount.com'
+        project_id: tranquil-post-357802 
+
+
+    - id: 'gcloud'
+      if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+      name: 'Deploy to gcloud'
+      run: |-
+        gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+        gcloud config set project tranquil-post-357802 
+        gcloud compute scp ./docs/docs.tar.gz  featureprobe:~ --zone=asia-east1-a
+        gcloud compute ssh featureprobe --zone=asia-east1-a --command="echo '★★★★★★★★★★★★★★★★[Start Deploy docs]★★★★★★★★★★★★★★★★';sudo rm -Rf /data/www/docs/*;sudo tar -xzvf ~/docs.tar.gz -C /data/www/docs/ --strip-components=3"

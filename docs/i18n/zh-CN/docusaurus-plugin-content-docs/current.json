@@ -1,0 +1,90 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.defaultSidebar.category.Introduction": {
+    "message": "简介",
+    "description": "The label for category Introduction in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Introduction.link.generated-index.description": {
+    "message": "FeatureProbe核心概念介绍。",
+    "description": "The generated-index page description for category Introduction in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.How-to guides": {
+    "message": "用户手册",
+    "description": "The label for category How-to guides in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.How-to guides.link.generated-index.description": {
+    "message": "FeatureProbe使用方法",
+    "description": "The generated-index page description for category How-to guides in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.SDK": {
+    "message": "接入SDK",
+    "description": "The label for category SDK in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.SDK.link.generated-index.description": {
+    "message": "FeatureProbe提供了适合各种编程语言的SDK",
+    "description": "The generated-index page description for category SDK in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Best Practices": {
+    "message": "最佳实践",
+    "description": "The label for category Best Practices in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Best Practices.link.generated-index.description": {
+    "message": "最佳实践",
+    "description": "The generated-index page description for category Best Practices in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Server-Side SDKs": {
+    "message": "接入服务端SDK",
+    "description": "The label for category Server-Side SDKs in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Server-Side SDKs.link.generated-index.description": {
+    "message": "接入服务端SDK",
+    "description": "The generated-index page description for category Server-Side SDKs in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Client-Side SDKs": {
+    "message": "接入客户端SDK",
+    "description": "The label for category Client-Side SDKs in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Client-Side SDKs.link.generated-index.description": {
+    "message": "接入客户端SDK",
+    "description": "The generated-index page description for category Client-Side SDKs in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Tutorials": {
+    "message": "入门教程",
+    "description": "The label for category Tutorials in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Deploy": {
+    "message": "部署服务",
+    "description": "The label for category Deploy in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Rollout": {
+    "message": "按百分比灰度放量",
+    "description": "The label for category Rollout in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Tutorials.link.generated-index.description": {
+    "message": "面向第一次使用FeatureProbe的用户，通过教程分步骤引导用户学习FeatureProbe的基本使用",
+    "description": "The generated-index page description for category Tutorials in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Reference Document": {
+    "message": "参考文档",
+    "description": "The label for category Reference Document in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Reference Document.link.generated-index.description": {
+    "message": "关于FeatureProbe更细节的一些设计文档",
+    "description": "The generated-index page description for category Reference Document in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Platform": {
+    "message": "平台操作",
+    "description": "The label for category Platform in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Platform.link.generated-index.description": {
+    "message": "介绍在FeatureProbe平台上能够操作的功能",
+    "description": "The generated-index page description for category Platform in sidebar defaultSidebar"
+  },
+  "sidebar.defaultSidebar.category.Local Development": {
+    "message": "本地开发",
+    "description": "The label for category Local Development in sidebar defaultSidebar"
+  }
+}
