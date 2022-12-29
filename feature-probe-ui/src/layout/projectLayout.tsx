@@ -360,7 +360,8 @@ const ProjectLayout = (props: IProps) => {
           (
             match.path === SEGMENT_PATH || 
             match.path === SEGMENT_ADD_PATH ||
-            match.path === SEGMENT_EDIT_PATH
+            match.path === SEGMENT_EDIT_PATH ||
+            match.path === SETTING_PATH
           ) 
             ? null 
             : <div style={{background: EnvironmentColors[envIndex]}} className={styles['environment-line']}></div>

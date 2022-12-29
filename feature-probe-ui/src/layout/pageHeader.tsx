@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Icon from 'components/Icon';
 import message from 'components/MessageBox';
+import SwitchLanguage from 'components/SwitchLanguage';
 import { PROJECT_PATH } from 'router/routes';
 import { getUserInfo } from 'services/user';
 import { getApprovalTotalByStatus } from 'services/approval';
@@ -35,11 +36,9 @@ const PageHeader = () => {
   const [ account, setAccount ] = useState<string>('');
   const [ menuOpen, setMenuOpen ] = useState<boolean>(false);
   const [ helpMenuOpen, setHelpMenuOpen ] = useState<boolean>(false);
-  const [ i18nMenuOpen, setI18nMenuOpen ] = useState<boolean>(false);
 
   const {
     i18n,
-    setI18n
   } = I18NContainer.useContainer();
 
   const timer: { current: NodeJS.Timeout | null } = useRef(null);
@@ -80,14 +79,11 @@ const PageHeader = () => {
       if (helpMenuOpen) {
         setHelpMenuOpen(false);
       }
-      if (i18nMenuOpen) {
-        setI18nMenuOpen(false);
-      }
     };
     window.addEventListener('click', handler);
 
     return () => window.removeEventListener('click', handler);
-  }, [menuOpen, helpMenuOpen, i18nMenuOpen]);
+  }, [menuOpen, helpMenuOpen]);
 
   useEffect(() => {
     getUserInfo<IUser>().then(res => {
@@ -208,35 +204,7 @@ const PageHeader = () => {
         </div>
       </div>
       <div className={'user'}>
-        <Popup
-          basic
-          open={i18nMenuOpen}
-          on='click'
-          position='bottom right'
-          className={styles.popup}
-          trigger={
-            <div 
-              onClick={(e: SyntheticEvent) => {
-                document.body.click();
-                e.stopPropagation();
-                setI18nMenuOpen(true);
-              }}
-              className={styles['language-popup']}
-            >
-              {i18n === 'en-US' ? 'English' : '中文'}
-              <Icon customclass={styles['angle-down']} type='angle-down' />
-            </div>
-          }
-        >
-          <div className={styles['menu']} onClick={() => {setI18nMenuOpen(false);}}>
-            <div className={styles['menu-item']} onClick={()=> {setI18n('en-US');}}>
-              English
-            </div>
-            <div className={styles['menu-item']} onClick={()=> {setI18n('zh-CN');}}>
-              中文
-            </div>
-          </div>
-        </Popup>
+        <SwitchLanguage />
         <Popup
           basic
           open={helpMenuOpen}
