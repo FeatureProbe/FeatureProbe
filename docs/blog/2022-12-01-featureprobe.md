@@ -1,5 +1,5 @@
 ---
-slug: FeatureProbe Longlink
+slug: FeatureProbe Longlink2
 title: 长连接实践方案（下）
 ---
 
