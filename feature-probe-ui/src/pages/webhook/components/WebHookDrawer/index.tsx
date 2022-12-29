@@ -1,5 +1,5 @@
-import { useEffect, useCallback, useState } from 'react';
-import { Checkbox, Form } from 'semantic-ui-react';
+import { useEffect, useCallback, useState, useMemo } from 'react';
+import { Checkbox, Form, Popup } from 'semantic-ui-react';
 import classNames from 'classnames';
 import { FormattedMessage, useIntl } from 'react-intl';
 import message from 'components/MessageBox';
@@ -8,7 +8,9 @@ import Icon from 'components/Icon';
 import { hooksFormContainer, webHookInfoContainer } from 'pages/webhook/provider';
 import FormItem from 'components/FormItem';
 import { IWebHook, WebHookStatus } from 'interfaces/webhook';
-import { createWebHook, updateWebHook } from 'services/webhook';
+import { createWebHook, updateWebHook, getSecretKey, checkUrl } from 'services/webhook';
+import { debounce } from 'lodash';
+import { useRequestTimeCheck } from 'hooks';
 import styles from './index.module.scss';
 
 interface IProps {
@@ -19,10 +21,16 @@ interface IProps {
   refresh: () => void;
 }
 
+interface ISecretKey {
+  secretKey: string;
+}
+
 const WebHookDrawer = (props: IProps) => {
   const { isAdd, visible, onClose, defaultValue, refresh } = props;
-  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
+  const [ submitLoading, setSubmitLoading ] = useState<boolean>(false);
+  const [ dulplicateUrls, saveDuplicateUrls ] = useState<string[]>([]);
   const intl = useIntl();
+  const creatRequestTimeCheck = useRequestTimeCheck();
 
   const {
     formState: { errors },
@@ -56,6 +64,12 @@ const WebHookDrawer = (props: IProps) => {
     register('name', {
       required: {
         message: intl.formatMessage({ id: 'common.name.required' }),
+        value: true,
+      },
+    });
+    register('secretKey', {
+      required: {
+        message: intl.formatMessage({ id: 'common.secret.required' }),
         value: true,
       },
     });
@@ -109,6 +123,21 @@ const WebHookDrawer = (props: IProps) => {
   }, [isAdd, webHookInfo, defaultValue?.id, intl, refresh, onClose, init]);
 
   useEffect(() => {
+    if (!visible) return;
+
+    getSecretKey<ISecretKey>().then(res => {
+      if (res.success && res.data) {
+        saveWebHookInfo({
+          ...webHookInfo,
+          secretKey: res.data.secretKey,
+        });
+        setValue('secretKey', res.data.secretKey);
+      }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, isAdd, saveWebHookInfo]);
+
+  useEffect(() => {
     if (visible && defaultValue) {
       saveOriginWebHookInfo(defaultValue);
       saveWebHookInfo(defaultValue);
@@ -116,8 +145,35 @@ const WebHookDrawer = (props: IProps) => {
       setValue('description', defaultValue.description);
       setValue('application', defaultValue.application);
       setValue('url', defaultValue.url);
+
+      if (!isAdd) {
+        setValue('secretKey', defaultValue.secretKey);
+      }
     }
-  }, [visible, webHookInfo, defaultValue, saveOriginWebHookInfo, saveWebHookInfo, setValue]);
+  }, [visible, webHookInfo, defaultValue, isAdd, saveOriginWebHookInfo, saveWebHookInfo, setValue]);
+
+  const debounceUrlExist = useMemo(() => {
+    return debounce(async (value: string) => {
+      const check = creatRequestTimeCheck('url');
+      const res = await checkUrl<string[]>(value);
+
+      if(!check()) {
+        return;
+      }
+
+      if (res.success && res.data) {
+        const result = res.data.filter((name: string) => {
+          return name !== webHookInfo.name;
+        });
+
+        saveDuplicateUrls(result);
+      }
+    }, 500);
+  }, [creatRequestTimeCheck, webHookInfo.name]);
+
+  const checkUrlExist = useCallback(async (url: string) => {
+    await debounceUrlExist(url);
+  }, [debounceUrlExist]);
 
   return (
     <div className={drawerCls}>
@@ -145,6 +201,7 @@ const WebHookDrawer = (props: IProps) => {
               setValue('url', '');
               setValue('name', '');
               setValue('description', '');
+              setValue('secretKey', '');
               clearErrors();
               onClose();
               init();
@@ -179,6 +236,39 @@ const WebHookDrawer = (props: IProps) => {
               }}
             />
           </FormItem>
+          <FormItem 
+            required
+            error={errors.secretKey} 
+            label={
+              <>
+                <FormattedMessage id='common.secret.key.text' />
+                {
+                  <Popup
+                    inverted
+                    className='popup-override'
+                    trigger={
+                      <Icon customclass={styles['icon-question']} type='question' />
+                    }
+                    content={intl.formatMessage({id: 'webhook.secretkey.tips'})}
+                    position='top center'
+                  />
+                }
+              </>
+            } 
+          >
+            <Form.Input
+              className={styles.input}
+              name="secretKey"
+              value={webHookInfo.secretKey}
+              placeholder={intl.formatMessage({ id: 'common.secret.required' })}
+              error={errors.secretKey ? true : false}
+              onChange={(e, detail) => {
+                setValue('secretKey', detail.value);
+                handleChange(e, detail, 'secretKey');
+                trigger('secretKey');
+              }}
+            />
+          </FormItem>
           <FormItem label={<FormattedMessage id="common.description.text" />}>
             <Form.Input
               name="description"
@@ -202,12 +292,23 @@ const WebHookDrawer = (props: IProps) => {
                 setValue('url', detail.value);
                 handleChange(e, detail, 'url');
                 trigger('url');
+                checkUrlExist(detail.value);
               }}
             />
           </FormItem>
           <div className={styles['url-normal-tips']}>
             <FormattedMessage id="webhook.url.normal.text" />
           </div>
+          {
+            dulplicateUrls.length > 0 && (
+              <div className={styles['card-tips']}>
+                <Icon type="warning-circle" customclass={styles['warning-circle']} />
+                <div className={styles['text']}>
+                  <FormattedMessage id='webhook.duplicated.urls' />{dulplicateUrls.join(', ')}
+                </div>
+              </div>
+            )
+          }
         </div>
       </Form>
     </div>

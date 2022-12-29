@@ -107,6 +107,7 @@
   "common.tokens.text": "Access tokens", 
   "common.token.text": "Access token", 
   "common.secret.key.text": "Secret key",
+  "common.secret.required": "Please input secret key",
   "common.diff.tips": "The following is a before and after comparison of this change.",
 
   "header.getuser.error.text": "Error getting user profile",
@@ -524,6 +525,8 @@
   "webhook.create.text": "Create a webhook",
   "webhook.edit.text": "Edit webhook",
   "webhook.total": "Webhooks in total",
+  "webhook.duplicated.urls": "Detected that there are currently existing webhooks for the same URL: ",
+  "webhook.secretkey.tips": "A method for webhook authentication. Use the 'secret key' to generate a request signature for authentication to prevent URLs from being maliciously requested.",
 
   "token.application.title": "Shared access tokens",
   "token.personal.title": "Personal access tokens",

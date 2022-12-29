@@ -40,6 +40,7 @@ const Variations = (props: IProps) => {
   const handleDeleteVariation = useCallback((index: number, variationId?: string) => {
     unregister(`variation_${variationId}_name`);
     unregister(`variation_${variationId}`);
+    unregister(`variation_${variationId}_normal`);
     handleDelete(index);
   }, [handleDelete, unregister]);
 
@@ -135,7 +136,6 @@ const Variations = (props: IProps) => {
           }
         </div>
       }
-
 		</div>
 	);
 };
