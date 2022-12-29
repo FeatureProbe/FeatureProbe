@@ -8,6 +8,7 @@ interface FieldRenderObj {
 }
 type renderFunc = (fileds: Map<string, FieldRenderObj>) => ReactNode;
 
+//Render object diff 
 export function renderField(diffContent: DiffResult, type: 'after' | 'before', render: renderFunc) {
   const after = type === 'after';
   const map = new Map();
@@ -46,6 +47,7 @@ export function renderField(diffContent: DiffResult, type: 'after' | 'before', r
 
 type ItemsRenderFunc<T> = (fileds: DiffResult | T | ArrayChange<unknown>, diffType: 'remove' | 'add' | 'modify' | 'same', type: 'after' | 'before', index: number) => ReactNode;
 
+//Render list diff 
 export function renderFieldsItems<T>(diffContent: DiffResult, type: 'after' | 'before', render: ItemsRenderFunc<T>) {
   let values: ReactNode[] = [];
   let count = 0;

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import VariationItem from '.';
-import { hooksFormContainer, variationContainer } from 'pages/toggle/provider';
+import { defaultServeContainer, hooksFormContainer, ruleContainer, variationContainer } from 'pages/toggle/provider';
 import { IntlWrapper } from 'components/utils/wrapper';
 import { DOMRect } from '../utils/domRect';
 
@@ -15,7 +15,11 @@ const Wrapper: React.FC = (props) => {
   return (
     <IntlWrapper>
       <hooksFormContainer.Provider>
-        <variationContainer.Provider>{props.children}</variationContainer.Provider>
+        <ruleContainer.Provider>
+          <defaultServeContainer.Provider>
+            <variationContainer.Provider>{props.children}</variationContainer.Provider>
+          </defaultServeContainer.Provider>
+        </ruleContainer.Provider>
       </hooksFormContainer.Provider>
     </IntlWrapper>
   );
@@ -33,6 +37,8 @@ it('VariationItem snapshot', (done) => {
         handleDelete={jest.fn()}
         handleChangeVariation={jest.fn()}
         handleInput={jest.fn()}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />,
       {
         wrapper: Wrapper,
@@ -49,6 +55,8 @@ it('VariationItem snapshot', (done) => {
         handleDelete={jest.fn()}
         handleChangeVariation={jest.fn()}
         handleInput={jest.fn()}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />
     );
     expect(asFragment()).toMatchSnapshot();
@@ -70,6 +78,8 @@ test('VariationItem delete', (done) => {
         handleDelete={mockHandleDelete}
         handleChangeVariation={jest.fn()}
         handleInput={jest.fn()}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />,
       {
         wrapper: Wrapper,
@@ -98,6 +108,8 @@ test('VariationItem input', (done) => {
         handleDelete={jest.fn()}
         handleChangeVariation={mockHandleChange}
         handleInput={mockHandleInput}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />,
       {
         wrapper: Wrapper,
@@ -128,6 +140,8 @@ test('VariationItem input', (done) => {
         handleDelete={jest.fn()}
         handleChangeVariation={mockHandleChange}
         handleInput={mockHandleInput}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />
     );
 
@@ -153,6 +167,8 @@ test('VariationItem number input', (done) => {
         handleDelete={jest.fn()}
         handleChangeVariation={mockHandleChange}
         handleInput={mockHandleInput}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />,
       {
         wrapper: Wrapper,
@@ -183,6 +199,8 @@ test('VariationItem json modal', (done) => {
         handleDelete={jest.fn()}
         handleChangeVariation={mockHandleChange}
         handleInput={mockHandleInput}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />,
       {
         wrapper: Wrapper,

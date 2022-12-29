@@ -65,10 +65,10 @@ import {
 import { IRouterParams } from 'interfaces/project';
 import { ISegmentList } from 'interfaces/segment';
 import { DATETIME_TYPE, SEGMENT_TYPE } from 'components/Rule/constants';
-import DiffSection from 'components/Diff/DiffSection';
 import { DiffServe } from 'components/Diff/DiffServe';
 import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
 import { RulesDiffContent } from 'components/Diff/RulesDiffContent';
+import { DiffStatusContent } from 'components/Diff/DiffStatus';
 import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
 import { getFromDictionary, saveDictionary } from 'services/dictionary';
 import { USER_GUIDE_LAYOUT, USER_GUIDE_TARGETING } from 'constants/dictionary_keys';
@@ -497,37 +497,37 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     }
   }, []);
 
-  const preDiffServe = useCallback(
-    (serve?: IServe) => {
-      if (!serve) {
-        return;
-      }
-      const obj: {
-        select?: string;
-        split?: string[];
-      } = {};
-      if (serve.select !== undefined && typeof serve.select === 'number') {
-        obj.select = variations[serve.select].name;
-      }
-      if (serve.split !== undefined) {
-        obj.split = serve.split.map((item: number, index: number) => {
-          return `${variations[index].name}: ${item / 100}%`;
-        });
-      }
+  const preDiffServe = useCallback((serve?: IServe, variations?: IVariation[]) => {
+    if (!serve || !variations) {
+      return;
+    }
+    const obj: {
+      select?: string;
+      split?: string[];
+    } = {};
+    if (serve.select !== undefined && typeof serve.select === 'number') {
+      obj.select = variations[serve.select].name;
+    }
+    if (serve.split !== undefined) {
+      obj.split = serve.split.map((item: number, index: number) => {
+        return `${variations[index].name}: ${item / 100}%`;
+      });
+    }
 
-      return obj;
-    },
-    [variations]
-  );
+    return obj;
+  }, []);
 
   const beforeServeDiff = useCallback(
     (before, after) => {
       const left = before;
       const right = after;
 
-      return [preDiffServe(left), preDiffServe(right)];
+      return [
+        preDiffServe(left, initialTargeting?.content.variations),
+        preDiffServe(right, publishTargeting?.content.variations),
+      ];
     },
-    [preDiffServe]
+    [preDiffServe, initialTargeting?.content.variations, publishTargeting?.content.variations]
   );
 
   const beforeRuleDiff = useCallback(
@@ -538,18 +538,18 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
         left.map((item: IRule) => {
           return {
             ...item,
-            serve: preDiffServe(item.serve),
+            serve: preDiffServe(item.serve, initialTargeting?.content.variations),
           };
         }),
         right.map((item: IRule) => {
           return {
             ...item,
-            serve: preDiffServe(item.serve),
+            serve: preDiffServe(item.serve, publishTargeting?.content.variations),
           };
         }),
       ];
     },
-    [preDiffServe]
+    [preDiffServe, initialTargeting?.content.variations, publishTargeting?.content.variations]
   );
 
   return (
@@ -597,6 +597,8 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           returnType={toggleInfo?.returnType || ''}
           hooksFormContainer={hooksFormContainer}
           variationContainer={variationContainer}
+          ruleContainer={ruleContainer}
+          defaultServeContainer={defaultServeContainer}
         />
       </div>
       <div className={styles.rules}>
@@ -640,45 +642,60 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           </div>
           <div className={styles['modal-content']}>
             <Diff
-              sections={
-                <>
-                  <DiffSection
-                    before={initialTargeting?.content.variations}
-                    after={publishTargeting?.content.variations}
-                    title={intl.formatMessage({ id: 'common.variations.text' })}
-                    renderContent={(content) => {
-                      return <VariationsDiffContent content={content} />;
-                    }}
-                  />
-                  <DiffSection
-                    before={initialTargeting?.content.rules}
-                    after={publishTargeting?.content.rules}
-                    title={intl.formatMessage({id: 'common.rules.text'})}
-                    renderContent={(content) => {
-                      return <RulesDiffContent content={content} />;
-                    }}
-                    beforeDiff={beforeRuleDiff}
-                  />
-                  <DiffSection
-                    before={initialTargeting?.content.defaultServe}
-                    after={publishTargeting?.content.defaultServe}
-                    title={intl.formatMessage({id: 'targeting.default.rule'})}
-                    renderContent={(content) => {
-                      return <DiffServe content={content} />;
-                    }}
-                    beforeDiff={beforeServeDiff}
-                  />
-                  <DiffSection
-                    title={intl.formatMessage({id: 'targeting.disabled.return.value'})}
-                    before={initialTargeting?.content.disabledServe}
-                    after={publishTargeting?.content.disabledServe}
-                    renderContent={(content) => {
-                      return <DiffServe content={content} />;
-                    }}
-                    beforeDiff={beforeServeDiff}
-                  />
-                </>
-              }
+              sections={[
+                {
+                  before: {
+                    disabled: initialTargeting?.disabled,
+                  },
+                  after: {
+                    disabled: publishTargeting?.disabled,
+                  },
+                  title: intl.formatMessage({ id: 'targeting.status.text' }),
+                  renderContent: (content) => {
+                    return <DiffStatusContent content={content} />;
+                  },
+                  diffKey: 'status',
+                },
+                {
+                  before: initialTargeting?.content.variations,
+                  after: publishTargeting?.content.variations,
+                  title: intl.formatMessage({ id: 'common.variations.text' }),
+                  renderContent: (content) => {
+                    return <VariationsDiffContent content={content} />;
+                  },
+                  diffKey: 'variations',
+                },
+                {
+                  before: initialTargeting?.content.rules,
+                  after: publishTargeting?.content.rules,
+                  title: intl.formatMessage({ id: 'common.rules.text' }),
+                  renderContent: (content) => {
+                    return <RulesDiffContent content={content} />;
+                  },
+                  beforeDiff: beforeRuleDiff,
+                  diffKey: 'rules',
+                },
+                {
+                  before: initialTargeting?.content.defaultServe,
+                  after: publishTargeting?.content.defaultServe,
+                  title: intl.formatMessage({ id: 'targeting.default.rule' }),
+                  renderContent: (content) => {
+                    return <DiffServe content={content} />;
+                  },
+                  beforeDiff: beforeServeDiff,
+                  diffKey: 'default',
+                },
+                {
+                  title: intl.formatMessage({ id: 'targeting.disabled.return.value' }),
+                  before: initialTargeting?.content.disabledServe,
+                  after: publishTargeting?.content.disabledServe,
+                  renderContent: (content) => {
+                    return <DiffServe content={content} />;
+                  },
+                  beforeDiff: beforeServeDiff,
+                  diffKey: 'disabled',
+                },
+              ]}
               maxHeight={341}
             />
             <div className={styles['diff-after']}>

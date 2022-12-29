@@ -11,16 +11,46 @@
 
 .tips {
   display: flex;
-  padding: 6px 24px;
+  justify-content: space-between;
+  padding: 6px 0 6px 24px;
   font-family: PingFangSC-Regular, Arial, Helvetica, sans-serif;
   font-size: 12px;
   color: #0a70f5;
   line-height: 18px;
   background-color: #eff8ff;
+  cursor: pointer;
+
+  & > * {
+    display: flex;
+
+    &:last-child {
+      & > * {
+        display: flex;
+        align-items: center;
+        margin-right: 16px;
+      }
+    }
+  }
 }
 
 .box {
   margin: 0 24px;
   border-radius: 8px;
   overflow: hidden;
+}
+
+.old-square {
+  width: 12px;
+  height: 12px;
+  background: #f6d5da;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+
+.new-square {
+  width: 12px;
+  height: 12px;
+  background: #c5f0db;
+  border-radius: 4px;
+  margin-right: 4px;
 }

@@ -11,10 +11,10 @@ import NoData from 'components/NoData';
 import { IToggle } from 'interfaces/segment';
 import TextLimit from 'components/TextLimit';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
+import { RulesDiffContent } from 'components/Diff/RulesDiffContent';
 import { hooksFormContainer } from 'pages/segmentEdit/provider';
 import styles from './index.module.scss';
-import DiffSection from 'components/Diff/DiffSection';
-import { RulesDiffContent } from 'components/Diff/RulesDiffContent';
+
 
 interface IPagination {
   pageIndex: number;
@@ -260,16 +260,17 @@ const ConfirmModal = (props: IProps) => {
           <>
             <div className={styles['diff-box']}>
               <Diff
-                sections={
-                  <DiffSection
-                    before={diff.before}
-                    after={diff.after}
-                    title="Rules"
-                    renderContent={(content) => {
+                sections={[
+                  {
+                    before:diff.before,
+                    after:diff.after,
+                    title: intl.formatMessage({ id: 'common.rules.text' }),
+                    renderContent: (content) => {
                       return <RulesDiffContent content={content} />;
-                    }}
-                  />
-                }
+                    },
+                    diffKey: 'rules'
+                  }
+                ]}
                 maxHeight={343}
               />
             </div>

@@ -1,5 +1,6 @@
 import { ArrayChange } from 'diff';
 import { ReactNode } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Table } from 'semantic-ui-react';
 import { ArrayObj, DiffResult } from './diff';
 import { DiffChangeType, DiffFieldValue } from './DiffFieldValue';
@@ -135,9 +136,9 @@ const VariationsDiffContent: React.FC<VariationsDiffContentProps> = (props) => {
           <Table basic="very" unstackable size="small">
             <Table.Header className={fieldStyles['table-header']}>
               <Table.Row>
-                <Table.HeaderCell className={styles['table-header-name']}>name</Table.HeaderCell>
-                <Table.HeaderCell>value</Table.HeaderCell>
-                <Table.HeaderCell>description</Table.HeaderCell>
+                <Table.HeaderCell className={styles['table-header-name']}><FormattedMessage id='common.name.lowercase.text' /></Table.HeaderCell>
+                <Table.HeaderCell><FormattedMessage id='common.value.text' /></Table.HeaderCell>
+                <Table.HeaderCell><FormattedMessage id='common.description.lowercase.text' /></Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>{content && renderFields(content, 'before')}</Table.Body>
@@ -149,9 +150,9 @@ const VariationsDiffContent: React.FC<VariationsDiffContentProps> = (props) => {
           <Table basic="very" unstackable size="small">
             <Table.Header className={fieldStyles['table-header']}>
               <Table.Row>
-                <Table.HeaderCell className={styles['table-header-name']}>name</Table.HeaderCell>
-                <Table.HeaderCell>value</Table.HeaderCell>
-                <Table.HeaderCell>description</Table.HeaderCell>
+                <Table.HeaderCell className={styles['table-header-name']}><FormattedMessage id='common.name.lowercase.text' /></Table.HeaderCell>
+                <Table.HeaderCell><FormattedMessage id='common.value.text' /></Table.HeaderCell>
+                <Table.HeaderCell><FormattedMessage id='common.description.lowercase.text' /></Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>{content && renderFields(content, 'after')}</Table.Body>

@@ -13,9 +13,9 @@ import Modal from 'components/Modal';
 import message from 'components/MessageBox';
 import TextLimit from 'components/TextLimit';
 import Loading from 'components/Loading';
-import DiffSection from 'components/Diff/DiffSection';
 import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
 import { RulesDiffContent } from 'components/Diff/RulesDiffContent';
+import { DiffStatusContent } from 'components/Diff/DiffStatus';
 import { DiffServe } from 'components/Diff/DiffServe';
 import { variationContainer } from 'pages/targeting/provider';
 import { HeaderContainer } from 'layout/hooks';
@@ -678,45 +678,60 @@ const Info = (props: IProps) => {
           </div>
           <div className={styles['diff-modal-content']}>
             <Diff
-              sections={
-                <>
-                  <DiffSection
-                    before={before?.content.variations}
-                    after={after?.content.variations}
-                    title={intl.formatMessage({ id: 'common.variations.text' })}
-                    renderContent={(content) => {
-                      return <VariationsDiffContent content={content} />;
-                    }}
-                  />
-                  <DiffSection
-                    before={before?.content.rules}
-                    after={after?.content.rules}
-                    title={intl.formatMessage({id: 'common.rules.text'})}
-                    renderContent={(content) => {
-                      return <RulesDiffContent content={content} />;
-                    }}
-                    beforeDiff={beforeRuleDiff}
-                  />
-                  <DiffSection
-                    before={before?.content.defaultServe}
-                    after={after?.content.defaultServe}
-                    title={intl.formatMessage({id: 'targeting.default.rule'})}
-                    renderContent={(content) => {
-                      return <DiffServe content={content} />;
-                    }}
-                    beforeDiff={beforeServeDiff}
-                  />
-                  <DiffSection
-                    title={intl.formatMessage({id: 'targeting.disabled.return.value'})}
-                    before={before?.content.disabledServe}
-                    after={after?.content.disabledServe}
-                    renderContent={(content) => {
-                      return <DiffServe content={content} />;
-                    }}
-                    beforeDiff={beforeServeDiff}
-                  />
-                </>
-              }
+              sections={[
+                {
+                  before: {
+                    disabled: before?.disable,
+                  },
+                  after: {
+                    disabled: after?.disable,
+                  },
+                  title: intl.formatMessage({ id: 'targeting.status.text' }),
+                  renderContent: (content) => {
+                    return <DiffStatusContent content={content} />;
+                  },
+                  diffKey: 'status',
+                },
+                {
+                  before: before?.content.variations,
+                  after: after?.content.variations,
+                  title: intl.formatMessage({ id: 'common.variations.text' }),
+                  renderContent: (content) => {
+                    return <VariationsDiffContent content={content} />;
+                  },
+                  diffKey: 'variations',
+                },
+                {
+                  before: before?.content.rules,
+                  after: after?.content.rules,
+                  title: intl.formatMessage({ id: 'common.rules.text' }),
+                  renderContent: (content) => {
+                    return <RulesDiffContent content={content} />;
+                  },
+                  beforeDiff: beforeRuleDiff,
+                  diffKey: 'rules',
+                },
+                {
+                  before: before?.content.defaultServe,
+                  after: after?.content.defaultServe,
+                  title: intl.formatMessage({ id: 'targeting.default.rule' }),
+                  renderContent: (content) => {
+                    return <DiffServe content={content} />;
+                  },
+                  beforeDiff: beforeServeDiff,
+                  diffKey: 'default',
+                },
+                {
+                  title: intl.formatMessage({ id: 'targeting.disabled.return.value' }),
+                  before: before?.content.disabledServe,
+                  after: after?.content.disabledServe,
+                  renderContent: (content) => {
+                    return <DiffServe content={content} />;
+                  },
+                  beforeDiff: beforeServeDiff,
+                  diffKey: 'disabled',
+                },
+              ]}
               maxHeight={341}
             />
           </div>

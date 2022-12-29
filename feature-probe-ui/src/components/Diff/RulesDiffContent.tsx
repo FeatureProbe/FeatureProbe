@@ -287,16 +287,26 @@ const ConditionModifyContent: React.FC<ConditionContentProps> = (props) => {
                   );
                 } else if (diffType === 'add' && type === 'after') {
                   return (
-                    <ConditiondiffAddItem type={type} value={value as ICondition & StringField} first={index - emptyCount === 1} />
+                    <ConditiondiffAddItem
+                      type={type}
+                      value={value as ICondition & StringField}
+                      first={index - emptyCount === 1}
+                    />
                   );
                 } else if (diffType === 'modify') {
                   return (
-                    <ConditiondiffModifyItem type={type} value={value as ArrayChange<DiffResult>} first={index - emptyCount === 1} />
+                    <ConditiondiffModifyItem
+                      type={type}
+                      value={value as ArrayChange<DiffResult>}
+                      first={index - emptyCount === 1}
+                    />
                   );
                 } else if (diffType === 'same') {
-                  return <ConditiondiffSameItem value={value as ICondition & StringField} first={index - emptyCount === 1} />;
+                  return (
+                    <ConditiondiffSameItem value={value as ICondition & StringField} first={index - emptyCount === 1} />
+                  );
                 } else {
-                  if(emptyCount >= 0) {
+                  if (emptyCount >= 0) {
                     emptyCount++;
                   }
                   return <ConditiondiffEmptyItem value={value as ICondition & StringField} first={index === 0} />;

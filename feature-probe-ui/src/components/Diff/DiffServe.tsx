@@ -7,6 +7,7 @@ import conditionStyles from './RulesDiffContent.module.scss';
 import styles from './DiffServe.module.scss';
 import fieldStyles from './fields.module.scss';
 import { FormattedMessage } from 'react-intl';
+import { CSSProperties } from 'react';
 
 interface DiffServeContentProps {
   map?: Map<string, string>;
@@ -19,13 +20,16 @@ interface DiffServeContentProps {
     | ArrayChange<number>[];
   type: 'after' | 'before';
   diffType: 'remove' | 'same' | 'modify' | 'add';
+  rowStyle?: CSSProperties;
 }
 
 export const DiffServeContent: React.FC<DiffServeContentProps> = (props) => {
   const { content, type, diffType } = props;
   return (
     <Table.Row className={`${fieldStyles[`diff-item-${diffType}`]} ${conditionStyles['condition-diff-item']}`}>
-      <Table.Cell><FormattedMessage id='common.serve.text' /></Table.Cell>
+      <Table.Cell>
+        <FormattedMessage id="common.serve.text" />
+      </Table.Cell>
       <Table.Cell colSpan="5">
         {(() => {
           if (content instanceof Array) {
@@ -88,8 +92,12 @@ export const DiffServe: React.FC<DiffServeProps> = (props) => {
 
   return (
     <div className={styles['serve-diff']}>
-      <DiffServeContent diffType="modify" content={content as ArrayChange<ArrayObj>[]} type={'before'} />
-      <DiffServeContent diffType="modify" content={content as ArrayChange<ArrayObj>[]} type={'after'} />
+      <div>
+        <DiffServeContent diffType="modify" content={content as ArrayChange<ArrayObj>[]} type={'before'} />
+      </div>
+      <div>
+        <DiffServeContent diffType="modify" content={content as ArrayChange<ArrayObj>[]} type={'after'} />
+      </div>
     </div>
   );
 };

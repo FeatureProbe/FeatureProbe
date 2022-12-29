@@ -17,6 +17,7 @@ export type DiffParam = ArrayObj[] | DiffObj | unknown[]
 
 export type DiffResult = (ArrayChange<unknown> & { modified?: boolean  })[];
 
+//compare in diff function
 const compared = (obj1: DiffObj | ArrayObj, obj2: DiffObj | ArrayObj) => {
   if (typeof obj1 === 'object' && typeof obj2 === 'object') {
     if (obj1.__key !== undefined && obj2.__key !== undefined) {
@@ -33,6 +34,7 @@ const compared = (obj1: DiffObj | ArrayObj, obj2: DiffObj | ArrayObj) => {
   }
 };
 
+//diff any object or array
 function diffObj(left: DiffParam, right: DiffParam): ArrayChange<ArrayObj | DiffObj>[] {
   if (left instanceof Array && right instanceof Array) {
     return diff.diffArrays<ArrayObj, ArrayObj>(left as ArrayObj[], right as ArrayObj[], {
@@ -56,6 +58,7 @@ function diffObj(left: DiffParam, right: DiffParam): ArrayChange<ArrayObj | Diff
   }
 }
 
+//Determine whether to continue to diff value
 const isTryToDiff = (value: ArrayObj) => {
   if (typeof value === 'object') {
     if (value.__key !== undefined && value.__value !== undefined) {
@@ -77,6 +80,7 @@ const isTryToDiff = (value: ArrayObj) => {
   };
 };
 
+//reset result to modified
 const resetDiffResult = (diffContent: ArrayChange<DiffObj | ArrayObj>[]) => {
   let result: DiffResult = [];
 
@@ -96,6 +100,7 @@ const resetDiffResult = (diffContent: ArrayChange<DiffObj | ArrayObj>[]) => {
   return result;
 };
 
+//let remove + add to modify
 function toModified(removed: DiffObj[], added: DiffObj[]) {
   const result: DiffResult  = [];
   let modifies = [];

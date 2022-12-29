@@ -4,16 +4,18 @@ import { ReactNode, useMemo } from 'react';
 import idiff, { DiffParam, DiffResult } from './diff';
 import styles from './DiffSection.module.scss';
 
-interface DiffSectionProps {
+export interface DiffSectionProps {
   title: string;
   before?: unknown;
   after?: unknown;
+  diffKey: string;
   renderContent: (diffContent: DiffResult) => ReactNode;
   beforeDiff?: (before: unknown, after: unknown) => unknown[];
+  setCount?: (key: string, count: number) => void;
 }
 
 const DiffSection: React.FC<DiffSectionProps> = (props) => {
-  const { title, before, after, renderContent, beforeDiff } = props;
+  const { title, before, after, renderContent, beforeDiff, setCount, diffKey } = props;
 
   const diffContent = useMemo(() => {
     let left, right;
@@ -43,6 +45,22 @@ const DiffSection: React.FC<DiffSectionProps> = (props) => {
       hide = true;
     }
   }
+
+  let count = 0;
+  diffContent?.forEach((item) => {
+    if(item.removed || item.added) {
+      count += item.value.length;
+    } else if(item.modified) {
+      count += item.value.reduce<number>((pre, current) => {
+        if((current as ArrayChange<unknown>).value && (current as ArrayChange<unknown>).value.length !== 1) {
+          return pre + 1;
+        } else {
+          return pre;
+        }
+      }, 0);
+    }
+  });
+  setCount && setCount(diffKey, count);
 
   return (
     <div hidden={hide} className={styles['diff-section']}>

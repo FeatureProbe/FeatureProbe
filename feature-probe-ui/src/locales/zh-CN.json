@@ -541,5 +541,7 @@
   "token.delete.error": "删除Token失败",
   "token.list.error": "查询Token列表失败",
   "token.card.application.description": "用于访问 OpenAPI。共享Token不与个人绑定，一经创建不可变更，且永久生效。",
-  "token.card.personal.description": "用于访问 OpenAPI。个人Token具有与创建人相同的权限，且会随着创建人的权限同步变化，如果创建人被删除，他的Token也将失效。"
+  "token.card.personal.description": "用于访问 OpenAPI。个人Token具有与创建人相同的权限，且会随着创建人的权限同步变化，如果创建人被删除，他的Token也将失效。",
+
+  "diff.count.text": "个改动点"
 }

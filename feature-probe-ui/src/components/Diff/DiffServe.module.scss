@@ -6,12 +6,15 @@
     width: 100%;
     margin-left: 24px;
     overflow-x: auto;
-    display: flex;
-    align-items: center;
     background-color: #fff;
-    
+
     & > * {
+      display: flex;
+      align-items: center;
+      
+      & > * {
         margin-right: 12px;
+      }
     }
   }
 }

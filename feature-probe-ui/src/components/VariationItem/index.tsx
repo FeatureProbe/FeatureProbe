@@ -7,6 +7,7 @@ import JsonEditor from 'components/JsonEditor';
 import Modal from '../Modal';
 import { VariationColors } from 'constants/colors';
 import { IContainer } from 'interfaces/provider';
+import { IRule } from 'interfaces/targeting';
 import { isJSON } from 'utils/tools';
 import styles from './index.module.scss';
 
@@ -28,6 +29,8 @@ interface IProps {
   handleChangeVariation(index: number, value: string): void;
   handleDelete(index: number): void;
   hooksFormContainer: IContainer;
+  ruleContainer: IContainer;
+  defaultServeContainer: IContainer;
 }
 
 const VariationItem = (props: IProps) => {
@@ -52,7 +55,12 @@ const VariationItem = (props: IProps) => {
     handleDelete,
     handleChangeVariation,
     hooksFormContainer,
+    ruleContainer,
+    defaultServeContainer
   } = props;
+
+  const { rules, saveRules } = ruleContainer.useContainer();
+  const { defaultServe, saveDefaultServe } = defaultServeContainer.useContainer();
 
   const {
     formState: { errors },
@@ -152,6 +160,22 @@ const VariationItem = (props: IProps) => {
       },
     ];
   }, [intl]);
+
+  const onDelete = useCallback((index: number) => {
+    handleDelete(index);
+    if(defaultServe.split) {
+      defaultServe.split.splice(index, 1);
+      saveDefaultServe({...defaultServe});
+    }
+    let flag = false;
+    rules.forEach((item: IRule) => {
+      if(item.serve?.split) {
+        flag = true;
+        item.serve.split.splice(index, 1);
+      }
+    });
+    flag && saveRules([...rules]);
+  }, [defaultServe, handleDelete, rules, saveDefaultServe, saveRules]);
 
 	return (
     <div className={styles.line}>
@@ -274,7 +298,7 @@ const VariationItem = (props: IProps) => {
       {
         index !== 0 && total !== 2 && !disabled ? (
           <div className={styles.operation}>
-            <Icon customclass={styles.iconfont} type='minus' onClick={() => handleDelete(index)} />
+            <Icon customclass={styles.iconfont} type='minus' onClick={() => onDelete(index)} />
           </div>
           ) : (
           <div className={styles['operation-holder']}></div>
