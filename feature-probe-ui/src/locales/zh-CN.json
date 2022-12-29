@@ -476,7 +476,7 @@
   
   "guide.global.step1.title": "项目",
   "guide.global.step1.project": "管理「项目」及项目的「环境」信息",
-  "guide.global.step1.env": "快速拷贝“环境密钥”，与代码环境变量建立关联",
+  "guide.global.step1.env": "快速拷贝“环境密钥”，用于SDK初始化",
   "guide.global.step1.enter": "切换查看不同项目「开关列表」的入口",
   "guide.global.step2.title": "切换环境",
   "guide.global.step2.env": "点击可切换环境，查看不同环境下的开关信息",
@@ -494,7 +494,7 @@
   "guide.toggle.targeting.step1.title": "点击切换开关状态",
   "guide.toggle.targeting.step1.off": "“关闭”状态，返回值取决于“未生效时的返回分组”", 
   "guide.toggle.targeting.step1.on": "“打开”状态，返回值取决于下方的“规则”和“默认规则”", 
-  "guide.toggle.targeting.step2.title": "为“未指定人群”设置默认规则",
+  "guide.toggle.targeting.step2.title": "设置默认规则",
   "guide.toggle.targeting.step2.default": "一个用户，若以上所有的“规则”都没命中，则返回“默认规则”的返回值",
 
   "guide.next": "下一个",
