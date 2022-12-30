@@ -1,4 +1,4 @@
-name: Publish to GCloud
+name: Deploy to Google Cloud
 
 on:
   workflow_dispatch:
