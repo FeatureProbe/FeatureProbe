@@ -9,7 +9,7 @@ import { hooksFormContainer, webHookInfoContainer } from 'pages/webhook/provider
 import FormItem from 'components/FormItem';
 import { IWebHook, WebHookStatus } from 'interfaces/webhook';
 import { createWebHook, updateWebHook, getSecretKey, checkUrl } from 'services/webhook';
-import { debounce } from 'lodash';
+import { debounce, cloneDeep } from 'lodash';
 import { useRequestTimeCheck } from 'hooks';
 import styles from './index.module.scss';
 
@@ -43,7 +43,8 @@ const WebHookDrawer = (props: IProps) => {
 
   const { 
     init, 
-    webHookInfo, 
+    webHookInfo,
+    originWebHookInfo,
     handleChange, 
     saveWebHookInfo, 
     saveOriginWebHookInfo,
@@ -139,7 +140,7 @@ const WebHookDrawer = (props: IProps) => {
 
   useEffect(() => {
     if (visible && defaultValue) {
-      saveOriginWebHookInfo(defaultValue);
+      saveOriginWebHookInfo(cloneDeep(defaultValue));
       saveWebHookInfo(defaultValue);
       setValue('name', defaultValue.name);
       setValue('description', defaultValue.description);
@@ -152,6 +153,12 @@ const WebHookDrawer = (props: IProps) => {
     }
   }, [visible, webHookInfo, defaultValue, isAdd, saveOriginWebHookInfo, saveWebHookInfo, setValue]);
 
+  useEffect(() => {
+    if (!visible) {
+      saveDuplicateUrls([]);
+    }
+  }, [visible]);
+
   const debounceUrlExist = useMemo(() => {
     return debounce(async (value: string) => {
       const check = creatRequestTimeCheck('url');
@@ -163,13 +170,13 @@ const WebHookDrawer = (props: IProps) => {
 
       if (res.success && res.data) {
         const result = res.data.filter((name: string) => {
-          return name !== webHookInfo.name;
+          return name !== originWebHookInfo.name || name !== webHookInfo.name;
         });
 
         saveDuplicateUrls(result);
       }
     }, 500);
-  }, [creatRequestTimeCheck, webHookInfo.name]);
+  }, [creatRequestTimeCheck, webHookInfo, originWebHookInfo.name]);
 
   const checkUrlExist = useCallback(async (url: string) => {
     await debounceUrlExist(url);
