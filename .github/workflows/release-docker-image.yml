@@ -141,3 +141,8 @@ jobs:
         run: |
           docker buildx imagetools inspect featureprobe/ui
         working-directory: ./feature-probe-ui  
+
+  deployment:
+    name: Deploy to Google Cloud
+    uses: FeatureProbe/FeatureProbe/.github/workflows/gcloud.yml@main
+    needs: [release_api, release_ui]
