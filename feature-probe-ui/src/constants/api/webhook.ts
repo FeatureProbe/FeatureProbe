@@ -6,6 +6,8 @@ const WebHookURI = {
   queryWebHookURI: `${origin}/webhooks/:id`,
   deleteWebHookURI: `${origin}/webhooks/:id`,
   updateWebHookURI: `${origin}/webhooks/:id`,
+  querySecretKeyURI: `${origin}/webhooks/secretKey`,
+  checkUrlURI: `${origin}/webhooks/checkUrl`,
 };
 
 export default WebHookURI;

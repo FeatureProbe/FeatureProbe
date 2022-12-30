@@ -60,3 +60,25 @@ export const deleteWebHook = async <T>(id: string) => {
     },
   });
 };
+
+export const getSecretKey = async <T>() => {
+  const url = API.querySecretKeyURI;
+
+  return request<T>(url, {
+    method: 'GET',
+    headers: {
+      ...ApplicationJson(),
+    },
+  });
+};
+
+export const checkUrl = async <T>(queryUrl: string) => {
+  const url = API.checkUrlURI + `?url=${queryUrl}`;
+
+  return request<T>(url, {
+    method: 'GET',
+    headers: {
+      ...ApplicationJson(),
+    },
+  });
+};

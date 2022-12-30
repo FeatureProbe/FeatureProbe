@@ -8,6 +8,7 @@ import com.featureprobe.api.base.doc.PatchApiResponse;
 import com.featureprobe.api.base.hook.Action;
 import com.featureprobe.api.base.hook.Hook;
 import com.featureprobe.api.base.hook.Resource;
+import com.featureprobe.api.dto.SecretKeyResponse;
 import com.featureprobe.api.dto.WebHookCreateRequest;
 import com.featureprobe.api.dto.WebHookItemResponse;
 import com.featureprobe.api.dto.WebHookListRequest;
@@ -28,7 +29,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @Tag(name = "WebHook", description = "The WebHook is a callback configurations")
@@ -75,10 +79,24 @@ public class WebHookController {
     }
 
     @GetApiResponse
+    @GetMapping("/secretKey")
+    @Operation(summary = "Get WebHook SecretKey", description = "Get a WebHook SecretKey.")
+    public SecretKeyResponse secretKey() {
+        return webHookService.secretKey();
+    }
+
+    @GetApiResponse
     @GetMapping
     @Operation(summary = "List WebHook", description = "Get a list of all WebHook.")
     public Page<WebHookItemResponse> list(@Validated WebHookListRequest listRequest) {
         return webHookService.list(listRequest);
+    }
+
+    @GetApiResponse
+    @GetMapping("/checkUrl")
+    @Operation(summary = "Get the webhook of the same url", description = "Get the webhook of the same url.")
+    public List<String> queryByUrl(@RequestParam(name = "url") String url) {
+        return webHookService.queryByUrl(url);
     }
 
 }
