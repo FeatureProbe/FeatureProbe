@@ -182,6 +182,12 @@ const WebHookDrawer = (props: IProps) => {
     await debounceUrlExist(url);
   }, [debounceUrlExist]);
 
+  useEffect(() => {
+    if (!isAdd && visible) {
+      checkUrlExist(webHookInfo.url);
+    }
+  }, [checkUrlExist, isAdd, visible, webHookInfo.url]);
+
   return (
     <div className={drawerCls}>
       <Form onSubmit={handleSubmit(onSubmit)} className={formCls} autoComplete="off">
