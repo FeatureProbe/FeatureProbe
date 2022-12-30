@@ -13,6 +13,8 @@ public class WebHookUpdateRequest {
 
     private HookSettingsStatus status;
 
+    private String secretKey;
+
     @NotBlank
     private String url;
 
