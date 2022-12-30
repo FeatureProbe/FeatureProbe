@@ -33,7 +33,7 @@ interface IProps {
   defaultServeContainer: IContainer;
 }
 
-const VariationItem = (props: IProps) => {
+const VariationItem: React.FC<IProps> = (props) => {
   const [ open, setOpen ] = useState<boolean>(false);
   const [ canSave, setCanSave ] = useState<boolean>(true);
   const [ jsonValue, setJsonValue ] =  useState<string>('');

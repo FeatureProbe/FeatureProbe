@@ -38,7 +38,7 @@ interface IProps {
   saveInitTargeting(targeting: ITargeting): void;
 }
 
-const Info = (props: IProps) => {
+const Info: React.FC<IProps> = (props) => {
   const { toggleInfo, modifyInfo, approvalInfo, isInfoLoading, targetingDisabled, gotoGetStarted, initTargeting, saveApprovalInfo, saveInitTargeting } = props;
   const [ enableApproval, saveEnableApproval ] = useState<boolean>(false);
   const [ open, saveOpen ] = useState<boolean>(false);

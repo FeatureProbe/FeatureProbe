@@ -1,4 +1,4 @@
-import {diffArrays, ArrayChange} from 'diff';
+import { diffArrays, ArrayChange } from 'diff';
 
 const diff = {
   diffArrays,
@@ -13,9 +13,9 @@ export interface ArrayObj {
   __value?: unknown;
 }
 
-export type DiffParam = ArrayObj[] | DiffObj | unknown[]
+export type DiffParam = ArrayObj[] | DiffObj | unknown[];
 
-export type DiffResult = (ArrayChange<unknown> & { modified?: boolean  })[];
+export type DiffResult = (ArrayChange<unknown> & { modified?: boolean })[];
 
 //compare in diff function
 const compared = (obj1: DiffObj | ArrayObj, obj2: DiffObj | ArrayObj) => {
@@ -25,7 +25,7 @@ const compared = (obj1: DiffObj | ArrayObj, obj2: DiffObj | ArrayObj) => {
         return diffObj(obj1.__value as DiffObj, obj2.__value as DiffObj).length === 1;
       }
       return obj1.__value === obj2.__value;
-    } else if((obj1 as DiffObj)['conditions']) {
+    } else if ((obj1 as DiffObj)['conditions']) {
       return false;
     }
     return diffObj(obj1 as DiffObj, obj2 as DiffObj).length === 1;
@@ -41,16 +41,20 @@ function diffObj(left: DiffParam, right: DiffParam): ArrayChange<ArrayObj | Diff
       comparator: compared,
     });
   } else {
-    const leftArr = Object.keys(left).map((key) => {
-      return { __key: key, __value: (left as DiffObj)[key] };
-    }).sort((a, b) => {
-      return a.__key > b.__key ? 1 : -1;
-    });
-    const rightArr = Object.keys(right).map((key) => {
-      return { __key: key, __value: (right as DiffObj)[key] };
-    }).sort((a, b) => {
-      return a.__key > b.__key ? 1 : -1;
-    });
+    const leftArr = Object.keys(left)
+      .map((key) => {
+        return { __key: key, __value: (left as DiffObj)[key] };
+      })
+      .sort((a, b) => {
+        return a.__key > b.__key ? 1 : -1;
+      });
+    const rightArr = Object.keys(right)
+      .map((key) => {
+        return { __key: key, __value: (right as DiffObj)[key] };
+      })
+      .sort((a, b) => {
+        return a.__key > b.__key ? 1 : -1;
+      });
 
     return diff.diffArrays(leftArr, rightArr, {
       comparator: compared,
@@ -100,48 +104,14 @@ const resetDiffResult = (diffContent: ArrayChange<DiffObj | ArrayObj>[]) => {
   return result;
 };
 
-//let remove + add to modify
-function toModified(removed: DiffObj[], added: DiffObj[]) {
-  const result: DiffResult  = [];
-  let modifies = [];
-  let removeds = [];
-  let addeds = [];
-  let i = 0;
-  for (i; i < removed.length; i++) {
-    if (i >= added.length) {
-      break;
-    }
-    const left = removed[i];
-    const right = added[i];
-
-    const isDiff = isTryToDiff(right);
-    if (isDiff.flag) {
-      if (removeds.length) {
-        result.push({ count: removeds.length, removed: true, value: removeds });
-        result.push({ count: addeds.length, added: true, value: addeds });
-        removeds = [];
-        addeds = [];
-      }
-
-      if (isDiff.type === 'key-value' && left.__key === right.__key) {
-        modifies.push({ __key: right.__key, __value: resetDiffResult(diffObj(left.__value as DiffParam, right.__value as DiffParam)) });
-      } else if(left.key !== right.__key) {
-        removeds.push(left);
-        addeds.push(right);
-      } else {
-        modifies.push({ count: 1, modified: true, value: resetDiffResult(diffObj(left, right)) });
-      }
-    } else {
-      if (modifies.length) {
-        result.push({ count: modifies.length, modified: true, value: modifies });
-        modifies = [];
-      }
-
-      removeds.push(left);
-      addeds.push(right);
-    }
-  }
-
+function setRemain(
+  removed: DiffObj[],
+  added: DiffObj[],
+  modifies: unknown[],
+  removeds: unknown[],
+  addeds: unknown[],
+  result: DiffResult
+) {
   if (removeds.length) {
     result.push({ count: removeds.length, removed: true, value: removeds });
   }
@@ -168,12 +138,60 @@ function toModified(removed: DiffObj[], added: DiffObj[]) {
       last.value = last.value.concat(added.slice(removed.length));
     }
   }
+}
+
+//let remove + add to modify
+function toModified(removed: DiffObj[], added: DiffObj[]) {
+  const result: DiffResult = [];
+  let modifies = [];
+  let removeds = [];
+  let addeds = [];
+  let i = 0;
+  for (i; i < removed.length; i++) {
+    if (i >= added.length) {
+      break;
+    }
+    const left = removed[i];
+    const right = added[i];
+
+    const isDiff = isTryToDiff(right);
+    if (isDiff.flag) {
+      if (removeds.length) {
+        result.push({ count: removeds.length, removed: true, value: removeds });
+        result.push({ count: addeds.length, added: true, value: addeds });
+        removeds = [];
+        addeds = [];
+      }
+
+      if (isDiff.type === 'key-value' && left.__key === right.__key) {
+        modifies.push({
+          __key: right.__key,
+          __value: resetDiffResult(diffObj(left.__value as DiffParam, right.__value as DiffParam)),
+        });
+      } else if (left.key !== right.__key) {
+        removeds.push(left);
+        addeds.push(right);
+      } else {
+        modifies.push({ count: 1, modified: true, value: resetDiffResult(diffObj(left, right)) });
+      }
+    } else {
+      if (modifies.length) {
+        result.push({ count: modifies.length, modified: true, value: modifies });
+        modifies = [];
+      }
+
+      removeds.push(left);
+      addeds.push(right);
+    }
+  }
+
+  setRemain(removed, added, modifies, removeds, addeds, result);
 
   return result;
-};
+}
 
-
-function idiff (left: DiffParam, right: DiffParam): DiffResult {
+function idiff(left: DiffParam, right: DiffParam): DiffResult {
   return resetDiffResult(diffObj(left, right));
 }
+
 export default idiff;

@@ -265,6 +265,44 @@ interface ConditionContentProps {
 const ConditionModifyContent: React.FC<ConditionContentProps> = (props) => {
   const { diffContent, type, serve, title } = props;
 
+  const render = () => {
+    let emptyCount = 0;
+    return renderFieldsItems<ICondition>(diffContent, type, (value, diffType, type, index) => {
+      if (diffType === 'remove' && type === 'before') {
+        return (
+          <ConditiondiffRemoveItem
+            type={type}
+            value={value as ICondition & StringField}
+            first={index - emptyCount === 1}
+          />
+        );
+      } else if (diffType === 'add' && type === 'after') {
+        return (
+          <ConditiondiffAddItem
+            type={type}
+            value={value as ICondition & StringField}
+            first={index - emptyCount === 1}
+          />
+        );
+      } else if (diffType === 'modify') {
+        return (
+          <ConditiondiffModifyItem
+            type={type}
+            value={value as ArrayChange<DiffResult>}
+            first={index - emptyCount === 1}
+          />
+        );
+      } else if (diffType === 'same') {
+        return <ConditiondiffSameItem value={value as ICondition & StringField} first={index - emptyCount === 1} />;
+      } else {
+        if (emptyCount >= 0) {
+          emptyCount++;
+        }
+        return <ConditiondiffEmptyItem value={value as ICondition & StringField} first={index === 0} />;
+      }
+    });
+  };
+
   return (
     <div>
       <Table basic="very" unstackable size="small">
@@ -274,46 +312,7 @@ const ConditionModifyContent: React.FC<ConditionContentProps> = (props) => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {diffContent &&
-            (() => {
-              let emptyCount = 0;
-              return renderFieldsItems<ICondition>(diffContent, type, (value, diffType, type, index) => {
-                if (diffType === 'remove' && type === 'before') {
-                  return (
-                    <ConditiondiffRemoveItem
-                      type={type}
-                      value={value as ICondition & StringField}
-                      first={index - emptyCount === 1}
-                    />
-                  );
-                } else if (diffType === 'add' && type === 'after') {
-                  return (
-                    <ConditiondiffAddItem
-                      type={type}
-                      value={value as ICondition & StringField}
-                      first={index - emptyCount === 1}
-                    />
-                  );
-                } else if (diffType === 'modify') {
-                  return (
-                    <ConditiondiffModifyItem
-                      type={type}
-                      value={value as ArrayChange<DiffResult>}
-                      first={index - emptyCount === 1}
-                    />
-                  );
-                } else if (diffType === 'same') {
-                  return (
-                    <ConditiondiffSameItem value={value as ICondition & StringField} first={index - emptyCount === 1} />
-                  );
-                } else {
-                  if (emptyCount >= 0) {
-                    emptyCount++;
-                  }
-                  return <ConditiondiffEmptyItem value={value as ICondition & StringField} first={index === 0} />;
-                }
-              });
-            })()}
+          {diffContent && render()}
           {serve && <DiffServeContent diffType="modify" content={serve} type={type} />}
         </Table.Body>
       </Table>
