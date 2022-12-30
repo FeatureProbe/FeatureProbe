@@ -33,6 +33,7 @@
     "chartjs-plugin-annotation": "^1.4.0",
     "classnames": "^2.3.1",
     "codemirror": "^5.65.3",
+    "dayjs": "^1.11.0",
     "diff": "^5.1.0",
     "jsonlint-mod": "^1.7.6",
     "less-loader": "^7.3.0",
