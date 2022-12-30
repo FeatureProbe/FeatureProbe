@@ -14,8 +14,8 @@ export const DiffStatusContent: React.FC<DiffStatusContentProps> = (props) => {
 
   return (
     <div className={styles['diff-status-content']}>
-      <div>
-        <div>
+      <div className={styles['diff-status-item']}>
+        <div className={styles['diff-status-field']}>
           {renderField(content, 'before', (map) => {
             const disabled = map.get('disabled');
             if (disabled?.type === 'remove') {
@@ -33,8 +33,8 @@ export const DiffStatusContent: React.FC<DiffStatusContentProps> = (props) => {
           })}
         </div>
       </div>
-      <div>
-        <div>
+      <div className={styles['diff-status-item']}>
+        <div className={styles['diff-status-field']}>
           {renderField(content, 'after', (map) => {
             const disabled = map.get('disabled');
             if (disabled?.type === 'add') {

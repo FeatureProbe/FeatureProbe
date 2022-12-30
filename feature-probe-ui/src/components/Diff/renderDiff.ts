@@ -1,15 +1,16 @@
 import { ArrayChange } from 'diff';
 import { ReactNode } from 'react';
+import { diffType, positionType } from './constants';
 import { ArrayObj, DiffResult } from './diff';
 
 interface FieldRenderObj {
-  type: 'remove' | 'add' | 'modify' | 'same';
+  type: diffType;
   value: unknown;
 }
 type renderFunc = (fileds: Map<string, FieldRenderObj>) => ReactNode;
 
 //Render object diff 
-export function renderField(diffContent: DiffResult, type: 'after' | 'before', render: renderFunc) {
+export function renderField(diffContent: DiffResult, type: positionType, render: renderFunc) {
   const after = type === 'after';
   const map = new Map();
   diffContent.forEach((current) => {
@@ -45,10 +46,10 @@ export function renderField(diffContent: DiffResult, type: 'after' | 'before', r
   return render(map);
 }
 
-type ItemsRenderFunc<T> = (fileds: DiffResult | T | ArrayChange<unknown>, diffType: 'remove' | 'add' | 'modify' | 'same', type: 'after' | 'before', index: number) => ReactNode;
+type ItemsRenderFunc<T> = (fileds: DiffResult | T | ArrayChange<unknown>, diffType: diffType, type: positionType, index: number) => ReactNode;
 
 //Render list diff 
-export function renderFieldsItems<T>(diffContent: DiffResult, type: 'after' | 'before', render: ItemsRenderFunc<T>) {
+export function renderFieldsItems<T>(diffContent: DiffResult, type: positionType, render: ItemsRenderFunc<T>) {
   let values: ReactNode[] = [];
   let count = 0;
 

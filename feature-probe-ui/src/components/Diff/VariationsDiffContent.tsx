@@ -2,13 +2,14 @@ import { ArrayChange } from 'diff';
 import { ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Table } from 'semantic-ui-react';
+import { diffType, positionType } from './constants';
 import { ArrayObj, DiffResult } from './diff';
-import { DiffChangeType, DiffFieldValue } from './DiffFieldValue';
+import { DiffFieldValue } from './DiffFieldValue';
 import fieldStyles from './fields.module.scss';
 import styles from './VariationsDiffContent.module.scss';
 
 type DiffFieldValue = {
-  type: DiffChangeType;
+  type: diffType;
   value: string;
 };
 
@@ -24,7 +25,7 @@ interface VariationsField {
   description?: string;
 }
 
-const VariationsModifyDiffItem: React.FC<{ content: DiffResult; type: 'before' | 'after' }> = (props) => {
+const VariationsModifyDiffItem: React.FC<{ content: DiffResult; type: positionType }> = (props) => {
   const { content, type } = props;
   const after = type === 'after';
   const obj: VariationsFieldType = content.reduce((pre, current) => {
@@ -75,8 +76,8 @@ const VariationsModifyDiffItem: React.FC<{ content: DiffResult; type: 'before' |
 
 const VariationsCountDiffItem: React.FC<{
   content: VariationsField;
-  diffType: 'add' | 'remove';
-  type: 'after' | 'before';
+  diffType: diffType;
+  type: positionType;
 }> = (props) => {
   const { content, diffType, type } = props;
   const obj = content;
@@ -97,7 +98,7 @@ interface VariationsDiffContentProps {
   content: DiffResult;
 }
 
-const renderFields = (diffContent: DiffResult, type: 'before' | 'after') => {
+const renderFields = (diffContent: DiffResult, type: positionType) => {
   let values: ReactNode[] = [];
   for (let i = 0; i < diffContent.length; i++) {
     const diffItem = diffContent[i];
@@ -107,18 +108,22 @@ const renderFields = (diffContent: DiffResult, type: 'before' | 'after') => {
           return <VariationsModifyDiffItem content={(item as ArrayChange<ArrayChange<unknown>>).value} type={type} />;
         })
       );
-    }
-    if (diffItem.removed) {
+    } else if (diffItem.removed) {
       values = values.concat(
         diffItem.value.map((item) => {
           return <VariationsCountDiffItem type={type} content={item as VariationsField} diffType="remove" />;
         })
       );
-    }
-    if (diffItem.added) {
+    } else if (diffItem.added) {
       values = values.concat(
         diffItem.value.map((item) => {
           return <VariationsCountDiffItem type={type} content={item as VariationsField} diffType="add" />;
+        })
+      );
+    } else {
+      values = values.concat(
+        diffItem.value.map((item) => {
+          return <VariationsCountDiffItem type={type} content={item as VariationsField} diffType="same" />;
         })
       );
     }
@@ -127,7 +132,7 @@ const renderFields = (diffContent: DiffResult, type: 'before' | 'after') => {
 };
 
 const VariationsDiffContent: React.FC<VariationsDiffContentProps> = (props) => {
-  const {content} = props;
+  const { content } = props;
 
   return (
     <div className={fieldStyles['diff-content']}>
@@ -136,9 +141,15 @@ const VariationsDiffContent: React.FC<VariationsDiffContentProps> = (props) => {
           <Table basic="very" unstackable size="small">
             <Table.Header className={fieldStyles['table-header']}>
               <Table.Row>
-                <Table.HeaderCell className={styles['table-header-name']}><FormattedMessage id='common.name.lowercase.text' /></Table.HeaderCell>
-                <Table.HeaderCell><FormattedMessage id='common.value.text' /></Table.HeaderCell>
-                <Table.HeaderCell><FormattedMessage id='common.description.lowercase.text' /></Table.HeaderCell>
+                <Table.HeaderCell className={styles['table-header-name']}>
+                  <FormattedMessage id="common.name.lowercase.text" />
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <FormattedMessage id="common.value.text" />
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <FormattedMessage id="common.description.lowercase.text" />
+                </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>{content && renderFields(content, 'before')}</Table.Body>
@@ -150,9 +161,15 @@ const VariationsDiffContent: React.FC<VariationsDiffContentProps> = (props) => {
           <Table basic="very" unstackable size="small">
             <Table.Header className={fieldStyles['table-header']}>
               <Table.Row>
-                <Table.HeaderCell className={styles['table-header-name']}><FormattedMessage id='common.name.lowercase.text' /></Table.HeaderCell>
-                <Table.HeaderCell><FormattedMessage id='common.value.text' /></Table.HeaderCell>
-                <Table.HeaderCell><FormattedMessage id='common.description.lowercase.text' /></Table.HeaderCell>
+                <Table.HeaderCell className={styles['table-header-name']}>
+                  <FormattedMessage id="common.name.lowercase.text" />
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <FormattedMessage id="common.value.text" />
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <FormattedMessage id="common.description.lowercase.text" />
+                </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>{content && renderFields(content, 'after')}</Table.Body>

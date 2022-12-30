@@ -1,9 +1,8 @@
 import { CSSProperties } from 'react';
+import { diffType } from './constants';
 import styles from './DiffFieldValue.module.scss';
 
-export type DiffChangeType = 'add' | 'remove' | 'modify' | 'same';
-
-export const DiffFieldValue = (props: { type?: DiffChangeType; value?: string | string[]; style?: CSSProperties }) => {
+export const DiffFieldValue = (props: { type?: diffType; value?: string | string[]; style?: CSSProperties }) => {
   const { type, style, value } = props;
   const typeCls = styles[`field-value-${type}`];
 

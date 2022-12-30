@@ -1,21 +1,21 @@
 .diff-status-content {
   display: flex;
   background: #f8f9fa;
+}
 
-  & > * {
-    width: 50%;
-    padding-left: 24px;
-    padding-right: 8px;
-    height: 28px;
-    border-right: 1px solid #fff;
+.diff-status-item {
+  width: 50%;
+  padding-left: 24px;
+  padding-right: 8px;
+  height: 28px;
+  border-right: 1px solid #fff;
+}
 
-    & > * {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-      background: #fff;
-      padding-left: 8px;
-    }
-  }
+.diff-status-field {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  padding-left: 8px;
 }

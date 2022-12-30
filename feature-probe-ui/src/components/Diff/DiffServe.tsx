@@ -1,13 +1,15 @@
+import { FormattedMessage } from 'react-intl';
+import { CSSProperties } from 'react';
 import { ArrayChange } from 'diff';
 import { Table } from 'semantic-ui-react';
 import { ArrayObj, DiffResult } from './diff';
 import { DiffFieldValue } from './DiffFieldValue';
 import { renderField, renderFieldsItems } from './renderDiff';
+import { diffType, positionType } from './constants';
 import conditionStyles from './RulesDiffContent.module.scss';
-import styles from './DiffServe.module.scss';
 import fieldStyles from './fields.module.scss';
-import { FormattedMessage } from 'react-intl';
-import { CSSProperties } from 'react';
+import styles from './DiffServe.module.scss';
+
 
 interface DiffServeContentProps {
   map?: Map<string, string>;
@@ -18,8 +20,8 @@ interface DiffServeContentProps {
       }
     | ArrayChange<ArrayObj>[]
     | ArrayChange<number>[];
-  type: 'after' | 'before';
-  diffType: 'remove' | 'same' | 'modify' | 'add';
+  type: positionType;
+  diffType: diffType;
   rowStyle?: CSSProperties;
 }
 

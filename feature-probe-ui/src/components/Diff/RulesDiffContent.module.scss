@@ -21,6 +21,10 @@
     width: 50%;
     padding-left: 24px;
 
+    &:first-child {
+      border-right: 1px solid #fff;
+    }
+
     & > div {
       margin-top: 12px;
       overflow-x: scroll;
@@ -39,10 +43,6 @@
           transform: translateY(-50%);
         }
       }
-    }
-
-    &:first-child {
-      border-right: 1px solid #fff;
     }
   }
 }

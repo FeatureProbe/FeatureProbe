@@ -1,16 +1,17 @@
+import { ReactNode } from 'react';
 import { ArrayChange } from 'diff';
 import { Table } from 'semantic-ui-react';
 import { ICondition, IRule } from '../../interfaces/targeting';
 import { DiffResult } from './diff';
-import { DiffChangeType, DiffFieldValue } from './DiffFieldValue';
+import { DiffFieldValue } from './DiffFieldValue';
 import { renderField, renderFieldsItems } from './renderDiff';
 import { DiffServeContent } from './DiffServe';
-import { ReactNode } from 'react';
+import { diffType, positionType } from './constants';
 import fieldStyles from './fields.module.scss';
 import styles from './RulesDiffContent.module.scss';
 
 interface FieldValue {
-  type: DiffChangeType;
+  type: diffType;
   value: unknown;
 }
 
@@ -82,8 +83,8 @@ export const RowFields: React.FC<RowFieldsProps> = (props) => {
 };
 
 interface RuleNameDiffProps {
-  diffType: 'remove' | 'add' | 'same';
-  type: 'after' | 'before';
+  diffType: diffType;
+  type: positionType;
   value: string;
 }
 
@@ -99,7 +100,7 @@ const RuleNameDiff: React.FC<RuleNameDiffProps> = (props) => {
 
 interface ConditiondiffRemoveItemProps {
   value: ICondition & { [key: string]: unknown };
-  type: 'after' | 'before';
+  type: positionType;
   first?: boolean;
 }
 
@@ -223,7 +224,7 @@ const ConditiondiffEmptyItem: React.FC<ConditiondiffSameItemProps> = (props) => 
 
 interface ConditiondiffModifyItemProps {
   value: ArrayChange<DiffResult>;
-  type: 'after' | 'before';
+  type: positionType;
   first?: boolean;
 }
 
@@ -256,7 +257,7 @@ const ConditiondiffModifyItem: React.FC<ConditiondiffModifyItemProps> = (props) 
 
 interface ConditionContentProps {
   diffContent: DiffResult;
-  type: 'after' | 'before';
+  type: positionType;
   serve?: unknown;
   title?: ReactNode;
 }

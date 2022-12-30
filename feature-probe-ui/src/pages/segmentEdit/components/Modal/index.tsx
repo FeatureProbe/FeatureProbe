@@ -127,7 +127,7 @@ const ConfirmModal = (props: IProps) => {
   };
 
   return (
-    <Modal open={open} width={800} footer={modalFooter()}>
+    <Modal handleCancel={handleCancel} open={open} width={800} footer={modalFooter()}>
       <div className={styles['modal-inner-box']}>
         <div className={styles['modal-header']}>
           <span>
@@ -137,6 +137,7 @@ const ConfirmModal = (props: IProps) => {
             customclass={styles['modal-header-icon']}
             type="close"
             onClick={(e: SyntheticEvent) => {
+              setCurrent(0);
               e.stopPropagation();
               setOpen(false);
             }}
