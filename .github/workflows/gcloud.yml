@@ -3,10 +3,7 @@ name: Deploy to Google Cloud
 on:
   workflow_dispatch:
   
-  workflow_run:
-    workflows: [Publish Docker Image]
-    types:
-      - completed
+  workflow_call:
 
 jobs:
   deployment:
