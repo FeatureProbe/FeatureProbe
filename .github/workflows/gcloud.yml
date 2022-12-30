@@ -9,7 +9,8 @@ on:
       - completed
 
 jobs:
-  build:
+  deployment:
+    environment: trial
     # Allow the job to fetch a GitHub ID token
     permissions:
       id-token: write
