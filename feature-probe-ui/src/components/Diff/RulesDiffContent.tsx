@@ -16,6 +16,9 @@ export function I18NRules(rules: IRule[], intl: IntlShape) {
     rule.conditions.forEach((condition) => {
       const typeI18N = rulesI18NMap.get(condition.type);
       const predicateI18N = rulesI18NMap.get(condition.predicate); 
+      if(condition.type === 'segment') {
+        condition.subject = intl.formatMessage({id: 'common.user.text'});
+      }
       condition.type = typeI18N ? intl.formatMessage({id: rulesI18NMap.get(condition.type)}) : condition.type;
       condition.predicate = predicateI18N ? intl.formatMessage({id: rulesI18NMap.get(condition.predicate)}) : condition.predicate;
     });
