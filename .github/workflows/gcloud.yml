@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   
   workflow_run:
-    workflows: [Publish Docker Image when Release]
+    workflows: [Publish Docker Image]
     types:
       - completed
 
