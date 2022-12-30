@@ -391,15 +391,21 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     clonevariations.forEach((variation: IVariation) => {
       const res = replaceSpace(variation);
       if (res.value === '') {
-        setError(`variation_${variation.id}`, {
-          message: intl.formatMessage({ id: 'common.input.placeholder' }),
-        });
+        if (toggleInfo?.returnType === 'boolean') {
+          setError(`variation_${variation.id}_normal`, {
+            message: intl.formatMessage({id: 'toggles.returntype.placeholder'}),
+          });
+        } else {
+          setError(`variation_${variation.id}`, {
+            message: intl.formatMessage({id: 'common.input.placeholder'}),
+          });
+        }
         isError = true;
       }
     });
 
     return isError;
-  }, [intl, rules, setError, variations]);
+  }, [intl, rules, setError, toggleInfo, variations]);
 
   const onSubmit = useCallback(() => {
     if (validateForm()) {

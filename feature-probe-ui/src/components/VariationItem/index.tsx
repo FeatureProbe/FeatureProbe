@@ -79,6 +79,7 @@ const VariationItem: React.FC<IProps> = (props) => {
     });
 
     if (returnType !== 'boolean') {
+      unregister(`variation_${id}_normal`);
       register(`variation_${id}`, {
         required: {
           value: true,
@@ -100,7 +101,7 @@ const VariationItem: React.FC<IProps> = (props) => {
           }
         }
       });
-
+      setValue(`variation_${id}`, '');
     } else {
       unregister(`variation_${id}`);
       register(`variation_${id}_normal`, {
@@ -215,65 +216,74 @@ const VariationItem: React.FC<IProps> = (props) => {
           <Form.Field className={styles[`${prefix ? (prefix + '-') : ''}variation-value`]}>
             {
               returnType !== 'boolean' ? (
-                <Form.Input 
-                  fluid 
-                  value={value}
-                  customname='value'
-                  index={index}
-                  name={`variation_${id}`}
-                  label={(
-                    <span className={styles['label-text']}>
-                      <span className={styles['label-required']}>*</span>
-                      <FormattedMessage id='common.value.text' />
-                    </span>
-                  )}
-                  placeholder={intl.formatMessage({id: 'common.value.text'})}
-                  error={errors?.[`variation_${id}`] ? true : false}
-                  disabled={disabled}
-                  onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
-                    handleInput(e, detail);
-                    setValue(detail.name, detail.value);
-                    await trigger(`variation_${id}`);
-                  }}
-                  icon={
-                    returnType === 'json' && (
-                      <Icon customclass={styles['icon-evaluate']} type='code' onClick={() => setOpen(true)} />
-                    )
+                <>
+                  <Form.Input 
+                    fluid 
+                    value={value}
+                    customname='value'
+                    index={index}
+                    name={`variation_${id}`}
+                    label={(
+                      <span className={styles['label-text']}>
+                        <span className={styles['label-required']}>*</span>
+                        <FormattedMessage id='common.value.text' />
+                      </span>
+                    )}
+                    placeholder={intl.formatMessage({id: 'common.value.text'})}
+                    error={errors?.[`variation_${id}`] ? true : false}
+                    disabled={disabled}
+                    onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
+                      handleInput(e, detail);
+                      setValue(detail.name, detail.value);
+                      await trigger(`variation_${id}`);
+                    }}
+                    icon={
+                      returnType === 'json' && (
+                        <Icon customclass={styles['icon-evaluate']} type='code' onClick={() => setOpen(true)} />
+                      )
+                    }
+                  />
+                  { 
+                    errors[`variation_${id}`] && <div className={prefix ? 'error-text-transform' : 'error-text-normal'}>
+                      { errors[`variation_${id}`].message }
+                    </div> 
                   }
-                />
+                </>
               ) : (
-                <Form.Dropdown 
-                  fluid 
-                  selection 
-                  floating
-                  value={value}
-                  customname='value'
-                  name={`variation_${id}_normal`}
-                  className={styles['status-dropdown']}
-                  selectOnBlur={false}
-                  options={booleanOption} 
-                  label={(
-                    <span className={styles['label-text']}>
-                      <span className={styles['label-required']}>*</span>
-                      <FormattedMessage id='common.value.text' />
-                    </span>
-                  )}
-                  disabled={disabled}
-                  placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
-                  icon={<Icon customclass={styles['angle-down']} type='angle-down' />}
-                  error={errors[`variation_${id}_normal`] ? true : false}
-                  onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
-                    handleChangeBoolean(e, detail);
-                    setValue(detail.name, detail.value);
-                    await trigger(`variation_${id}_normal`);
-                  }}
-                />
+                <>
+                  <Form.Dropdown 
+                    fluid 
+                    selection 
+                    floating
+                    value={value}
+                    customname='value'
+                    name={`variation_${id}_normal`}
+                    className={styles['status-dropdown']}
+                    selectOnBlur={false}
+                    options={booleanOption} 
+                    label={(
+                      <span className={styles['label-text']}>
+                        <span className={styles['label-required']}>*</span>
+                        <FormattedMessage id='common.value.text' />
+                      </span>
+                    )}
+                    disabled={disabled}
+                    placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
+                    icon={<Icon customclass={styles['angle-down']} type='angle-down' />}
+                    error={errors[`variation_${id}_normal`] ? true : false}
+                    onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
+                      handleChangeBoolean(e, detail);
+                      setValue(detail.name, detail.value);
+                      await trigger(`variation_${id}_normal`);
+                    }}
+                  />
+                  { 
+                    errors[`variation_${id}_normal`] && <div className={prefix ? 'error-text-transform' : 'error-text-normal'}>
+                      { errors[`variation_${id}_normal`].message }
+                    </div> 
+                  }
+                </>
               )
-            }
-            { 
-              errors[`variation_${id}`] && <div className={prefix ? 'error-text-transform' : 'error-text-normal'}>
-                { errors[`variation_${id}`].message }
-              </div> 
             }
           </Form.Field>
           <Form.Field width={6}>

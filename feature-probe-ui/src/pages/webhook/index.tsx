@@ -155,7 +155,7 @@ const WebHook = () => {
                             saveList={saveList}
                             refresh={loadingList}
                             handleEdit={() => {
-                              saveDrawerValue(item);
+                              saveDrawerValue(cloneDeep(item));
                               setDrawerVisible(true);
                               setIsAdd(false);
                             }}

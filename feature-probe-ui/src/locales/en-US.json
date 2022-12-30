@@ -107,6 +107,7 @@
   "common.tokens.text": "Access tokens", 
   "common.token.text": "Access token", 
   "common.secret.key.text": "Secret key",
+  "common.secret.required": "Please input secret key",
   "common.diff.tips": "The following is a before and after comparison of this change.",
 
   "header.getuser.error.text": "Error getting user profile",
@@ -325,7 +326,6 @@
   "targeting.semver.more": "Learn more",
   "targeting.rule.not.empty": "Please add a rule condition",
 
-
   "targeting.approval.tips": "Owner can set approval reviewers for this environment.",
   "targeting.approval.operation.skip.approval": "Skip Approval and Publish",
   "targeting.approval.operation.view.changes": "Show Changes",
@@ -476,7 +476,7 @@
   
   "guide.global.step1.title": "Project",
   "guide.global.step1.project": "Manage the [project] and the [environments] information of the project",
-  "guide.global.step1.env": "Quickly copy the [environment key] and associate it with the code environment variable",
+  "guide.global.step1.env": "Quickly copy the [environment key] for SDK initialization",
   "guide.global.step1.enter": "Switch the entry for viewing the toggles of different projects",
   "guide.global.step2.title": "Switch environment",
   "guide.global.step2.env": "Click to switch the environment and view the toggles information in different environments",
@@ -494,7 +494,7 @@
   "guide.toggle.targeting.step1.title": "Click to switch toggle status",
   "guide.toggle.targeting.step1.off": "Disabled status, the return value depends on the [Disabled toggle return value]", 
   "guide.toggle.targeting.step1.on": "Enabled status, the return value depends on the [Rules] and [Default Rule] below", 
-  "guide.toggle.targeting.step2.title": "Set the default return value for 【Unspecified Crowd】",
+  "guide.toggle.targeting.step2.title": "Set the default return value",
   "guide.toggle.targeting.step2.default": "If all the above [rules] of a user fail to hit, the [default rule] will be returned",
 
   "guide.next": "Next",
@@ -524,6 +524,8 @@
   "webhook.create.text": "Create a webhook",
   "webhook.edit.text": "Edit webhook",
   "webhook.total": "Webhooks in total",
+  "webhook.duplicated.urls": "Detected that there are currently existing webhooks for the same URL: ",
+  "webhook.secretkey.tips": "A method for webhook authentication. Use the 'secret key' to generate a request signature for authentication to prevent URLs from being maliciously requested.",
 
   "token.application.title": "Shared access tokens",
   "token.personal.title": "Personal access tokens",
