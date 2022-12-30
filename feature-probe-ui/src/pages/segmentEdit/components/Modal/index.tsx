@@ -11,7 +11,7 @@ import NoData from 'components/NoData';
 import { IToggle } from 'interfaces/segment';
 import TextLimit from 'components/TextLimit';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
-import { RulesDiffContent } from 'components/Diff/RulesDiffContent';
+import { I18NRules, RulesDiffContent } from 'components/Diff/RulesDiffContent';
 import { hooksFormContainer } from 'pages/segmentEdit/provider';
 import styles from './index.module.scss';
 
@@ -125,6 +125,15 @@ const ConfirmModal = (props: IProps) => {
       );
     }
   };
+
+  const beforeRuleDiff = useCallback(
+    (before, after) => {
+      const left = I18NRules(before, intl);
+      const right = I18NRules(after, intl);
+      return [left, right];
+    },
+    [intl]
+  );
 
   return (
     <Modal handleCancel={handleCancel} open={open} width={800} footer={modalFooter()}>
@@ -269,6 +278,7 @@ const ConfirmModal = (props: IProps) => {
                     renderContent: (content) => {
                       return <RulesDiffContent content={content} />;
                     },
+                    beforeDiff: beforeRuleDiff,
                     diffKey: 'rules'
                   }
                 ]}

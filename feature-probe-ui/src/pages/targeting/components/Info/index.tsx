@@ -14,7 +14,7 @@ import message from 'components/MessageBox';
 import TextLimit from 'components/TextLimit';
 import Loading from 'components/Loading';
 import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
-import { RulesDiffContent } from 'components/Diff/RulesDiffContent';
+import { I18NRules, RulesDiffContent } from 'components/Diff/RulesDiffContent';
 import { DiffStatusContent } from 'components/Diff/DiffStatus';
 import { DiffServe } from 'components/Diff/DiffServe';
 import { variationContainer } from 'pages/targeting/provider';
@@ -274,8 +274,8 @@ const Info: React.FC<IProps> = (props) => {
 
   const beforeRuleDiff = useCallback(
     (before, after) => {
-      const left = before;
-      const right = after;
+      const left = I18NRules(before, intl);
+      const right = I18NRules(after, intl);
       return [
         left.map((item: IRule) => {
           return {
@@ -291,7 +291,7 @@ const Info: React.FC<IProps> = (props) => {
         }),
       ];
     },
-    [preDiffServe]
+    [preDiffServe, intl]
   );
 
 	return (

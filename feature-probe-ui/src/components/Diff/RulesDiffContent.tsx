@@ -1,14 +1,27 @@
 import { ReactNode } from 'react';
 import { ArrayChange } from 'diff';
 import { Table } from 'semantic-ui-react';
+import { IntlShape } from 'react-intl';
 import { ICondition, IRule } from '../../interfaces/targeting';
 import { DiffResult } from './diff';
 import { DiffFieldValue } from './DiffFieldValue';
 import { renderField, renderFieldsItems } from './renderDiff';
 import { DiffServeContent } from './DiffServe';
-import { diffType, positionType } from './constants';
+import { diffType, positionType, rulesI18NMap } from './constants';
 import fieldStyles from './fields.module.scss';
 import styles from './RulesDiffContent.module.scss';
+
+export function I18NRules(rules: IRule[], intl: IntlShape) {
+  rules.forEach((rule) => {
+    rule.conditions.forEach((condition) => {
+      const typeI18N = rulesI18NMap.get(condition.type);
+      const predicateI18N = rulesI18NMap.get(condition.predicate); 
+      condition.type = typeI18N ? intl.formatMessage({id: rulesI18NMap.get(condition.type)}) : condition.type;
+      condition.predicate = predicateI18N ? intl.formatMessage({id: rulesI18NMap.get(condition.predicate)}) : condition.predicate;
+    });
+  });
+  return rules;
+};
 
 interface FieldValue {
   type: diffType;

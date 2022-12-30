@@ -67,13 +67,12 @@ import { ISegmentList } from 'interfaces/segment';
 import { DATETIME_TYPE, SEGMENT_TYPE } from 'components/Rule/constants';
 import { DiffServe } from 'components/Diff/DiffServe';
 import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
-import { RulesDiffContent } from 'components/Diff/RulesDiffContent';
+import { I18NRules, RulesDiffContent } from 'components/Diff/RulesDiffContent';
 import { DiffStatusContent } from 'components/Diff/DiffStatus';
 import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
 import { getFromDictionary, saveDictionary } from 'services/dictionary';
 import { USER_GUIDE_LAYOUT, USER_GUIDE_TARGETING } from 'constants/dictionary_keys';
 import { useFormErrorScrollIntoView } from 'hooks';
-import 'diff2html/bundles/css/diff2html.min.css';
 import styles from './index.module.scss';
 
 interface IProps {
@@ -538,8 +537,8 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
 
   const beforeRuleDiff = useCallback(
     (before, after) => {
-      const left = before;
-      const right = after;
+      const left = I18NRules(before, intl);
+      const right = I18NRules(after, intl);
       return [
         left.map((item: IRule) => {
           return {
@@ -555,7 +554,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
         }),
       ];
     },
-    [preDiffServe, initialTargeting?.content.variations, publishTargeting?.content.variations]
+    [preDiffServe, initialTargeting?.content.variations, publishTargeting?.content.variations, intl]
   );
 
   return (
