@@ -10,6 +10,8 @@ import { Form } from 'semantic-ui-react';
 import { ISegmentList } from 'interfaces/segment';
 import { variationContainer } from 'pages/toggle/provider';
 
+window.open = jest.fn();
+
 const ruleData = {
   id: 'test-id',
   name: '',

@@ -5,24 +5,29 @@ import Variations from '.';
 import { hooksFormContainer, variationContainer } from 'pages/toggle/provider';
 import { IntlWrapper } from 'components/utils/wrapper';
 import { useEffect } from 'react';
+import { defaultServeContainer, ruleContainer } from 'pages/targeting/provider';
 
 const Wrapper: React.FC = (props) => {
   return (
     <IntlWrapper>
       <hooksFormContainer.Provider>
         <variationContainer.Provider>
-          <UseHookWrapper
-            data={[
-              {
-                id: 'test_id',
-                value: '',
-                name: 'name',
-                description: '',
-              },
-            ]}
-          >
-            {props.children}
-          </UseHookWrapper>
+          <ruleContainer.Provider>
+            <defaultServeContainer.Provider>
+              <UseHookWrapper
+                data={[
+                  {
+                    id: 'test_id',
+                    value: '',
+                    name: 'name',
+                    description: '',
+                  },
+                ]}
+              >
+                {props.children}
+              </UseHookWrapper>
+            </defaultServeContainer.Provider>
+          </ruleContainer.Provider>
         </variationContainer.Provider>
       </hooksFormContainer.Provider>
     </IntlWrapper>
@@ -34,24 +39,28 @@ const ErrorWrapper: React.FC = (props) => {
     <IntlWrapper>
       <hooksFormContainer.Provider>
         <variationContainer.Provider>
-          <UseHookWrapper
-            data={[
-              {
-                id: 'test_id',
-                value: '',
-                name: 'name',
-                description: '',
-              },
-              {
-                id: 'test_id2',
-                value: '',
-                name: 'name',
-                description: '',
-              },
-            ]}
-          >
-            {props.children}
-          </UseHookWrapper>
+          <ruleContainer.Provider>
+            <defaultServeContainer.Provider>
+              <UseHookWrapper
+                data={[
+                  {
+                    id: 'test_id',
+                    value: '',
+                    name: 'name',
+                    description: '',
+                  },
+                  {
+                    id: 'test_id2',
+                    value: '',
+                    name: 'name',
+                    description: '',
+                  },
+                ]}
+              >
+                {props.children}
+              </UseHookWrapper>
+            </defaultServeContainer.Provider>
+          </ruleContainer.Provider>
         </variationContainer.Provider>
       </hooksFormContainer.Provider>
     </IntlWrapper>
@@ -76,6 +85,8 @@ it('Variations snapshot', (done) => {
         prefix="drawer"
         hooksFormContainer={hooksFormContainer}
         variationContainer={variationContainer}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />,
       {
         wrapper: Wrapper,
@@ -89,6 +100,8 @@ it('Variations snapshot', (done) => {
         prefix="drawer"
         hooksFormContainer={hooksFormContainer}
         variationContainer={variationContainer}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />
     );
     expect(asFragment()).toMatchSnapshot();
@@ -99,6 +112,8 @@ it('Variations snapshot', (done) => {
         prefix="drawer"
         hooksFormContainer={hooksFormContainer}
         variationContainer={variationContainer}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />
     );
     expect(asFragment()).toMatchSnapshot();
@@ -109,6 +124,8 @@ it('Variations snapshot', (done) => {
         prefix="drawer"
         hooksFormContainer={hooksFormContainer}
         variationContainer={variationContainer}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />
     );
     expect(asFragment()).toMatchSnapshot();
@@ -125,12 +142,14 @@ it('Variations error name', (done) => {
         prefix="drawer"
         hooksFormContainer={hooksFormContainer}
         variationContainer={variationContainer}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />,
       {
         wrapper: ErrorWrapper,
       }
     );
-    
+
     expect(asFragment()).toMatchSnapshot();
     done();
   })();
@@ -144,6 +163,8 @@ test('Add Variations and delete', (done) => {
         prefix="drawer"
         hooksFormContainer={hooksFormContainer}
         variationContainer={variationContainer}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />,
       {
         wrapper: Wrapper,
@@ -176,6 +197,8 @@ test('Add Variations and input', (done) => {
         prefix="drawer"
         hooksFormContainer={hooksFormContainer}
         variationContainer={variationContainer}
+        ruleContainer={ruleContainer}
+        defaultServeContainer={defaultServeContainer}
       />,
       {
         wrapper: Wrapper,

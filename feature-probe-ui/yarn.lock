@@ -4213,9 +4213,9 @@ diff2html@*, diff2html@^3.4.17:
   optionalDependencies:
     highlight.js "11.6.0"
 
-diff@5.1.0, diff@^5.0.0:
+diff@5.1.0, diff@^5.1.0:
   version "5.1.0"
-  resolved "https://registry.npmjs.org/diff/-/diff-5.1.0.tgz#bc52d298c5ea8df9194800224445ed43ffc87e40"
+  resolved "https://registry.npmmirror.com/diff/-/diff-5.1.0.tgz#bc52d298c5ea8df9194800224445ed43ffc87e40"
   integrity sha512-D+mk+qE8VC/PAUrlAU34N+VfXev0ghe5ywmpqrawphmVZc1bEfn56uo9qpyGp1p4xpzOHkSW4ztBd6L7Xx4ACw==
 
 dir-glob@^3.0.1:

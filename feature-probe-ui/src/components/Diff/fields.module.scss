@@ -1,0 +1,67 @@
+.diff-content {
+  display: flex;
+
+  & > .after,
+  & > .before {
+    padding-left: 24px;
+    width: 50%;
+    flex-grow: 1;
+    background: #f8f9fa;
+  }
+
+  & > .before {
+    border-right: 1px solid #fff;
+  }
+}
+
+.diff-fields {
+  display: flex;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  & > * {
+    flex: 1 1;
+  }
+}
+
+.table-header {
+  position: sticky;
+  top: 0;
+  background: #eff2f7;
+  height: 28px;
+  line-height: 28px;
+  z-index: 1;
+  font-family: PingFangSC-Regular, Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #495057;
+  letter-spacing: 0;
+  font-weight: 400;
+
+  & th {
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+    color: unset !important;
+    background: unset !important;
+  }
+
+  table {
+    background: unset !important;
+  }
+}
+
+.diff-item-remove {
+  background-color: #feecef !important;
+}
+
+.diff-item-add {
+  background-color: #e5fbf0 !important;
+}
+
+.diff-item-normal,
+.diff-item-same,
+.diff-item-modify {
+  background-color: #fff;
+}
