@@ -544,5 +544,9 @@
   "token.delete.error": "Error deleting token",
   "token.list.error": "Failed to get token list",
   "token.card.application.description": "The lifetime of a shared token is not bounded with its creator. You must delete the token to make it invalid.",
-  "token.card.personal.description": "A personal API token has the same access privileges as its creator. If its creator is removed, the token will be invalidated immediately."
+  "token.card.personal.description": "A personal API token has the same access privileges as its creator. If its creator is removed, the token will be invalidated immediately.",
+
+  "diff.count.text": "({count} changes)",
+  "diff.old.text": "Old/Delete",
+  "diff.create.text": "New/Create"
 }

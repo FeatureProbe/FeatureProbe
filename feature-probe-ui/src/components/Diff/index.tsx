@@ -1,61 +1,73 @@
-import { useEffect, useRef } from 'react';
 import Icon from 'components/Icon';
 import { FormattedMessage } from 'react-intl';
-import styles from'./index.module.scss';
-import 'diff2html/bundles/css/diff2html.min.css';
+import { useCallback, useRef, useState } from 'react';
+import DiffSection, { DiffSectionProps } from './DiffSection';
+import styles from './index.module.scss';
 
 interface DiffProps {
-  content: string;
+  sections: DiffSectionProps[];
   height?: number;
   maxHeight?: number;
 }
 
 const Diff: React.FC<DiffProps> = (props) => {
-  const ref = useRef<HTMLDivElement>(null);
+  const { sections } = props;
+  const CountMapRef = useRef<Map<string, number>>(new Map());
+  const [count, saveCount] = useState(0);
+  const [show, setShow] = useState(false);
 
-  useEffect(() => {
-    if (ref.current) {
-      if (props.maxHeight && ref.current.clientHeight <= props.maxHeight) {
-        ref.current.style.height = ref.current.clientHeight + 6 + 'px';
-      }
-
-      const ySides = ref.current.getElementsByClassName('d2h-file-side-diff');
-      if (ySides[0] && ySides[1]) {
-        ySides[0]?.addEventListener('scroll', function (e) {
-          ySides[1].scrollTop = (e.target as HTMLDivElement).scrollTop;
-        });
-        ySides[1]?.addEventListener('scroll', function (e) {
-          ySides[0].scrollTop = (e.target as HTMLDivElement).scrollTop;
-        });
-      }
-
-      const xSides = ref.current.getElementsByClassName('d2h-code-wrapper');
-
-      if (xSides[1].scrollWidth > xSides[1].clientWidth && xSides[0].scrollWidth === xSides[0].clientWidth) {
-        ySides[0].setAttribute('style', 'padding-bottom: 10px');
-      }
-
-      if (xSides[0].scrollWidth > xSides[0].clientWidth && xSides[1].scrollWidth === xSides[1].clientWidth) {
-        ySides[1].setAttribute('style', 'padding-bottom: 10px');
-      }
-    }
-  }, [ref, props.maxHeight]);
+  const setCount = useCallback((key: string, count: number) => {
+    CountMapRef.current.set(key, count);
+    let temp = 0;
+    CountMapRef.current.forEach((value) => {
+      temp += value;
+    });
+    saveCount(temp);
+  }, []);
 
   return (
     <div className={styles.box}>
-      <div className={styles.tips}>
-        <Icon type="warning-circle" customclass={styles['warning-circle']} />
-        <FormattedMessage id="common.diff.tips" />
+      <div
+        className={styles.tips}
+        onClick={() => {
+          setShow((show) => {
+            return !show;
+          });
+        }}
+      >
+        <div>
+          <Icon type="warning-circle" customclass={styles['warning-circle']} />
+          <FormattedMessage id="common.diff.tips" />
+          <span><FormattedMessage id="diff.count.text" values={{count: count}} /></span>
+        </div>
+        <div>
+          <div>
+            <div className={styles['old-square']}></div>
+            <FormattedMessage id="diff.old.text" />
+          </div>
+          <div>
+            <div className={styles['new-square']}></div>
+            <FormattedMessage id="diff.create.text" />
+          </div>
+          <div>
+            {show ? (
+              <Icon customclass={styles['icon-accordion']} type="angle-up" />
+            ) : (
+              <Icon customclass={styles['icon-accordion']} type="angle-down" />
+            )}
+          </div>
+        </div>
       </div>
       <div
         style={{
-          height: props.height ?? 'unset',
-          maxHeight: props.maxHeight ?? 'unset',
+          display: !show ? 'none' : 'block',
         }}
-        ref={ref}
-        className="diff"
-        dangerouslySetInnerHTML={{ __html: props.content }}
-      />
+        className={styles['diff']}
+      >
+        {sections.map((props) => {
+          return <DiffSection key={props.diffKey} setCount={setCount} {...props} />;
+        })}
+      </div>
     </div>
   );
 };

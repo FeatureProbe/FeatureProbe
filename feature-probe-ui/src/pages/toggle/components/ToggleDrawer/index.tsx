@@ -22,7 +22,7 @@ import Icon from 'components/Icon';
 import FormItemName from 'components/FormItem/name';
 import FormItemKey from 'components/FormItem/key';
 import FormItemDescription from 'components/FormItem/description';
-import { variationContainer, toggleInfoContainer, hooksFormContainer } from '../../provider';
+import { variationContainer, toggleInfoContainer, hooksFormContainer, ruleContainer, defaultServeContainer } from '../../provider';
 import { VariationColors } from 'constants/colors';
 import { CONFLICT } from 'constants/httpCode';
 import { replaceSpace } from 'utils/tools';
@@ -593,6 +593,8 @@ const Drawer = (props: IParams) => {
               returnType={toggleInfo?.returnType}
               variationContainer={variationContainer}
               hooksFormContainer={hooksFormContainer}
+              ruleContainer={ruleContainer}
+              defaultServeContainer={defaultServeContainer}
             />
           </Form.Field>
 

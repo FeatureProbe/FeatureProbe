@@ -1,12 +1,28 @@
-import { useCallback, useEffect, useState, SyntheticEvent, useMemo, forwardRef, useImperativeHandle, useRef } from 'react';
-import { Form, Radio, CheckboxProps, TextAreaProps, InputOnChangeData, Loader, Dropdown, DropdownItemProps, Popup } from 'semantic-ui-react';
+import {
+  useCallback,
+  useEffect,
+  useState,
+  SyntheticEvent,
+  useMemo,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+} from 'react';
+import {
+  Form,
+  Radio,
+  CheckboxProps,
+  TextAreaProps,
+  InputOnChangeData,
+  Loader,
+  Dropdown,
+  DropdownItemProps,
+  Popup,
+} from 'semantic-ui-react';
 import { useParams, useHistory, Prompt } from 'react-router-dom';
 import isEqual from 'lodash/isEqual';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
-import JSONbig from 'json-bigint';
-import { createPatch } from 'diff';
-import { html } from 'diff2html/lib/diff2html';
 import { FormattedMessage, useIntl } from 'react-intl';
 import cloneDeep from 'lodash/cloneDeep';
 import { v4 as uuidv4 } from 'uuid';
@@ -25,19 +41,34 @@ import EventTracker from 'components/EventTracker';
 import Diff from 'components/Diff';
 import { approveToggle, saveToggle } from 'services/toggle';
 import { replaceSpace } from 'utils/tools';
-import { 
+import {
   variationContainer,
   ruleContainer,
   defaultServeContainer,
   disabledServeContainer,
   hooksFormContainer,
-  segmentContainer
+  segmentContainer,
 } from '../../provider';
 import { VariationColors } from 'constants/colors';
-import { IApprovalInfo, ICondition, IDictionary, IOption, IRule, ITarget, ITargeting, IToggleInfo, IVariation } from 'interfaces/targeting';
+import {
+  IApprovalInfo,
+  ICondition,
+  IDictionary,
+  IOption,
+  IRule,
+  IServe,
+  ITarget,
+  ITargeting,
+  IToggleInfo,
+  IVariation,
+} from 'interfaces/targeting';
 import { IRouterParams } from 'interfaces/project';
 import { ISegmentList } from 'interfaces/segment';
 import { DATETIME_TYPE, SEGMENT_TYPE } from 'components/Rule/constants';
+import { DiffServe } from 'components/Diff/DiffServe';
+import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
+import { RulesDiffContent } from 'components/Diff/RulesDiffContent';
+import { DiffStatusContent } from 'components/Diff/DiffStatus';
 import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
 import { getFromDictionary, saveDictionary } from 'services/dictionary';
 import { USER_GUIDE_LAYOUT, USER_GUIDE_TARGETING } from 'constants/dictionary_keys';
@@ -52,7 +83,7 @@ interface IProps {
   approvalInfo?: IApprovalInfo;
   toggleDisabled: boolean;
   initialTargeting?: ITargeting;
-  segmentList?: ISegmentList
+  segmentList?: ISegmentList;
   initTargeting(): void;
   saveToggleDisable(status: boolean): void;
 }
@@ -61,68 +92,77 @@ const STEPS: Step[] = [
   {
     content: (
       <div>
-        <div className='joyride-title'>
-          <FormattedMessage id='guide.toggle.targeting.step1.title' />
+        <div className="joyride-title">
+          <FormattedMessage id="guide.toggle.targeting.step1.title" />
         </div>
-        <ul className='joyride-item'>
+        <ul className="joyride-item">
           <li>
-            <FormattedMessage id='guide.toggle.targeting.step1.off' />
+            <FormattedMessage id="guide.toggle.targeting.step1.off" />
           </li>
           <li>
-            <FormattedMessage id='guide.toggle.targeting.step1.on' />
+            <FormattedMessage id="guide.toggle.targeting.step1.on" />
           </li>
         </ul>
-        <div className='joyride-pagination'>1/2</div>
+        <div className="joyride-pagination">1/2</div>
       </div>
     ),
     spotlightPadding: 20,
     placement: 'right',
     target: '.joyride-toggle-status',
-    ...commonConfig
+    ...commonConfig,
   },
   {
     content: (
       <div>
-        <div className='joyride-title'>
-          <FormattedMessage id='guide.toggle.targeting.step2.title' />
+        <div className="joyride-title">
+          <FormattedMessage id="guide.toggle.targeting.step2.title" />
         </div>
-        <ul className='joyride-item'>
+        <ul className="joyride-item">
           <li>
-            <FormattedMessage id='guide.toggle.targeting.step2.default' />
+            <FormattedMessage id="guide.toggle.targeting.step2.default" />
           </li>
         </ul>
-        <div className='joyride-pagination'>2/2</div>
+        <div className="joyride-pagination">2/2</div>
       </div>
     ),
     spotlightPadding: 4,
     placement: 'right',
     target: '.joyride-default-rule',
-    ...commonConfig
+    ...commonConfig,
   },
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Targeting = forwardRef((props: IProps, ref: any) => {
-  const { disabled, toggleInfo, approvalInfo, targeting, toggleDisabled, initialTargeting, segmentList, initTargeting, saveToggleDisable } = props;
+  const {
+    disabled,
+    toggleInfo,
+    approvalInfo,
+    targeting,
+    toggleDisabled,
+    initialTargeting,
+    segmentList,
+    initTargeting,
+    saveToggleDisable,
+  } = props;
   const { rules, saveRules } = ruleContainer.useContainer();
   const { variations, saveVariations } = variationContainer.useContainer();
   const { defaultServe, saveDefaultServe } = defaultServeContainer.useContainer();
   const { disabledServe, saveDisabledServe } = disabledServeContainer.useContainer();
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
-  const [ open, setOpen ] = useState<boolean>(false);
-  const [ publishDisabled, setPublishDisabled ] = useState<boolean>(true);
-  const [ publishTargeting, setPublishTargeting ] = useState<ITargeting>();
-  const [ diffContent, setDiffContent ] = useState<string>('');
-  const [ comment, setComment ] = useState<string>('');
-  const [ isLoading, setLoading ] = useState<boolean>(false);
-  const [ options, saveOptions ] = useState<IOption[]>();
-  const [ run, saveRun ] = useState<boolean>(false);
-  const [ stepIndex, saveStepIndex ] = useState<number>(0);
+  const [open, setOpen] = useState<boolean>(false);
+  const [publishDisabled, setPublishDisabled] = useState<boolean>(true);
+  const [publishTargeting, setPublishTargeting] = useState<ITargeting>();
+  const [comment, setComment] = useState<string>('');
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [options, saveOptions] = useState<IOption[]>();
+  const [run, saveRun] = useState<boolean>(false);
+  const [stepIndex, saveStepIndex] = useState<number>(0);
   const history = useHistory();
   const intl = useIntl();
   const formRef = useRef();
 
-  useBeforeUnload(!publishDisabled, intl.formatMessage({id: 'targeting.page.leave.text'}));
+  useBeforeUnload(!publishDisabled, intl.formatMessage({ id: 'targeting.page.leave.text' }));
   useImperativeHandle(ref, () => publishDisabled, [publishDisabled]);
 
   const {
@@ -130,7 +170,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     trigger: newTrigger,
     register: newRegister,
     setValue: newSetValue,
-    clearErrors
+    clearErrors,
   } = useForm();
 
   const {
@@ -140,19 +180,17 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     formState: { errors },
   } = hooksFormContainer.useContainer();
 
-  const {
-    saveSegmentList,
-  } = segmentContainer.useContainer();
+  const { saveSegmentList } = segmentContainer.useContainer();
 
   const { scrollToError, setBeforeScrollCallback } = useFormErrorScrollIntoView(errors);
 
   useEffect(() => {
     setBeforeScrollCallback((names: string[]) => {
       names.forEach((name) => {
-        if(name.startsWith('rule')) {
+        if (name.startsWith('rule')) {
           const id = name.split('_')[1];
-          for(let i = 0; i < rules.length; i++) {
-            if(rules[i].id === id) {
+          for (let i = 0; i < rules.length; i++) {
+            if (rules[i].id === id) {
               saveRules((rules: IRule[]) => {
                 rules[i].active = true;
                 return [...rules];
@@ -167,9 +205,9 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
 
   useEffect(() => {
     Promise.all([
-      getFromDictionary<IDictionary>(USER_GUIDE_LAYOUT), 
-      getFromDictionary<IDictionary>(USER_GUIDE_TARGETING), 
-    ]).then(res => {
+      getFromDictionary<IDictionary>(USER_GUIDE_LAYOUT),
+      getFromDictionary<IDictionary>(USER_GUIDE_TARGETING),
+    ]).then((res) => {
       // After finishing layout user guide, then show targeting user guide
       if (res[0].success && res[0].data && parseInt(JSON.parse(res[0].data.value)) === 3) {
         const { success, data } = res[1];
@@ -204,7 +242,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
         rule.conditions.forEach((condition: ICondition) => {
           condition.id = uuidv4();
           if (condition.type === SEGMENT_TYPE) {
-            condition.subject = intl.formatMessage({id: 'common.user.text'});
+            condition.subject = intl.formatMessage({ id: 'common.user.text' });
           } else if (condition.type === DATETIME_TYPE && condition.objects) {
             condition.datetime = condition.objects[0].slice(0, 19);
             condition.timezone = condition.objects[0].slice(19);
@@ -256,7 +294,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     });
   }, [rules, variations, setValue]);
 
-  useEffect(()=> {
+  useEffect(() => {
     if (targeting) {
       variations.forEach((variation: IVariation) => {
         setValue(`variation_${variation.id}_name`, variation.name);
@@ -264,13 +302,13 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       });
 
       if (
-        disabledServe && 
-        Object.prototype.hasOwnProperty.call(disabledServe, 'select') && 
+        disabledServe &&
+        Object.prototype.hasOwnProperty.call(disabledServe, 'select') &&
         Number(disabledServe?.select) < variations.length
       ) {
         setValue('disabledServe', disabledServe);
       }
-      if (defaultServe && (typeof(defaultServe.select) !== 'undefined' || typeof(defaultServe.split) !== 'undefined')) {
+      if (defaultServe && (typeof defaultServe.select !== 'undefined' || typeof defaultServe.split !== 'undefined')) {
         setValue('defaultServe', defaultServe);
       }
     }
@@ -307,7 +345,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
         disabledServe,
         defaultServe,
         variations: requestVariations,
-      }
+      },
     });
   }, [toggleDisabled, rules, variations, defaultServe, disabledServe]);
 
@@ -331,8 +369,8 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   }, [approvalInfo]);
 
   useEffect(() => {
-    newRegister('reason', { 
-      required: approvalInfo?.enableApproval, 
+    newRegister('reason', {
+      required: approvalInfo?.enableApproval,
     });
   }, [newRegister, approvalInfo]);
 
@@ -343,7 +381,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     copyRules.forEach((rule: IRule) => {
       if (rule.conditions.length === 0) {
         setError(`rule_${rule.id}_add`, {
-          message: intl.formatMessage({id: 'common.input.placeholder'}),
+          message: intl.formatMessage({ id: 'common.input.placeholder' }),
         });
         isError = true;
       }
@@ -373,20 +411,8 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     if (validateForm()) {
       return;
     }
-
-    const before = JSONbig.stringify(initialTargeting, null, 2);
-    const after = JSONbig.stringify(publishTargeting, null, 2);
-    const result = createPatch('content', before.replace(/\\n/g, '\n'), after.replace(/\\n/g, '\n'));
-    const content = html(result, {
-      matching: 'lines',
-      outputFormat: 'side-by-side',
-      diffStyle: 'word',
-      drawFileList: false,
-    });
-
-    setDiffContent(content);
     setOpen(true);
-  }, [validateForm, initialTargeting, publishTargeting]);
+  }, [validateForm]);
 
   const onError = useCallback(() => {
     validateForm();
@@ -409,23 +435,23 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     setLoading(true);
     if (publishTargeting) {
       let res;
-      if(approvalInfo && approvalInfo.enableApproval) {
+      if (approvalInfo && approvalInfo.enableApproval) {
         res = await approveToggle(projectKey, environmentKey, toggleKey, {
           comment,
           ...publishTargeting,
-          reviewers: approvalInfo.reviewers
+          reviewers: approvalInfo.reviewers,
         });
       } else {
         res = await saveToggle(projectKey, environmentKey, toggleKey, {
           comment,
-          ...publishTargeting
+          ...publishTargeting,
         });
       }
       if (res.success) {
         if (approvalInfo && approvalInfo?.enableApproval) {
-          message.success(intl.formatMessage({id: 'targeting.approval.request.success'}));
+          message.success(intl.formatMessage({ id: 'targeting.approval.request.success' }));
         } else {
-          message.success(intl.formatMessage({id: 'targeting.publish.success.text'}));
+          message.success(intl.formatMessage({ id: 'targeting.publish.success.text' }));
         }
         initTargeting();
         setComment('');
@@ -433,12 +459,22 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       newSetValue('reason', '');
       setLoading(false);
     }
-  }, [intl, comment, projectKey, environmentKey, toggleKey, publishTargeting, approvalInfo, initTargeting, newTrigger, newSetValue]);
+  }, [
+    intl,
+    comment,
+    projectKey,
+    environmentKey,
+    toggleKey,
+    publishTargeting,
+    approvalInfo,
+    initTargeting,
+    newTrigger,
+    newSetValue,
+  ]);
 
   const disabledText = useMemo(() => {
     if (variations[disabledServe.select]) {
-      return variations[disabledServe.select].name 
-      || variations[disabledServe.select].value;
+      return variations[disabledServe.select].name || variations[disabledServe.select].value;
     }
   }, [disabledServe.select, variations]);
 
@@ -447,10 +483,10 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   }, []);
 
   const renderLabel = useCallback((label: DropdownItemProps) => {
-    return ({
+    return {
       content: label.text,
-      removeIcon: null
-    });
+      removeIcon: null,
+    };
   }, []);
 
   const handleGotoSetting = useCallback(() => {
@@ -466,55 +502,113 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       saveDictionary(USER_GUIDE_TARGETING, nextStepIndex);
     }
   }, []);
-  
-	return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)} autoComplete='off' ref={formRef}>
+
+  const preDiffServe = useCallback((serve?: IServe, variations?: IVariation[]) => {
+    if (!serve || !variations) {
+      return;
+    }
+    const obj: {
+      select?: string;
+      split?: string[];
+    } = {};
+    if (serve.select !== undefined && typeof serve.select === 'number') {
+      obj.select = variations[serve.select].name;
+    }
+    if (serve.split !== undefined) {
+      obj.split = serve.split.map((item: number, index: number) => {
+        return `${variations[index].name}: ${item / 100}%`;
+      });
+    }
+
+    return obj;
+  }, []);
+
+  const beforeServeDiff = useCallback(
+    (before, after) => {
+      const left = before;
+      const right = after;
+
+      return [
+        preDiffServe(left, initialTargeting?.content.variations),
+        preDiffServe(right, publishTargeting?.content.variations),
+      ];
+    },
+    [preDiffServe, initialTargeting?.content.variations, publishTargeting?.content.variations]
+  );
+
+  const beforeRuleDiff = useCallback(
+    (before, after) => {
+      const left = before;
+      const right = after;
+      return [
+        left.map((item: IRule) => {
+          return {
+            ...item,
+            serve: preDiffServe(item.serve, initialTargeting?.content.variations),
+          };
+        }),
+        right.map((item: IRule) => {
+          return {
+            ...item,
+            serve: preDiffServe(item.serve, publishTargeting?.content.variations),
+          };
+        }),
+      ];
+    },
+    [preDiffServe, initialTargeting?.content.variations, publishTargeting?.content.variations]
+  );
+
+  return (
+    <Form onSubmit={handleSubmit(onSubmit, onError)} autoComplete="off" ref={formRef}>
       <div className={`${styles.status}`}>
         <div className={`${styles['joyride-status']} joyride-toggle-status`}>
-          <SectionTitle title={intl.formatMessage({id: 'targeting.status.text'})} />
+          <SectionTitle title={intl.formatMessage({ id: 'targeting.status.text' })} />
           <div className={styles['toggle-status']}>
             <Radio
-              size='mini'
-              toggle 
-              checked={!toggleDisabled} 
-              onChange={(e: SyntheticEvent, data: CheckboxProps) => saveToggleDisable(!data.checked || false)} 
-              className={styles['info-toggle-status']} 
+              size="mini"
+              toggle
+              checked={!toggleDisabled}
+              onChange={(e: SyntheticEvent, data: CheckboxProps) => saveToggleDisable(!data.checked || false)}
+              className={styles['info-toggle-status']}
               disabled={disabled}
             />
           </div>
-          {
-            toggleDisabled ? (
-              <div className={styles['status-text']}>
-                <span><FormattedMessage id='targeting.status.disabled.text' /></span>
-                <span className={styles['name-color']} style={{background: VariationColors[Number(disabledServe.select) % 20]}}></span>
-                <span className={styles['name-text']}>
-                  {disabledText}
-                </span>
-              </div>
-            ) : (
-              <div className={styles['status-text']}>
-                <FormattedMessage id='common.enabled.text' />
-              </div>
-            )
-          }
+          {toggleDisabled ? (
+            <div className={styles['status-text']}>
+              <span>
+                <FormattedMessage id="targeting.status.disabled.text" />
+              </span>
+              <span
+                className={styles['name-color']}
+                style={{ background: VariationColors[Number(disabledServe.select) % 20] }}
+              ></span>
+              <span className={styles['name-text']}>{disabledText}</span>
+            </div>
+          ) : (
+            <div className={styles['status-text']}>
+              <FormattedMessage id="common.enabled.text" />
+            </div>
+          )}
         </div>
       </div>
 
       <div className={styles.variations}>
         <SectionTitle
-          title={intl.formatMessage({id: 'common.variations.text'})}
+          title={intl.formatMessage({ id: 'common.variations.text' })}
           showTooltip={true}
-          tooltipText={intl.formatMessage({id: 'toggles.variations.tips'})}
+          tooltipText={intl.formatMessage({ id: 'toggles.variations.tips' })}
         />
         <Variations
           disabled={disabled}
           returnType={toggleInfo?.returnType || ''}
           hooksFormContainer={hooksFormContainer}
           variationContainer={variationContainer}
+          ruleContainer={ruleContainer}
+          defaultServeContainer={defaultServeContainer}
         />
       </div>
       <div className={styles.rules}>
-        <Rules 
+        <Rules
           disabled={disabled}
           useSegment={true}
           ruleContainer={ruleContainer}
@@ -522,99 +616,147 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           hooksFormContainer={hooksFormContainer}
           segmentContainer={segmentContainer}
         />
-        <DefaultRule
-          disabled={disabled}
-        />
-        <DisabledServe 
-          disabled={disabled}
-        />
+        <DefaultRule disabled={disabled} />
+        <DisabledServe disabled={disabled} />
       </div>
-      <div id='footer' className={styles.footer}>
-        <EventTracker category='targeting' action='publish-toggle'>
-          <Button className={styles['publish-btn']} disabled={publishDisabled || disabled || isLoading} primary type="submit">
-            { isLoading && <Loader inverted active inline size='tiny' className={styles['publish-btn-loader']} /> }
+      <div id="footer" className={styles.footer}>
+        <EventTracker category="targeting" action="publish-toggle">
+          <Button
+            className={styles['publish-btn']}
+            disabled={publishDisabled || disabled || isLoading}
+            primary
+            type="submit"
+          >
+            {isLoading && <Loader inverted active inline size="tiny" className={styles['publish-btn-loader']} />}
             <span className={styles['publish-btn-text']}>
-              {
-                approvalInfo?.enableApproval ? <FormattedMessage id='common.request.approval.text' /> : <FormattedMessage id='common.publish.text' />
-              }
+              {approvalInfo?.enableApproval ? (
+                <FormattedMessage id="common.request.approval.text" />
+              ) : (
+                <FormattedMessage id="common.publish.text" />
+              )}
             </span>
           </Button>
         </EventTracker>
       </div>
-      <Modal
-        open={open}
-        width={800}
-        handleCancel={handlePublishCancel}
-        handleConfirm={handlePublishConfirm}
-      >
+      <Modal open={open} width={800} handleCancel={handlePublishCancel} handleConfirm={handlePublishConfirm}>
         <div>
           <div className={styles['modal-header']}>
             <span className={styles['modal-header-text']}>
-              <FormattedMessage id='targeting.publish.modal.title' />
+              <FormattedMessage id="targeting.publish.modal.title" />
             </span>
-            <Icon customclass={styles['modal-close-icon']} type='close' onClick={handlePublishCancel} />
+            <Icon customclass={styles['modal-close-icon']} type="close" onClick={handlePublishCancel} />
           </div>
           <div className={styles['modal-content']}>
-            <Diff content={diffContent} maxHeight={341} />
+            <Diff
+              sections={[
+                {
+                  before: {
+                    disabled: initialTargeting?.disabled,
+                  },
+                  after: {
+                    disabled: publishTargeting?.disabled,
+                  },
+                  title: intl.formatMessage({ id: 'targeting.status.text' }),
+                  renderContent: (content) => {
+                    return <DiffStatusContent content={content} />;
+                  },
+                  diffKey: 'status',
+                },
+                {
+                  before: initialTargeting?.content.variations,
+                  after: publishTargeting?.content.variations,
+                  title: intl.formatMessage({ id: 'common.variations.text' }),
+                  renderContent: (content) => {
+                    return <VariationsDiffContent content={content} />;
+                  },
+                  diffKey: 'variations',
+                },
+                {
+                  before: initialTargeting?.content.rules,
+                  after: publishTargeting?.content.rules,
+                  title: intl.formatMessage({ id: 'common.rules.text' }),
+                  renderContent: (content) => {
+                    return <RulesDiffContent content={content} />;
+                  },
+                  beforeDiff: beforeRuleDiff,
+                  diffKey: 'rules',
+                },
+                {
+                  before: initialTargeting?.content.defaultServe,
+                  after: publishTargeting?.content.defaultServe,
+                  title: intl.formatMessage({ id: 'targeting.default.rule' }),
+                  renderContent: (content) => {
+                    return <DiffServe content={content} />;
+                  },
+                  beforeDiff: beforeServeDiff,
+                  diffKey: 'default',
+                },
+                {
+                  title: intl.formatMessage({ id: 'targeting.disabled.return.value' }),
+                  before: initialTargeting?.content.disabledServe,
+                  after: publishTargeting?.content.disabledServe,
+                  renderContent: (content) => {
+                    return <DiffServe content={content} />;
+                  },
+                  beforeDiff: beforeServeDiff,
+                  diffKey: 'disabled',
+                },
+              ]}
+              maxHeight={341}
+            />
             <div className={styles['diff-after']}>
               <Form>
-                {
-                  approvalInfo?.enableApproval && (
-                    <div className={styles['approval']}>
-                      <div className={styles['approval-title']}>
-                        <FormattedMessage id='toggles.settings.approval.reviewers' />:
-                        <Popup
-                          inverted
-                          trigger={
-                            <Icon type='info' customclass={styles['icon-info']} />
-                          }
-                          content={intl.formatMessage({id: 'targeting.approval.tips'})}
-                          position='top center'
-                          className='popup-override'
-                        />
-                      </div>
-                      <div className={styles['approval-content']}>
-                        <Dropdown 
-                          fluid 
-                          multiple 
-                          value={approvalInfo?.reviewers}
-                          options={options} 
-                          renderLabel={renderLabel}
-                          icon={null}
-                          disabled={true}
-                          className={styles['approval-dropdown']}
-                        />
-                        <div className={styles['approval-btn']} onClick={handleGotoSetting}>
-                          <FormattedMessage id='common.toggle.appoval.settings.text' />
-                        </div>
+                {approvalInfo?.enableApproval && (
+                  <div className={styles['approval']}>
+                    <div className={styles['approval-title']}>
+                      <FormattedMessage id="toggles.settings.approval.reviewers" />:
+                      <Popup
+                        inverted
+                        trigger={<Icon type="info" customclass={styles['icon-info']} />}
+                        content={intl.formatMessage({ id: 'targeting.approval.tips' })}
+                        position="top center"
+                        className="popup-override"
+                      />
+                    </div>
+                    <div className={styles['approval-content']}>
+                      <Dropdown
+                        fluid
+                        multiple
+                        value={approvalInfo?.reviewers}
+                        options={options}
+                        renderLabel={renderLabel}
+                        icon={null}
+                        disabled={true}
+                        className={styles['approval-dropdown']}
+                      />
+                      <div className={styles['approval-btn']} onClick={handleGotoSetting}>
+                        <FormattedMessage id="common.toggle.appoval.settings.text" />
                       </div>
                     </div>
-                  )
-                }
+                  </div>
+                )}
                 <div className={styles['comment']}>
                   <div className={styles['comment-title']}>
-                    { approvalInfo?.enableApproval && <span className='label-required'>*</span> }
-                    <FormattedMessage id='targeting.publish.modal.comment' />:
+                    {approvalInfo?.enableApproval && <span className="label-required">*</span>}
+                    <FormattedMessage id="targeting.publish.modal.comment" />:
                   </div>
                   <div className={styles['comment-content']}>
                     <Form.TextArea
-                      name='reason'
-                      error={ newFormState.errors.reason ? true : false }
-                      className={styles['comment-input']} 
-                      placeholder={intl.formatMessage({id: 'common.input.placeholder'})}
+                      name="reason"
+                      error={newFormState.errors.reason ? true : false}
+                      className={styles['comment-input']}
+                      placeholder={intl.formatMessage({ id: 'common.input.placeholder' })}
                       onChange={async (e: SyntheticEvent, detail: TextAreaProps) => {
                         handleInputComment(e, detail);
                         newSetValue(detail.name, detail.value);
                         await newTrigger('reason');
                       }}
                     />
-                    { 
-                      newFormState.errors.reason && (
-                        <div className='error-text'>
-                          <FormattedMessage id='common.input.placeholder' />
-                        </div> 
-                      )
-                    }
+                    {newFormState.errors.reason && (
+                      <div className="error-text">
+                        <FormattedMessage id="common.input.placeholder" />
+                      </div>
+                    )}
                   </div>
                 </div>
               </Form>
@@ -622,10 +764,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           </div>
         </div>
       </Modal>
-      <Prompt
-        when={!publishDisabled}
-        message={intl.formatMessage({id: 'targeting.page.leave.text'})}
-      />
+      <Prompt when={!publishDisabled} message={intl.formatMessage({ id: 'targeting.page.leave.text' })} />
       <Joyride
         run={run}
         callback={handleJoyrideCallback}
@@ -639,15 +778,15 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
         disableCloseOnEsc={true}
         steps={STEPS}
         locale={{
-          'back': intl.formatMessage({id: 'guide.last'}),
-          'next': intl.formatMessage({id: 'guide.next'}),
-          'last': intl.formatMessage({id: 'guide.done'}),
+          back: intl.formatMessage({ id: 'guide.last' }),
+          next: intl.formatMessage({ id: 'guide.next' }),
+          last: intl.formatMessage({ id: 'guide.done' }),
         }}
-        floaterProps={{...floaterStyle}}
-        styles={{...tourStyle}}
+        floaterProps={{ ...floaterStyle }}
+        styles={{ ...tourStyle }}
       />
     </Form>
-	);
+  );
 });
 
 export default Targeting;

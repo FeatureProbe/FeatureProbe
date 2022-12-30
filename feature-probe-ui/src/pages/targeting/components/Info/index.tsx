@@ -5,9 +5,7 @@ import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { cloneDeep } from 'lodash';
 import { useForm } from 'react-hook-form';
-import JSONbig from 'json-bigint';
-import { createPatch } from 'diff';
-import { html } from 'diff2html/lib/diff2html';
+import Diff from 'components/Diff';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
@@ -15,10 +13,15 @@ import Modal from 'components/Modal';
 import message from 'components/MessageBox';
 import TextLimit from 'components/TextLimit';
 import Loading from 'components/Loading';
+import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
+import { RulesDiffContent } from 'components/Diff/RulesDiffContent';
+import { DiffStatusContent } from 'components/Diff/DiffStatus';
+import { DiffServe } from 'components/Diff/DiffServe';
+import { variationContainer } from 'pages/targeting/provider';
 import { HeaderContainer } from 'layout/hooks';
 import { updateApprovalStatus, publishTargetingDraft, cancelTargetingDraft } from 'services/approval';
 import { getTargeting, getTargetingDiff } from 'services/toggle';
-import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, IContent } from 'interfaces/targeting';
+import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, IContent, ITarget, IServe, IRule } from 'interfaces/targeting';
 import { IRouterParams } from 'interfaces/project';
 import { OWNER } from 'constants/auth';
 import styles from './index.module.scss';
@@ -35,7 +38,7 @@ interface IProps {
   saveInitTargeting(targeting: ITargeting): void;
 }
 
-const Info = (props: IProps) => {
+const Info: React.FC<IProps> = (props) => {
   const { toggleInfo, modifyInfo, approvalInfo, isInfoLoading, targetingDisabled, gotoGetStarted, initTargeting, saveApprovalInfo, saveInitTargeting } = props;
   const [ enableApproval, saveEnableApproval ] = useState<boolean>(false);
   const [ open, saveOpen ] = useState<boolean>(false);
@@ -44,10 +47,17 @@ const Info = (props: IProps) => {
   const [ isReEdit, saveIsREdit ] = useState<boolean>(true);
   const [ comment, saveComment ] = useState<string>('');
   const [ toggleStatus, saveToggleStatus ] = useState<string>(approvalInfo?.status || '');
-  const [ diffContent, setDiffContent ] = useState<string>('');
+  const [before, saveBefore] = useState<{
+      disable: boolean;
+      content: ITarget;
+  }>();
+  const [after, saveAfter] = useState<{
+      disable: boolean;
+      content: ITarget;
+  }>();
   const [ isDiffLoading, saveIsDiffLoading ] = useState<boolean>(false);
   const [ approvePublishLoading, setApprovePublishLoading ] = useState<boolean>(false);
-
+  const { variations } = variationContainer.useContainer();
   const { userInfo } = HeaderContainer.useContainer();
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
@@ -209,26 +219,17 @@ const Info = (props: IProps) => {
     const targetingDiff = res.data;
     if (targetingDiff) {
       const { currentContent, oldContent, oldDisabled, currentDisabled } = targetingDiff;
-
-      const before = JSONbig.stringify({
-        disabled: oldDisabled,
+      const before = {
+        disable: oldDisabled,
         content: oldContent
-      }, null, 2);
-
-      const after = JSONbig.stringify({
-        disabled: currentDisabled,
+      };
+      const after = {
+        disable: currentDisabled,
         content: currentContent
-      }, null, 2);
+      };
+      saveAfter(after);
+      saveBefore(before);
 
-      const result = createPatch('content', before.replace(/\\n/g, '\n'), after.replace(/\\n/g, '\n'));
-
-      const content = html(result, {
-        matching: 'lines',
-        outputFormat: 'side-by-side',
-        diffStyle: 'word',
-        drawFileList: false,
-      });
-      setDiffContent(content);
       saveDiffOpen(true);
     }
   }, [projectKey, environmentKey, toggleKey]);
@@ -237,6 +238,61 @@ const Info = (props: IProps) => {
   const handleChangeComment = useCallback((e: SyntheticEvent, detail: TextAreaProps) => {
     saveComment(detail.value as string);
   }, []);
+
+  const preDiffServe = useCallback(
+    (serve?: IServe) => {
+      if (!serve) {
+        return;
+      }
+      const obj: {
+        select?: string;
+        split?: string[];
+      } = {};
+      if (serve.select !== undefined && typeof serve.select === 'number') {
+        obj.select = variations[serve.select].name;
+      }
+      if (serve.split !== undefined) {
+        obj.split = serve.split.map((item: number, index: number) => {
+          return `${variations[index].name}: ${item / 100}%`;
+        });
+      }
+
+      return obj;
+    },
+    [variations]
+  );
+
+  const beforeServeDiff = useCallback(
+    (before, after) => {
+      const left: IServe = before;
+      const right: IServe = after;
+
+      return [preDiffServe(left), preDiffServe(right)];
+    },
+    [preDiffServe]
+  );
+
+  const beforeRuleDiff = useCallback(
+    (before, after) => {
+      const left = before;
+      const right = after;
+      return [
+        left.map((item: IRule) => {
+          return {
+            ...item,
+            serve: preDiffServe(item.serve),
+          };
+        }),
+        right.map((item: IRule) => {
+          return {
+            ...item,
+            serve: preDiffServe(item.serve),
+          };
+        }),
+      ];
+    },
+    [preDiffServe]
+  );
 
 	return (
     <div className={styles.info}>
@@ -621,7 +677,63 @@ const Info = (props: IProps) => {
             <Icon customclass={styles['diff-modal-close-icon']} type='close' onClick={() => { saveDiffOpen(false); }} />
           </div>
           <div className={styles['diff-modal-content']}>
-            <div className="diff" dangerouslySetInnerHTML={{ __html: diffContent }} />
+            <Diff
+              sections={[
+                {
+                  before: {
+                    disabled: before?.disable,
+                  },
+                  after: {
+                    disabled: after?.disable,
+                  },
+                  title: intl.formatMessage({ id: 'targeting.status.text' }),
+                  renderContent: (content) => {
+                    return <DiffStatusContent content={content} />;
+                  },
+                  diffKey: 'status',
+                },
+                {
+                  before: before?.content.variations,
+                  after: after?.content.variations,
+                  title: intl.formatMessage({ id: 'common.variations.text' }),
+                  renderContent: (content) => {
+                    return <VariationsDiffContent content={content} />;
+                  },
+                  diffKey: 'variations',
+                },
+                {
+                  before: before?.content.rules,
+                  after: after?.content.rules,
+                  title: intl.formatMessage({ id: 'common.rules.text' }),
+                  renderContent: (content) => {
+                    return <RulesDiffContent content={content} />;
+                  },
+                  beforeDiff: beforeRuleDiff,
+                  diffKey: 'rules',
+                },
+                {
+                  before: before?.content.defaultServe,
+                  after: after?.content.defaultServe,
+                  title: intl.formatMessage({ id: 'targeting.default.rule' }),
+                  renderContent: (content) => {
+                    return <DiffServe content={content} />;
+                  },
+                  beforeDiff: beforeServeDiff,
+                  diffKey: 'default',
+                },
+                {
+                  title: intl.formatMessage({ id: 'targeting.disabled.return.value' }),
+                  before: before?.content.disabledServe,
+                  after: after?.content.disabledServe,
+                  renderContent: (content) => {
+                    return <DiffServe content={content} />;
+                  },
+                  beforeDiff: beforeServeDiff,
+                  diffKey: 'disabled',
+                },
+              ]}
+              maxHeight={341}
+            />
           </div>
         </div>
       </Modal>
