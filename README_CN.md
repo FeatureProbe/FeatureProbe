@@ -37,9 +37,7 @@ FeatureProbe 是一个开源的 **『特性』管理** 服务。它包含灰度�
 ![FeatureProbe screenshot](./pictures/toggles.png) 
 
 
-## 💡 核心概念
-
-## 🧩 FeatureProbe的技术架构
+# 🧩 FeatureProbe的技术架构
 
 FeatureProbe 的总体架构如下图所示：
 
@@ -55,15 +53,15 @@ FeatureProbe 的总体架构如下图所示：
    * Client-Side SDKs
    * Server-Side SDKs
 
-### 🍭 2步体验FeatureProbe
+# 🍭 2步体验FeatureProbe
 
-#### 1️⃣ 启动FeatureProbe核心服务
+## 1️⃣ 启动FeatureProbe核心服务
 
 1. 我们提供一个在线的FeatureProbe体验核心服务[FeatureProbe](https://featureprobe.io)，您可以直接访问，省去自己部署服务的步骤。
 
 2. 您也可以在自己服务器使用docker composer来部署一套自己的FeatureProbe服务：详见[教程](https://docs.featureprobe.io/zh-CN/tutorials/setup_own_env)
 
-#### 2️⃣ 在你自己服务代码中调用FeatureProbe SDK
+## 2️⃣ 在你自己服务代码中调用FeatureProbe SDK
 
 在您App的代码中引入FeatureProbe的SDK，并通过类似以下的代码访问在FeatureProbe平台上创建的开关
 
@@ -77,7 +75,7 @@ if (fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)) {
 
 我们提供如下语言的SDK：
 
-##### 💻 **服务端SDK**
+### 💻 **服务端SDK**
 
 * [Java SDK](https://gitee.com/FeatureProbe/server-sdk-java)
 * [Rust SDK](https://gitee.com/FeatureProbe/server-sdk-rust)
@@ -86,7 +84,7 @@ if (fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)) {
 * [Node.js SDK](https://github.com/FeatureProbe/server-sdk-node) by [@HeZean](https://github.com/HeZean)
 
 
-##### 📲 **客户端SDK**
+### 📲 **客户端SDK**
 
 * [Javascript SDK](https://gitee.com/FeatureProbe/client-sdk-js)
 * [Android SDK](https://gitee.com/FeatureProbe/client-sdk-mobile)
@@ -98,7 +96,7 @@ if (fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)) {
 
 > 我们提供了一个受FeatureProbe控制的模拟网站应用（通过使用JS SDK）。你可以在线体验通过FeatureProbe控制网站应用的展示。见[教程](https://docs.featureprobe.io/zh-CN/tutorials/try_demo/)
 
-## 🙌 Contributing
+# 🙌 Contributing
 
 我们仍在不断迭代，为FeatureProbe补充更多的功能，以便适应更多的使用场景和用户需求。开发活动会基于github的代码库持续发布。欢迎开源社区的朋友加入我们，提需求、报bug、参与社区讨论、提交PR都可以。
 
@@ -106,14 +104,14 @@ Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, 
 taking part in improving FeatureProbe.
 
 
-## 📜 License
+# 📜 License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
 
 
-## 🌈 Community and Sharing
+# 🌈 Community and Sharing
 
-🍻 我们搭建了一个微信社区，帮助新朋友尽快了解FeatureProbe，新老朋友们也可以在社区一起讨论关于『功能』管理相关的任何话题. 扫描以下二维码加入我们。
+🍻 我们搭建了一个微信社区，帮助新朋友尽快了解FeatureProbe，新老朋友们也可以在社区一起讨论关于特性管理(Feature Management)相关的任何话题. 扫描以下二维码加入我们。
 
 <img src="https://gitee.com/featureprobe/FeatureProbe/raw/main/pictures/Wechat0715.png" width = "250" />
 
@@ -121,7 +119,7 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 🙋 如果想上报BUG，或者贡献代码，请使用Github的Issue和PR功能： [GitHub issue](https://github.com/FeatureProbe/FeatureProbe/issues/new/choose) 
 
 
-## 🎢 Star History
+# 🎢 Star History
 
 如果FeatureProbe能帮到您，请⭐️star我们~
 
