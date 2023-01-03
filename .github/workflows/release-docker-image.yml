@@ -145,6 +145,7 @@ jobs:
   deployment:
     name: Deploy to Google Cloud
     uses: FeatureProbe/FeatureProbe/.github/workflows/gcloud.yml@main
+    secrets: inherit # pass all secrets
     needs: [release_api, release_ui]
     permissions:
       id-token: write
