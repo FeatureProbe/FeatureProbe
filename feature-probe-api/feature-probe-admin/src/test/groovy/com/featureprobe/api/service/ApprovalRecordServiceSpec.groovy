@@ -2,6 +2,7 @@ package com.featureprobe.api.service
 
 import com.featureprobe.api.base.enums.ApprovalStatusEnum
 import com.featureprobe.api.base.enums.ApprovalTypeEnum
+import com.featureprobe.api.base.enums.SketchStatusEnum
 import com.featureprobe.api.dto.ApprovalRecordQueryRequest
 import com.featureprobe.api.dao.entity.ApprovalRecord
 import com.featureprobe.api.dao.entity.Environment
@@ -33,6 +34,7 @@ class ApprovalRecordServiceSpec extends Specification {
     ApprovalRecordRepository approvalRecordRepository
     TargetingSketchRepository targetingSketchRepository
     ApprovalRecord approvalRecord
+    ApprovalRecord approvalRecord2
     EntityManager entityManager
 
     def setup() {
@@ -46,18 +48,21 @@ class ApprovalRecordServiceSpec extends Specification {
                 approvalRecordRepository, targetingSketchRepository, entityManager)
         approvalRecord = new ApprovalRecord(id: 1, organizationId: -1, projectKey: "projectKey",
                 environmentKey: "environmentKey", toggleKey: "toggleKey", submitBy: "Admin", approvedBy: "Test", reviewers: "[\"manager\"]", status: ApprovalStatusEnum.PENDING, title: "title")
+        approvalRecord2 = new ApprovalRecord(id: 2, organizationId: -1, projectKey: "projectKey",
+                environmentKey: "environmentKey", toggleKey: "toggleKey", submitBy: "Admin", approvedBy: "Test", reviewers: "[\"manager\"]", status: ApprovalStatusEnum.PENDING, title: "title")
     }
 
     def "Query approval record list"() {
         when:
         def list = approvalRecordService.list(new ApprovalRecordQueryRequest(keyword: "test", status: [ApprovalStatusEnum.PENDING], type: ApprovalTypeEnum.APPLY))
         then:
-        1 * approvalRecordRepository.findAll(_, _) >> new PageImpl<>([approvalRecord], Pageable.ofSize(1), 1)
-        1 * targetingSketchRepository.findByApprovalIdIn(_) >> [new TargetingSketch(approvalId: 1, modifiedTime: new Date())]
+        1 * approvalRecordRepository.findAll(_, _) >> new PageImpl<>([approvalRecord, approvalRecord2], Pageable.ofSize(2), 2)
+        1 * targetingSketchRepository.findByApprovalIdIn(_) >> [new TargetingSketch(approvalId: 1, modifiedTime: new Date(), status: SketchStatusEnum.PENDING),
+                                                                new TargetingSketch(approvalId: 2, modifiedTime: new Date(), status: SketchStatusEnum.CANCEL)]
         1 * projectRepository.findByKeyIn(_) >> [new Project(name: "projectName", key: "projectKey")]
         1 * environmentRepository.findByKeyIn(_) >> [new Environment(name: "environmentName", key: "environmentKey", project: new Project(key: "projectKey"))]
         1 * toggleRepository.findByKeyIn(_) >> [new Toggle(name: "toggleName", projectKey: "projectKey", key: "toggleKey")]
-        1 == list.content.size()
+        2 == list.content.size()
     }
 
     def "Query approval record total by status"() {
