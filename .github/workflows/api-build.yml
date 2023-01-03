@@ -34,4 +34,5 @@ jobs:
       with:
         directory: feature-probe-api/
         verbose: true
+        flags: api_ut
       
