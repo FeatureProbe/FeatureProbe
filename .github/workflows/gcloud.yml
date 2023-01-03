@@ -31,13 +31,11 @@ jobs:
           
       - id: 'deploy-instance1'
         name: 'deploy-instance1'
-        shell: bash
         run: |
           gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
           gcloud compute ssh featureprobe --zone=asia-east1-a --command="set -eo pipefail;echo '★★★★★★★★★★★★★★★★[Start Deploy instance featureprobe]★★★★★★★★★★★★★★★★';wget --header 'Authorization: token ${{ secrets.GH_API_TOKEN }}' https://raw.githubusercontent.com/FeatureProbe/internal_script/main/io/start.sh -O start.sh;sudo chmod +x start.sh;sudo ./start.sh"
           
       - id: 'deploy-instance2'
         name: 'deploy-instance2'
-        shell: bash
         run: |
           gcloud compute ssh featureprobe-db --zone=asia-east1-a --command="set -eo pipefail;echo '★★★★★★★★★★★★★★★★[Start Deploy instance featureprobe-db]★★★★★★★★★★★★★★★★';wget --header 'Authorization: token ${{ secrets.GH_API_TOKEN }}' https://raw.githubusercontent.com/FeatureProbe/internal_script/main/io/start.sh -O start.sh;sudo chmod +x start.sh;sudo ./start.sh"
