@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
@@ -30,6 +30,7 @@ jobs:
           
       - id: 'gcloud'
         name: 'gcloud'
+        shell: bash
         run: |-
           gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
           gcloud config set project tranquil-post-357802 
