@@ -44,5 +44,7 @@ jobs:
       working-directory: ./feature-probe-ui
       
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v3.1.1
+      with:
+        flags: ui
 
