@@ -8,9 +8,12 @@ import com.featureprobe.api.base.model.OrganizationMemberModel
 import com.featureprobe.api.base.model.TargetingContent
 import com.featureprobe.api.base.tenant.TenantContext
 import com.featureprobe.api.base.util.JsonMapper
+import com.featureprobe.api.dao.entity.Member
+import com.featureprobe.api.dao.entity.Segment
 import com.featureprobe.api.dao.exception.ResourceNotFoundException
 import com.featureprobe.api.dto.CancelSketchRequest
 import com.featureprobe.api.dto.TargetingApprovalRequest
+import com.featureprobe.api.dto.TargetingDiffResponse
 import com.featureprobe.api.dto.TargetingPublishRequest
 import com.featureprobe.api.dto.TargetingVersionRequest
 import com.featureprobe.api.dto.UpdateApprovalStatusRequest
@@ -30,6 +33,7 @@ import com.featureprobe.api.dao.repository.TargetingSketchRepository
 import com.featureprobe.api.dao.repository.TargetingVersionRepository
 import com.featureprobe.api.dao.repository.VariationHistoryRepository
 import org.hibernate.internal.SessionImpl
+import org.junit.platform.commons.util.StringUtils
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.context.SecurityContextHolder
@@ -63,9 +67,11 @@ class TargetingServiceSpec extends Specification {
     def environmentKey
     def toggleKey
     def content
+    def changeContent
     def numberErrorContent
     def datetimeErrorContent
     def semVerErrorContent
+    def segmentRule
     ApprovalRecord approvalRecord
     TargetingSketch targetingSketch
 
@@ -92,6 +98,15 @@ class TargetingServiceSpec extends Specification {
         content = "{\"rules\":[{\"conditions\":[{\"type\":\"string\",\"subject\":\"city\",\"predicate\":\"is one of\"," +
                 "\"objects\":[\"Paris\"]},{\"type\":\"segment\",\"subject\":\"\",\"predicate\":\"is in\"," +
                 "\"objects\":[\"test_segment\"]},{\"type\":\"number\",\"subject\":\"age\",\"predicate\":\"=\"," +
+                "\"objects\":[\"20\"]},{\"type\":\"datetime\",\"subject\":\"\",\"predicate\":\"before\"," +
+                "\"objects\":[\"2022-06-27T16:08:10+08:00\"]},{\"type\":\"semver\",\"subject\":\"\"," +
+                "\"predicate\":\"before\",\"objects\":[\"1.0.1\"]}],\"name\":\"Paris women show 50% red buttons, 50% blue\"," +
+                "\"serve\":{\"split\":[5000,5000,0]}}],\"disabledServe\":{\"select\":1},\"defaultServe\":{\"select\":1}," +
+                "\"variations\":[{\"value\":\"red\",\"name\":\"Red Button\",\"description\":\"Set button color to Red\"}," +
+                "{\"value\":\"blue\",\"name\":\"Blue Button\",\"description\":\"Set button color to Blue\"}]}"
+        changeContent = "{\"rules\":[{\"conditions\":[{\"type\":\"string\",\"subject\":\"city2\",\"predicate\":\"is one of\"," +
+                "\"objects\":[\"Paris\"]},{\"type\":\"segment\",\"subject\":\"\",\"predicate\":\"is in\"," +
+                "\"objects\":[\"test_segment2\"]},{\"type\":\"number\",\"subject\":\"age\",\"predicate\":\"=\"," +
                 "\"objects\":[\"20\"]},{\"type\":\"datetime\",\"subject\":\"\",\"predicate\":\"before\"," +
                 "\"objects\":[\"2022-06-27T16:08:10+08:00\"]},{\"type\":\"semver\",\"subject\":\"\"," +
                 "\"predicate\":\"before\",\"objects\":[\"1.0.1\"]}],\"name\":\"Paris women show 50% red buttons, 50% blue\"," +
@@ -128,6 +143,7 @@ class TargetingServiceSpec extends Specification {
                 "\"disabledServe\":{\"select\":1},\"defaultServe\":{\"select\":1},\"variations\":[{\"value\":\"red\"," +
                 "\"name\":\"Red Button\",\"description\":\"Set button color to Red\"},{\"value\":\"blue\"," +
                 "\"name\":\"Blue Button\",\"description\":\"Set button color to Blue\"}]}"
+        segmentRule = "[{\"conditions\":[{\"type\":\"string\",\"subject\":\"1\",\"predicate\":\"is one of\",\"objects\":[\"1\"]},{\"type\":\"string\",\"subject\":\"1\",\"predicate\":\"is one of\",\"objects\":[\"1\"]},{\"type\":\"string\",\"subject\":\"1\",\"predicate\":\"is one of\",\"objects\":[\"1\"]},{\"type\":\"string\",\"subject\":\"1\",\"predicate\":\"is one of\",\"objects\":[\"2\"]},{\"type\":\"number\",\"subject\":\"1\",\"predicate\":\"=\",\"objects\":[\"1\"]}],\"name\":\"\"},{\"conditions\":[{\"type\":\"datetime\",\"subject\":\"1\",\"predicate\":\"before\",\"objects\":[\"2022-11-04T18:10:07+07:00\"]}],\"name\":\"\"},{\"conditions\":[{\"type\":\"datetime\",\"subject\":\"1\",\"predicate\":\"before\",\"objects\":[\"2022-11-18T18:10:18+08:00\"]}],\"name\":\"\"},{\"conditions\":[{\"type\":\"number\",\"subject\":\"23\",\"predicate\":\"!=\",\"objects\":[\"1\"]},{\"type\":\"string\",\"subject\":\"1\",\"predicate\":\"is not any of\",\"objects\":[\"2\"]}],\"name\":\"\"}]"
         approvalRecord = new ApprovalRecord(id: 1, organizationId: -1, projectKey: "projectKey",
                 environmentKey: "environmentKey", toggleKey: "toggleKey", submitBy: "Admin", approvedBy: "Test", reviewers: "[\"Admin\"]", status: ApprovalStatusEnum.PENDING, title: "title")
         targetingSketch = new TargetingSketch(approvalId: 1, organizationId: -1, projectKey: "projectKey",
@@ -289,17 +305,17 @@ class TargetingServiceSpec extends Specification {
 
     def "query after targeting version"() {
         when:
-        def afterVersion = targetingService.queryAfterVersion(projectKey, environmentKey,
-                toggleKey, 10)
+        def afterVersion = targetingService.queryAfterVersion(projectKey, environmentKey, toggleKey, 10)
         then:
         1 * targetingVersionRepository
                 .findAllByProjectKeyAndEnvironmentKeyAndToggleKeyAndVersionGreaterThanEqualOrderByVersionDesc(
-                        projectKey, environmentKey, toggleKey, 10) >> [new TargetingVersion()]
+                        projectKey, environmentKey, toggleKey, 10) >> [new TargetingVersion( approvalId: 1)]
+        1 * approvalRecordRepository.findById(1) >> Optional.of(
+                new ApprovalRecord(status: ApprovalStatusEnum.PASS, modifiedBy: new Member(account: "Admin"), approvedBy: "Admin", comment: ""))
         1 * targetingVersionRepository.countByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey,
                 environmentKey, toggleKey) >> 2
         2 == afterVersion.total
         1 == afterVersion.versions.size()
-
     }
 
     def "update approval status to PASS"() {
@@ -373,6 +389,29 @@ class TargetingServiceSpec extends Specification {
                 content: "", disabled: false, version: 2))
         1 * targetingSketchRepository.save(_)
         1 * targetingRepository.save(_)
+    }
+
+    def "query ref attributes"() {
+        when:
+        def attributes = targetingService.attributes(projectKey, environmentKey, toggleKey)
+        then:
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey,
+                environmentKey, toggleKey) >> Optional.of(new Targeting(content: content))
+        1 * segmentRepository.findByProjectKeyAndKey(projectKey, "test_segment") >> Optional.of(new Segment(rules: segmentRule))
+        5 == attributes.size()
+    }
+
+    def "get change diff"() {
+        when:
+        def diff = targetingService.diff(projectKey, environmentKey, toggleKey)
+        then:
+        1 * targetingSketchRepository.findAll(_, _) >>  new PageImpl([new TargetingSketch(disabled: true, content: changeContent)], Pageable.ofSize(1), 1)
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey,
+                environmentKey, toggleKey) >> Optional.of(new Targeting(content: content, disabled: false))
+        content == JsonMapper.toJSONString(diff.oldContent)
+        changeContent == JsonMapper.toJSONString(diff.currentContent)
+        !diff.oldDisabled
+        diff.currentDisabled
     }
 
 
