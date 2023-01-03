@@ -66,6 +66,7 @@ class AccessTokenAuthenticationProviderSpec extends Specification {
         AccessTokenAuthenticationToken authenticationToken = new AccessTokenAuthenticationToken(token)
         when:
         def supports = provider.supports(authenticationToken.class)
+
         then:
         supports
     }
