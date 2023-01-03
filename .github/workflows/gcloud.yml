@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - id: 'checkout' 
+      - uses: actions/checkout@v3
+      
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
@@ -26,11 +29,14 @@ jobs:
           project_id: tranquil-post-357802
           
           
-      - id: 'gcloud'
-        name: 'gcloud'
+      - id: 'deploy-instance1'
+        name: 'deploy-instance1'
         shell: bash
         run: |
           gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-          gcloud config set project tranquil-post-357802 
           gcloud compute ssh featureprobe --zone=asia-east1-a --command="set -eo pipefail;echo '★★★★★★★★★★★★★★★★[Start Deploy instance featureprobe]★★★★★★★★★★★★★★★★';wget --header 'Authorization: token ${{ secrets.GH_API_TOKEN }}' https://raw.githubusercontent.com/FeatureProbe/internal_script/main/io/start.sh -O start.sh;sudo chmod +x start.sh;sudo ./start.sh"
+          
+      - id: 'deploy-instance2'
+        shell: bash
+        run: |
           gcloud compute ssh featureprobe-db --zone=asia-east1-a --command="set -eo pipefail;echo '★★★★★★★★★★★★★★★★[Start Deploy instance featureprobe-db]★★★★★★★★★★★★★★★★';wget --header 'Authorization: token ${{ secrets.GH_API_TOKEN }}' https://raw.githubusercontent.com/FeatureProbe/internal_script/main/io/start.sh -O start.sh;sudo chmod +x start.sh;sudo ./start.sh"
