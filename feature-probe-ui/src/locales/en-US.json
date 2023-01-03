@@ -208,6 +208,7 @@
   "projects.environment.archive.error": "Error archiving environment",
   "projects.environment.restore.success": "Environment restored successfully",
   "projects.environment.restore.error": "Error restoring environment",
+  "projects.description": "Projects are collections of toggles that allow one FeatureProbe account to manage several different business goals. We recommend creating corresponding projects according to the service (microservice) granularity of the actual business.",
 
   "toggles.filter.evaluated": "Evaluated",
   "toggles.filter.evaluated.last.seven.days": "In the last 7 days",
@@ -227,6 +228,7 @@
   "toggles.edit.toggle": "Edit toggle",
   "toggles.key.tips": "Use this key in your code. Cannot be changed after creation.",
   "toggles.sdk.type": "Use client-side SDK?",
+  "toggles.sdk.tips": "If the toggle will use the client SDK later, please select “yes”, which determines the type of language used to access the SDK.",
   "toggles.sdk.yes": "yes",
   "toggles.sdk.no": "no",
   "toggles.returntype": "Return type",
@@ -258,6 +260,7 @@
   "toggles.permanent.type": "Is this a permanent toggle?",
   "toggles.permanent.type.tips": "FeatureProbe cares a lot about code quality, and technical debt builds up over time. The non-\"permanent\" toggle cycle is is 30 days, and we will prompt you to clean it up in time. If you want to keep it in your code as a long-term toggle, you can mark it as a \"permanent\" toggle and we won't prompt you to clean it up.",
   "toggles.permanent.tips": "This toggle is temporary and has been used for {useDays} days. It is recommended to clean it in time!",
+  "toggles.description": "Toggle is a managed entity for single/multiple functions. A toggle belongs to a project, and when a toggle is created, it appears in all environments of the project.",
 
   "toggles.settings.tips": "Set approval strategy for environments. The strategy will affect all toggle publishing in this environment.",
   "toggles.settings.approval.reviewers": "Reviewers",
@@ -288,6 +291,7 @@
   "targeting.metrics.error.text": "Error getting toggle metrics",
   "targeting.metrics.option.seven.days": "Last 7 days",
   "targeting.metrics.option.one.day": "Last 24 hours",
+  "targeting.metrics.desc": "After the SDK is successfully connected, you can observe the changes of the access data at any time, and perceive the impact of the version change on the access data.",
   "targeting.rule.delete.text": "Are you sure to delete this rule?",
   "targeting.rule.subject.placeholder": "Enter a subject",
   "targeting.rule.subject.required": "Please enter a subject",
@@ -497,6 +501,12 @@
   "guide.toggle.targeting.step2.title": "Set the default return value",
   "guide.toggle.targeting.step2.default": "If all the above [rules] of a user fail to hit, the [default rule] will be returned",
 
+  "guide.project.step1.title": "Environment",
+  "guide.project.step1.content1": "A project supports multiple environments, generally including online environment, test environment, development environment, etc",
+  "guide.project.step1.content2": "All environments contain all toggles under the project, but the settings of toggles in each environment are usually different",
+  "guide.project.step2.title": "Environment SDK key",
+  "guide.project.step2.content1": "Quickly copy the environment “SDK Key” for SDK initialization",
+
   "guide.next": "Next",
   "guide.last": "Previous",
   "guide.done": "Done",
@@ -526,6 +536,7 @@
   "webhook.total": "Webhooks in total",
   "webhook.duplicated.urls": "Detected that there are currently existing webhooks for the same URL: ",
   "webhook.secretkey.tips": "A method for webhook authentication. Use the 'secret key' to generate a request signature for authentication to prevent URLs from being maliciously requested.",
+  "webhook.description": "Support for subscribing to platform event changes, such as toggle changes, user changes, and more.",
 
   "token.application.title": "Shared access tokens",
   "token.personal.title": "Personal access tokens",

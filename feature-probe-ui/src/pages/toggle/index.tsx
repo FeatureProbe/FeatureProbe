@@ -342,6 +342,9 @@ const Toggle = () => {
                   </div>
                 )
               }
+              <div className={styles.tips}>
+                <FormattedMessage id='toggles.description' />
+              </div>
               <div className={styles.add}>
                 <Form className={styles['filter-form']}>
                   <Form.Field className={styles['evaluation-field']}>
