@@ -4,7 +4,6 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/featureprobe/api)](https://hub.docker.com/u/featureprobe)
 [![Apache-2.0 license](https://img.shields.io/github/license/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe/blob/main/LICENSE)
 
-
 FeatureProbe supports an extensive API so that other services or clients can use it programmatically.
 This API is exposed using the standard REST architecture in a secure, uniform, stateless manner.
 
