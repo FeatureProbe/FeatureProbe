@@ -24,7 +24,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-        cache: maven
+        cache: 'maven'
         
     - name: Build & Test
       run: mvn -B verify --file ./feature-probe-api/pom.xml
