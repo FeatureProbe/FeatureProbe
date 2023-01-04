@@ -158,7 +158,7 @@ public class MemberService {
         Specification<OrganizationMember> spec = (root, query, cb) -> {
             Predicate p1 = cb.equal(root.get("organization").get("id"), TenantContext.getCurrentOrganization()
                     .getOrganizationId());
-            Predicate p2 = cb.notEqual(root.get("member").get("source"), MemberSourceEnum.ACCESS_TOKEN);
+            Predicate p2 = cb.notEqual(root.get("member").get("source"), MemberSourceEnum.ACCESS_TOKEN.name());
             return query.where(cb.and(p1, p2)).getRestriction();
         };
         Page<OrganizationMember> organizationMembers = organizationMemberRepository.findAll(spec, pageable);
