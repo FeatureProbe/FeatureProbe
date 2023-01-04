@@ -3,6 +3,7 @@ package com.featureprobe.api.service;
 import com.featureprobe.api.auth.TokenHelper;
 import com.featureprobe.api.base.constants.MessageKey;
 import com.featureprobe.api.base.db.ExcludeTenant;
+import com.featureprobe.api.base.enums.MemberSourceEnum;
 import com.featureprobe.api.base.enums.OrganizationRoleEnum;
 import com.featureprobe.api.base.enums.ResourceType;
 import com.featureprobe.api.base.exception.ForbiddenException;
@@ -157,7 +158,7 @@ public class MemberService {
         Specification<OrganizationMember> spec = (root, query, cb) -> {
             Predicate p1 = cb.equal(root.get("organization").get("id"), TenantContext.getCurrentOrganization()
                     .getOrganizationId());
-            Predicate p2 = cb.notEqual(root.get("member").get("source"), "ACCESS_TOKEN");
+            Predicate p2 = cb.notEqual(root.get("member").get("source"), MemberSourceEnum.ACCESS_TOKEN);
             return query.where(cb.and(p1, p2)).getRestriction();
         };
         Page<OrganizationMember> organizationMembers = organizationMemberRepository.findAll(spec, pageable);
