@@ -3,6 +3,7 @@ package com.featureprobe.api.service;
 import com.featureprobe.api.auth.TokenHelper;
 import com.featureprobe.api.base.db.ExcludeTenant;
 import com.featureprobe.api.base.enums.AccessTokenType;
+import com.featureprobe.api.base.enums.MemberSourceEnum;
 import com.featureprobe.api.base.enums.ResourceType;
 import com.featureprobe.api.base.util.KeyGenerateUtil;
 import com.featureprobe.api.dao.entity.AccessToken;
@@ -10,7 +11,6 @@ import com.featureprobe.api.dao.entity.Member;
 import com.featureprobe.api.dao.exception.ResourceConflictException;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
 import com.featureprobe.api.dao.repository.AccessTokenRepository;
-import com.featureprobe.api.dao.repository.MemberRepository;
 import com.featureprobe.api.dao.utils.PageRequestUtil;
 import com.featureprobe.api.dto.AccessTokenCreateRequest;
 import com.featureprobe.api.dto.AccessTokenResponse;
@@ -58,17 +58,22 @@ public class AccessTokenService {
             token.setMemberId(TokenHelper.getUserId());
             token.setRole(null);
         } else {
-            MemberCreateRequest memberCreateRequest = new MemberCreateRequest();
-            String account = "api:" + token.getName();
-            memberCreateRequest.setAccounts(Lists.newArrayList(account));
-            memberCreateRequest.setPassword("WITHOUT_PASSWORD");
-            memberCreateRequest.setSource("ACCESS_TOKEN");
-            memberCreateRequest.setRole(createRequest.getRole());
-            memberService.create(memberCreateRequest);
-            Member member = memberService.findByAccount(account).get();
+            Member member = createAccessTokenMember(createRequest, token);
             token.setMemberId(member.getId());
         }
         return token;
+    }
+
+    private Member createAccessTokenMember(AccessTokenCreateRequest createRequest, AccessToken token) {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest();
+        String account = "api:" + token.getName();
+        memberCreateRequest.setAccounts(Lists.newArrayList(account));
+        memberCreateRequest.setPassword(String.valueOf(System.nanoTime()));
+        memberCreateRequest.setSource(MemberSourceEnum.ACCESS_TOKEN.name());
+        memberCreateRequest.setRole(createRequest.getRole());
+        memberService.create(memberCreateRequest);
+        Member member = memberService.findByAccount(account).get();
+        return member;
     }
 
     @Transactional(rollbackFor = Exception.class)
