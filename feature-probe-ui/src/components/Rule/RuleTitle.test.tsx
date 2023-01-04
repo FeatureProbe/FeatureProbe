@@ -113,7 +113,8 @@ test('RuleTitle opt', (done) => {
     await userEvent.hover(ruleTextbox);
     await userEvent.click(ruleTextbox);
     await userEvent.keyboard('test rule');
-    await userEvent.type(ruleTextbox, 'test rule long long long long long long long long long long long long long long long');
+    await userEvent.type(ruleTextbox, 'test rule long long long long long long long long long long long long long' +
+        ' long long long');
 
     const del = document.querySelector('span.icon-archive');
     del && (await userEvent.click(del));
