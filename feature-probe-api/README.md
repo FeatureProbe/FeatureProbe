@@ -1,6 +1,6 @@
 # FeatureProbe API
 
-[![codecov](https://codecov.io/gh/FeatureProbe/feature-probe-api/branch/main/graph/badge.svg?token=JVJWQUUIJH)](https://codecov.io/gh/FeatureProbe/feature-probe-api)
+[![codecov](https://codecov.io/gh/FeatureProbe/FeatureProbe/feature-probe-api/branch/main/graph/badge.svg?token=JVJWQUUIJH)](https://app.codecov.io/github/FeatureProbe/FeatureProbe/tree/main/feature-probe-api)
 [![Docker Pulls](https://img.shields.io/docker/pulls/featureprobe/api)](https://hub.docker.com/u/featureprobe)
 [![Apache-2.0 license](https://img.shields.io/github/license/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe/blob/main/LICENSE)
 
