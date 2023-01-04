@@ -57,7 +57,7 @@ const DisabledServe = (props: IProps) => {
     <div className={styles['disabled-serve']}>
       <SectionTitle
         showTooltip={true}
-        title={intl.formatMessage({id: 'targeting.disabled.return.value'})}
+        title={intl.formatMessage({id: 'common.disabled.return.type.text'})}
         tooltipText={intl.formatMessage({id: 'targeting.disabled.return.value.tips'})}
       />
       <div className={styles['serve-select']}>

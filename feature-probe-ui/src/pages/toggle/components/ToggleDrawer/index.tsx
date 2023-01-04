@@ -94,7 +94,7 @@ const STEPS: Step[] = [
     content: (
       <div>
         <div className='joyride-title'>
-          <FormattedMessage id='guide.creat.toggle.step3.title' />
+          <FormattedMessage id='common.disabled.return.type.text' />
         </div>
         <ul className='joyride-item'>
           <li>

@@ -63,7 +63,14 @@
 .rules {
   margin-top: 12px;
   background-color: #ffffff;
+  border-radius: 12px;
+  padding: 0 24px 12px;
+}
+
+.disabled-return {
   border-radius: 12px 12px 0 0;
+  background-color: #ffffff;
+  margin-top: 12px;
   padding: 0 24px 12px;
 }
 
