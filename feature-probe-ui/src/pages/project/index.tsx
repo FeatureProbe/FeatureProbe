@@ -198,7 +198,7 @@ const Project = () => {
             scrollToFirstStep
             showProgress={false}
             showSkipButton
-            scrollOffset={100}
+            scrollOffset={1000}
             disableCloseOnEsc={true}
             steps={STEPS}
             locale={{
