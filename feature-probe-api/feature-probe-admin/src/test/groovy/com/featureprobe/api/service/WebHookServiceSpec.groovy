@@ -4,7 +4,6 @@ import com.featureprobe.api.base.hook.HookSettingsStatus
 import com.featureprobe.api.dao.entity.WebHookSettings
 import com.featureprobe.api.dao.exception.ResourceConflictException
 import com.featureprobe.api.dao.repository.WebHookSettingsRepository
-import com.featureprobe.api.dto.SecretKeyResponse
 import com.featureprobe.api.dto.WebHookCreateRequest
 import com.featureprobe.api.dto.WebHookListRequest
 import com.featureprobe.api.dto.WebHookUpdateRequest

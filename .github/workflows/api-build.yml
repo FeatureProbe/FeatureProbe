@@ -9,6 +9,7 @@ on:
     branches: [ main ]
     paths:
       - 'feature-probe-api/**'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -23,11 +24,15 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-        cache: maven
+        cache: 'maven'
         
     - name: Build & Test
       run: mvn -B verify --file ./feature-probe-api/pom.xml
       
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@v3
+      with:
+        directory: feature-probe-api/
+        verbose: true
+        flags: api_ut
       

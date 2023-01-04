@@ -1,5 +1,6 @@
 package com.featureprobe.api.service
 
+import com.featureprobe.api.base.enums.ToggleReleaseStatusEnum
 import com.featureprobe.api.component.SpringBeanManager
 import com.featureprobe.api.config.AppConfig
 import com.featureprobe.api.base.enums.SketchStatusEnum
@@ -284,7 +285,7 @@ class ToggleServiceSpec extends Specification {
     def "search toggles by filter params"() {
         def toggleSearchRequest =
                 new ToggleSearchRequest(visitFilter: VisitFilter.IN_WEEK_VISITED, disabled: false,
-                        tags: ["test"], keyword: "test", environmentKey: environmentKey)
+                        tags: ["test"], keyword: "test", environmentKey: environmentKey, releaseStatusList: [ToggleReleaseStatusEnum.RELEASE])
         when:
         def page = toggleService.list(projectKey, toggleSearchRequest)
 
@@ -296,6 +297,8 @@ class ToggleServiceSpec extends Specification {
         1 * tagRepository.findByNameIn(["test"]) >> [new Tag(name: "test")]
         1 * toggleTagRepository.findByTagIdIn(_) >> [new ToggleTagRelation(toggleKey: toggleKey)]
         1 * eventRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
+        1 * targetingRepository.findAllByProjectKeyAndEnvironmentKeyAndStatusIn(projectKey,
+                environmentKey, [ToggleReleaseStatusEnum.RELEASE]) >> [new Targeting(toggleKey: toggleKey, environmentKey: environmentKey, projectKey: projectKey, disabled: true)]
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
                 Pageable.ofSize(1), 1)
         1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, [toggleKey]) >>
@@ -313,6 +316,16 @@ class ToggleServiceSpec extends Specification {
             null != it.getContent().get(0).visitedTime
             true == it.getContent().get(0).isLocked()
         }
+    }
+
+    def "search toggles in project"() {
+        given:
+        when:
+        def toggles = toggleService.list(projectKey, new ToggleSearchRequest())
+        then:
+        1 * toggleRepository.findAllByProjectKeyAndArchived(projectKey, false, _) >>  new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
+                Pageable.ofSize(1), 1)
+        1 == toggles.content.size()
     }
 
     def "create toggle success"() {
