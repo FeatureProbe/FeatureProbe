@@ -24,7 +24,9 @@ sidebar_position: 4
 
 我们提供了一个可运行的演示代码，让您了解如何使用 FeatureProbe SDK。
 
-1. 使用 docker composer 启动 FeatureProbe 服务。 [How to](https://github.com/FeatureProbe/FeatureProbe#1-starting-featureprobe-service-with-docker-compose)
+1. 首先需要选择通过连接哪个环境的FeatureProbe来控制你的程序
+    * 可以使用我们提供的在线的[演示环境](https://featureprobe.io/login)
+    * 也可以使用自己搭建的[docker环境](https://gitee.com/featureprobe/FeatureProbe)
 
 2. 下载这个 repo 并运行演示程序：
 
@@ -33,9 +35,17 @@ git clone https://github.com/FeatureProbe/client-sdk-miniprogram.git
 cd client-sdk-miniprogram
 ```
 
-3.找到Demo代码 [example](https://github.com/FeatureProbe/client-sdk-miniprogram/tree/main/example),
-做一些改变并再次运行程序。
+3. 修改[example](https://github.com/FeatureProbe/client-sdk-miniprogram/tree/main/example)程序中的链接信息。
+    * 对于在线演示环境:
+        * `remoteUrl` = "https://featureprobe.io/server"
+        * `clientSdkKey`  请从如下界面中拷贝：
 
+      ![client_sdk_key snapshot](/client_sdk_key_snapshot_cn.png)
+    * 对于本地docker环境:
+        * `remoteUrl` = "http://YOUR_DOCKER_IP:4009/server"
+        * `clientSdkKey` = "client-25614c7e03e9cb49c0e96357b797b1e47e7f2dff"
+
+4. 运行程序。
 
 ## 分步指南
 
@@ -49,7 +59,6 @@ cd client-sdk-miniprogram
 ```js
 npm install featureprobe-client-sdk-miniprogram --save
 ```
-
 
 ### Step 2. 初始化SDK客户端
 初始化 SDK 客户端，填写SDK初始化过程中的必填参数
@@ -109,16 +118,3 @@ featureProbeClient.on("ready", function() {
 | user              | yes            | n/a     | User 对象可以通过With方法设置属性，用来根据属性判断开关规则 |
 | refreshInterval   | no            | 1000    | 设置 SDK 的开关和事件刷新时间   |
 | timeoutInterval   | no            | 1000    | 设置 SDK 初始化等待的超时时间，超时后SDK将发布`error`事件   |
-
-## SDK的API文档
-
-查看API文档：[SDK API](https://featureprobe.github.io/client-sdk-miniprogram/)
-
-
-## 集成测试
-
-我们对所有 SDK 提供了统一的集成测试。通过以下命令运行测试。
-
-```shell
-npm run test
-```

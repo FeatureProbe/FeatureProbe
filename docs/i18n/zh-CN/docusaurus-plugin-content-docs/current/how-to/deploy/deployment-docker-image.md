@@ -3,7 +3,7 @@ sidebar_position: 2
 ---
 
 # Docker image 部署
-使用各模块提供的docker 镜象在 Linux/Unix/Mac 独立部署各子服务
+> 使用各模块提供的docker 镜象在 Linux/Unix/Mac 独立部署各子服务
 
 ## 环境准备
 
@@ -93,30 +93,30 @@ sidebar_position: 2
 
    ```nginx
    upstream featureProbeAPI {
-        # FeatureProbeAPI 服务的 IP 和端口，请根据实际情况调整
-       server 10.100.1.1:4008;
+      # FeatureProbeAPI 服务的 IP 和端口，请根据实际情况调整
+      server 10.100.1.1:4008;
    }
    
    server {
-     # 访问的 UI 端口
-     listen 4009;  # UI 端口
+      # 访问的 UI 端口
+      listen 4009;  # UI 端口
    
-     location / {
-       index  index.html index.htm;
-       root /usr/share/nginx/html;
-       try_files $uri /index.html;
-     }
+      location / {
+         index  index.html index.htm;
+         root /usr/share/nginx/html;
+         try_files $uri /index.html;
+      }
    
       location /api { # 访问 /api 时统一转发到 featureProbeAPI 服务
-       proxy_set_header X-Real-IP $remote_addr;
-       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-       proxy_set_header X-NginX-Proxy true;
-       proxy_pass http://featureProbeAPI/api;
-       proxy_ssl_session_reuse off;
-       proxy_set_header Host $http_host;
-       proxy_cache_bypass $http_upgrade;
-       proxy_redirect off;
-     }
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header X-NginX-Proxy true;
+         proxy_pass http://featureProbeAPI/api;
+         proxy_ssl_session_reuse off;
+         proxy_set_header Host $http_host;
+         proxy_cache_bypass $http_upgrade;
+         proxy_redirect off;
+      }
    }
    ```
 

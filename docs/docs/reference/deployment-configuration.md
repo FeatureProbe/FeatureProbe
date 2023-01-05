@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# 部署参数说明
+# Deployment Configuration
 
 API 模块和 Server 模块在启动时参数说明。
 

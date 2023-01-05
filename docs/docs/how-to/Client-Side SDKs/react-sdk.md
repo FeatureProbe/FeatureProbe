@@ -8,37 +8,60 @@ sidebar_position: 5
 To provide a better integration for use in React applications, React SDK builds on JavaScript SDK. Much of the JavaScript SDK functionality is also available for the React SDK to use. Please reference [JavaScript SDK](./javascript-sdk.md).
 :::
 
+:::note SDK quick links
+In addition to this reference guide, we provide source code, API reference documentation, and sample applications at the following links:
+
+| **Resource**  | **Location**                                                 |
+| ------------- | ------------------------------------------------------------ |
+| SDK API documentation  | [ SDK API docs](https://featureprobe.github.io/client-sdk-react/) |
+| GitHub repository | [Client Side SDK for React](https://github.com/FeatureProbe/client-sdk-react) |
+| Sample applications      | [Demo code](https://github.com/FeatureProbe/client-sdk-react/tree/main/example) |
+| Published module    | [npm](https://www.npmjs.com/package/featureprobe-client-sdk-react) |
+
+:::
+
 ## Try Out Demo Code
 
 We provide a runnable demo code for you to understand how FeatureProbe SDK is used.
 
-1. Start FeatureProbe Service with docker composer. [How to](https://github.com/FeatureProbe/FeatureProbe#1-starting-featureprobe-service-with-docker-compose)
+1. First, you need to choose which environment FeatureProbe is connected to control your program
+     * You can use our online [demo environment](https://featureprobe.io/login)
+     * You can also use your own [docker environment](https://github.com/featureprobe/FeatureProbe)
 
 2. Download this repo and run the demo program:
 
 
-```bash
-git clone https://github.com/FeatureProbe/client-sdk-react.git
-cd client-sdk-react
-```
+  ```bash
+  git clone https://github.com/FeatureProbe/client-sdk-react.git
+  cd client-sdk-react
+  ```
 
-3. Find the Demo code in [example](https://github.com/FeatureProbe/client-sdk-react/tree/main/example),
-do some change and run the program again.
+3. Modify the link information in the [example](https://github.com/FeatureProbe/client-sdk-react/tree/main/example).
+     * For online demo environment:
+         * `remoteUrl` = "https://featureprobe.io/server"
+         * `clientSdkKey` Please copy from the following interface:
 
-The first Demo:
-```bash
-cd example/provider
-npm install
-npm run start
-```
+       ![client_sdk_key snapshot](/client_sdk_key_snapshot_cn.png)
+     * For local docker environment:
+         * `remoteUrl` = "http://YOUR_DOCKER_IP:4009/server"
+         * `clientSdkKey` = "client-25614c7e03e9cb49c0e96357b797b1e47e7f2dff"
 
-The second Demo:
+4. Run the program.
 
-```bash
-cd example/async-provider
-npm install
-npm run start
-```
+  The first Demo:
+  ```bash
+  cd example/provider
+  npm install
+  npm run start
+  ```
+
+  The second Demo:
+
+  ```bash
+  cd example/async-provider
+  npm install
+  npm run start
+  ```
 
 ## Step-by-Step Guide
 

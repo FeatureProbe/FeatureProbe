@@ -8,11 +8,25 @@ sidebar_position: 4
 This SDK is only applicable to WeChat mini program, other mini programs including Alipay, Baidu, DingDing and TouTiao are preparing, will be released soon. To provide a better integration for use in mini program applications, MiniProgram SDK builds on JavaScript SDK. Much of the JavaScript SDK functionality is also available for the MiniProgram SDK to use. Please reference [JavaScript SDK](./javascript-sdk.md).
 :::
 
+:::note SDK quick links
+In addition to this reference guide, we provide source code, API reference documentation, and sample applications at the following links:
+
+| **Resource**  | **Location**                                                 |
+| ------------- | ------------------------------------------------------------ |
+| SDK API documentation  | [ SDK API docs](https://featureprobe.github.io/client-sdk-miniprogram/) |
+| GitHub repository | [Client Side SDK for MiniProgram](https://github.com/FeatureProbe/client-sdk-miniprogram) |
+| Sample applications    | [Demo code](https://github.com/FeatureProbe/client-sdk-miniprogram/tree/main/example) |
+| Published module    | [npm](https://www.npmjs.com/package/featureprobe-client-sdk-miniprogram) |
+
+:::
+
 ## Try Out Demo Code
 
 We provide a runnable demo code for you to understand how FeatureProbe SDK is used.
 
-1. Start FeatureProbe Service with docker composer. [How to](https://github.com/FeatureProbe/FeatureProbe#1-starting-featureprobe-service-with-docker-compose)
+1. First, you need to choose which environment FeatureProbe is connected to control your program
+     * You can use our online [demo environment](https://featureprobe.io/login)
+     * You can also use your own [docker environment](https://github.com/featureprobe/FeatureProbe)
 
 2. Download this repo and run the demo program:
 
@@ -21,8 +35,17 @@ git clone https://github.com/FeatureProbe/client-sdk-miniprogram.git
 cd client-sdk-miniprogram
 ```
 
-3. Find the Demo code in [example](https://github.com/FeatureProbe/client-sdk-miniprogram/tree/main/example),
-do some change and run the program again.
+3. Modify the link information in the [example](https://github.com/FeatureProbe/client-sdk-miniprogram/tree/main/example).
+     * For online demo environment:
+         * `remoteUrl` = "https://featureprobe.io/server"
+         * `clientSdkKey` Please copy from the following interface:
+
+       ![client_sdk_key snapshot](/client_sdk_key_snapshot_cn.png)
+     * For local docker environment:
+         * `remoteUrl` = "http://YOUR_DOCKER_IP:4009/server"
+         * `clientSdkKey` = "client-25614c7e03e9cb49c0e96357b797b1e47e7f2dff"
+
+4. Run the program.
 
 ## Step-by-Step Guide
 
@@ -36,7 +59,6 @@ Install the FeatureProbe SDK as a dependency in your application.
 ```js
 npm install featureprobe-client-sdk-miniprogram --save
 ```
-
 
 ### Step 2. Initialize SDK client
 Initialize SDK client with required options
@@ -98,15 +120,3 @@ This SDK takes the following options:
 | user              | yes            | n/a     | The User with attributes like name, age is used when toggle evaluation |
 | refreshInterval   | no            | 1000     | The SDK check for updated in millisecond   |
 | timeoutInterval   | no            | 1000    | Timeout for SDK initialization, SDK will emit an `error` event when timeout is reaching  |
-
-
-## SDK Open API
-
-API Docs: [SDK API](https://featureprobe.github.io/client-sdk-js/)
-
-
-## Testing
-
-```shell
-npm run test
-```
