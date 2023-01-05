@@ -10,7 +10,7 @@ import { FLOW_EXPLAIN } from 'constants/dictionary_keys';
 import styles from './index.module.scss';
 
 const FlowExplain = () => {
-  const [open, saveOpen] = useState<boolean>(true);
+  const [open, saveOpen] = useState<boolean>(false);
   const [modalOpen, saveModalOpen] = useState<boolean>(false);
   const intl  = useIntl();
 
