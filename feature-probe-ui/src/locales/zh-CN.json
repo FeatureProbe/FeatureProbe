@@ -109,6 +109,8 @@
   "common.secret.key.text": "签名密钥",
   "common.secret.required": "请输入签名密钥",
   "common.diff.tips": "以下为本次变更内容的前后对比。",
+  "common.flow.explain": "流量解读",
+  "common.know.text": "我知道了",
   
   "header.getuser.error.text": "无法获取用户信息!",
 

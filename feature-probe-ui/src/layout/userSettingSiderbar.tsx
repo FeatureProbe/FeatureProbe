@@ -51,7 +51,7 @@ const Sidebar = () => {
         <PutAwayMemu type="attribute" isPutAway={isPutAway} title={intl.formatMessage({ id: 'common.profile.text' })} />
       </div>
       <div className={tokenCls} onClick={() => gotoPage(TOKENS)}>
-        <PutAwayMemu type="yingyongTokens" isPutAway={isPutAway} title={intl.formatMessage({ id: 'common.tokens.text' })} />
+        <PutAwayMemu type="token" isPutAway={isPutAway} title={intl.formatMessage({ id: 'common.tokens.text' })} />
       </div>
     </div>
   );

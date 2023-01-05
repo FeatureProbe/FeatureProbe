@@ -66,14 +66,14 @@ const Sidebar = () => {
       </div>
       <div className={webhookCls} onClick={() => gotoPage(WEBHOOKLIST)}>
         <PutAwayMemu
-          type='WebHooks'
+          type='webhook'
           isPutAway={isPutAway}
           title={intl.formatMessage({id: 'common.webhooks.text'})}
         />
       </div>
       <div className={tokenCls} onClick={() => gotoPage(TOKENS)}>
         <PutAwayMemu 
-          type="yingyongTokens" 
+          type="token" 
           isPutAway={isPutAway} 
           title={intl.formatMessage({ id: 'common.tokens.text' })} />
       </div>

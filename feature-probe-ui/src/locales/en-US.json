@@ -109,6 +109,8 @@
   "common.secret.key.text": "Secret key",
   "common.secret.required": "Please input secret key",
   "common.diff.tips": "The following is a before and after comparison of this change.",
+  "common.flow.explain": "Explain",
+  "common.know.text": "I see",
 
   "header.getuser.error.text": "Error getting user profile",
 
