@@ -7,7 +7,7 @@ In many cases, the R&D team is very strict about online change management, and a
 ## Approval settings
 In the "Environment" under the project, you can set approvers and enable approval separately.
 
-![toggle targeting screenshot](/approval_settings.png)
+![toggle targeting screenshot](/approval_settings_en.png)
 
 1. Environment: All environments under the project are shown here.
 2. Approver: Support setting the same or different approvers for each item. Approvers receive release approval for all toggles in the environment.
@@ -17,7 +17,7 @@ In the "Environment" under the project, you can set approvers and enable approva
 ## trigger approval
 After the approval setting is completed, in the environment where the approval is enabled, if the toggle is released, the approval will be triggered.
 
-![sdk screenshot](/publish.png)
+![sdk screenshot](/publish_en.png)
 
 1. Modify the toggle configuration information, and click "Request Approval", and you will see the approvers for this release.
 2. Changes description: The change description is required at this time, and it will be sent to the approver as the title of the approval.
@@ -25,8 +25,8 @@ After the approval setting is completed, in the environment where the approval i
 
 ## Approval Center
 After the release, the approver can see it in the [Approval Center]~ You can click to enter the toggle to approve, and the applicant can also see it in the application list.
-![history screenshot](/approval_list.png)
-![history screenshot](/application_list.png)
+![history screenshot](/approval_list_en.png)
+![history screenshot](/application_list_en.png)
 + Approval Status: (Pending review, Accepted, Declined, Skipped, Withdrawn)
    - Pending revie: After the approval is released, it is in the status of "Pending revie"
    - Accepted: "Pending revie" toggle, after the approver approves [Passed], it is in the "Accepted" state
@@ -38,15 +38,15 @@ After the release, the approver can see it in the [Approval Center]~ You can cli
 ## toggle list and toggle targeting
 After approval, the applicant needs to click [Publish] to complete the release.
 ### toggle targeting
-![history screenshot](/toggle_approval.png)
+![history screenshot](/toggle_approval_en.png)
 
 ### switch configuration page
 [Pending approval] - [Applicant]:
-![history screenshot](/pending_review_q.png)
+![history screenshot](/pending_review_q_en.png)
 [Pending approval] - [Approver]:
-![history screenshot](/pending_review_p.png)
+![history screenshot](/pending_review_p_en.png)
 【To be released】-【Applicant】：
-![history screenshot](/pending_publish.png)
+![history screenshot](/pending_publish_en.png)
 + Switch Status: (Pending review, Pending Publishing, Declined, Published)
    - Pending review: After the approval is released, it is in the status of "Pending review"
    - Pending Publishing: After the approver approves [Pass], it is in the "Pending Publishing" state. At this time, the applicant can click [Publish] or [Abandon]
