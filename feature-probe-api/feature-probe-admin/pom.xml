@@ -267,7 +267,7 @@
                     <installDirectory>../node</installDirectory>
                     <workingDirectory>../../feature-probe-ui</workingDirectory>
 <!--                    <nodeDownloadRoot>https://npm.taobao.org/mirrors/node/</nodeDownloadRoot>-->
-                    <skip>false</skip>
+                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>

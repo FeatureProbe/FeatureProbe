@@ -35,7 +35,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @Slf4j
-@Tag(name = "WebHook", description = "The WebHook is a callback configurations")
+@Tag(name = "Webhooks", description = "The webhooks API allows you to list, create, modify, \" +\n" +
+        "        \"query and delete WebHook programmatically.")
 @RequestMapping("/api/webhooks")
 @DefaultApiResponses
 @AllArgsConstructor
@@ -47,7 +48,7 @@ public class WebHookController {
 
     @CreateApiResponse
     @PostMapping
-    @Operation(summary = "Create Webhook", description = "Create a new Webhook.")
+    @Operation(summary = "Create webhook", description = "Create a new webhook.")
     @Hook(resource = Resource.WEBHOOK, action = Action.CREATE)
     public WebHookResponse create(@Validated @RequestBody WebHookCreateRequest createRequest) {
         return webHookService.create(createRequest);
@@ -55,7 +56,7 @@ public class WebHookController {
 
     @PatchApiResponse
     @PatchMapping("/{id}")
-    @Operation(summary = "Update WebHook", description = "Update a WebHook.")
+    @Operation(summary = "Update webhook", description = "Update a webhook.")
     @Hook(resource = Resource.WEBHOOK, action = Action.UPDATE)
     public WebHookResponse update(
             @PathVariable(name = "id") Long id,
@@ -65,7 +66,7 @@ public class WebHookController {
 
     @DeleteApiResponse
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete WebHook", description = "Delete a WebHook.")
+    @Operation(summary = "Delete webhook", description = "Delete a webhook.")
     @Hook(resource = Resource.WEBHOOK, action = Action.DELETE)
     public WebHookResponse delete(@PathVariable(name = "id") Long id) {
         return webHookService.delete(id);
@@ -73,14 +74,14 @@ public class WebHookController {
 
     @GetApiResponse
     @GetMapping("/{id}")
-    @Operation(summary = "Query WebHook", description = "Query a WebHook.")
+    @Operation(summary = "Get WebHook", description = "Get a single webhook flag by id.")
     public WebHookItemResponse query(@PathVariable(name = "id") Long id) {
         return webHookService.query(id);
     }
 
     @GetApiResponse
     @GetMapping("/secretKey")
-    @Operation(summary = "Get WebHook SecretKey", description = "Get a WebHook SecretKey.")
+    @Operation(summary = "Get WebHook SecretKey", description = "Get a system-suggested secret key.")
     public SecretKeyResponse secretKey() {
         return webHookService.secretKey();
     }
@@ -94,7 +95,7 @@ public class WebHookController {
 
     @GetApiResponse
     @GetMapping("/checkUrl")
-    @Operation(summary = "Get the webhook of the same url", description = "Get the webhook of the same url.")
+    @Operation(summary = "Get webhook names", description = "Get the webhook names of the same url.")
     public List<String> queryByUrl(@RequestParam(name = "url") String url) {
         return webHookService.queryByUrl(url);
     }

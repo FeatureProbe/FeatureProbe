@@ -23,6 +23,7 @@ import com.featureprobe.api.dto.UpdateApprovalStatusRequest;
 import com.featureprobe.api.service.TargetingService;
 import com.featureprobe.api.validate.ResourceExistsValidate;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @Slf4j
-@Tag(name = "Targeting", description = "The user targeting rules")
+@Tag(name = "Targeting", description = "The Targeting API allows you to publish ,query and approval programmatically.")
 @RequestMapping("/api/projects/{projectKey}/environments/{environmentKey}/toggles/{toggleKey}/targeting")
 @ProjectKeyParameter
 @EnvironmentKeyParameter
@@ -53,7 +54,8 @@ public class TargetingController {
 
     @PatchApiResponse
     @PatchMapping
-    @Operation(summary = "Update targeting", description = "Update targeting.")
+    @Operation(summary = "Publish targeting", description = "Publish the targeting " +
+            "by projectKey， environmentKey and toggleKey.")
     @Hook(resource = Resource.TOGGLE, action = Action.PUBLISH)
     public TargetingResponse publish(
             @PathVariable("projectKey") String projectKey,
@@ -65,7 +67,7 @@ public class TargetingController {
 
     @CreateApiResponse
     @PostMapping("/approval")
-    @Operation(summary = "submit targeting approval", description = "submit targeting approval.")
+    @Operation(summary = "Submit targeting approval", description = "Submit the targeting change approval.")
     @Hook(resource = Resource.TOGGLE, action = Action.CREATE_APPROVAL)
     public ApprovalResponse approval(
             @PathVariable("projectKey") String projectKey,
@@ -88,7 +90,7 @@ public class TargetingController {
 
     @PatchMapping("/sketch/cancel")
     @CreateApiResponse
-    @Operation(summary = "Cancel targeting sketch", description = "Cancel targeting sketch.")
+    @Operation(summary = "Abandon targeting sketch", description = "Abandon targeting sketch.")
     @Hook(resource = Resource.TOGGLE, action = Action.REVOKE_APPROVAL)
     public TargetingResponse cancelSketch(@PathVariable("projectKey") String projectKey,
                                      @PathVariable("environmentKey") String environmentKey,
@@ -100,7 +102,7 @@ public class TargetingController {
 
     @PatchApiResponse
     @PatchMapping("/approvalStatus")
-    @Operation(summary = "Update targeting approval status", description = "Update targeting approval status.")
+    @Operation(summary = "Update targeting approval", description = "Update targeting approval status.")
     @Hook(resource = Resource.TOGGLE, action = Action.UPDATE_APPROVAL)
     public ApprovalResponse updateApprovalStatus(@PathVariable("projectKey") String projectKey,
                                              @PathVariable("environmentKey") String environmentKey,
@@ -111,7 +113,8 @@ public class TargetingController {
 
     @GetApiResponse
     @GetMapping
-    @Operation(summary = "Get targeting", description = "Get a single targeting by toggle key in the environment.")
+    @Operation(summary = "Get targeting", description = "Get a single targeting by projectKey ," +
+            "environmentKey and toggleKey.")
     public TargetingResponse query(
             @PathVariable("projectKey") String projectKey,
             @PathVariable("environmentKey") String environmentKey,
@@ -121,7 +124,7 @@ public class TargetingController {
 
     @GetApiResponse
     @GetMapping("/versions")
-    @Operation(summary = "Get targeting versions", description = "Get targeting version history.")
+    @Operation(summary = "List targeting version", description = "Get a list for all targeting version.")
     public Page<TargetingVersionResponse> versions(
             @PathVariable("projectKey") String projectKey,
             @PathVariable("environmentKey") String environmentKey,
@@ -132,18 +135,21 @@ public class TargetingController {
 
     @GetApiResponse
     @GetMapping("/versions/{version}")
-    @Operation(summary = "Get all targeting versions larger than the version。",
-            description = "Get all targeting versions larger than the version.")
+    @Operation(summary = "List targeting version by version number",
+            description = "Get all targeting historical versions larger than the version.")
     public AfterTargetingVersionResponse allAfterVersions(@PathVariable("projectKey") String projectKey,
                                                           @PathVariable("environmentKey") String environmentKey,
                                                           @PathVariable("toggleKey") String toggleKey,
-                                                          @PathVariable("version") Long version) {
+                                                          @PathVariable("version")
+                                                          @Schema(description = "Query all versions greater " +
+                                                                  "than this version number")
+                                                          Long version) {
         return targetingService.queryAfterVersion(projectKey, environmentKey, toggleKey, version);
     }
 
     @GetApiResponse
     @GetMapping("/diff")
-    @Operation(summary = "Get targeting diff.", description = "Get targeting diff.")
+    @Operation(summary = "Get targeting diff.", description = "Get current targeting and latest targeting sketch diff.")
     public TargetingDiffResponse diff(@PathVariable("projectKey") String projectKey,
                                       @PathVariable("environmentKey") String environmentKey,
                                       @PathVariable("toggleKey") String toggleKey) {
@@ -152,6 +158,7 @@ public class TargetingController {
 
     @GetApiResponse
     @GetMapping("/attributes")
+    @Operation(summary = "Get targeting attributes.", description = "Get all user attributes used by the targeting.")
     public List<String> attributes(@PathVariable("projectKey") String projectKey,
                                    @PathVariable("environmentKey") String environmentKey,
                                    @PathVariable("toggleKey") String toggleKey) {
