@@ -169,27 +169,29 @@ const EnvironmentCard = (props: IProps) => {
             )
           }
         </div>
-        <div className={styles['sdk-key']}>
-          <span className={styles.text}>
-            <FormattedMessage id='projects.server.sdk.key' />
-          </span>
-        </div>
-        <div className={styles['sdk-value']}>
-          <CopyToClipboardPopup text={item.serverSdkKey}>
-            <span className={styles.text} onClick={e => e.stopPropagation()}>
-              { item.serverSdkKey }
+        <div className='sdk-key'>
+          <div className={styles['sdk-key']}>
+            <span className={styles.text}>
+              <FormattedMessage id='projects.server.sdk.key' />
             </span>
-          </CopyToClipboardPopup>
-        </div>
-        <div className={styles['sdk-key']}>
-          <span className={styles.text}>
-            <FormattedMessage id='projects.client.sdk.key' />
-          </span>
-        </div>
-        <div className={styles['sdk-value']}>
-          <CopyToClipboardPopup text={item.clientSdkKey}>
-            <span className={styles.text} onClick={e => e.stopPropagation()}>{ item.clientSdkKey }</span>
-          </CopyToClipboardPopup>
+          </div>
+          <div className={styles['sdk-value']}>
+            <CopyToClipboardPopup text={item.serverSdkKey}>
+              <span className={styles.text} onClick={e => e.stopPropagation()}>
+                { item.serverSdkKey }
+              </span>
+            </CopyToClipboardPopup>
+          </div>
+          <div className={styles['sdk-key']}>
+            <span className={styles.text}>
+              <FormattedMessage id='projects.client.sdk.key' />
+            </span>
+          </div>
+          <div className={styles['sdk-value']}>
+            <CopyToClipboardPopup text={item.clientSdkKey}>
+              <span className={styles.text} onClick={e => e.stopPropagation()}>{ item.clientSdkKey }</span>
+            </CopyToClipboardPopup>
+          </div>
         </div>
       </div>
 

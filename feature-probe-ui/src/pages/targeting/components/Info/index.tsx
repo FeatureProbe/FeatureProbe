@@ -722,7 +722,7 @@ const Info: React.FC<IProps> = (props) => {
                   diffKey: 'default',
                 },
                 {
-                  title: intl.formatMessage({ id: 'targeting.disabled.return.value' }),
+                  title: intl.formatMessage({ id: 'common.disabled.return.type.text' }),
                   before: before?.content.disabledServe,
                   after: after?.content.disabledServe,
                   renderContent: (content) => {

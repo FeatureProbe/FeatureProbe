@@ -76,25 +76,24 @@ const Member = () => {
       <>
         <SettingCard title={<FormattedMessage id='common.members.text' />}>
           <div className={styles['card-tips']}>
-            <Icon type="warning-circle" customclass={styles['warning-circle']} />
             <div className={styles['text']}>
               <div>Writer<FormattedMessage id='members.writer.auth.text' /></div>
               <div>Owner<FormattedMessage id='members.owner.auth.text' /></div>
             </div>
+            {
+              OWNER.includes(userInfo.role) && (
+                <div className={styles.add}>
+                  <Button primary className={styles['add-button']} onClick={() => { 
+                    setIsAdd(true);
+                    setDrawerVisible(true);
+                  }}>
+                    <Icon customclass={styles['iconfont']} type='add' />
+                    <FormattedMessage id='common.member.text' />
+                  </Button>
+                </div>
+              )
+            }
           </div>
-          {
-            OWNER.includes(userInfo.role) && (
-              <div className={styles.add}>
-                <Button primary className={styles['add-button']} onClick={() => { 
-                  setIsAdd(true);
-                  setDrawerVisible(true);
-                }}>
-                  <Icon customclass={styles['iconfont']} type='add' />
-                  <FormattedMessage id='common.member.text' />
-                </Button>
-              </div>
-            )
-          }
           {
             isLoading ? (
               <div className={styles['loading-box']}>

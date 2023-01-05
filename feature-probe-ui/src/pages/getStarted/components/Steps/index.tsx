@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
-import Icon from 'components/Icon';
 import message from 'components/MessageBox';
 import Loading from 'components/Loading';
 import StepFirst from '../StepFirst';
@@ -212,10 +211,9 @@ const Steps = () => {
                 <span className={styles['intro-title']}>
                   <FormattedMessage id='common.get.started.text' />
                 </span>
-                <Icon type='info-circle' customclass={styles['intro-icon']} />
-                <span className={styles['intro-desc']}>
-                  <FormattedMessage id='connect.description' />
-                </span>
+              </div>
+              <div className={styles['intro-desc']}>
+                <FormattedMessage id='connect.description' />
               </div>
               <div className={styles['intro-info']}>
                 <div className={styles['card-item']}>
