@@ -19,6 +19,8 @@ const FlowExplain = () => {
       if (res.success && res.data) {
         const savedData = JSON.parse(res.data.value);
         saveOpen(savedData);
+      } else {
+        saveOpen(true);
       }
     });
   }, []);
@@ -49,7 +51,7 @@ const FlowExplain = () => {
 
       <Modal 
         open={modalOpen}
-        width={990}
+        width={770}
         footer={<></>}
       >
         <div>
