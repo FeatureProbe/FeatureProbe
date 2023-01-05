@@ -10,7 +10,7 @@
 }
 
 .title {
-  padding: 12px 24px;
+  padding: 12px 24px 0;
   font-family: HelveticaNeue-Medium;
   font-size: 20px;
   color: #212529;
@@ -23,7 +23,15 @@
 .action-line {
   display: flex;
   justify-content: space-between;
-  padding: 4px 20px 0;
+  margin: 0 24px;
+  align-items: center;
+}
+
+.card-tips {
+  line-height: 18px;
+  color: #74788d;
+  flex: 1;
+  font-size: 12px;
 }
 
 .keywords-field {
@@ -42,6 +50,7 @@
 
 .add-button {
   font-size: 13px !important;
+  margin-left: 16px !important;
 }
 
 .iconfont {
@@ -59,7 +68,7 @@
 
 .table-box {
   position: relative;
-  padding: 0 20px;
+  padding: 0 24px;
   margin-top: 12px;
   padding-bottom: 2px;
   flex: 1 1;

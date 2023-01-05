@@ -2,6 +2,7 @@
   padding: 24px 20px 16px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   :global {
     .ui.primary.button {
@@ -26,6 +27,12 @@
   margin-left: 10px;
 }
 
+.project-desc {
+  font-size: 12px;
+  color: #74788d;
+  margin-top: 4px;
+}
+
 .iconfont {
   font-size: 14px !important;
   vertical-align: middle;
@@ -37,5 +44,5 @@
   flex-wrap: wrap;
   padding: 0 20px;
   position: relative;
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - 144px);
 }

@@ -27,7 +27,6 @@
 
 .add {
   text-align: right;
-  margin-top: 12px;
 }
 
 .add-button {
@@ -73,19 +72,15 @@
 
 .card-tips {
   display: flex;
-  line-height: 20px;
-  background: #fffae0;
-  border-radius: 8px;
-  padding: 8px 12px;
-  margin-top: 12px;
+  align-items: center;
+  margin-top: 4px;
 
   & > .text {
-    font-family: PingFangSC-Regular, Arial, Helvetica, sans-serif;
-    font-size: 13px;
-    color: #592d00;
     flex: 1 1;
     overflow: hidden;
     overflow-wrap: break-word;
+    font-size: 12px;
+    color: #74788d;
   }
 }
 

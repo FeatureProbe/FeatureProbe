@@ -12,6 +12,7 @@ import { getWebHookList } from 'services/webhook';
 import message from 'components/MessageBox';
 import NoData from 'components/NoData';
 import CustomPagination from 'components/Pagination';
+
 import styles from './index.module.scss';
 
 const WebHook = () => {
@@ -90,6 +91,9 @@ const WebHook = () => {
             <FormattedMessage id="common.webhooks.text" />
           </div>
           <div className={styles['action-line']}>
+            <div className={styles['card-tips']}>
+              <FormattedMessage id="webhook.description" />
+            </div>
             <Form>
               <Form.Field className={styles['keywords-field']}>
                 <Form.Input
