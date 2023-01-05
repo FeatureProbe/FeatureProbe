@@ -18,8 +18,6 @@ sidebar_position: 3
 
 :::
 
-
-
 :::tip
 对于首次使用FeatureProbe的用户，我们强烈建议你在阅读过[灰度放量教程](../../tutorials/rollout_tutorial/)之后，再回到这篇文章继续阅读。
 :::

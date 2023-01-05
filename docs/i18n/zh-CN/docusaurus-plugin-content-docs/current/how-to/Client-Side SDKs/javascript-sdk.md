@@ -24,7 +24,7 @@ sidebar_position: 1
 
 1. 首先需要选择通过连接哪个环境的FeatureProbe来控制你的程序
     * 可以使用我们提供的在线的[演示环境](https://featureprobe.io/login)
-    * 也可以使用自己搭建的[docker环境](https://gitee.com/featureprobe/FeatureProbe#%E5%90%AF%E5%8A%A8featureprobe)
+    * 也可以使用自己搭建的[docker环境](https://gitee.com/featureprobe/FeatureProbe)
 
 2. 下载此 repo 中的演示代码：
 
@@ -163,11 +163,6 @@ test("feature probe unit testing", (done) => {
 | user              | yes            | n/a     | User 对象可以通过With方法设置属性，用来根据属性判断开关规则 |
 | refreshInterval   | no            | 1000    | 设置 SDK 的开关和事件刷新时间   |
 | timeoutInterval   | no            | 1000    | 设置 SDK 初始化等待超时时间，超时后SDK将发布`error`事件   |
-
-
-## SDK的API文档
-
-查看API文档：[SDK API](https://featureprobe.github.io/client-sdk-js/)
 
 
 ## SDK发布的事件

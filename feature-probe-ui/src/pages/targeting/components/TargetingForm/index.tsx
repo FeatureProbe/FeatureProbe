@@ -616,6 +616,8 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           segmentContainer={segmentContainer}
         />
         <DefaultRule disabled={disabled} />
+      </div>
+      <div className={styles['disabled-return']}>
         <DisabledServe disabled={disabled} />
       </div>
       <div id="footer" className={styles.footer}>
@@ -691,7 +693,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                   diffKey: 'default',
                 },
                 {
-                  title: intl.formatMessage({ id: 'targeting.disabled.return.value' }),
+                  title: intl.formatMessage({ id: 'common.disabled.return.type.text' }),
                   before: initialTargeting?.content.disabledServe,
                   after: publishTargeting?.content.disabledServe,
                   renderContent: (content) => {

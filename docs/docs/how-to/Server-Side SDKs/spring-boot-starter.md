@@ -4,11 +4,25 @@ sidebar_position: 2
 
 # Spring Boot Starter
 
-Feature Probe is an open source feature management service. 
+FeatureProbe is an open source feature management service. 
 This article describes how to use the FeatureProbe SDK in a Spring Boot project.
 
+:::note SDK quick links
+
+In addition to this reference guide, we provide source code, API reference documentation, and sample applications at the following links:
+
+
+| **Resource**  | **Location**                                                 |
+| ------------- | ------------------------------------------------------------ |
+| GitHub repository | [featureprobe-spring-boot-starter](https://github.com/FeatureProbe/featureprobe-spring-boot-starter) |
+| Sample applications | -                                                            |
+| Published module | [Maven](https://mvnrepository.com/artifact/com.featureprobe/featureprobe-spring-boot-starter) |
+
+:::
+
+
 :::tip
-For users who use FeatureProbe for the first time, we strongly recommend that you return to this article after reading [Grayscale Volume Tutorial](../../tutorials/rollout_tutorial/)
+For users who use FeatureProbe for the first time, we strongly recommend that you return to this article after reading [Gradual Rollout Tutorial](../../tutorials/rollout_tutorial/)
 :::
 
 ## Access FeatureProbe
@@ -147,4 +161,18 @@ public class FeatureProbeTest {
     }
 
 }
+```
+
+## Customize SDK
+
+:::tip
+This paragraph applies to users who want to customize this SDK, or contribute code to this SDK through the open source community. Other users can skip this section.
+:::
+
+We provide an acceptance test of this SDK to ensure that the modified SDK is compatible with the native rules of FeatureProbe.
+Integration test cases are added as submodules of each SDK repository. So be sure to pull the submodule first to get the latest integration tests before running the tests.
+
+```shell
+git submodule update --init --recursive
+mvn test
 ```

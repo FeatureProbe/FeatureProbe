@@ -137,13 +137,10 @@ const Segment = () => {
             <div className={styles.heading}>
               <FormattedMessage id="common.segments.text" />
             </div>
-            <div className={styles['card-tips']}>
-              <Icon type="warning-circle" customclass={styles['warning-circle']} />
-              <div className={styles['text']}>
+            <div className={styles.add}>
+              <div className={styles['card-tips']}>
                 <FormattedMessage id="segments.card.tips" />
               </div>
-            </div>
-            <div className={styles.add}>
               <Form className={styles['filter-form']}>
                 <Form.Field className={styles['keywords-field']}>
                   <Form.Input

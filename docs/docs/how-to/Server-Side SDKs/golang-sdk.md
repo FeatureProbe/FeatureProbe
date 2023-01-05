@@ -4,32 +4,35 @@ sidebar_position: 3
 
 # Golang SDK
 
-Feature Probe is an open source feature management service. This SDK is used to control features in golang programs. 
+FeatureProbe is an open source feature management service. This SDK is used to control features in golang programs. 
 This SDK is designed primarily for use in multi-user systems such as web servers and applications.
 
-## Try Out Demo Code
+:::note SDK quick links
 
-We provide a runnable [demo code](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/example/) for you to understand how FeatureProbe SDK is used.
+In addition to this reference guide, we provide source code, API reference documentation, and sample applications at the following links:
 
-1. Select a FeatureProbe platform to connect to.
-    * You can use our online demo environment [FeatureProbe Demo](https://featureprobe.io/login).
-    * Or you can use docker composer to [set up your own FeatureProbe service](https://github.com/FeatureProbe/FeatureProbe#1-starting-featureprobe-service-with-docker-compose)
+| **Resource**        | **Location** |
+| --------------------------------------- | ----------------- |
+| SDK API documentation | [ SDK API docs](https://pkg.go.dev/github.com/featureprobe/server-sdk-go#section-documentation) |
+| GitHub repository | [Server-SDK for Golang](https://github.com/FeatureProbe/server-sdk-go) |
+| Sample applications | [FeatureProbeDemo](https://github.com/FeatureProbe/server-sdk-go/tree/main/example) |
+|Published module|[pkg.go.dev](https://pkg.go.dev/github.com/featureprobe/server-sdk-go)|
 
-2. Download this repo and run the demo program:
-```bash
-git clone https://github.com/FeatureProbe/server-sdk-go.git
-cd server-sdk-go
-go run example/main.go
-```
-3. Find the Demo code in [example](https://github.com/FeatureProbe/server-sdk-go/tree/main/example), 
-do some change and run the program again.
-```bash
-go run main.go
-```
+:::
+
+:::tip
+For users who are using FeatureProbe for the first time, we strongly recommend that you return to this article to continue reading after reading the [Gradual Rollout Tutorial](../../tutorials/rollout_tutorial/).
+:::
+
 
 ## Step-by-Step Guide
 
-In this guide we explain how to use feature toggles in a Golang application using FeatureProbe.
+Backend projects usually only need to instantiate a FeatureProbe SDK (Client).
+According to the requests of different users, call the FeatureProbe Client to obtain the toggle result for each user.
+
+:::info
+The server-side SDK uses an asynchronous connection to the FeatureProbe server to pull judgment rules, and the judgment rules will be cached locally. All interfaces exposed to user code only involve memory operations, so there is no need to worry about performance issues when calling.
+:::
 
 ### Step 1. Install the Golang SDK
 
@@ -50,14 +53,17 @@ go get github.com/featureprobe/server-sdk-go
 After you install and import the SDK, create a single, shared instance of the FeatureProbe sdk.
 
 ```go
-
 config := featureprobe.FPConfig{
-    RemoteUrl:       "FEATURE_PROBE_SERVER_URL",
-    ServerSdkKey:    "FEATURE_PROBE_SERVER_SDK_KEY",
-    RefreshInterval: 1000,
+    RemoteUrl:       /* FeatureProbe Server URI */,
+    ServerSdkKey:    /* FeatureProbe Server SDK Key */,
+    RefreshInterval: 2 * time.Second,
 }
 
-fp, err := featureprobe.NewFeatureProbe(config)
+fpClient := featureprobe.NewFeatureProbe(config)
+
+if !fpClient.Initialized() {
+  fmt.Println("SDK failed to initialize!")
+}
 ```
 
 ### Step 3. Use the feature toggle
@@ -65,29 +71,48 @@ fp, err := featureprobe.NewFeatureProbe(config)
 You can use sdk to check which variation a particular user will receive for a given feature flag.
 
 ```go
-user := featureprobe.NewUser("USER_ID_FOR_PERCENTAGE_ROLLOUT")
-user.With("ATTRIBUTE_NAME_IN_RULE", VALUE_OF_ATTRIBUTE);    // Call With() for each attribute used in Rule.
-val := fp.BoolValue("YOUR_TOGGLE_KEY", user, true)
+user := featureprobe.NewUser().With("ATTRIBUTE_NAME_IN_RULE", VALUE_OF_ATTRIBUTE)
+toggle := fpClient.BoolValue("YOUR_TOGGLE_KEY", user, false)
+if toggle {
+    // the code to run if the toggle is on
+} else {
+    // the code to run if the toggle is off
+}
 ```
 
-### Step 4. Unit Testing (Optional)
+### Step 4. Close FeatureProbe Client before program exits
+
+Close the client before exiting to ensure accurate data reporting.
+
+```go
+fpClient.Close();
+```
+
+
+## Unit Testing
+
+FeatureProbe SDK provides a set of mock mechanism, which can specify the return value of FeatureProbe SDK in unit test.
 
 ```go
 toggles := map[string]interface{}{}
 toggles["bool_toggle"] = true
 
 fp := featureprobe.NewFeatureProbeForTest(toggles)
-user := featureprobe.NewUser("user")
+user := featureprobe.NewUser()
 
 assert.Equal(t, fp.BoolValue("bool_toggle", user, false), true)
 ```
 
-## Testing SDK
+## Customize SDK
 
-We have unified integration tests for all our SDKs. Integration test cases are added as submodules for each SDK repo. So
-be sure to pull submodules first to get the latest integration tests before running tests.
+:::tip
+This paragraph applies to users who want to customize this SDK, or contribute code to this SDK through the open source community. Other users can skip this section.
+:::
+
+We provide an acceptance test of this SDK to ensure that the modified SDK is compatible with the native rules of FeatureProbe.
+Integration test cases are added as submodules of each SDK repository. So be sure to pull the submodule first to get the latest integration tests before running the tests.
 
 ```shell
-git pull --recurse-submodules
+git submodule update --init --recursive
 go test
 ```

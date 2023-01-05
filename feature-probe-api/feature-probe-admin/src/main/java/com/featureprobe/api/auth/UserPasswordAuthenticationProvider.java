@@ -1,5 +1,6 @@
 package com.featureprobe.api.auth;
 
+import com.featureprobe.api.base.enums.MemberSourceEnum;
 import com.featureprobe.api.dao.entity.Member;
 import com.featureprobe.api.dao.entity.OperationLog;
 import com.featureprobe.api.base.enums.OperationType;
@@ -34,14 +35,22 @@ public class UserPasswordAuthenticationProvider implements AuthenticationProvide
             Optional<Member> member = memberService.findByAccount(token.getAccount());
             OperationLog log = new OperationLog(OperationType.LOGIN.name() + "_" + token.getSource(),
                     token.getAccount());
-            if (member.isPresent()
-                    && new BCryptPasswordEncoder().matches(token.getPassword(), member.get().getPassword())) {
+            if (!member.isPresent() || isAccessTokenNumber(member)) {
+                return null;
+            }
+            boolean passwordMatched = new BCryptPasswordEncoder().matches(token.getPassword(),
+                    member.get().getPassword());
+            if (passwordMatched) {
                 memberService.updateVisitedTime(token.getAccount());
                 operationLogService.save(log);
                 return new UserPasswordAuthenticationToken(AuthenticatedMember.create(member.get()), Arrays.asList());
             }
         }
         return null;
+    }
+
+    private boolean isAccessTokenNumber(Optional<Member> member) {
+        return StringUtils.equalsIgnoreCase(member.get().getSource(), MemberSourceEnum.ACCESS_TOKEN.name());
     }
 
     @Override

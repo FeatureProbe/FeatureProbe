@@ -94,7 +94,7 @@ const STEPS: Step[] = [
     content: (
       <div>
         <div className='joyride-title'>
-          <FormattedMessage id='guide.creat.toggle.step3.title' />
+          <FormattedMessage id='common.disabled.return.type.text' />
         </div>
         <ul className='joyride-item'>
           <li>
@@ -511,6 +511,15 @@ const Drawer = (props: IParams) => {
           <Form.Field className={`${styles.joyride} joyride-sdk-type`}>
             <label>
               <FormattedMessage id='toggles.sdk.type' />
+              <Popup
+                inverted
+                trigger={
+                  <Icon customclass={styles['icon-question']} type='question' />
+                }
+                content={intl.formatMessage({id: 'toggles.sdk.tips'})}
+                position='top center'
+                className='popup-override'
+              />
             </label>
             <div className={styles['radio-group']}>
               <Form.Radio

@@ -1,7 +1,6 @@
 .action-line {
-  margin-top: 16px;
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
 }
 
 .add {
@@ -44,7 +43,7 @@
 .table-box {
   position: relative;
   padding: 2px 1px;
-  margin-top: 12px;
+  margin-top: 14px;
   flex: 1 1;
 }
 
@@ -94,25 +93,8 @@
 }
 
 .card-tips {
-  display: flex;
-  line-height: 20px;
-  background: #fffae0;
-  border-radius: 8px;
-  padding: 8px 12px;
-  margin-top: 12px;
-
-  & > .text {
-    font-family: PingFangSC-Regular;
-    font-size: 13px;
-    color: #592d00;
-    flex: 1 1;
-    overflow: hidden;
-    overflow-wrap: break-word;
-  }
-}
-
-.warning-circle {
-  color: #ffc300;
-  padding: 0 10px;
-  font-size: 17px;
+  flex: 1;
+  line-height: 18px;
+  font-size: 12px;
+  color: #74788d;
 }
