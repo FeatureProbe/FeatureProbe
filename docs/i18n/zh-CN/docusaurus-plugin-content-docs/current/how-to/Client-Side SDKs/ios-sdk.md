@@ -4,8 +4,6 @@ sidebar_position: 3
 
 # iOS SDK
 
-## iOS Usage
-
 :::note SDK quick links
 除了本参考指南外，我们还提供源代码、示例应用程序，相关链接如下所示：
 
@@ -17,9 +15,9 @@ sidebar_position: 3
 
 :::
 
-### Swift
+## Swift
 
-#### Step 1. 安装 SDK
+### Step 1. 安装 SDK
 
 Swift Package Manager:
 
@@ -31,7 +29,7 @@ Cocoapods:
     1. add `pod 'FeatureProbe', :git => 'git@github.com:FeatureProbe/client-sdk-ios.git'` to Podfile
     2. `pod install` or `pod update`
 
-#### 步骤 2. 创建一个 FeatureProbe instance
+### 步骤 2. 创建一个 FeatureProbe instance
 
 ```swift
 import featureprobe
@@ -48,7 +46,7 @@ let config = FpConfig(
 let fp = FeatureProbe(config: config, user: user)
 ```
 
-#### 步骤 3. 使用 FeatureProbe 开关
+### 步骤 3. 使用 FeatureProbe 开关
 
 ```swift
 let showFeature = fp.boolValue("toggle_key", false)
@@ -59,7 +57,7 @@ if showFeature {
 }
 ```
 
-#### 步骤 4. 单元测试 (可选)
+### 步骤 4. 单元测试 (可选)
 
 ```swift
 let fp2 = FeatureProbe.newForTest(toggles: "{ \"toggle_1\": true }")
@@ -69,9 +67,9 @@ assert(is_true == true);
 
 Find the Demo code in [example](https://github.com/FeatureProbe/client-sdk-mobile/tree/main/examples/)
 
-### Objective-C
+## Objective-C
 
-#### 步骤 1. 安装 SDK
+### 步骤 1. 安装 SDK
 
 Cocoapods
 
@@ -79,7 +77,7 @@ add `pod 'FeatureProbe', :git => 'git@github.com:FeatureProbe/client-sdk-ios.git
 
 `pod install` or `pod update`
 
-#### 步骤 2. 创建一个 FeatureProbe instance
+### 步骤 2. 创建一个 FeatureProbe instance
 
 ```objectivec
 #import "FeatureProbe-Swift.h"
@@ -95,7 +93,7 @@ FpConfig *config = [[FpConfig alloc] initWithRemoteUrl: url
 FeatureProbe *fp = [[FeatureProbe alloc] initWithConfig:config user:user];
 ```
 
-#### 步骤 3. 使用 FeatureProbe 开关
+### 步骤 3. 使用 FeatureProbe 开关
 
 ```objectivec
 bool showFeature = [fp boolValueWithKey: @"toggle_key" defaultValue: false];
@@ -106,7 +104,7 @@ if (showFeature) {
 }
 ```
 
-#### 步骤 4. 单元测试 (可选)
+### 步骤 4. 单元测试 (可选)
 
 ```objectivec
 #import "FeatureProbe-Swift.h"

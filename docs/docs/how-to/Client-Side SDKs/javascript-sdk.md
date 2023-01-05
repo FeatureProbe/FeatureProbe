@@ -4,22 +4,46 @@ sidebar_position: 1
 
 # JavaScript SDK
 
+FeatureProbe is an open source feature management service. This SDK is used to control features in JavaScript programs.
+
+:::note SDK quick links
+In addition to this reference guide, we provide source code, API reference documentation, and sample applications at the following links:
+
+| **Resource**  | **Location**                                                 |
+| ------------- | ------------------------------------------------------------ |
+| SDK API documentation  | [ SDK API docs](https://featureprobe.github.io/client-sdk-js/) |
+| GitHub repository | [Client Side SDK for JavaScript](https://github.com/FeatureProbe/client-sdk-js) |
+| Sample applications      | [Demo code](https://github.com/FeatureProbe/client-sdk-js/blob/main/example/index.html) (HTML+JS) |
+| Published module    | [npm](https://www.npmjs.com/package/featureprobe-client-sdk-js) |
+
+:::
+
 ## Try Out Demo Code
 
 We provide a runnable demo code for you to understand how FeatureProbe SDK is used.
 
-1. Start FeatureProbe Service with docker composer. [How to](https://github.com/FeatureProbe/FeatureProbe#1-starting-featureprobe-service-with-docker-compose)
+1. First, you need to choose which environment FeatureProbe is connected to control your program
+     * You can use our online [demo environment](https://featureprobe.io/login)
+     * You can also use your own [docker environment](https://github.com/featureprobe/FeatureProbe)
 
 2. Download this repo and run the demo program:
 
 ```bash
 git clone https://github.com/FeatureProbe/client-sdk-js.git
 cd client-sdk-js
-// open example/index.html in browser
 ```
 
-3. Find the Demo code in [example](https://github.com/FeatureProbe/client-sdk-js/tree/main/example),
-do some change and run the program again.
+3. Modify the link information in the `example/index.html` program.
+     * For online demo environment:
+         * `remoteUrl` = "https://featureprobe.io/server"
+         * `clientSdkKey` Please copy from the following interface:
+
+       ![client_sdk_key snapshot](/client_sdk_key_snapshot_cn.png)
+     * For local docker environment:
+         * `remoteUrl` = "http://YOUR_DOCKER_IP:4009/server"
+         * `clientSdkKey` = "client-25614c7e03e9cb49c0e96357b797b1e47e7f2dff"
+
+4. Run the program.
 
 ```
 // open example/index.html in browser
@@ -53,14 +77,14 @@ NPM:
 
 ```js
 const user = new FPUser();
-user.with("userId", /* userId */);
+user.with("ATTRIBUTE_NAME_IN_RULE", VALUE_OF_ATTRIBUTE);
 
 const fp = new FeatureProbe({
-  remoteUrl: "https://featureprobe.io/server",
-  // remoteUrl: "https://127.0.0.1:4007", // for local docker
-  clientSdkKey: /* clientSdkKey */
+  remoteUrl: /* FeatureProbe Server URI */,
+  clientSdkKey: /* FeatureProbe Server SDK Key */,
   user,
 });
+
 fp.start();
 ```
 
@@ -68,14 +92,14 @@ Or via CDN:
 
 ```js
 const user = new featureProbe.FPUser();
-user.with("userId", /* userId */);
+user.with("ATTRIBUTE_NAME_IN_RULE", VALUE_OF_ATTRIBUTE);
 
 const fp = new featureProbe.FeatureProbe({
-  remoteUrl: "https://featureprobe.io/server",
-  // remoteUrl: "https://127.0.0.1:4007", // for local docker
-  clientSdkKey: /* clientSdkKey */
-  user,
+    remoteUrl: /* FeatureProbe Server URI */,
+    clientSdkKey: /* FeatureProbe Server SDK Key */,
+    user,
 });
+
 fp.start();
 ```
 
@@ -84,15 +108,15 @@ fp.start();
 You can use sdk to check which value this user will receive for a given feature flag.
 
 ```js
-fp.on("ready", function() {
-  const result = fp.boolValue(/* toggleKey */, false);
-  if (result) {
-    do_some_thing();
-  } else {
-    do_other_thing();
-  }
-  const reason = fp.boolDetail(/* toggleKey */, false);
-  console.log(reason);
+fp.on('ready', function() {
+    const result = fp.boolValue('YOUR_TOGGLE_KEY', false);
+    if (result) {
+        do_some_thing();
+    } else {
+        do_other_thing();
+    }
+    const reason = fp.boolDetail('YOUR_TOGGLE_KEY', false);
+    console.log(reason);
 })
 ```
 
@@ -106,7 +130,7 @@ test("feature probe unit testing", (done) => {
   fp.start();
 
   fp.on("ready", function () {
-    let t = fp.boolValue(/* toggleKey */, false);
+    let t = fp.boolValue('YOUR_TOGGLE_KEY', false);
     expect(t).toBe(true);
     done();
   });
@@ -121,7 +145,7 @@ test("feature probe unit testing", (done) => {
   fp.start();
 
   fp.on("ready", function () {
-    let t = fp.boolValue(/* toggleKey */, false);
+    let t = fp.boolValue('YOUR_TOGGLE_KEY', false);
     expect(t).toBe(true);
     done();
   });
@@ -142,10 +166,6 @@ This SDK takes the following options:
 | refreshInterval   | no            | 1000    | The SDK check for updated in millisecond   |
 | timeoutInterval   | no            | 1000    | Timeout for SDK initialization, SDK will emit an `error` event when timeout is reaching  |
 
-
-## SDK Open API：
-
-API Docs: [SDK API](https://featureprobe.github.io/client-sdk-js/)
 
 ## SDK Events：
 

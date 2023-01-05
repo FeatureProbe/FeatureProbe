@@ -4,44 +4,33 @@ sidebar_position: 4
 
 # Node.js SDK
 
-Feature Probe is an open source feature management service. This SDK is used to control features in Node.js programs.
+FeatureProbe is an open source feature management service. This SDK is used to control features in Node.js programs.
 This SDK is designed primarily for use in multi-user systems such as web servers and applications.
 
-## Try Out Demo Code
+:::note SDK quick links
 
-We provide a runnable [demo code](https://github.com/FeatureProbe/server-sdk-node/blob/main/example) for you to understand how FeatureProbe SDK is used.
+| **Resource**  | **Location**                                                 |
+| ------------- | ------------------------------------------------------------ |
+| SDK API documentation  | [ SDK API docs](https://featureprobe.github.io/server-sdk-node/) |
+| GitHub repository | [Server-SDK for Node.js](https://github.com/FeatureProbe/server-sdk-node) |
+| Sample applications      | [Demo code](https://github.com/FeatureProbe/server-sdk-node/blob/main/example/demo.js) (TypeScript) |
+| Published module    | [ npm](https://www.npmjs.com/package/featureprobe-server-sdk-node) |
 
-1. Select a FeatureProbe platform to connect to.
-    * You can use our online demo environment [FeatureProbe Demo](https://featureprobe.io/login).
-    * Or you can use docker composer to [set up your own FeatureProbe service](https://github.com/FeatureProbe/FeatureProbe#1-starting-featureprobe-service-with-docker-compose)
+:::
 
-2. Download this repo, then build the latest distribution:
-
-```bash
-git clone https://github.com/FeatureProbe/server-sdk-node.git
-cd server-sdk-node
-npm install
-npm run build
-```
-
-3. Find the Demo code in `example/demo.js`, change `FEATURE_PROBE_SERVER_URL` and
-   `FEATURE_PROBE_SERVER_SDK_KEY` to match the platform you selected.
-    * For online demo environment:
-        * `FEATURE_PROBE_SERVER_URL` = "https://featureprobe.io/server"
-        * `FEATURE_PROBE_SERVER_SDK_KEY` please copy from GUI:
-          ![server_sdk_key snapshot](/server_sdk_key_en.png)
-    * For docker environment:
-        * `FEATURE_PROBE_SERVER_URL` = "http://YOUR_DOCKER_IP:4009/server"
-        * `FEATURE_PROBE_SERVER_SDK_KEY` = "server-8ed48815ef044428826787e9a238b9c6a479f98c"
-
-4. Run the program.
-```bash
-node example/demo.js
-```
+:::tip
+For users who are using FeatureProbe for the first time, we strongly recommend that you return to this article to continue reading after reading the [Gradual Rollout Tutorial](../../tutorials/rollout_tutorial/).
+:::
 
 ## Step-by-Step Guide
 
-In this guide we explain how to use feature toggles in a Node.js application using FeatureProbe.
+Backend projects usually only need to instantiate a FeatureProbe SDK (Client).
+
+According to the requests of different users, call the FeatureProbe Client to obtain the toggle result for each user.
+
+:::info
+The server-side SDK uses an asynchronous connection to the FeatureProbe server to pull judgment rules, and the judgment rules will be cached locally. All interfaces exposed to user code only involve memory operations, so there is no need to worry about performance issues when calling.
+:::
 
 ### Step 1. Install the Node.js SDK
 
@@ -84,12 +73,26 @@ if (boolValue) {
 }
 ```
 
-## Testing
+### Step 4. Close FeatureProbe Client before program exits
 
-We have unified integration tests for all our SDKs. Integration test cases are added as submodules for each SDK repo. So
-be sure to pull submodules first to get the latest integration tests before running tests.
+Close the client before exiting to ensure accurate data reporting.
+
+```java
+await fp.close();
+```
+
+
+## Customize SDK
+
+:::tip
+This paragraph applies to users who want to customize this SDK, or contribute code to this SDK through the open source community. Other users can skip this section.
+:::
+
+We provide an acceptance test of this SDK to ensure that the modified SDK is compatible with the native rules of FeatureProbe.
+Integration test cases are added as submodules of each SDK repository. So be sure to pull the submodule first to get the latest integration tests before running the tests.
 
 ```shell
+git submodule update --init --recursive
 git pull --recurse-submodules
 npm run test
 ```

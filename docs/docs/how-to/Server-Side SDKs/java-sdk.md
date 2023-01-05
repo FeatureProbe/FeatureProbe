@@ -4,41 +4,34 @@ sidebar_position: 1
 
 # Java SDK
 
-Feature Probe is an open source feature management service. This SDK is used to control features in java programs. This
-SDK is designed primarily for use in multi-user systems such as web servers and applications.
+FeatureProbe is an open source feature management service. This SDK is used to control features in java programs. This SDK is designed primarily for use in multi-user systems such as web servers and applications.
 
-## Try Out Demo Code
+:::note SDK quick links
 
-We provide a runnable [demo code](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/example/) for you to understand how FeatureProbe SDK is used.
+In addition to this reference guide, we provide source code, API reference documentation, and sample applications at the following links:
 
-1. Select a FeatureProbe platform to connect to.
-    * You can use our online demo environment [FeatureProbe Demo](https://featureprobe.io/login).
-    * Or you can use docker composer to [set up your own FeatureProbe service](https://github.com/FeatureProbe/FeatureProbe#1-starting-featureprobe-service-with-docker-compose)
+| **Resource**        | **Location** |
+| --------------------------------------- | ----------------- |
+| SDK API documentation | [ SDK API docs](https://featureprobe.github.io/server-sdk-java/) |
+| GitHub repository | [Server-SDK for Java](https://github.com/FeatureProbe/server-sdk-java) |
+| Sample applications | [FeatureProbeDemo](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java) (Java) |
+|Published module|[Maven](https://mvnrepository.com/artifact/com.featureprobe/server-sdk-java)|
 
-2. Download this repo:
-```bash
-git clone https://github.com/FeatureProbe/server-sdk-java.git
-cd server-sdk-java
-```
-3. Find the Demo code in `src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java` change `FEATURE_PROBE_SERVER_URL` and
-   `FEATURE_PROBE_SERVER_SDK_KEY` to match the platform you selected.
-    * For online demo environment:
-        * `FEATURE_PROBE_SERVER_URL` = "https://featureprobe.io/server"
-        * `FEATURE_PROBE_SERVER_SDK_KEY` please copy from GUI:
-          ![server_sdk_key snapshot](/server_sdk_key_en.png)
-    * For docker environment:
-        * `FEATURE_PROBE_SERVER_URL` = "http://YOUR_DOCKER_IP:4009/server"
-        * `FEATURE_PROBE_SERVER_SDK_KEY` = "server-8ed48815ef044428826787e9a238b9c6a479f98c"
+:::
 
-4. Run the program.
-```bash
-mvn package
-java -jar ./target/server-sdk-java-1.4.0.jar
-```
+:::tip
+For users who are using FeatureProbe for the first time, we strongly recommend that you return to this article to continue reading after reading the [Gradual Rollout Tutorial](../../tutorials/rollout_tutorial/).
+:::
 
 ## Step-by-Step Guide
 
-In this guide we explain how to use feature toggles in your own Java application using FeatureProbe.
+Backend projects usually only need to instantiate a FeatureProbe SDK (Client).
+
+According to the requests of different users, call the FeatureProbe Client to obtain the toggle result for each user.
+
+:::info
+The server-side SDK uses an asynchronous connection to the FeatureProbe server to pull judgment rules, and the judgment rules will be cached locally. All interfaces exposed to user code only involve memory operations, so there is no need to worry about performance issues when calling.
+:::
 
 ### Step 1. Install the Java SDK
 
@@ -67,11 +60,15 @@ After you install and import the SDK, create a single, shared instance of the Fe
 ```java
 public class Demo {
     private static final FPConfig config = FPConfig.builder()
-            .remoteUri(/* FeatureProbe Server URI */)
-            .build();
+        .remoteUri(/* FeatureProbe Server URI */)
+        .build();
 
     private static final FeatureProbe fpClient = new FeatureProbe(
         /* FeatureProbe Server SDK Key */, config);
+  
+  	if（!fpClient.initialized()) {
+				System.out.println("SDK failed to initialize!")
+		}
 }
 ```
 
@@ -80,29 +77,27 @@ public class Demo {
 You can use sdk to check which variation a particular user will receive for a given feature flag.
 
 ```java
-FPUser user = new FPUser(/* uniqueUserId for percentage rollout */);
-user.with("ATTRIBUTE_NAME_IN_RULE", VALUE_OF_ATTRIBUTE);    // Call with() for each attribute used in Rule.
-boolean boolValue = fpClient.boolValue("YOUR_TOGGLE_KEY", user, false);
-if (boolValue) {
-   // the code to run if the toggle is on
-} else {
-   // the code to run if the toggle is off
-}
+FPUser user = new FPUser();
+    user.with("ATTRIBUTE_NAME_IN_RULE", VALUE_OF_ATTRIBUTE);    // Call with() for each attribute used in Rule.
+    boolean boolValue = fpClient.boolValue("YOUR_TOGGLE_KEY", user, false);
+    if (boolValue) {
+    // the code to run if the toggle is on
+    } else {
+    // the code to run if the toggle is off
+    }
 ```
 
-## Test of this SDK
+### Step 4. Close FeatureProbe Client before program exits
 
-We have unified integration tests for all our SDKs. Integration test cases are added as submodules for each SDK repo. So
-be sure to pull submodules first to get the latest integration tests before running tests.
+Close the client before exiting to ensure accurate data reporting.
 
-```shell
-git pull --recurse-submodules
-mvn test
+```java
+fpClient.close();
 ```
 
-## Mock FeatureProbe for Unittest
+## Mock FeatureProbe for Unit test
 
-You can mock FeatureProbe SDK returned value, to run unittest of your code.
+You can mock FeatureProbe SDK returned value, to run unit test of your code.
 
 ### 1. Add powermock SDK to your project:
 
@@ -156,4 +151,18 @@ public class FeatureProbeTest {
     }
 
 }
+```
+
+## Customize SDK
+
+:::tip
+This paragraph applies to users who want to customize this SDK, or contribute code to this SDK through the open source community. Other users can skip this section.
+:::
+
+We provide an acceptance test of this SDK to ensure that the modified SDK is compatible with the native rules of FeatureProbe.
+Integration test cases are added as submodules of each SDK repository. So be sure to pull the submodule first to get the latest integration tests before running the tests.
+
+```shell
+git submodule update --init --recursive
+mvn test
 ```

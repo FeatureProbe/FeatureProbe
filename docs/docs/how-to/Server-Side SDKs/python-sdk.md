@@ -4,43 +4,36 @@ sidebar_position: 5
 
 # Python SDK
 
-Feature Probe is an open source feature management service. This SDK is used to control features in Python programs.
+FeatureProbe is an open source feature management service. This SDK is used to control features in Python programs.
 This SDK is designed primarily for use in multi-user systems such as web servers and applications.
 
-## Try Out Demo Code
+:::note SDK quick links
 
-We provide a runnable [demo code](https://github.com/FeatureProbe/server-sdk-python/blob/main/demo.py) for you to understand how FeatureProbe SDK is used.
+In addition to this reference guide, we provide source code, API reference documentation, and sample applications at the following links:
 
-1. Select a FeatureProbe platform to connect to.
-    * You can use our online demo environment [FeatureProbe Demo](https://featureprobe.io/login).
-    * Or you can use docker composer to [set up your own FeatureProbe service](https://github.com/FeatureProbe/FeatureProbe#1-starting-featureprobe-service-with-docker-compose)
+| **Resource**  | **Location**                                                 |
+| ------------- | ------------------------------------------------------------ |
+| SDK API documentation  | [ SDK API docs](https://test-fp-server-py.readthedocs.io/en/latest/api.html) |
+| GitHub repository | [Server-SDK for Python](https://github.com/FeatureProbe/server-sdk-python) |
+| Sample applications      | [Demo code](https://github.com/FeatureProbe/server-sdk-python/blob/main/demo.py) |
+| Published module    | [ PyPI](https://pypi.org/project/featureprobe-server-sdk-python/) |
 
-2. Download this repo:
+:::
 
-```bash
-git clone https://github.com/FeatureProbe/server-sdk-python.git
-cd server-sdk-python
-```
-
-3. Find the Demo code in [demo.py](https://github.com/FeatureProbe/server-sdk-python/blob/main/demo.py), change `FEATURE_PROBE_SERVER_URL` and
-   `SDK_KEY` to match the platform you selected.
-    * For online demo environment:
-        * `FEATURE_PROBE_SERVER_URL` = "https://featureprobe.io/server"
-        * `SDK_KEY` please copy from GUI:
-          ![server_sdk_key snapshot](/server_sdk_key_en.png)
-    * For docker environment:
-        * `FEATURE_PROBE_SERVER_URL` = "http://YOUR_DOCKER_IP:4009/server"
-        * `SDK_KEY` = "server-8ed48815ef044428826787e9a238b9c6a479f98c"
-
-4. Run the program.
-```bash
-pip3 install -r requirements.txt
-python3 demo.py
-```
+:::tip
+For users who are using FeatureProbe for the first time, we strongly recommend that you return to this article to continue reading after reading the [Gradual Rollout Tutorial](../../tutorials/rollout_tutorial/).
+:::
 
 ## Step-by-Step Guide
 
-In this guide we explain how to use feature toggles in a Python application using FeatureProbe.
+Backend projects usually only need to instantiate a FeatureProbe SDK (Client).
+
+According to the requests of different users, call the FeatureProbe Client to obtain the toggle result for each user.
+
+:::info
+The server-side SDK uses an asynchronous connection to the FeatureProbe server to pull judgment rules, and the judgment rules will be cached locally. All interfaces exposed to user code only involve memory operations, so there is no need to worry about performance issues when calling.
+:::
+
 
 ### Step 1. Install the Python SDK
 
@@ -71,8 +64,11 @@ After you install the SDK, import it, then create a single, shared instance of t
 ```python
 import featureprobe as fp
 
-config = fp.Config(remote_uri='http://127.0.0.1:4007', sync_mode='pooling', refresh_interval=3)
-client = fp.Client('server-8ed48815ef044428826787e9a238b9c6a479f98c', config)
+config = fp.Config(remote_uri=/* FeatureProbe Server URI */, sync_mode='pooling', refresh_interval=3)
+client = fp.Client(/* FeatureProbe Server SDK Key */, config)
+
+if not client.initialized():
+		print("SDK failed to initialize!")
 ```
 
 > NOTE: You can use the `context manager` (aka. `with`) to create a fp.Client that will auto close when the context is exited.
@@ -82,25 +78,25 @@ client = fp.Client('server-8ed48815ef044428826787e9a238b9c6a479f98c', config)
 You can use sdk to check which variation a particular user will receive for a given feature flag.
 
 ```python
-user = fp.User(
-    stable_rollout_key='user_unique_id',
-    attrs={
-        'userId': '9876',
-        'tel': '12345678998',
-    })
-bool_eval = bool(client.value('bool_toggle_key', user, default=False))
+user = fp.User().with_attr('ATTRIBUTE_NAME_IN_RULE', VALUE_OF_ATTRIBUTE)
+bool_eval = bool(client.value('YOUR_TOGGLE_KEY', user, default=False))
 if bool_eval:
     ...  # application code to show the feature
 else:
     ...  # the code to run if the feature is off
 ```
 
-## Testing
+## Customize SDK
 
-We have unified integration tests for all our SDKs. Integration test cases are added as submodules for each SDK repo. So
-be sure to pull submodules first to get the latest integration tests before running tests.
+:::tip
+This paragraph applies to users who want to customize this SDK, or contribute code to this SDK through the open source community. Other users can skip this section.
+:::
+
+We provide an acceptance test of this SDK to ensure that the modified SDK is compatible with the native rules of FeatureProbe.
+Integration test cases are added as submodules of each SDK repository. So be sure to pull the submodule first to get the latest integration tests before running the tests.
 
 ```shell
+git submodule update --init --recursive
 git pull --recurse-submodules
 pip3 install -r requirements-dev.txt
 pytest featureprobe

@@ -4,11 +4,23 @@ sidebar_position: 2
 
 # Android SDK
 
+:::note SDK quick links
+
+In addition to this reference guide, we provide source code, API reference documentation, and sample applications at the following links:
+
+| **Resource**  | **Location**                                                 |
+| ------------- | ------------------------------------------------------------ |
+| GitHub repository | [Client Side SDK for Android](https://github.com/FeatureProbe/client-sdk-mobile/tree/main/sdk-android) |
+| Sample applications      | [Demo code](https://github.com/FeatureProbe/client-sdk-mobile/tree/main/examples/demo-android) (Kotlin) |
+| Published module    | [maven](https://mvnrepository.com/artifact/com.featureprobe/client-sdk-android) |
+
+:::
+
 ## Kotlin
 
 ### Step 1. Install SDK
 
-```shel
+```shell
 implementation 'com.featureprobe:client-sdk-android:1.2.0@aar'
 implementation 'net.java.dev.jna:jna:5.7.0@aar'
 ```
