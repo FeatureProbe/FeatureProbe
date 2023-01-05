@@ -22,6 +22,7 @@ import com.featureprobe.api.service.IncludeArchivedToggleService;
 import com.featureprobe.api.service.ToggleService;
 import com.featureprobe.api.validate.ResourceExistsValidate;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@Tag(name = "Toggle", description = "The toggle is a collection of configurations")
+@Tag(name = "Toggles", description = "The toggles API allows you to list, create, modify, query, " +
+        "offline and restore toggles programmatically.")
 @RequestMapping("/api/projects/{projectKey}/toggles")
 @ProjectKeyParameter
 @ToggleKeyParameter
@@ -113,8 +115,10 @@ public class ToggleController {
     @GetApiResponse
     @Operation(summary = "Check toggle exist", description = "Check toggle exist")
     public BaseResponse checkKey(@PathVariable("projectKey") String projectKey,
-                                 @RequestParam ValidateTypeEnum type,
-                                 @RequestParam String value) {
+                                 @RequestParam @Schema(description = "The type needs to be checked.")
+                                 ValidateTypeEnum type,
+                                 @RequestParam @Schema(description = "The attribute value to be checked.")
+                                 String value) {
         includeArchivedToggleService.validateIncludeArchivedToggle(projectKey, type, value);
         return new BaseResponse(ResponseCodeEnum.SUCCESS);
     }

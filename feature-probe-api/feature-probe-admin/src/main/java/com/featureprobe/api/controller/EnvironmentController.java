@@ -2,8 +2,10 @@ package com.featureprobe.api.controller;
 
 import com.featureprobe.api.base.doc.CreateApiResponse;
 import com.featureprobe.api.base.doc.DefaultApiResponses;
+import com.featureprobe.api.base.doc.EnvironmentKeyParameter;
 import com.featureprobe.api.base.doc.GetApiResponse;
 import com.featureprobe.api.base.doc.PatchApiResponse;
+import com.featureprobe.api.base.doc.ProjectKeyParameter;
 import com.featureprobe.api.base.hook.Action;
 import com.featureprobe.api.base.hook.Hook;
 import com.featureprobe.api.base.hook.Resource;
@@ -18,6 +20,7 @@ import com.featureprobe.api.service.EnvironmentService;
 import com.featureprobe.api.service.IncludeArchivedEnvironmentService;
 import com.featureprobe.api.validate.ResourceExistsValidate;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +42,10 @@ import java.util.List;
 @RequestMapping("/api/projects/{projectKey}/environments")
 @DefaultApiResponses
 @ResourceExistsValidate
-@Tag(name = "Environment", description = "Using the environments API, you can create, update, and manage environments")
+@ProjectKeyParameter
+@EnvironmentKeyParameter
+@Tag(name = "Environments", description = "The environments API allows you to list, create, modify, offline, " +
+        "and restore check environments programmatically.")
 public class EnvironmentController {
 
     private EnvironmentService environmentService;
@@ -59,7 +65,7 @@ public class EnvironmentController {
 
     @PatchMapping("/{environmentKey}")
     @PatchApiResponse
-    @Operation(summary = "Update environment", description = "Update a environment.")
+    @Operation(summary = "Update environment", description = "Update an environment.")
     @Hook(resource = Resource.ENVIRONMENT, action = Action.UPDATE)
     public EnvironmentResponse update(@PathVariable("projectKey") String projectKey,
                                       @PathVariable("environmentKey") String environmentKey,
@@ -69,7 +75,7 @@ public class EnvironmentController {
 
     @PatchMapping("/{environmentKey}/offline")
     @PatchApiResponse
-    @Operation(summary = "Offline environment", description = "Offline a environment.")
+    @Operation(summary = "Offline environment", description = "Offline an environment.")
     @Hook(resource = Resource.ENVIRONMENT, action = Action.OFFLINE)
     public EnvironmentResponse offline(@PathVariable("projectKey") String projectKey,
                                        @PathVariable("environmentKey") String environmentKey) {
@@ -87,7 +93,7 @@ public class EnvironmentController {
 
     @GetMapping
     @GetApiResponse
-    @Operation(summary = "List environment", description = "Get a list of all environment")
+    @Operation(summary = "List environments", description = "Return a list of environments for the specified project.")
     public List<EnvironmentResponse> list(@PathVariable("projectKey") String projectKey,
                                           EnvironmentQueryRequest queryRequest) {
         return environmentService.list(projectKey, queryRequest);
@@ -95,7 +101,7 @@ public class EnvironmentController {
 
     @GetMapping("/{environmentKey}")
     @GetApiResponse
-    @Operation(summary = "Query environment", description = "Query a environment.")
+    @Operation(summary = "Get environment", description = "Get an environment given a project and key.")
     public EnvironmentResponse query(@PathVariable("projectKey") String projectKey,
                                      @PathVariable("environmentKey") String environmentKey) {
         return environmentService.query(projectKey, environmentKey);
@@ -103,9 +109,12 @@ public class EnvironmentController {
 
     @GetMapping("/exists")
     @GetApiResponse
-    @Operation(summary = "Check environment exist", description = "Check environment exist")
+    @Operation(summary = "Check environment exist", description = "Check environment exist given a type or key.")
     public BaseResponse exists(@PathVariable("projectKey") String projectKey,
-                               @RequestParam ValidateTypeEnum type,
+                               @RequestParam
+                               @Schema(description = "The type needs to be checked.")
+                               ValidateTypeEnum type,
+                               @Schema(description = "The attribute value to be checked.")
                                @RequestParam String value) {
         includeArchivedEnvironmentService.validateIncludeArchivedEnvironment(projectKey, type, value);
         return new BaseResponse(ResponseCodeEnum.SUCCESS);

@@ -11,6 +11,7 @@ import com.featureprobe.api.base.enums.MetricType;
 import com.featureprobe.api.service.MetricService;
 import com.featureprobe.api.validate.ResourceExistsValidate;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,18 +30,22 @@ import org.springframework.web.bind.annotation.RestController;
 @ToggleKeyParameter
 @EnvironmentKeyParameter
 @ResourceExistsValidate
-@Tag(name = "Metric", description = "")
+@Tag(name = "Metrics", description = "The metrics API allows you to statistics toggle access events.")
 public class MetricController {
 
     private MetricService metricService;
 
     @GetApiResponse
     @GetMapping("/metrics")
-    @Operation(summary = "Query Metrics", description = "")
+    @Operation(summary = "Query Metrics", description = "Get the access statistics report of the toggle" +
+            " for a period of time.")
     public MetricResponse query(@PathVariable("projectKey") String projectKey,
                                 @PathVariable("environmentKey") String environmentKey,
                                 @PathVariable("toggleKey") String toggleKey,
-                                @RequestParam(value = "metricType", defaultValue = "VALUE") MetricType metricType,
+                                @Schema(description = "Metrics group type.")
+                                @RequestParam(value = "metricType", defaultValue = "VALUE")
+                                MetricType metricType,
+                                @Schema(description = "Metrics statistical time granularity.")
                                 @RequestParam(value = "lastHours", defaultValue = "24") int lastHours) {
 
         return metricService.query(projectKey, environmentKey, toggleKey, metricType, lastHours);
@@ -48,7 +53,7 @@ public class MetricController {
 
     @GetApiResponse
     @GetMapping("/access")
-    @Operation(summary = "Query access status", description = "")
+    @Operation(summary = "Get access status", description = "Get whether the specified environment toggle is accessed.")
     public AccessStatusResponse query(@PathVariable("projectKey") String projectKey,
                                       @PathVariable("environmentKey") String environmentKey,
                                       @PathVariable("toggleKey") String toggleKey) {
