@@ -106,9 +106,12 @@ const Metrics = () => {
       {
         isLoading ? <Loading /> : (
           <>
+            <div className={styles['title-text']}>
+              <FormattedMessage id='common.evaluations.text' />
+            </div>
             <div className={styles.title}>
-              <div className={styles['title-text']}>
-                <FormattedMessage id='common.evaluations.text' />
+              <div className={styles['desc-text']}>
+                <FormattedMessage id='targeting.metrics.desc' />
               </div>
               <div className={styles.operations}>
                 <div className={styles.menus}>

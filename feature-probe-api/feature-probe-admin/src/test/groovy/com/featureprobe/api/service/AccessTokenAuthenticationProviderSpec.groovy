@@ -42,7 +42,9 @@ class AccessTokenAuthenticationProviderSpec extends Specification {
         provider = new AccessTokenAuthenticationProvider(memberService, accessTokenService, operationLogService)
     }
 
-    def "authenticate token"() {
+
+    def "Authenticate Token"() {
+
         given:
         def token = "api-123"
         AccessTokenAuthenticationToken authenticationToken = new AccessTokenAuthenticationToken(token)
@@ -59,7 +61,7 @@ class AccessTokenAuthenticationProviderSpec extends Specification {
         null != authenticate
     }
 
-    def "provider supports"() {
+    def "Provider supports"() {
         given:
         def token = "api-123"
         AccessTokenAuthenticationToken authenticationToken = new AccessTokenAuthenticationToken(token)

@@ -211,16 +211,16 @@ const Lists = () => {
                   }
                 </Table.Body>
               </Table>
+              {
+                approvalList.length === 0 ? <NoData /> : (
+                  <Pagination
+                    total={total}
+                    pagination={pagination}
+                    handlePageChange={handlePageChange}
+                  />
+                )
+              }
             </div>
-            {
-              approvalList.length === 0 ? <NoData /> : (
-                <Pagination
-                  total={total}
-                  pagination={pagination}
-                  handlePageChange={handlePageChange}
-                />
-              )
-            }
           </>
         )
       }

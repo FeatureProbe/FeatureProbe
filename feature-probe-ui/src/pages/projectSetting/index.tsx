@@ -141,7 +141,6 @@ const ProjectSetting = () => {
                   <FormattedMessage id='common.toggle.appoval.settings.text' />
                 </div>
                 <div className={styles.tips}>
-                  <Icon type='warning-circle' customclass={styles['warning-circle']}></Icon>
                   <FormattedMessage id='toggles.settings.tips' />
                 </div>
                 <div>

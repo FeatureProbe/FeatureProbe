@@ -12,24 +12,22 @@ on:
     branches: [ main ]
     paths:
       - 'feature-probe-ui/**'
+  workflow_dispatch:
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
     - uses: actions/checkout@v3
     
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 16
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 16
+        cache: yarn
+        cache-dependency-path: feature-probe-ui/yarn.lock
         
     - name: yarn install
       run: yarn install --frozen-lockfile
@@ -44,5 +42,7 @@ jobs:
       working-directory: ./feature-probe-ui
       
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v3.1.1
+      with:
+        flags: ui
 

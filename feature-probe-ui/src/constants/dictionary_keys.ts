@@ -3,3 +3,4 @@ export const DEMO_TIP_SHOW = 'is_demo_tips_show';
 export const USER_GUIDE_LAYOUT = 'user_guide_layout';
 export const USER_GUIDE_TOGGLE = 'user_guide_toggle';
 export const USER_GUIDE_TARGETING = 'user_guide_targeting';
+export const USER_GUIDE_PROJECT = 'user_guide_project';

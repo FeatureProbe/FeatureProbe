@@ -70,13 +70,10 @@ const ApiToken = () => {
     <UserSettingLayout>
       <Provider>
         <SettingCard title={<FormattedMessage id="token.personal.title" />}>
-          <div className={styles['card-tips']}>
-            <Icon type="warning-circle" customclass={styles['warning-circle']} />
-            <div className={styles['text']}>
+          <div className={styles['action-line']}>
+            <div className={styles['card-tips']}>
               <FormattedMessage id="token.card.personal.description" />
             </div>
-          </div>
-          <div className={styles['action-line']}>
             <div className={styles.buttons}>
               <Button primary className={styles['add-button']} onClick={handleAddToken}>
                 <Icon customclass={styles['iconfont']} type="add" />
