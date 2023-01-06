@@ -24,6 +24,9 @@ const ConfirmModal = (props: IProps) => {
       open={open}
       onClose={handleCancel}
       style={{width: `${width || 400}px`}}
+      onClick={(e: SyntheticEvent) => {
+        e.stopPropagation();
+      }}
     >
       <Modal.Content>
         { children }

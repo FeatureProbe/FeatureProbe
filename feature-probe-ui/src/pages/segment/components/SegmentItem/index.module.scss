@@ -100,3 +100,58 @@
 .btn {
   margin-right: 8px !important;
 }
+
+.modal-inner-box {
+  min-height: 405px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: PingFangSC-Medium, sans-serif;
+  font-size: 16px;
+  color: #212529;
+  height: 25px;
+  margin-bottom: 9px;
+}
+
+.modal-header-icon {
+  font-size: 16px !important;
+  cursor: pointer;
+  color: #495057;
+}
+
+.modal-info-circle {
+  font-size: 17px;
+  color: #f5483b;;
+  margin-right: 9px;
+}
+
+.modal-tips {
+  height: 36px;
+  background: #fff5f4;
+  font-size: 14px;
+  color: #660e16;
+  line-height: 36px;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  padding: 0 16px;
+}
+
+.modal-not-delete-content {
+  margin-top: 52px;
+  margin-bottom: 70px;
+}
+
+.modal-footer {
+  display: flex;
+  height: 43px;
+  justify-content: flex-end;
+  align-items: flex-end;
+  border-top: 1px solid #ced4da;
+
+  & > button {
+    margin-left: 8px !important;
+  }
+}

@@ -189,8 +189,8 @@ const Segment = () => {
                               <SegmentItem
                                 key={segment.key}
                                 segment={segment}
-                                fetchSegmentLists={fetchSegmentLists}
                                 handleEdit={handleEdit}
+                                fetchSegmentLists={fetchSegmentLists}
                                 handleClickItem={handleClickItem}
                               />
                             );
