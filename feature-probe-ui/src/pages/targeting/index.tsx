@@ -14,6 +14,7 @@ import TargetingForm from './components/TargetingForm';
 import Loading from 'components/Loading';
 import Metrics from './components/Metrics';
 import Info from './components/Info';
+import FlowExplain from './components/FlowExplain';
 import History from 'components/History';
 import { Provider } from './provider';
 import { getSegmentList } from 'services/segment';
@@ -471,6 +472,7 @@ const Targeting = () => {
               )
             }
           </div>
+          <FlowExplain />
           <Modal 
             open={open}
             width={400}

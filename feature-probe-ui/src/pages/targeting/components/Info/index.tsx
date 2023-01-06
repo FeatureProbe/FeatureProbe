@@ -678,6 +678,8 @@ const Info: React.FC<IProps> = (props) => {
           </div>
           <div className={styles['diff-modal-content']}>
             <Diff
+              defaultOpen={true}
+              maxHeight={341}
               sections={[
                 {
                   before: {
@@ -732,7 +734,6 @@ const Info: React.FC<IProps> = (props) => {
                   diffKey: 'disabled',
                 },
               ]}
-              maxHeight={341}
             />
           </div>
         </div>

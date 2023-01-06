@@ -109,6 +109,8 @@
   "common.secret.key.text": "Secret key",
   "common.secret.required": "Please input secret key",
   "common.diff.tips": "The following is a before and after comparison of this change.",
+  "common.flow.explain": "Explain",
+  "common.know.text": "I see",
 
   "header.getuser.error.text": "Error getting user profile",
 
@@ -369,7 +371,7 @@
   "segments.modal.delete.header": "Save segment",
   "segments.modal.delete.title": "Are you sure to delete this segment?",
   "segments.modal.cannot.delete.title": "Can not delete",
-  "segments.modal.cannot.delete.text": "This segment is in use, can not delete",
+  "segments.modal.cannot.delete.text": "This segment is used by {count} toggles, can not delete",
   "segments.modal.delete.tips": "This change will take effect in {count} toggles",
   "segments.create.success": "Segment created and published successfully",
   "segments.create.error": "Error creating segment",
@@ -534,7 +536,7 @@
   "webhook.total": "Webhooks in total",
   "webhook.duplicated.urls": "Detected that there are currently existing webhooks for the same URL: ",
   "webhook.secretkey.tips": "A method for webhook authentication. Use the 'secret key' to generate a request signature for authentication to prevent URLs from being maliciously requested.",
-  "webhook.description": "Support for subscribing to platform event changes, such as toggle changes, user changes, and more.",
+  "webhook.description": "Support for subscribing to platform events, such as toggle changes, user changes, and more.",
 
   "token.application.title": "Shared access tokens",
   "token.personal.title": "Personal access tokens",

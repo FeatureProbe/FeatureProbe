@@ -8,13 +8,14 @@ interface DiffProps {
   sections: DiffSectionProps[];
   height?: number;
   maxHeight?: number;
+  defaultOpen?: boolean;
 }
 
 const Diff: React.FC<DiffProps> = (props) => {
-  const { sections } = props;
+  const { sections, defaultOpen } = props;
   const CountMapRef = useRef<Map<string, number>>(new Map());
   const [count, saveCount] = useState(0);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(defaultOpen || false);
 
   const setCount = useCallback((key: string, count: number) => {
     CountMapRef.current.set(key, count);

@@ -1,19 +1,30 @@
 import { SyntheticEvent, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Table } from 'semantic-ui-react';
+import { PaginationProps, Table } from 'semantic-ui-react';
 import { cloneDeep } from 'lodash';
 import TextLimit from 'components/TextLimit';
+import Button from 'components/Button';
 import DeleteTipsModal from 'components/DeleteTipsModal';
-import { ISegment, IToggleList } from 'interfaces/segment';
+import { ISegment, IToggle, IToggleList } from 'interfaces/segment';
 import { deleteSegment, getSegmentUsingToggles } from 'services/segment';
 import message from 'components/MessageBox';
+import Modal from 'components/Modal';
+import Icon from 'components/Icon';
 import { segmentContainer } from '../../provider';
+import ToggleList from 'pages/segmentEdit/components/ToggleList';
+
 import styles from './index.module.scss';
 
 interface ILocationParams {
   projectKey: string;
   environmentKey: string;
+}
+
+interface ISearchParams {
+  pageIndex: number;
+  pageSize: number;
+  sortBy?: string;
 }
 
 interface IProps {
@@ -25,8 +36,15 @@ interface IProps {
 
 const ToggleItem = (props: IProps) => {
   const { segment, fetchSegmentLists, handleEdit, handleClickItem } = props;
-  const [ open, setOpen ] = useState<boolean>(false);
-  const [ canDelete, setCanDelete ] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [canNotDeleteOpen, setCanNotDeleteOpen] = useState<boolean>(false);
+  const [currentSegmentKey, setCurrentKey] = useState<string>('');
+  const [toggleList, setToggleList] = useState<IToggle[]>([]);
+  const [pagination, setPagination] = useState({
+    pageIndex: 1,
+    totalPages: 1,
+  });
+  const [total, setTotal] = useState<number>(0);
   const { projectKey } = useParams<ILocationParams>();
   const intl = useIntl();
 
@@ -41,23 +59,58 @@ const ToggleItem = (props: IProps) => {
     handleEdit(segment.key);
   }, [saveOriginSegmentInfo, saveSegmentInfo, handleEdit]);
 
-  const checkSegmentDelete = useCallback((segmentKey: string) => {
-    getSegmentUsingToggles<IToggleList>(projectKey, segmentKey, {
-      pageIndex: 0,
-      pageSize: 10,
-    }).then((res) => {
+  const fetchToggleList = useCallback(async (segmentKey: string, searchParams: ISearchParams) => {
+    return await getSegmentUsingToggles<IToggleList>(projectKey, segmentKey, searchParams).then((res) => {
       const { success, data } = res;
       if (success && data) {
-        const { totalElements } = data;
+        const { content, pageable, totalPages, totalElements } = data;
         if (totalElements > 0) {
-          setCanDelete(false);
+          setCanNotDeleteOpen(true);
         } else {
-          setCanDelete(true);
+          setOpen(true);
         }
-        setOpen(true);
+
+        setToggleList(content);
+        setPagination({
+          pageIndex: (pageable?.pageNumber || 0) + 1,
+          totalPages: totalPages || 1,
+        });
+        setTotal(totalElements || 0);
+      } else {
+        setToggleList([]);
+        setPagination({
+          pageIndex: 1,
+          totalPages: 1,
+        });
+        setTotal(0);
+        message.error(intl.formatMessage({ id: 'toggles.list.error.text' }));
       }
     });
-  }, [projectKey]);
+  }, [projectKey, intl]);
+
+  const checkSegmentDelete = useCallback((segmentKey: string) => {
+    fetchToggleList(segmentKey, {
+      pageIndex: 0,
+      pageSize: 5,
+    });
+  }, [fetchToggleList]);
+
+  const handlePageChange = useCallback(
+    (e: SyntheticEvent, data: PaginationProps) => {
+      fetchToggleList(currentSegmentKey, {
+        pageIndex: Number(data.activePage) - 1,
+        pageSize: 5,
+      });
+    },
+    [currentSegmentKey, fetchToggleList]
+  );
+
+  const handleGotoToggle = useCallback(
+    (envKey: string, toggleKey: string) => {
+      window.open(`/${projectKey}/${envKey}/${toggleKey}/targeting`);
+    },
+    [projectKey]
+  );
 
   const confirmDeleteSegment = useCallback((segmentKey: string) => {
     deleteSegment(projectKey, segmentKey).then(res => {
@@ -109,6 +162,7 @@ const ToggleItem = (props: IProps) => {
               document.body.click();
               e.stopPropagation();
               checkSegmentDelete(segment?.key);
+              setCurrentKey(segment.key);
             }}
           >
             <FormattedMessage id='common.delete.text' />
@@ -120,19 +174,58 @@ const ToggleItem = (props: IProps) => {
         onCancel={() => {
           setOpen(false);
         }}
-        onConfirm={() => {
-          canDelete ? confirmDeleteSegment(segment.key) : setOpen(false);
-        }}
-        content={
-          !canDelete && <FormattedMessage id='segments.modal.cannot.delete.text' />
-        }
-        title={
-          canDelete ? <FormattedMessage id='segments.modal.delete.title' /> : <FormattedMessage id='segments.modal.cannot.delete.title' />
-        }
+        onConfirm={() => {confirmDeleteSegment(segment.key);}}
+        content={null}
+        title={<FormattedMessage id='segments.modal.delete.title' />}
         renderFooter={(buttons) => {
-          return canDelete ? buttons : [buttons[1]];
+          return buttons;
         }}
       />
+      <Modal open={canNotDeleteOpen} width={800} footer={
+        <div className={styles['modal-footer']}>
+          <Button
+            key="confirm"
+            primary
+            onClick={async (e: SyntheticEvent) => {
+              e.stopPropagation();
+              setCanNotDeleteOpen(false);
+            }}
+          >
+            <FormattedMessage id="common.confirm.text" />
+          </Button>
+        </div>
+      }>
+        <div className={styles['modal-inner-box']}>
+          <div className={styles['modal-header']}>
+            <span>
+              <FormattedMessage id="segments.modal.cannot.delete.title" />
+            </span>
+            <Icon
+              customclass={styles['modal-header-icon']}
+              type="close"
+              onClick={(e: SyntheticEvent) => {
+                e.stopPropagation();
+                setCanNotDeleteOpen(false);
+              }}
+            />
+          </div>
+          <>
+            <div className={styles['modal-tips']}>
+              <Icon type="remove-circle" customclass={styles['modal-info-circle']} />
+              {intl.formatMessage({ id: 'segments.modal.cannot.delete.text'}, { count: total })}
+            </div>
+            <div className={styles['modal-not-delete-content']}>
+              <ToggleList 
+                total={total}
+                pagination={pagination}
+                toggleList={toggleList}
+                handlePageChange={handlePageChange}
+                handleGotoToggle={handleGotoToggle}
+              />
+            </div>
+          </>
+        </div>
+      </Modal>
     </Table.Row>
 	);
 };
