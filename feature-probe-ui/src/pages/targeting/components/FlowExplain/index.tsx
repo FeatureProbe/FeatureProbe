@@ -26,11 +26,8 @@ const FlowExplain = () => {
   }, []);
 
   const toggleFlowExplain = useCallback(() => {
-    saveDictionary(FLOW_EXPLAIN, !open).then((res) => {
-      if (res.success) {
-        saveOpen(!open);
-      }
-    });
+    saveOpen(!open);
+    saveDictionary(FLOW_EXPLAIN, !open);
   }, [open]);
 
   return (
@@ -41,14 +38,15 @@ const FlowExplain = () => {
         }
       </div>
       {
-        open && <div className={styles.right} onClick={() => { saveModalOpen(true); }}>
-          <div>
-            <Icon type='flow' customclass={styles['icon-flow']} />
+        open && (
+          <div className={styles.right} onClick={() => { saveModalOpen(true); }}>
+            <div>
+              <Icon type='flow' customclass={styles['icon-flow']} />
+            </div>
+            <FormattedMessage id='common.flow.explain' />
           </div>
-          <FormattedMessage id='common.flow.explain' />
-        </div>
+        )
       }
-
       <Modal 
         open={modalOpen}
         width={770}
@@ -63,10 +61,10 @@ const FlowExplain = () => {
           </div>
           <div className={styles['modal-content']}>
             {
-              intl.locale === 'zh-CN' ?  <img className={styles['modal-image']} src={require('images/flow-explain-zh.png')} alt='flow' /> 
-              :  <img className={styles['modal-image']} src={require('images/flow-explain-en.png')} alt='flow' />
+              intl.locale === 'zh-CN' 
+              ? <img className={styles['modal-image']} src={require('images/flow-explain-zh.png')} alt='flow' /> 
+              : <img className={styles['modal-image']} src={require('images/flow-explain-en.png')} alt='flow' />
             }
-           
           </div>
           <div className={styles['modal-footer']}>
             <Button size="mini" primary onClick={() => { saveModalOpen(false); }}>
