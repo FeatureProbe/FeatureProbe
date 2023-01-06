@@ -22,7 +22,7 @@ exports[`Click CopyToClipboard 1`] = `
           customclass="icon-success"
           type="success-circle"
         />
-        Copied successfully
+        Copy success
       </span>
     </div>
   </div>
@@ -58,7 +58,7 @@ exports[`CopyToClipboard hover snapshot 1`] = `
       style="position: initial;"
     >
       <span>
-        Click me to copy
+        Click to copy
       </span>
     </div>
   </div>

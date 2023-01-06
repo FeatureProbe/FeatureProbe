@@ -731,7 +731,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                         className={styles['approval-dropdown']}
                       />
                       <div className={styles['approval-btn']} onClick={handleGotoSetting}>
-                        <FormattedMessage id="common.toggle.appoval.settings.text" />
+                        <FormattedMessage id="common.toggle.approval.settings.text" />
                       </div>
                     </div>
                   </div>

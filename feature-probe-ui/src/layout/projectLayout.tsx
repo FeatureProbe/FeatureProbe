@@ -80,7 +80,7 @@ const STEPS: Step[] = [
           <FormattedMessage id='guide.global.step3.title' />
         </div>
         <ul className='joyride-item'>
-          <li><FormattedMessage id='guide.global.step3.env' /></li>
+          <li><FormattedMessage id='segments.card.tips' /></li>
         </ul>
         <div className='joyride-pagination'>3/3</div>
       </div>

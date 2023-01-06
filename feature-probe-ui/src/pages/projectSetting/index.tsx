@@ -138,7 +138,7 @@ const ProjectSetting = () => {
             <>
               <div className={styles.content}>
                 <div className={styles.title}>
-                  <FormattedMessage id='common.toggle.appoval.settings.text' />
+                  <FormattedMessage id='common.toggle.approval.settings.text' />
                 </div>
                 <div className={styles.tips}>
                   <FormattedMessage id='toggles.settings.tips' />
