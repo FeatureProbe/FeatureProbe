@@ -1,7 +1,11 @@
 package com.featureprobe.api.controller;
 
 import com.featureprobe.api.auth.TokenHelper;
+import com.featureprobe.api.base.doc.CreateApiResponse;
 import com.featureprobe.api.base.doc.DefaultApiResponses;
+import com.featureprobe.api.base.doc.DeleteApiResponse;
+import com.featureprobe.api.base.doc.GetApiResponse;
+import com.featureprobe.api.base.doc.PatchApiResponse;
 import com.featureprobe.api.base.hook.Action;
 import com.featureprobe.api.base.hook.Hook;
 import com.featureprobe.api.base.hook.Resource;
@@ -42,6 +46,7 @@ public class MemberController {
 
     private MemberService memberService;
 
+    @GetApiResponse
     @GetMapping("/current")
     @Operation(summary = "Get login member", description = "Get current login member.")
     @PreAuthorize("hasAnyAuthority('OWNER', 'WRITER')")
@@ -49,6 +54,7 @@ public class MemberController {
         return new MemberItemResponse(TokenHelper.getAccount(), TokenHelper.getRole());
     }
 
+    @CreateApiResponse
     @PostMapping
     @Operation(summary = "Create multiple member", description = "Create multiple new member.")
     @PreAuthorize("hasAuthority('OWNER')")
@@ -57,6 +63,7 @@ public class MemberController {
         return memberService.create(createRequest);
     }
 
+    @GetApiResponse
     @GetMapping
     @Operation(summary = "List members", description = "Fetch a list of members.")
     @PreAuthorize("hasAnyAuthority('OWNER', 'WRITER')")
@@ -64,6 +71,7 @@ public class MemberController {
         return memberService.list(searchRequest);
     }
 
+    @PatchApiResponse
     @PatchMapping
     @Operation(summary = "Update member", description = "Update a member.")
     @PreAuthorize("hasAuthority('OWNER')")
@@ -72,6 +80,7 @@ public class MemberController {
         return memberService.update(updateRequest);
     }
 
+    @PatchApiResponse
     @PatchMapping("/modifyPassword")
     @Operation(summary = "Modify member password", description = "Modify a member password.")
     public MemberItemResponse modifyPassword(
@@ -79,6 +88,7 @@ public class MemberController {
         return memberService.modifyPassword(modifyPasswordRequest);
     }
 
+    @DeleteApiResponse
     @DeleteMapping
     @Operation(summary = "Delete member", description = "Logical delete a member.")
     @PreAuthorize("hasAuthority('OWNER')")
@@ -87,6 +97,7 @@ public class MemberController {
         return memberService.delete(deleteRequest.getAccount());
     }
 
+    @GetApiResponse
     @GetMapping("/query")
     @Operation(summary = "Get member", description = "Get a single member by account.")
     public MemberItemResponse query(@Schema(description = "A system-unique account used to reference the member.")

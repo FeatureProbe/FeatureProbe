@@ -17,6 +17,7 @@ import com.featureprobe.api.dto.WebHookUpdateRequest;
 import com.featureprobe.api.service.WebHookService;
 import com.featureprobe.api.validate.ResourceExistsValidate;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -68,14 +69,16 @@ public class WebHookController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete webhook", description = "Delete a webhook.")
     @Hook(resource = Resource.WEBHOOK, action = Action.DELETE)
-    public WebHookResponse delete(@PathVariable(name = "id") Long id) {
+    public WebHookResponse delete(@PathVariable(name = "id") @Schema(description = "The ID of the webhook.")
+                                      Long id) {
         return webHookService.delete(id);
     }
 
     @GetApiResponse
     @GetMapping("/{id}")
     @Operation(summary = "Get WebHook", description = "Get a single webhook flag by id.")
-    public WebHookItemResponse query(@PathVariable(name = "id") Long id) {
+    public WebHookItemResponse query(@PathVariable(name = "id") @Schema(description = "The ID of the webhook.")
+                                         Long id) {
         return webHookService.query(id);
     }
 
@@ -96,7 +99,8 @@ public class WebHookController {
     @GetApiResponse
     @GetMapping("/checkUrl")
     @Operation(summary = "Get webhook names", description = "Get the webhook names of the same url.")
-    public List<String> queryByUrl(@RequestParam(name = "url") String url) {
+    public List<String> queryByUrl(@RequestParam(name = "url") @Schema(description = "The url of the webhook.")
+                                       String url) {
         return webHookService.queryByUrl(url);
     }
 
