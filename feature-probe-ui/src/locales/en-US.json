@@ -536,7 +536,7 @@
   "webhook.total": "Webhooks in total",
   "webhook.duplicated.urls": "Detected that there are currently existing webhooks for the same URL: ",
   "webhook.secretkey.tips": "A method for webhook authentication. Use the 'secret key' to generate a request signature for authentication to prevent URLs from being maliciously requested.",
-  "webhook.description": "Support for subscribing to platform event changes, such as toggle changes, user changes, and more.",
+  "webhook.description": "Support for subscribing to platform events, such as toggle changes, user changes, and more.",
 
   "token.application.title": "Shared access tokens",
   "token.personal.title": "Personal access tokens",

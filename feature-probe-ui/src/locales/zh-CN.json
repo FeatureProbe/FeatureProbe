@@ -210,7 +210,7 @@
   "projects.environment.archive.error": "环境下线失败",
   "projects.environment.restore.success": "环境恢复成功",
   "projects.environment.restore.error": "环境恢复失败",
-  "projects.description": "项目是开关的集合，它允许一个FeatureProbe帐户管理多个不同的业务目标。我们推荐按实际业务的服务（微服务）粒度来创建对应的项目",
+  "projects.description": "项目是开关的集合，我们推荐按实际业务的服务（微服务）粒度来创建对应的项目。",
 
   "toggles.filter.evaluated": "访问",
   "toggles.filter.evaluated.last.seven.days": "7日内有访问",
@@ -262,9 +262,9 @@
   "toggles.permanent.type": "是否是永久性开关？",
   "toggles.permanent.type.tips": "FeatureProbe非常关心代码质量，技术债务会随着时间的推移而逐渐增加。非“永久性”开关周期是30天，超时我们会及时提示您清理。如果希望将其作为长期开关保留在代码中，可以标记为“永久性”开关，我们不会提示您处理。",
   "toggles.permanent.tips": "该开关是临时开关，已使用{useDays}天，建议及时清理",
-  "toggles.description": "开关是单/多个功能的管理实体。开关属于某个项目，开关创建后，会在项目的所有环境中出现。",
+  "toggles.description": "开关是功能的管理实体。开关属于某个项目，开关创建后，会在项目的所有环境中出现。",
 
-  "toggles.settings.tips": "对项目下开关变更进行审批设置，审批设置对环境内的所有开关变更都生效",
+  "toggles.settings.tips": "对项目下开关变更进行审批设置，审批设置对环境内的所有开关变更都生效。",
   "toggles.settings.approval.reviewers": "审批人",
   "toggles.settings.approval.reviewers.placeholder": "请选择审批人",
   "toggles.settings.approval.enable": "开启审批",
@@ -293,7 +293,7 @@
   "targeting.metrics.error.text": "获取开关监控信息失败!",
   "targeting.metrics.option.seven.days": "最近7天",
   "targeting.metrics.option.one.day": "最近24小时",
-  "targeting.metrics.desc": "SDK接入成功后，随时观察访问数据变化，感知版本变更对访问数据的影响",
+  "targeting.metrics.desc": "SDK接入成功后，随时观察访问数据变化，感知版本变更对访问数据的影响。",
   "targeting.rule.delete.text": "确认删除规则?",
   "targeting.rule.subject.placeholder": "输入属性值",
   "targeting.rule.subject.required": "输入一个属性值",
@@ -381,7 +381,7 @@
   "segments.delete.success": "人群组删除成功",
   "segments.delete.error": "人群组删除失败，请重试",
   "segments.label.name.text": "人群组名称",
-  "segments.card.tips": "常用人群规则可以设立为单独的人群组，方便在多个开关中共享",
+  "segments.card.tips": "常用人群规则可以设立为单独的人群组，方便在多个开关中共享。",
   
   "toggle.connect": "连接SDK",
   "connect.description": "将应用程序连接到FeatureProbe！",
@@ -536,7 +536,7 @@
   "webhook.total": "总数",
   "webhook.duplicated.urls": "检测到目前已有相同URL的Webhook：",
   "webhook.secretkey.tips": "用于WebHook鉴权的方式，通过“签名密钥”生成请求签名进行鉴权，防止URL被恶意请求",
-  "webhook.description": "支持订阅平台事件的变更，如开关的变更、用户的变更等。",
+  "webhook.description": "支持订阅平台的事件，如开关的变更、用户的变更等。",
 
   "token.application.title": "共享 access tokens",
   "token.personal.title": "个人 access tokens",
