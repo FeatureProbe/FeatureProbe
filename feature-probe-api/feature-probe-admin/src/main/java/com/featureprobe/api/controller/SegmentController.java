@@ -4,6 +4,8 @@ import com.featureprobe.api.base.doc.CreateApiResponse;
 import com.featureprobe.api.base.doc.DefaultApiResponses;
 import com.featureprobe.api.base.doc.GetApiResponse;
 import com.featureprobe.api.base.doc.PatchApiResponse;
+import com.featureprobe.api.base.doc.ProjectKeyParameter;
+import com.featureprobe.api.base.doc.SegmentKeyParameter;
 import com.featureprobe.api.base.hook.Action;
 import com.featureprobe.api.base.hook.Hook;
 import com.featureprobe.api.base.hook.Resource;
@@ -22,6 +24,7 @@ import com.featureprobe.api.base.model.PaginationRequest;
 import com.featureprobe.api.service.SegmentService;
 import com.featureprobe.api.validate.ResourceExistsValidate;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,14 +47,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/projects/{projectKey}/segments")
 @DefaultApiResponses
 @ResourceExistsValidate
-@Tag(name = "Segment", description = "Using the segments API, you can create, delete, and manage segments")
+@ProjectKeyParameter
+@SegmentKeyParameter
+@Tag(name = "Segments", description = "The segments API allows you to list, create, modify, query, " +
+        "publish and delete segment programmatically.")
 public class SegmentController {
 
     private SegmentService segmentService;
 
     @GetMapping
     @GetApiResponse
-    @Operation(summary = "List segments", description = "Get a list of all segments")
+    @Operation(summary = "List segments", description = "Fetch a list of all segments in project.")
     public Page<SegmentResponse> list(@PathVariable(name = "projectKey") String projectKey,
                                       SegmentSearchRequest searchRequest) {
         return segmentService.list(projectKey, searchRequest);
@@ -98,7 +104,7 @@ public class SegmentController {
 
     @GetMapping("/{segmentKey}/toggles")
     @GetApiResponse
-    @Operation(summary = "List of toggles using segment", description = "List of toggles using segment")
+    @Operation(summary = "Using segment toggles", description = "List of toggles using segment.")
     public Page<ToggleSegmentResponse> usingToggles(@PathVariable(name = "projectKey") String projectKey,
                                                     @PathVariable(name = "segmentKey") String segmentKey,
                                                     PaginationRequest paginationRequest) {
@@ -108,7 +114,7 @@ public class SegmentController {
 
     @GetMapping("/{segmentKey}/versions")
     @GetApiResponse
-    @Operation(summary = "List of version by segment", description = "List of version by segment")
+    @Operation(summary = "List segment versions", description = "List historical versions of toggle.")
     public Page<SegmentVersionResponse> versions(@PathVariable(name = "projectKey") String projectKey,
                                                  @PathVariable(name = "segmentKey") String segmentKey,
                                                  SegmentVersionRequest versionRequest) {
@@ -117,7 +123,7 @@ public class SegmentController {
 
     @GetApiResponse
     @GetMapping("/{segmentKey}")
-    @Operation(summary = "Get segment", description = "Get a single segment by key.")
+    @Operation(summary = "Get segment", description = "Get a single segment by key in project.")
     public SegmentResponse query(@PathVariable(name = "projectKey") String projectKey,
                                  @PathVariable(name = "segmentKey") String segmentKey) {
         return segmentService.queryByKey(projectKey, segmentKey);
@@ -125,10 +131,12 @@ public class SegmentController {
 
     @GetMapping("/exists")
     @GetApiResponse
-    @Operation(summary = "Check segment exist", description = "Check segment exist")
+    @Operation(summary = "Check segment exist", description = "Check segment exist.")
     public BaseResponse exists(@PathVariable("projectKey") String projectKey,
-                               @RequestParam ValidateTypeEnum type,
-                               @RequestParam String value) {
+                               @RequestParam @Schema(description = "The type needs to be checked.")
+                               ValidateTypeEnum type,
+                               @RequestParam @Schema(description = "The attribute value to be checked.")
+                               String value) {
         segmentService.validateExists(projectKey, type, value);
         return new BaseResponse(ResponseCodeEnum.SUCCESS);
     }

@@ -1,5 +1,6 @@
 package com.featureprobe.api.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
@@ -7,14 +8,13 @@ import java.util.List;
 @Data
 public class ApprovalSettings {
 
+    @Schema(description = "A unique key used to reference the environment.")
     private String environmentKey;
 
-    private String environmentName;
-
+    @Schema(description = "Enable Approval.")
     private Boolean enable;
 
+    @Schema(description = "Configure reviewers account")
     private List<String> reviewers;
-
-    private boolean locked;
 
 }

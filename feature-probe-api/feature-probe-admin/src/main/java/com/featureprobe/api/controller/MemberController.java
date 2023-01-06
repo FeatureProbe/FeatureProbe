@@ -14,6 +14,7 @@ import com.featureprobe.api.dto.MemberSearchRequest;
 import com.featureprobe.api.dto.MemberUpdateRequest;
 import com.featureprobe.api.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,20 +36,21 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/members")
 @DefaultApiResponses
-@Tag(name = "Members", description = "Using the members API, you can create, destroy, and manage members")
+@Tag(name = "Members", description = "The members API allows you to list, create, modify, query" +
+        " and delete member programmatically.")
 public class MemberController {
 
     private MemberService memberService;
 
     @GetMapping("/current")
-    @Operation(summary = "Current login member", description = "")
+    @Operation(summary = "Get login member", description = "Get current login member.")
     @PreAuthorize("hasAnyAuthority('OWNER', 'WRITER')")
     public MemberItemResponse currentLoginMember() {
         return new MemberItemResponse(TokenHelper.getAccount(), TokenHelper.getRole());
     }
 
     @PostMapping
-    @Operation(summary = "Create member", description = "Create a new member")
+    @Operation(summary = "Create multiple member", description = "Create multiple new member.")
     @PreAuthorize("hasAuthority('OWNER')")
     @Hook(resource = Resource.MEMBER, action = Action.CREATE)
     public List<MemberResponse> create(@Validated @RequestBody MemberCreateRequest createRequest) {
@@ -56,14 +58,14 @@ public class MemberController {
     }
 
     @GetMapping
-    @Operation(summary = "List Member", description = "Get a list of all member")
+    @Operation(summary = "List members", description = "Fetch a list of members.")
     @PreAuthorize("hasAnyAuthority('OWNER', 'WRITER')")
     public Page<MemberItemResponse> list(MemberSearchRequest searchRequest) {
         return memberService.list(searchRequest);
     }
 
     @PatchMapping
-    @Operation(summary = "Update member", description = "Update a member")
+    @Operation(summary = "Update member", description = "Update a member.")
     @PreAuthorize("hasAuthority('OWNER')")
     @Hook(resource = Resource.MEMBER, action = Action.UPDATE)
     public MemberResponse update(@Validated @RequestBody MemberUpdateRequest updateRequest) {
@@ -71,14 +73,14 @@ public class MemberController {
     }
 
     @PatchMapping("/modifyPassword")
-    @Operation(summary = "Modify member password", description = "Modify a member password")
+    @Operation(summary = "Modify member password", description = "Modify a member password.")
     public MemberItemResponse modifyPassword(
             @Validated @RequestBody MemberModifyPasswordRequest modifyPasswordRequest) {
         return memberService.modifyPassword(modifyPasswordRequest);
     }
 
     @DeleteMapping
-    @Operation(summary = "Delete member", description = "Logical delete a member")
+    @Operation(summary = "Delete member", description = "Logical delete a member.")
     @PreAuthorize("hasAuthority('OWNER')")
     @Hook(resource = Resource.MEMBER, action = Action.DELETE)
     public MemberResponse delete(@Validated @RequestBody MemberDeleteRequest deleteRequest) {
@@ -87,7 +89,8 @@ public class MemberController {
 
     @GetMapping("/query")
     @Operation(summary = "Get member", description = "Get a single member by account.")
-    public MemberItemResponse query(String account) {
+    public MemberItemResponse query(@Schema(description = "A system-unique account used to reference the member.")
+                                        String account) {
         return memberService.queryByAccount(account);
     }
 }

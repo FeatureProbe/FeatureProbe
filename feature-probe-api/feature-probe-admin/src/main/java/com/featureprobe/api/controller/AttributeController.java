@@ -9,6 +9,7 @@ import com.featureprobe.api.dto.AttributeResponse;
 import com.featureprobe.api.service.AttributeService;
 import com.featureprobe.api.validate.ResourceExistsValidate;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +20,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 @Slf4j
 @DefaultApiResponses
-@Tag(name = "Attributes", description = "The attribute used for targeting rule configuration ")
+@Tag(name = "Attributes", description = "The attribute used for targeting rule configuration.")
 @RequestMapping("/api/projects/{projectKey}/attributes")
 @ProjectKeyParameter
 @AllArgsConstructor
@@ -45,7 +45,7 @@ public class AttributeController {
 
     @GetApiResponse
     @GetMapping
-    @Operation(summary = "List attributes", description = "Get a list of all attributes in the project.")
+    @Operation(summary = "List attributes", description = "List all attributes in the project.")
     public List<String> list(@PathVariable("projectKey") String projectKey) {
         return attributeService.queryByProjectKey(projectKey);
     }
