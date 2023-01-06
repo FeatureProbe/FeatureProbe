@@ -1,4 +1,4 @@
-import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
+import { SyntheticEvent, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { PaginationProps, Table } from 'semantic-ui-react';
@@ -36,20 +36,15 @@ interface IProps {
 
 const ToggleItem = (props: IProps) => {
   const { segment, fetchSegmentLists, handleEdit, handleClickItem } = props;
-  const [ open, setOpen ] = useState<boolean>(false);
-  const [ canNotDeleteOpen, setCanNotDeleteOpen ] = useState<boolean>(false);
-  const [ currentSegmentKey, setCurrentKey ] = useState<string>('');
-  const [ searchParams, setSearchParams ] = useState<ISearchParams>({
-    pageIndex: 0,
-    pageSize: 5,
-  });
+  const [open, setOpen] = useState<boolean>(false);
+  const [canNotDeleteOpen, setCanNotDeleteOpen] = useState<boolean>(false);
+  const [currentSegmentKey, setCurrentKey] = useState<string>('');
   const [toggleList, setToggleList] = useState<IToggle[]>([]);
   const [pagination, setPagination] = useState({
     pageIndex: 1,
     totalPages: 1,
   });
   const [total, setTotal] = useState<number>(0);
-
   const { projectKey } = useParams<ILocationParams>();
   const intl = useIntl();
 
@@ -94,17 +89,20 @@ const ToggleItem = (props: IProps) => {
   }, [projectKey, intl]);
 
   const checkSegmentDelete = useCallback((segmentKey: string) => {
-    fetchToggleList(segmentKey, searchParams);
-  }, [fetchToggleList, searchParams]);
+    fetchToggleList(segmentKey, {
+      pageIndex: 0,
+      pageSize: 5,
+    });
+  }, [fetchToggleList]);
 
   const handlePageChange = useCallback(
     (e: SyntheticEvent, data: PaginationProps) => {
       fetchToggleList(currentSegmentKey, {
-        ...searchParams,
         pageIndex: Number(data.activePage) - 1,
+        pageSize: 5,
       });
     },
-    [currentSegmentKey, fetchToggleList, searchParams]
+    [currentSegmentKey, fetchToggleList]
   );
 
   const handleGotoToggle = useCallback(
