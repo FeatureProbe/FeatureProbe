@@ -24,7 +24,9 @@ React SDK是在 JavaScript SDK的基础上进行的封装，主要为了提升�
 
 我们提供了一个可运行的演示代码，让您了解如何使用 `FeatureProbe` SDK。
 
-1. 使用 docker composer 启动 FeatureProbe 服务。 [How to](https://github.com/FeatureProbe/FeatureProbe#1-starting-featureprobe-service-with-docker-compose)
+1. 首先需要选择通过连接哪个环境的FeatureProbe来控制你的程序
+    * 可以使用我们提供的在线的[演示环境](https://featureprobe.io/login)
+    * 也可以使用自己搭建的[docker环境](https://gitee.com/featureprobe/FeatureProbe)
 
 2. 下载这个 repo 并运行演示程序：
 
@@ -34,23 +36,32 @@ git clone https://github.com/FeatureProbe/client-sdk-react.git
 cd client-sdk-react
 ```
 
-3.找到Demo代码 [example](https://github.com/FeatureProbe/client-sdk-react/tree/main/example),
-做一些改变并再次运行程序。
+3. 修改[example](https://github.com/FeatureProbe/client-sdk-react/tree/main/example) 程序中的链接信息。
+    * 对于在线演示环境:
+        * `remoteUrl` = "https://featureprobe.io/server"
+        * `clientSdkKey`  请从如下界面中拷贝：
 
-第一个demo：
-```bash
-cd example/provider
-npm install
-npm run start
-```
+      ![client_sdk_key snapshot](/client_sdk_key_snapshot_cn.png)
+    * 对于本地docker环境:
+        * `remoteUrl` = "http://YOUR_DOCKER_IP:4009/server"
+        * `clientSdkKey` = "client-25614c7e03e9cb49c0e96357b797b1e47e7f2dff"
 
-第二个demo：
+4. 运行程序。
 
-```bash
-cd example/async-provider
-npm install
-npm run start
-```
+  第一个demo：
+  ```bash
+  cd example/provider
+  npm install
+  npm run start
+  ```
+
+  第二个demo：
+
+  ```bash
+  cd example/async-provider
+  npm install
+  npm run start
+  ```
 
 ## 分步指南
 

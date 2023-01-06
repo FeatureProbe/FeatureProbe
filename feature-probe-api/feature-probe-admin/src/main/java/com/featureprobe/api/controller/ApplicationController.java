@@ -3,16 +3,12 @@ package com.featureprobe.api.controller;
 import com.featureprobe.api.base.enums.LoginMode;
 import com.featureprobe.api.config.JWTConfig;
 import com.featureprobe.api.dto.AppSettingsResponse;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.swagger.v3.oas.annotations.Hidden;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Map;
 

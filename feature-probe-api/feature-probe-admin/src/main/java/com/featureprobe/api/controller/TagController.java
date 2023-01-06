@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @DefaultApiResponses
 @RequestMapping("/api/projects/{projectKey}/tags")
-@Tag(name = "Tags", description = "With these endpoints you can manage Tags")
+@Tag(name = "Tags", description = "The Tags API allows you to list and create tag programmatically.")
 @ProjectKeyParameter
 @AllArgsConstructor
 @ResourceExistsValidate
@@ -36,7 +36,7 @@ public class TagController {
 
     @GetApiResponse
     @GetMapping
-    @Operation(summary = "List Tags", description = "Returns the list of the Tags in a specified Project.")
+    @Operation(summary = "List tags", description = "Returns the list of the Tags in a specified Project.")
     public List<TagResponse> list(@PathVariable(name = "projectKey") String projectKey) {
         return tagService.queryByProjectKey(projectKey);
     }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.featureprobe.sdk.server.model.Serve;
 import com.featureprobe.sdk.server.model.Split;
 import com.google.common.collect.Lists;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,10 +14,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(description = "Define the return value. <br/> Just provide one of 'select' and 'split'. ")
 public class ServeValue {
 
+    @Schema(description = "Define the return variation index.")
     private Integer select;
 
+    @Schema(description = "Variations rollout by percentage. <br/> Accuracy is ten thousand. " +
+            "<br/> Example: [5000, 5000] means the percentages are 50% each.")
     private List<Integer> split;
 
     ServeValue(Integer select) {

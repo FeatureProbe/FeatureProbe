@@ -6,6 +6,7 @@ import com.featureprobe.api.dao.exception.ResourceConflictException;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
 import com.featureprobe.api.dao.exception.ResourceOverflowException;
 import com.featureprobe.api.dto.ApprovalSettings;
+import com.featureprobe.api.dto.ApprovalSettingsResponse;
 import com.featureprobe.api.dto.PreferenceCreateRequest;
 import com.featureprobe.api.dto.ProjectCreateRequest;
 import com.featureprobe.api.dto.ProjectQueryRequest;
@@ -85,7 +86,8 @@ public class ProjectService {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public List<ApprovalSettings> updateApprovalSettings(String projectKey, PreferenceCreateRequest createRequest) {
+    public List<ApprovalSettingsResponse> updateApprovalSettings(String projectKey,
+                                                                 PreferenceCreateRequest createRequest) {
         Map<String, ApprovalSettings> approvalSettingsMap = createRequest.getApprovalSettings().stream()
                 .collect(Collectors.toMap(ApprovalSettings::getEnvironmentKey, Function.identity()));
         if (CollectionUtils.isNotEmpty(createRequest.getApprovalSettings())) {
@@ -97,14 +99,14 @@ public class ProjectService {
         return approvalSettingsList(projectKey);
     }
 
-    public List<ApprovalSettings> approvalSettingsList(String projectKey) {
+    public List<ApprovalSettingsResponse> approvalSettingsList(String projectKey) {
         List<Environment> environments = environmentRepository.findAllByProjectKey(projectKey);
-        List<ApprovalSettings> approvalSettingsList = environments.stream().map(environment ->
-                EnvironmentMapper.INSTANCE.entityToApprovalSettings(environment)).collect(Collectors.toList());
-        for (ApprovalSettings approvalSettings : approvalSettingsList) {
+        List<ApprovalSettingsResponse> approvalSettingsList = environments.stream().map(environment ->
+                EnvironmentMapper.INSTANCE.entityToApprovalSettingsResponse(environment)).collect(Collectors.toList());
+        for (ApprovalSettingsResponse response : approvalSettingsList) {
             boolean locked = targetingSketchRepository.existsByProjectKeyAndEnvironmentKeyAndStatus(projectKey,
-                    approvalSettings.getEnvironmentKey(), SketchStatusEnum.PENDING);
-            approvalSettings.setLocked(locked);
+                    response.getEnvironmentKey(), SketchStatusEnum.PENDING);
+            response.setLocked(locked);
         }
         return approvalSettingsList;
     }

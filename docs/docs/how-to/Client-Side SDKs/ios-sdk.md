@@ -4,11 +4,20 @@ sidebar_position: 3
 
 # iOS SDK
 
-## iOS Usage
+:::note SDK quick links
+In addition to this reference guide, we provide source code, API reference documentation, and sample applications at the following links:
 
-### Swift
+| **Resource**  | **Location**                                                 |
+| ------------- | ------------------------------------------------------------ |
+| GitHub repository | [Client Side SDK for iOS](https://github.com/FeatureProbe/client-sdk-mobile/tree/main/sdk-ios) |
+| Sample applications      | [demo-cocoapods](https://github.com/FeatureProbe/client-sdk-mobile/tree/main/examples/demo-cocoapods)、[demo-objc](https://github.com/FeatureProbe/client-sdk-mobile/tree/main/examples/demo-objc)、[demo-swiftpm](https://github.com/FeatureProbe/client-sdk-mobile/tree/main/examples/demo-swiftpm) |
+| Published module    | [CocoaPods](https://cocoapods.org/pods/FeatureProbe)         |
 
-#### Step 1. Install SDK
+:::
+
+## Swift
+
+### Step 1. Install SDK
 
 Swift Package Manager:
 
@@ -20,7 +29,7 @@ Cocoapods:
     1. add `pod 'FeatureProbe', :git => 'git@github.com:FeatureProbe/client-sdk-ios.git'` to Podfile
     2. `pod install` or `pod update`
 
-#### Step 2. Create a FeatureProbe instance
+### Step 2. Create a FeatureProbe instance
 
 ```swift
 import featureprobe
@@ -38,7 +47,7 @@ let config = FpConfig(
 let fp = FeatureProbe(config: config, user: user)
 ```
 
-#### Step 3. Use the feature toggle
+### Step 3. Use the feature toggle
 
 ```swift
 let showFeature = fp.boolValue("toggle_key", false)
@@ -49,7 +58,7 @@ if showFeature {
 }
 ```
 
-#### Step 4. Unit Testing (Optional)
+### Step 4. Unit Testing (Optional)
 
 ```swift
 let fp2 = FeatureProbe.newForTest(toggles: "{ \"toggle_1\": true }")
@@ -59,9 +68,9 @@ assert(is_true == true);
 
 Find the Demo code in [example](https://github.com/FeatureProbe/client-sdk-mobile/tree/main/examples/)
 
-### Objective-C
+## Objective-C
 
-#### Step 1. Install SDK
+### Step 1. Install SDK
 
 Cocoapods
 
@@ -69,7 +78,7 @@ add `pod 'FeatureProbe', :git => 'git@github.com:FeatureProbe/client-sdk-ios.git
 
 `pod install` or `pod update`
 
-#### Step 2. Create a FeatureProbe instance
+### Step 2. Create a FeatureProbe instance
 
 ```objective-c
 #import "FeatureProbe-Swift.h"
@@ -85,7 +94,7 @@ FpConfig *config = [[FpConfig alloc] initWithRemoteUrl: url
 FeatureProbe *fp = [[FeatureProbe alloc] initWithConfig:config user:user];
 ```
 
-#### Step 3. Use the feature toggle
+### Step 3. Use the feature toggle
 
 ```objective-c
 bool showFeature = [fp boolValueWithKey: @"toggle_key" defaultValue: false];
@@ -96,7 +105,7 @@ if (showFeature) {
 }
 ```
 
-#### Step 4. Unit Testing (Optional)
+### Step 4. Unit Testing (Optional)
 
 ```objective-c
 #import "FeatureProbe-Swift.h"

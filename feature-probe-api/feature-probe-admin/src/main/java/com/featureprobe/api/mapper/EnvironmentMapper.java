@@ -1,6 +1,7 @@
 package com.featureprobe.api.mapper;
 
 import com.featureprobe.api.dto.ApprovalSettings;
+import com.featureprobe.api.dto.ApprovalSettingsResponse;
 import com.featureprobe.api.dto.EnvironmentCreateRequest;
 import com.featureprobe.api.dto.EnvironmentResponse;
 import com.featureprobe.api.dto.EnvironmentUpdateRequest;
@@ -28,7 +29,7 @@ public interface EnvironmentMapper {
     @Mapping(target = "environmentName", source = "name")
     @Mapping(target = "enable", source = "enableApproval")
     @Mapping(target = "reviewers", expression = "java(toReviewerList(environment.getReviewers()))")
-    ApprovalSettings entityToApprovalSettings(Environment environment);
+    ApprovalSettingsResponse entityToApprovalSettingsResponse(Environment environment);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void mapEntity(EnvironmentUpdateRequest updateRequest, @MappingTarget Environment environment);
