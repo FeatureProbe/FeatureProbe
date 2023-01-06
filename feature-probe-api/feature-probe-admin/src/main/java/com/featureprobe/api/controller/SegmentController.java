@@ -2,6 +2,7 @@ package com.featureprobe.api.controller;
 
 import com.featureprobe.api.base.doc.CreateApiResponse;
 import com.featureprobe.api.base.doc.DefaultApiResponses;
+import com.featureprobe.api.base.doc.DeleteApiResponse;
 import com.featureprobe.api.base.doc.GetApiResponse;
 import com.featureprobe.api.base.doc.PatchApiResponse;
 import com.featureprobe.api.base.doc.ProjectKeyParameter;
@@ -92,7 +93,7 @@ public class SegmentController {
         return segmentService.publish(projectKey, segmentKey, publishRequest);
     }
 
-    @DefaultApiResponses
+    @DeleteApiResponse
     @DeleteMapping("/{segmentKey}")
     @Operation(summary = "Delete segment", description = "Delete a segment.")
     @Hook(resource = Resource.SEGMENT, action = Action.DELETE)

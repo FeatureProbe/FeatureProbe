@@ -1,6 +1,8 @@
 package com.featureprobe.api.controller;
 
+import com.featureprobe.api.base.doc.CreateApiResponse;
 import com.featureprobe.api.base.doc.DefaultApiResponses;
+import com.featureprobe.api.base.doc.GetApiResponse;
 import com.featureprobe.api.dto.DictionaryResponse;
 import com.featureprobe.api.service.DictionaryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +26,7 @@ public class DictionaryController {
 
     private DictionaryService dictionaryService;
 
+    @GetApiResponse
     @GetMapping("/{key}")
     @Operation(summary = "Get dictionary", description = "Get a single dictionary by key in current login user.")
     public DictionaryResponse query(
@@ -33,6 +36,7 @@ public class DictionaryController {
         return dictionaryService.query(key);
     }
 
+    @CreateApiResponse
     @PostMapping("/{key}")
     @Operation(summary = "Create dictionary", description = "Create a new dictionary in current login user.")
     public DictionaryResponse save(

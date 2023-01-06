@@ -46,7 +46,8 @@ public class AttributeController {
     @GetApiResponse
     @GetMapping
     @Operation(summary = "List attributes", description = "List all attributes in the project.")
-    public List<String> list(@PathVariable("projectKey") String projectKey) {
+    public List<String> list(
+            @PathVariable("projectKey") String projectKey) {
         return attributeService.queryByProjectKey(projectKey);
     }
 
