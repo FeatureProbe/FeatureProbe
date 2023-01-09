@@ -50,11 +50,11 @@ There is no need to manually create table structures. All tables and initializat
 
 ```bash
 git clone https://gitee.com/FeatureProbe/FeatureProbe.git
-cd FeatureProbe/feature-probe-api
+cd FeatureProbe/api
 mvn clean package
 ```
 
-   After the compilation is completed, a jar deployment file named after the version will be generated in the current directory, such as `target/feature-probe-api-1.1.0.jar`.
+   After the compilation is completed, a jar deployment file named after the version will be generated in the current directory, such as `target/api-1.1.0.jar`.
 
 ### Deployment steps
 
@@ -62,14 +62,14 @@ mvn clean package
 
     - JDK 1.8+
 
-2. Place `feature-probe-api-1.1.0.jar` in the deployment server, fill in the database link configuration, and start it with `4008` port:
+2. Place `api-1.1.0.jar` in the deployment server, fill in the database link configuration, and start it with `4008` port:
 
     :::caution
     The database-related information in the following script needs to be replaced with the actual database information you use.
     :::
     
     ```bash
-    java -jar feature-probe-api-1.1.0.jar --server.port=4008 \
+    java -jar api-1.1.0.jar --server.port=4008 \
          --spring.datasource.jdbc-url=jdbc:mysql://{MYSQL_DATABASE_IP}:{MYSQL_PORT}/feature_probe \  # 数据库 IP/端口和库名
          --spring.datasource.username={MYSQL_USERNAME} \
          --spring.datasource.password={MYSQL_PASSWORD} 
@@ -141,12 +141,12 @@ mvn clean package
         ~~~
 2. Get the source code and compile the deployment package
     ```bash
-    git clone https://gitee.com/FeatureProbe/feature-probe-server.git
+    git clone https://github.com/FeatureProbe/FeatureProbe.git
     ```
 
     Compile in the source code directory:
     ```bash
-    cd feature-probe-server
+    cd server
     cargo build --release --verbose
     ```
 
@@ -217,7 +217,7 @@ mvn clean package
 
     ```bash
     git clone https://gitee.com/FeatureProbe/FeatureProbe.git
-    cd FeatureProbe/feature-probe-ui
+    cd FeatureProbe/ui
     yarn install --frozen-lockfile
     yarn build
     ```
@@ -240,8 +240,8 @@ mvn clean package
     (1) Open `craco.config.js` file
 
     ```bash
-    cd feature-probe-ui
-    vi FeatureProbe/feature-probe-ui/craco.config.js
+    cd vi
+    vi FeatureProbe/ui/craco.config.js
     ```
 
     (2) On the basis of the original configuration, add the `publicPath` field in the webpack - configure - output object, for example, set the value to: /featureprobe/

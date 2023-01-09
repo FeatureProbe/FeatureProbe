@@ -25,7 +25,7 @@ Since the SDK needs to be integrated into your application runtime environment, 
 
 ### Resilience
 
-[FeatureProbe Server ](https://github.com/FeatureProbe/feature-probe-server) is implemented in Rust language and is naturally high-performance and highly reliable. As you can see in the figure below, the fast horizontal scaling allows you to easily handle large-scale traffic access. At the same time, we are already planning to further improve the performance of the Server by using Multiplexing + Publish & Subscribe mode, so that the switch rules can be issued and take effect in milliseconds after changes.
+[FeatureProbe Server ](https://github.com/FeatureProbe/FeatureProbe/tree/main/server) is implemented in Rust language and is naturally high-performance and highly reliable. As you can see in the figure below, the fast horizontal scaling allows you to easily handle large-scale traffic access. At the same time, we are already planning to further improve the performance of the Server by using Multiplexing + Publish & Subscribe mode, so that the switch rules can be issued and take effect in milliseconds after changes.
 
 ![featureprobe server](/feature-probe-server.png)
 

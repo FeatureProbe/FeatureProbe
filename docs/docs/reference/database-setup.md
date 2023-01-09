@@ -20,7 +20,7 @@ We provide two ways to create tables and initial data:
 
 ### **Automatically created based on Flyway**
 
-No special configuration is required, the FeatureProbe API natively uses [flyway](https://flywaydb.org/) to manage and automatically create the database version, in [gitub](https://github.com/FeatureProbe/feature-probe-api/tree/main/feature-probe-admin/src/main/resources/db/migration) you can see all the change SQL for the database. Every time you start FeatureProbe API, the program will automatically execute DML/DDL, no need to manually maintain the version of the data table.
+No special configuration is required, the FeatureProbe API natively uses [flyway](https://flywaydb.org/) to manage and automatically create the database version, in [gitub](https://github.com/FeatureProbe/FeatureProbe/tree/main/api/admin/src/main/resources/db/migration) you can see all the change SQL for the database. Every time you start FeatureProbe API, the program will automatically execute DML/DDL, no need to manually maintain the version of the data table.
 
 Also, you can view the data in `feature_probe.flyway_schema_history` for database changes.
 
@@ -28,7 +28,7 @@ Also, you can view the data in `feature_probe.flyway_schema_history` for databas
 
 If you do not want to use flyway to automatically create tables and manage database versions, you can obtain native DML/DDL to implement manual import and creation.
 
-Before using this method, you need to disable the use of flyway in the application to avoid conflicts. Add the following parameter to disable flyway execution when `feature-probe-api` starts:
+Before using this method, you need to disable the use of flyway in the application to avoid conflicts. Add the following parameter to disable flyway execution when `api` starts:
 
 ```bash
 --spring.flyway.enabled=false
@@ -36,17 +36,17 @@ Before using this method, you need to disable the use of flyway in the applicati
 
 #### **Steps**
 
-**SETP1**: Clone `feature-probe-api` code
+**SETP1**: Clone `api` code
 
 ```bash
-$ git clone https://github.com/FeatureProbe/feature-probe-api.git
+$ git clone https://github.com/FeatureProbe/FeatureProbe.git
 ```
 
 **SETP2**: Get SQL
 
 ```bash
-$ cd feature-probe-api
-$ ls -1 feature-probe-admin/src/main/resources/db/migration/V* \
+$ cd api
+$ ls -1 admin/src/main/resources/db/migration/V* \
 | sort -V | xargs cat >> rollup.sql
 ```
 

@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# feature-probe-ui
+# UI
 
 ## Requirements
 
@@ -14,7 +14,7 @@ Clone code to your local
 
 ```shell
 git clone git@github.com:FeatureProbe/FeatureProbe.git
-cd FeatureProbe/feature-probe-ui
+cd FeatureProbe/ui
 ```
 
 Use `yarn` to install dependencies

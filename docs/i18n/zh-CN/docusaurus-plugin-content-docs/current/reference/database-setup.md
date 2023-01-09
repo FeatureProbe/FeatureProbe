@@ -20,7 +20,7 @@ CREATE DATABASE IF NOT EXISTS `feature_probe` /*!40100 DEFAULT CHARACTER SET utf
 
 ### **基于 Flyway 自动创建**
 
-无须特殊配置，FeatureProbe API 原生采用 [flyway](https://flywaydb.org/) 对数据库版本管理和自动创建，在 [gitub](https://github.com/FeatureProbe/feature-probe-api/tree/main/feature-probe-admin/src/main/resources/db/migration) 上你可以看到所有针对数据库的变更 SQL。在您每次启动 FeatureProbe API 时，程序将自动执行 DML/DDL ，无须手工对数据表版本进行维护。
+无须特殊配置，FeatureProbe API 原生采用 [flyway](https://flywaydb.org/) 对数据库版本管理和自动创建，在 [gitub](https://github.com/FeatureProbe/FeatureProbe/tree/main/api/admin/src/main/resources/db/migration) 上你可以看到所有针对数据库的变更 SQL。在您每次启动 FeatureProbe API 时，程序将自动执行 DML/DDL ，无须手工对数据表版本进行维护。
 
 并且，针对数据库的变化您可以查看 `feature_probe.flyway_schema_history` 中的数据。
 
@@ -28,7 +28,7 @@ CREATE DATABASE IF NOT EXISTS `feature_probe` /*!40100 DEFAULT CHARACTER SET utf
 
 如果不希望使用 flyway 自动创建表和管理数据库版本，可以获取原生 DML/DDL 实现手工导入创建。
 
-在使用该方式前需要在应用程序中禁用 flyway 的使用，避免产生冲突。在 `feature-probe-api` 启动时增加如下参数来禁用 flyway 的执行：
+在使用该方式前需要在应用程序中禁用 flyway 的使用，避免产生冲突。在 `api` 启动时增加如下参数来禁用 flyway 的执行：
 
 ```bash
 --spring.flyway.enabled=false
@@ -36,17 +36,17 @@ CREATE DATABASE IF NOT EXISTS `feature_probe` /*!40100 DEFAULT CHARACTER SET utf
 
 **操作步骤**
 
-**SETP1**: 下载 `feature-probe-api` 代码
+**SETP1**: 下载 `api` 代码
 
 ```bash
-$ git clone https://github.com/FeatureProbe/feature-probe-api.git
+$ git clone https://github.com/FeatureProbe/FeatureProbe
 ```
 
 **SETP2**: 获取 SQL
 
 ```bash
-$ cd feature-probe-api
-$ ls -1 feature-probe-admin/src/main/resources/db/migration/V* \
+$ cd api
+$ ls -1 admin/src/main/resources/db/migration/V* \
 	| sort -V | xargs cat >> rollup.sql
 ```
 

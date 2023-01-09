@@ -1,6 +1,6 @@
 {
   "name": "feature-probe-ui",
-  "version": "1.7.0",
+  "version": "1.1.13",
   "description": "FeatureProbe UI/Portal",
   "license": "Apache-2.0",
   "keywords": [
@@ -10,7 +10,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:FeatureProbe/feature-probe-ui.git"
+    "url": "git@github.com:FeatureProbe/FeatureProbe.git"
   },
   "engines": {
     "node": "16.x"

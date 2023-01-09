@@ -54,11 +54,11 @@ sidebar_position: 3
 
 ```bash
 git clone https://gitee.com/FeatureProbe/FeatureProbe.git
-cd FeatureProbe/feature-probe-api
+cd FeatureProbe/api
 mvn clean package
 ```
 
-  完成编译后会在当前目录生成以版本命名的 jar 部署文件，如 ` target/feature-probe-api-1.1.0.jar`。
+  完成编译后会在当前目录生成以版本命名的 jar 部署文件，如 ` target/api-1.1.0.jar`。
 
 ### 部署步骤
 
@@ -66,14 +66,14 @@ mvn clean package
 
    - JDK 1.8+
 
-2. 将 `feature-probe-api-1.1.0.jar` 放置部署服务器中，填入数据库链接配置，并以 `4008` 端口启动：
+2. 将 `api-1.1.0.jar` 放置部署服务器中，填入数据库链接配置，并以 `4008` 端口启动：
 
    :::caution
    以下脚本中数据库相关信息需要替换成您实际使用的数据库信息。
    :::
 
    ```bash
-    java -jar feature-probe-api-1.1.0.jar --server.port=4008 \
+    java -jar api-1.1.0.jar --server.port=4008 \
          --spring.datasource.jdbc-url=jdbc:mysql://{MYSQL_DATABASE_IP}:{MYSQL_PORT}/feature_probe \  # 数据库 IP/端口和库名
          --spring.datasource.username={MYSQL_USERNAME} \
          --spring.datasource.password={MYSQL_PASSWORD} 
@@ -147,12 +147,12 @@ mvn clean package
 2. 获取源码并编译出部署包：
 
    ```bash
-   git clone https://gitee.com/FeatureProbe/feature-probe-server.git
+   git clone https://github.com/FeatureProbe/FeatureProbe.git
    ```
    
    在源码目录中编译：
    ```bash
-   cd feature-probe-server
+   cd server
    cargo build --release --verbose
    ```
 
@@ -225,7 +225,7 @@ mvn clean package
 
    ```bash
    git clone https://gitee.com/FeatureProbe/FeatureProbe.git
-   cd FeatureProbe/feature-probe-ui
+   cd FeatureProbe/ui
    yarn install --frozen-lockfile
    yarn build
    ```
@@ -248,8 +248,8 @@ mvn clean package
    (1) 打开 `craco.config.js` 文件
 
    ```bash
-   cd feature-probe-ui
-   vi FeatureProbe/feature-probe-ui/craco.config.js
+   cd ui
+   vi craco.config.js
    ```
 
    (2) 在原有配置的基础上，在webpack - configure - output 对象中添加 `publicPath` 字段，比如设置值为：/featureprobe/
