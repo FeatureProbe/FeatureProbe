@@ -81,6 +81,11 @@ public class MetricService {
                                 int lastHours) {
         int queryLastHours = Math.min(lastHours, MAX_QUERY_HOURS);
         String serverSdkKey = queryEnvironmentServerSdkKey(projectKey, environmentKey);
+        boolean isAccess = eventRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey);
+        if (!isAccess) {
+            return new MetricResponse(false, Collections.emptyList(),
+                    sortAccessCounters(Collections.emptyList()));
+        }
         Targeting targeting = targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey,
                 environmentKey, toggleKey).get();
         Map<String, VariationHistory> variationVersionMap = buildVariationVersionMap(projectKey,
@@ -91,7 +96,6 @@ public class MetricService {
                 accessEventPoints, metricType);
         List<VariationAccessCounter> accessCounters = summaryAccessEvents(aggregatedAccessEventPoints);
         appendLatestVariations(accessCounters, targeting, metricType);
-        boolean isAccess = eventRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey);
         return new MetricResponse(isAccess, accessEventPoints, sortAccessCounters(accessCounters));
     }
 
