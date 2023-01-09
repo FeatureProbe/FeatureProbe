@@ -241,7 +241,7 @@ mvn clean package
 
     ```bash
     cd ui
-    vi FeatureProbe/ui/craco.config.js
+    vi craco.config.js
     ```
 
     (2) On the basis of the original configuration, add the `publicPath` field in the webpack - configure - output object, for example, set the value to: /featureprobe/

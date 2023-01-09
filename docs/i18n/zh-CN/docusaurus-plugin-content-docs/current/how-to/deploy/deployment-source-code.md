@@ -147,7 +147,7 @@ mvn clean package
 2. 获取源码并编译出部署包：
 
    ```bash
-   git clone https://github.com/FeatureProbe/FeatureProbe.git
+   git clone https://gitee.com/FeatureProbe/FeatureProbe.git
    ```
    
    在源码目录中编译：
