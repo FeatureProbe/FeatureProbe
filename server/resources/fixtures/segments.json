@@ -1,0 +1,23 @@
+{
+  "segments": {
+    "some_segment1-fjoaefjaam": {
+      "key": "some_segment1",
+      "uniqueId": "some_segment1-fjoaefjaam",
+      "version": 2,
+      "rules": [
+        {
+          "conditions": [
+            {
+              "type": "string",
+              "subject": "city",
+              "predicate": "in",
+              "objects": [
+                "4"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

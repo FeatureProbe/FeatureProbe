@@ -1,0 +1,38 @@
+[package]
+edition = "2021"
+name = "feature-probe-server"
+version = "1.0.1"
+
+[[bin]]
+name = "feature_probe_server"
+path = "src/main.rs"
+
+[lib]
+name = "feature_probe_server"
+path = "src/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0"
+axum = { version = "0.5", features = ["headers"] }
+axum-extra = { version = "0.2", features = ["typed-routing"] }
+base64 = "0.13"
+config = "0.13"
+futures = "0.3"
+log = "0.4"
+parking_lot = "0.12"
+reqwest = { version = "0.11", default-features = false, features = ["rustls-tls"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = "0.2"
+url = "2.2"
+
+feature-probe-server-sdk = { git = "https://github.com/FeatureProbe/server-sdk-rust.git",  features = ["internal", "use_tokio"], default-features = false }
+feature-probe-event = { git = "https://github.com/FeatureProbe/fp-event-rs.git", features = ["use_tokio", "collector"], default-features = false }
+
+[dev-dependencies]
+rusty-hook = "^0.11.2"
