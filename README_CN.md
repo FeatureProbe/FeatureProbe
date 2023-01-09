@@ -44,10 +44,10 @@ FeatureProbe 的总体架构如下图所示：
 ![FeatureProbe Architecture](./pictures/feature_probe_architecture.png)
 
 * 特性管理平台
-   * 前端: [Admin UI](https://github.com/FeatureProbe/FeatureProbe/tree/main/feature-probe-ui), 提供用户操作页面
-   * 后端: [API](https://github.com/FeatureProbe/FeatureProbe/tree/main/feature-probe-api),提供核心数据管理和对外API。
+   * 前端: [Admin UI](https://github.com/FeatureProbe/FeatureProbe/tree/main/ui), 提供用户操作页面
+   * 后端: [API](https://github.com/FeatureProbe/FeatureProbe/tree/main/api),提供核心数据管理和对外API。
 
-* FeatureProbe [Server](https://github.com/FeatureProbe/feature-probe-server)处理SDK的链接，提供高性能的规则判定引擎。
+* FeatureProbe [Server](https://github.com/FeatureProbe/FeatureProbe/tree/main/server)处理SDK的链接，提供高性能的规则判定引擎。
 
 * 各语言SDK
    * Client-Side SDKs

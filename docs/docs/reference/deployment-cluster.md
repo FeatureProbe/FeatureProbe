@@ -1,46 +1,43 @@
 ---
-sidebar_position: 4
+sidebar_position: 6
 ---
-
 
 # Deploy a Cluster
 
-> 本文档介绍如何以多集群方式部署 FeatureProbe 服务。
+> This document describes how to deploy the FeatureProbe service in a multi-cluster manner.
 
+## Deployment topology
 
-
-## 部署拓扑
-
-为保证整体服务的高可用，我们推荐部署拓扑结构如下：
+In order to ensure the high availability of the overall service, we recommend the deployment topology as follows:
 
 ![image-20220906181332418](/deploy.png)
 
-一套独立的 FeatureProbe 集群由三部分组成：
+An independent FeatureProbe cluster consists of three parts:
 
-- Admin 集群
+- Admin cluster
 
-  一个 Admin 服务由 UI（Nginx） 和 API 模块组成。该集群可通过*域名*或 *VIP* 方式负载均衡机制
+   An Admin service consists of UI (Nginx) and API modules. The cluster can use *domain name* or *VIP* mode load balancing mechanism
 
-- Server 集群
+- Server cluster
 
-  依赖 API 服务，需访问同集群下的 Admin 集群中的 API 服务。该服务为 SDK 提供开关执行和下发能力，建议以*域名*方式对外提供访问
+   Relying on the API service, you need to access the API service in the Admin cluster under the same cluster. This service provides the SDK with toggle caculation and distribution capabilities, and it is recommended to provide external access in the form of *domain name*
 
-- 数据库集群
+- Database cluster
 
-  建议可使用一主多从集群模式。
+   It is recommended to use the one-master-multiple-slave cluster mode.
 
-**网络策略**
+**Network Policy**
 
-- 将 Admin 集群和数据库控制仅在内网访问，不建议暴露在公网上。
-- Server 集群需为 APP SDK 和 JS SDK 提供开关执行能力，所以需要能在公网访问。如仅使用 Server SDK 接入则无须暴露在公网中。
+- Control the Admin cluster and database only for internal network access, and it is not recommended to expose it to the public network.
+- The server cluster needs to provide toggle caculation capabilities for the APP SDK and JS SDK, so it needs to be accessible on the public network. If you only use the Server SDK to access, it does not need to be exposed to the public network.
 
 
 
-## 多环境
+## Multiple Environments
 
-FeatureProbe 本身提供了多环境支持，不同环境之间数据采用逻辑隔离方式，所以无须为不同环境部署独立环境。
+FeatureProbe itself provides multi-environment support, and the data between different environments is logically isolated, so there is no need to deploy separate environments for different environments.
 
-> 关于对多环境的支持和自定义环境，可以参考 使用手册 - 平台使用 - 创建配置和环境
+> For support for multiple environments and custom environments, please reference [How to use project and environment](/how-to/platform/project-and-environment)
 
 
 

@@ -1,12 +1,12 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # OpenAPI
 
 ### Authentication
 
-所有 REST API 资源访问使用[个人或应用 Access Token](#) 进行身份验证，不支持其他身份验证机制。 您可以在您的帐户设置页面上管理[个人 Access Token](#)。
+所有 REST API 资源访问使用[个人或应用 Access Token](/how-to/platform/token) 进行身份验证，不支持其他身份验证机制。 您可以在您的帐户设置页面上管理[个人 Access Token](/how-to/platform/token#个人tokens)。
 
 您在平台上创建并获取到 Access Token 后，即可通过该 Token 来访问所有的 REST API ，访问时需要加上如下请求头参数：
 
@@ -16,8 +16,6 @@ sidebar_position: 3
 | Content-Type  | 发送的数据协议类型，只支持 JSON | -H 'Content-Type: application/json'  |
 
 所有对 API 的调用请使用 HTTPS 方式。
-
-
 
 ### Example
 
@@ -72,8 +70,6 @@ curl -i 'https://featureprobe.io/api/projects/{PROJECT_KEY}/environments/{ENV_KE
     }
 }'
 ```
-
-
 
 ### OpenAPI Specification
 

@@ -23,7 +23,7 @@ FeatureProbe SDK 分为 Client-side SDK 和 Server-side SDK 两种
 
 ### Server-side SDK
 
-主要用在业务系统的后端服务中，支持 Golang，Java，Rust，Python 等语言。有以下特点：
+主要用在业务系统的后端服务中，支持 Golang，Java，Rust，Python， Node.js 等语言。有以下特点：
 
 * 业务系统后端服务通常会处理大量用户的请求，需要代表不同用户请求FeatureProbe SDK，拿到每个用户的开关结果。
 * 服务器的性能较高，可以承担部分计算任务
