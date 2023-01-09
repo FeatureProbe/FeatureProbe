@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 7
 ---
 
 # 部署参数说明
@@ -10,13 +10,13 @@ API 模块和 Server 模块在启动时参数说明。
 
 | **Environment variable**                | **Default value** | Required | **Description**                                              |
 | --------------------------------------- | ----------------- | -------- | ------------------------------------------------------------ |
-| spring.datasource.jdbc-url              | -                 | 是       | JDBC 连接地址。示例：` jdbc:mysql://{database_ip:port}/{database_name}` |
+| spring.datasource.jdbc-url              | -                 | 是       | JDBC 连接地址。示例：`jdbc:mysql://{database_ip:port}/{database_name}` |
 | spring.datasource.username              | root              | 否       | 连接数据库用户名                                             |
 | spring.datasource.password              | root              | 否       | 连接数据库密码                                               |
 | server.port                             | 8080              | 否       | 服务端口                                                     |
 | TZ                                      | Asia/Shanghai     | 否       | 时区                                                         |
 | spring.profiles.active                  | online            | 否       | 当前生效的 profile                                           |
-| logging.level.root                      | INFO              | 否       | 应用日志级别； `INFO`/`ERROR`/`WARN`/`DEBUG                  |
+| logging.level.root                      | INFO              | 否       | 应用日志级别； `INFO`/`ERROR`/`WARN`/`DEBUG`                  |
 | spring.jpa.show-sql                     | false             | 否       | 是否显示执行时的 SQL 语句                                    |
 | app.security.jwt.keystore-location      | ./jwt.jks         | 否       | 证书文件路径                                                 |
 | app.security.jwt.keystore-password      | password          | 否       | 生成证书时 storepass                                         |
@@ -50,8 +50,7 @@ keytool -genkey -alias my-featureprobe-jwt -keyalg RSA -keysize 1024 -keystore f
 | FP_KEYS_URL              | http://127.0.0.1:8080/api/server/sdk_keys | 是       | 连接的 FeatureProbe API 服务地址；用于拉取 sdk key     |
 | FP_EVENTS_URL            | http://127.0.0.1:8080/api/server/events   | 是       | 连接的 FeatureProbe API 服务地址；用于上报开关访问事件 |
 | FP_SERVER_PORT           | 4007                                      | 否       | 服务端口                                               |
-| FP_REFRESH_SECONDS       | 3                                         | 否       | 轮训拉取开关间隔时间                                   |
+| FP_REFRESH_SECONDS       | 3                                         | 否       | 轮询拉取开关间隔时间                                   |
 | RUST_LOG                 | info                                      | 否       | 应用日志级别;  `info`/`error`                          |
 
 *上述参数无论是以 docker 方式或二进制方式启动，均通过 Environment 传入.*
-

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 # SDK 实现原理
@@ -9,8 +9,6 @@ sidebar_position: 2
 :::tip
 FeatureProbe SDK 分为 Client-side SDK 和 Server-side SDK 两种，相关概念可以查看[SDK 基本概念](/reference/sdk-introduction)文档。
 :::
-
-
 
 ## 实现原理
 
@@ -49,7 +47,7 @@ String stringValue = fpClient.stringValue("YOUR_TOGGLE_KEY", user, false);
 
 #### 3、同步开关规则
 
-当开关发生变更时，SDK 需要获取到最新开关规则，以保证计算结果的实现性。 所以 SDK 在内部采用轮训（**Polling**）机制（默认3秒一次）异步从 FeatureProbe server 来获取最新开关规则更新到缓存，在每次获取开关结果时都将基于最新规则计算返回结果。
+当开关发生变更时，SDK 需要获取到最新开关规则，以保证计算结果的实现性。 所以 SDK 在内部采用轮询（**Polling**）机制（默认每5秒一次）异步从 FeatureProbe server 来获取最新开关规则更新到缓存，在每次获取开关结果时都将基于最新规则计算返回结果。目前我们正在将轮询机制升级为WebSocket机制。
 
 #### 4、开关访问数据上报
 
@@ -80,7 +78,7 @@ val fpClient = FeatureProbe(config, user) // 上报用户属性来执行初始�
 
 #### 3、同步开关结果
 
-Client-side SDK 同步方式 Server-side SDK 一致，均是使用轮训（**Polling**）机制异步从 FeatureProbe server 同步数据。主要区别在于 Client-side SDK 同步的是开关访问结果。
+Client-side SDK 同步方式 Server-side SDK 一致，均是使用轮询（**Polling**）机制异步从 FeatureProbe server 同步数据。主要区别在于 Client-side SDK 同步的是开关访问结果。目前我们正在将轮询机制升级为WebSocket机制。
 
 #### 4、开关访问数据上报
 

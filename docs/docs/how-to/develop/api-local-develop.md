@@ -52,7 +52,7 @@ If you want to turn off the UI compilation option, please set FeatureProbe/featu
 
 ## Local development
 
-After the compilation is complete, run the feature-probe-admin module through your familiar IDE, and visit http://localhost:8080 to view the UI page.
+After the compilation is complete, run the feature-probe-admin module through your familiar IDE, and visit `http://localhost:8080` to view the UI page.
 
 :::info
 If the UI project code changes, the compilation step needs to be re-executed.

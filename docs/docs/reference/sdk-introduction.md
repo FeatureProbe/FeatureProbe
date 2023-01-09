@@ -8,7 +8,35 @@ This document mainly introduces the classification, implementation, similarities
 
 ## SDK Implementation
 
-SDK matches the user attributes according to the toggle rules pre-configured in the UI platform of FeatureProbe, and returns the rule value. For example, for a feature in the APP is pre-set in advance to control the opening and closing. After running for a period of time, it is found that a bug will be triggered under certain circumstances, then we can have a rule that is lower than the specified version, and this rule value returns false . Then we need to add the `app_version` attribute to SDK User object, so that when the attribute is passed to the FeatureProbe server, the corresponding rule will return false for the lower version, closing that feature.
+SDK matches the user attributes according to the toggle rules pre-configured in the UI platform of FeatureProbe, and returns the rule value. 
+
+## Differences between SDKs
+
+At present, the SDK has two types: Client-side SDK and Server-side SDK.
+
+### Client-side SDK
+
+It is mainly aimed at the device environment of APP users such as browsers and mobile device, including three categories: JavaScript, Android and iOS. Compared with the Server-side SDK.
+
+* Generally, the Client SDK has a one-to-one relationship with the user, and the Client SDK always represents the result of the same user requesting the toggle.
+* The performance and security level of the equipment is not as good as the server in the IDC
+
+### Server-side SDK
+
+It is mainly used in the back-end services of business systems, and supports Golang, Java, Rust, Python, Node.js and other languages. Has the following characteristics:
+
+* The backend service of the business system usually handles a large number of user requests, and needs to request the FeatureProbe SDK on behalf of different users to get the toggle results of each user.
+* The server has high performance and can undertake part of the computing tasks
+
+:::tip
+To learn more about the difference between Client-side SDK and Server-side SDK, you can view the [SDK Specification](/reference/sdk-specification) document.
+:::
+
+## SDK Key
+
+Client SDK Key can only be used in Client-side SDK, and can only pull calculation results.
+
+Server SDK Key can only be used in Server-side SDK, and can only pull calculation rules and evaluate them in real time in the SDK.
 
 ## Core Data Structure
 
@@ -25,6 +53,7 @@ SDK matches the user attributes according to the toggle rules pre-configured in 
 - FeatureProbe
   - `value` functions: there are bool/string/number/json four types. used to get the value corresponding to the rule in the UI platform, the  type correspond to the type of toggle in UI platform.
   - `detail` functions: there are bool/string/number/json four types. used to get the value corresponding to the rule in the UI platform, and more debug info.
+  - `close` method: Close the FeatureProbe client gracefully to ensure that all metrics information is uploaded.
 
 - FPDetail
   - `value` : the value corresponding to the rule in the UI platform.
@@ -32,25 +61,6 @@ SDK matches the user attributes according to the toggle rules pre-configured in 
   - `variation index`: The sequence number of the variations in the UI platform
   - `version`: the version of toggle
   - `reason`: why return this value, like disabled, default, not exist and so on.
-
-
-## Differences between SDKs
-
-At present, the SDK has two types: Client-side SDK and Server-side SDK.
-
-### Client-side SDK
-
-It is mainly aimed at the device environment of APP users such as browsers and mobile device, including three categories: JavaScript, Android and iOS. Compared with the Server-side SDK, the performance and security level of the device are not as good as the server in the IDC, so the Client-side SDK chooses to hand over the toggle evaluation to the FeatureProbe server, and wait for the server to complete. Subsequent toggle value obtain from the cache in memory.
-
-### Server-side SDK
-
-Currently, it is mainly aimed at back-end services deployed in the developer's IDC or FeatureProbe's IDC, including Golang, Java, Rust, Python, etc. Because the performance of the server is better, the concurrency is larger, the security level is higher, and the attribute of User changes according to the number of users, the calculation of the rules is calculated in real time in the Server-side SDK.
-
-## SDK Key
-
-Client SDK Key can only be used in Client-side SDK, and can only pull calculation results.
-
-Server SDK Key can only be used in Server-side SDK, and can only pull calculation rules and evaluate them in real time in the SDK.
 
 ## Privacy
 

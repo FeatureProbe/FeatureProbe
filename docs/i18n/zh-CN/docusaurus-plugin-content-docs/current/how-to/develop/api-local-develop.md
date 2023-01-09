@@ -50,7 +50,7 @@ mvn clean compile
 
 ## 本地开发
 
-编译完成后，通过自己熟悉的IDE运行 feature-probe-admin 模块，访问 http://localhost:8080 查看UI页面。
+编译完成后，通过自己熟悉的IDE运行 feature-probe-admin 模块，访问 `http://localhost:8080` 查看UI页面。
 
 :::info
 如果UI项目代码变动，需要重新执行编译步骤。

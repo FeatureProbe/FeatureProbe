@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 6
 ---
 
 # 集群部署
@@ -37,5 +37,5 @@ sidebar_position: 4
 
 FeatureProbe 本身提供了多环境支持，不同环境之间数据采用逻辑隔离方式，所以无须为不同环境部署独立环境。
 
-> 关于对多环境的支持和自定义环境，可以参考 使用手册 - 平台使用 - 创建配置和环境
+> 关于对多环境的支持和自定义环境，可以参考[项目与环境](/how-to/platform/project-and-environment)
 

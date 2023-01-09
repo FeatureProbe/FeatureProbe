@@ -13,7 +13,7 @@ This SDK is designed primarily for use in multi-user systems such as web servers
 | ------------- | ------------------------------------------------------------ |
 | SDK API documentation  | [ SDK API docs](https://featureprobe.github.io/server-sdk-node/) |
 | GitHub repository | [Server-SDK for Node.js](https://github.com/FeatureProbe/server-sdk-node) |
-| Sample applications      | [Demo code](https://github.com/FeatureProbe/server-sdk-node/blob/main/example/demo.js) (TypeScript) |
+| Sample applications      | [Demo code](https://github.com/FeatureProbe/server-sdk-node/blob/main/example/demo.js) (JavaScript) |
 | Published module    | [ npm](https://www.npmjs.com/package/featureprobe-server-sdk-node) |
 
 :::

@@ -1,55 +1,54 @@
 ---
-sidebar_position: 5
+sidebar_position: 7
 ---
 
 # Deployment Configuration
 
-API 模块和 Server 模块在启动时参数说明。
+The following is the description of the parameters of the API module and Server module at startup.
 
 ## FeatureProbe API
 
 | **Environment variable**                | **Default value** | Required | **Description**                                              |
 | --------------------------------------- | ----------------- | -------- | ------------------------------------------------------------ |
-| server.port                             | 8080              | 否       | 服务端口                                                     |
-| TZ                                      | Asia/Shanghai     | 否       | 时区                                                         |
-| spring.datasource.jdbc-url              | -                 | 是       | JDBC 连接地址。如` jdbc:mysql://database:13306/feature_probe` |
-| spring.profiles.active                  | online            | 否       | 当前生效的 profile                                           |
-| logging.level.root                      | INFO              | 否       | 应用日志级别； `INFO`/`ERROR`/`WARN`/`DEBUG                  |
-| spring.jpa.show-sql                     | false             | 否       | 是否显示执行时的 SQL 语句                                    |
-| app.security.jwt.keystore-location      | ./jwt.jks         | 否       | 证书文件路径                                                 |
-| app.security.jwt.keystore-password      | password          | 否       | 生成证书时 storepass                                         |
-| app.security.jwt.private-key-passphrase | password          | 否       | 生成证书时的 keypass                                         |
+| server.port                             | 8080              | no       | Server port                                                     |
+| TZ                                      | Asia/Shanghai     | no       | Timezone                                                         |
+| spring.datasource.jdbc-url              | -                 | yes       |  Connection address of JDBC. Such as `jdbc:mysql://database:13306/feature_probe` |
+| spring.profiles.active                  | online            | no       | Currently active profile                                           |
+| logging.level.root                      | INFO              | no       | Application log level: `INFO`/`ERROR`/`WARN`/`DEBUG`                  |
+| spring.jpa.show-sql                     | false             | no       | Whether to display the SQL statement at execution time                                    |
+| app.security.jwt.keystore-location      | ./jwt.jks         | no       | Certificate file path                                                 |
+| app.security.jwt.keystore-password      | password          | no       | Storepass when generating the certificate                                         |
+| app.security.jwt.private-key-passphrase | password          | no       | Keypass when generating the certificate                                        |
 
-*上述参数使用 docker 方式启动程序通过 Environment 传入，如以 jar 包启动通过 java -D 传入.*
+*The above parameters use the docker method to start the program and pass it in through Environment, such as starting it with a jar package and passing it in through java -D.*
 
-### 安全认证配置
+### Security authentication configuration
 
-FeatureProbe API 作为管理后台，对用户登录认证采用 [JWT](https://jwt.io/) 标准协议，并使用 [RSA256](https://de.wikipedia.org/wiki/RSA-Kryptosystem) 加密算法签名。为保证安全性，强烈建议重新生成 RSA 密钥文件。
+FeatureProbe API is used as the management background, using [JWT](https://jwt.io/) standard protocol for user login authentication, and using [RSA256](https://de.wikipedia.org/wiki/RSA-Kryptosystem) encryption Algorithmic signature. For security reasons, it is strongly recommended to regenerate the RSA key file.
 
-密钥生成方式：
+Key generation method:
 
 ```bash
 keytool -genkey -alias my-featureprobe-jwt -keyalg RSA -keysize 1024 -keystore fp-jwt.jks -validity 365 -keypass YOU-PRIVATE-KEY-PASSPHRASE -storepass YOU-KEYSTORE-PASSWORD
 ```
 
-执行完成后会在当前目录下生成 `fp-jwt.jks` 文件，参数说明：
+After the execution is completed, the `fp-jwt.jks` file will be generated in the current directory. The parameter description:
 
-- validity - 证书有效天数
+- validity - Certificate valid days
 - keypass - *YOU-PRIVATE-KEY-PASSPHRASE*
 - storepass - *YOU-KEYSTORE-PASSWORD*
 
-证书生成后，需要修改启用参数 `app.security.jwt.*` 来让当前证书在应用程序中生效。
+After the certificate is generated, you need to modify the enabling parameters `app.security.jwt.*` to make the current certificate take effect in the application.
 
 ## FeatureProbe Server
 
 | **Environment variable** | **Default value**                         | Required | **Description**                                        |
 | ------------------------ | ----------------------------------------- | -------- | ------------------------------------------------------ |
-| FP_SERVER_PORT           | 4007                                      | 否       | 服务端口                                               |
-| FP_TOGGLES_URL           | http://127.0.0.1:8080/api/server/toggles  | 是       | 连接的 FeatureProbe API 服务地址；用于拉取开关         |
-| FP_KEYS_URL              | http://127.0.0.1:8080/api/server/sdk_keys | 是       | 连接的 FeatureProbe API 服务地址；用于拉取 sdk key     |
-| FP_EVENTS_URL            | http://127.0.0.1:8080/api/server/events   | 是       | 连接的 FeatureProbe API 服务地址；用于上报开关访问事件 |
-| FP_REFRESH_SECONDS       | 3                                         | 否       | 轮训拉取开关间隔时间                                   |
-| RUST_LOG                 | info                                      | 否       | 应用日志级别;  `info`/`error`                          |
+| FP_SERVER_PORT           | 4007                                      | no       | Server port                                               |
+| FP_TOGGLES_URL           | http://127.0.0.1:8080/api/server/toggles  | yes       | Service address to connect to FeatureProbe API. Used for pull toggles         |
+| FP_KEYS_URL              | http://127.0.0.1:8080/api/server/sdk_keys | yes       | Service address to connect to FeatureProbe API. Used for pull sdk key     |
+| FP_EVENTS_URL            | http://127.0.0.1:8080/api/server/events   | yes       | Service address to connect to FeatureProbe API. Used to report toggle access events |
+| FP_REFRESH_SECONDS       | 3                                         | no       | Interval of polling pull toggle                                    |
+| RUST_LOG                 | info                                      | no       | Application log level, `info`/`error`                          |
 
-*上述参数无论是以 docker 方式或二进制方式启动，均通过 Environment 传入.*
-
+*Whether the above parameters are started in docker mode or binary mode, they are all passed in through Environment.*

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 5
 ---
 
 # 初始化数据库
@@ -14,8 +14,6 @@ sidebar_position: 3
 CREATE DATABASE IF NOT EXISTS `feature_probe` /*!40100 DEFAULT CHARACTER SET utf8 */;
 ```
 
-
-
 ## 创建表和初始数据
 
 我们提供了两种方式来创建表和初始数据：
@@ -25,8 +23,6 @@ CREATE DATABASE IF NOT EXISTS `feature_probe` /*!40100 DEFAULT CHARACTER SET utf
 无须特殊配置，FeatureProbe API 原生采用 [flyway](https://flywaydb.org/) 对数据库版本管理和自动创建，在 [gitub](https://github.com/FeatureProbe/feature-probe-api/tree/main/feature-probe-admin/src/main/resources/db/migration) 上你可以看到所有针对数据库的变更 SQL。在您每次启动 FeatureProbe API 时，程序将自动执行 DML/DDL ，无须手工对数据表版本进行维护。
 
 并且，针对数据库的变化您可以查看 `feature_probe.flyway_schema_history` 中的数据。
-
-
 
 ### **手工导入 DML/DDL **
 
