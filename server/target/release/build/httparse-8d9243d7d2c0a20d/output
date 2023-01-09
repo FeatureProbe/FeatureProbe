@@ -1,2 +1,0 @@
-cargo:rustc-cfg=httparse_simd
-cargo:warning=CARGO_CFG_TARGET_FEATURE was not set
