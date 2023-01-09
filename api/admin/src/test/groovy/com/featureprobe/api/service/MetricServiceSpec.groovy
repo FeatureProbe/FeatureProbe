@@ -73,29 +73,12 @@ class MetricServiceSpec extends Specification {
         then:
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, envKey) >> Optional.of(new Environment(serverSdkKey: serverSdkKey))
         1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, envKey, toggleKey) >> Optional.of(new Targeting(id: 1, content: "{}"))
-        2 * metricsCacheRepository.findBySdkKeyAndToggleKeyAndStartDateAndEndDateAndType(serverSdkKey, toggleKey, _, _, MetricsCacheTypeEnum.METRICS) >> Optional.empty()
-        3 * eventRepository.findBySdkKeyAndToggleKeyAndStartDateGreaterThanEqualAndEndDateLessThanEqual(serverSdkKey, toggleKey,
+        1 * eventRepository.findBySdkKeyAndToggleKeyAndStartDateGreaterThanEqualAndEndDateLessThanEqual(serverSdkKey, toggleKey,
                 _, _) >> []
         1 * variationHistoryRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, envKey, toggleKey) >> []
         1 * eventRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey) >> true
         0 == response.summary.size()
         response.isAccess
-    }
-
-    def "test query access event points when event is empty"() {
-        given:
-        def lastHours = 10
-
-        when:
-        List<AccessEventPoint> accessEventPoints = metricService.queryAccessEventPoints("test-sdk-key",
-                "my_toggle1",
-                new Targeting(projectKey: "project_test", environmentKey: "online", toggleKey: "test_toggle"),
-                lastHours)
-
-        then:
-        9 * metricsCacheRepository.findBySdkKeyAndToggleKeyAndStartDateAndEndDateAndType(_, _, _, _, MetricsCacheTypeEnum.METRICS) >> Optional.empty()
-        10 * eventRepository.findBySdkKeyAndToggleKeyAndStartDateGreaterThanEqualAndEndDateLessThanEqual(_, _, _, _) >> []
-        lastHours == accessEventPoints.size()
     }
 
     def "test append latest variations"() {
