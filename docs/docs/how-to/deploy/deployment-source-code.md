@@ -240,7 +240,7 @@ mvn clean package
     (1) Open `craco.config.js` file
 
     ```bash
-    cd vi
+    cd ui
     vi FeatureProbe/ui/craco.config.js
     ```
 
