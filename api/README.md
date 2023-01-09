@@ -1,6 +1,6 @@
 # FeatureProbe API
 
-[![codecov](https://codecov.io/gh/FeatureProbe/FeatureProbe/feature-probe-api/branch/main/graph/badge.svg?token=JVJWQUUIJH)](https://app.codecov.io/github/FeatureProbe/FeatureProbe/tree/main/feature-probe-api)
+[![codecov](https://codecov.io/gh/FeatureProbe/FeatureProbe/api/branch/main/graph/badge.svg?token=JVJWQUUIJH)](https://app.codecov.io/github/FeatureProbe/FeatureProbe/tree/main/api)
 [![Docker Pulls](https://img.shields.io/docker/pulls/featureprobe/api)](https://hub.docker.com/u/featureprobe)
 [![Apache-2.0 license](https://img.shields.io/github/license/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe/blob/main/LICENSE)
 
@@ -51,7 +51,9 @@ spring.datasource.jdbc-url=jdbc:mysql://database:13306/feature_probe?useSSL=fals
 You can also choose to build the project and generate the package use Maven.
 
 ```
-git clone https://github.com/FeatureProbe/feature-probe-api.git
+git clone https://github.com/FeatureProbe/FeatureProbe.git
+cd FeatureProbe/api
+
 mvn clean package
 ```
 
@@ -73,7 +75,7 @@ We will briefly outline these methods here, but in practice how you do this will
 
 #### Building your own image
 
-* Clone the FeatureProbe API repository at https://github.com/FeatureProbe/feature-probe-api.git
+* Clone the FeatureProbe API repository at https://github.com/FeatureProbe/FeatureProbe.git 
 * Modify codes as you wish.
 * Build the new image with e.g: docker build --tag my-featureprobe-api
 * Optionally push to a registry, and deploy.

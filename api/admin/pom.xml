@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>feature-probe-api</artifactId>
+        <artifactId>api</artifactId>
         <groupId>com.featureprobe</groupId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>feature-probe-admin</artifactId>
+    <artifactId>admin</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -21,11 +21,11 @@
     <dependencies>
         <dependency>
             <groupId>com.featureprobe</groupId>
-            <artifactId>feature-probe-base</artifactId>
+            <artifactId>base</artifactId>
         </dependency>
         <dependency>
             <groupId>com.featureprobe</groupId>
-            <artifactId>feature-probe-dao</artifactId>
+            <artifactId>dao</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -66,7 +66,7 @@
     </dependencies>
 
     <build>
-        <finalName>feature-probe-api</finalName>
+        <finalName>api</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -265,7 +265,7 @@
                 <version>1.6</version>
                 <configuration>
                     <installDirectory>../node</installDirectory>
-                    <workingDirectory>../../feature-probe-ui</workingDirectory>
+                    <workingDirectory>../../ui</workingDirectory>
 <!--                    <nodeDownloadRoot>https://npm.taobao.org/mirrors/node/</nodeDownloadRoot>-->
                     <skip>false</skip>
                 </configuration>
@@ -326,7 +326,7 @@
                             <overwrite>true</overwrite>
                             <resources>
                                 <resource>
-                                    <directory>../../feature-probe-ui/build/</directory>
+                                    <directory>../../ui/build/</directory>
                                     <includes>
                                         <include>/**</include>
                                     </includes>
