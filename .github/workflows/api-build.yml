@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'feature-probe-api/**'
+      - 'api/**'
   pull_request:
     branches: [ main ]
     paths:
-      - 'feature-probe-api/**'
+      - 'api/**'
   workflow_dispatch:
 
 jobs:
@@ -27,12 +27,12 @@ jobs:
         cache: 'maven'
         
     - name: Build & Test
-      run: mvn -B verify --file ./feature-probe-api/pom.xml
+      run: mvn -B verify --file ./api/pom.xml
       
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
-        directory: feature-probe-api/
+        directory: api/
         verbose: true
         flags: api_ut
       

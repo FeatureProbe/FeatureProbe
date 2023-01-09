@@ -1,0 +1,82 @@
+{
+  "sdk-key1": {
+    "toggle1": {
+      "key": "toggle1",
+      "enabled": false,
+      "forClient": true,
+      "version": 1,
+      "disabledServe": {
+        "select": 1
+      },
+      "defaultServe": {
+        "select": 0
+      },
+      "rules": [],
+      "variations": [
+        {},
+        {
+          "toggle1": "toggle1"
+        }
+      ]
+    },
+    "toggle2": {
+      "key": "toggle2",
+      "enabled": false,
+      "forClient": true,
+      "version": 1,
+      "disabledServe": {
+        "select": 1
+      },
+      "defaultServe": {
+        "select": 0
+      },
+      "rules": [],
+      "variations": [
+        {},
+        {
+          "toggle2": "toggle2"
+        }
+      ]
+    }
+  },
+  "sdk-key2": {
+    "toggle3": {
+      "key": "toggle3",
+      "enabled": false,
+      "forClient": true,
+      "version": 1,
+      "disabledServe": {
+        "select": 1
+      },
+      "defaultServe": {
+        "select": 0
+      },
+      "rules": [],
+      "variations": [
+        {},
+        {
+          "toggle3": "toggle3"
+        }
+      ]
+    },
+    "toggle2": {
+      "key": "toggle2",
+      "enabled": false,
+      "forClient": true,
+      "version": 1,
+      "disabledServe": {
+        "select": 1
+      },
+      "defaultServe": {
+        "select": 0
+      },
+      "rules": [],
+      "variations": [
+        {},
+        {
+          "toggle2": "toggle2"
+        }
+      ]
+    }
+  }
+}

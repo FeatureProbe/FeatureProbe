@@ -1,0 +1,64 @@
+[package]
+edition = "2021"
+name = "feature-probe-server"
+version = "1.3.13"
+license = "Apache-2.0"
+authors = ["maintain@featureprobe.com"]
+description = "FeatureProbe Server for evaluating feature toggles"
+build = "build.rs"
+
+[[bin]]
+name = "feature_probe_server"
+path = "src/main.rs"
+
+[lib]
+name = "feature_probe_server"
+path = "src/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = ["realtime"]
+unstable = []
+realtime = ["socketio-rs"]
+
+[build-dependencies]
+vergen = "7"
+
+[dependencies]
+anyhow = "1.0"
+axum = { version = "0.5", features = ["headers"] }
+axum-extra = { version = "0.2", features = ["typed-routing"] }
+base64 = "0.13"
+config = "0.13"
+futures = "0.3"
+log = "0.4"
+parking_lot = "0.12"
+reqwest = { version = "0.11", default-features = false, features = [
+  "rustls-tls",
+] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+tokio = { version = "1", features = ["full"] }
+time = { version = "0.3", features = ["formatting", "local-offset", "macros"] }
+tracing = "0.1"
+tracing-core = "0.1"
+tracing-log = "0.1"
+tracing-subscriber = { version = "0.3", features = [
+  "local-time",
+  "env-filter",
+] }
+url = "2.3"
+socketio-rs = { optional = true, version = "0.1.7", default-features = false, features = ["server"] }
+feature-probe-server-sdk = { version = "1.2.9", features = [
+  "internal",
+  "use_tokio",
+], default-features = false }
+feature-probe-event = { version = "1.0.5", features = [
+  "use_tokio",
+  "collector",
+], default-features = false }
+
+[dev-dependencies]
+rusty-hook = "^0.11.2"

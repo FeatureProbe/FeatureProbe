@@ -1,0 +1,338 @@
+{
+  "version": 1,
+  "segments": {
+    "some_segment1-fjoaefjaam": {
+      "key": "some_segment1",
+      "uniqueId": "some_segment1-fjoaefjaam",
+      "version": 2,
+      "rules": [
+        {
+          "conditions": [
+            {
+              "type": "string",
+              "subject": "city",
+              "predicate": "is one of",
+              "objects": [
+                "4"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "toggles": {
+    "bool_toggle": {
+      "key": "bool_toggle",
+      "enabled": true,
+      "forClient": true,
+      "version": 1,
+      "disabledServe": {
+        "select": 1
+      },
+      "defaultServe": {
+        "select": 0
+      },
+      "rules": [
+        {
+          "serve": {
+            "select": 0
+          },
+          "conditions": [
+            {
+              "type": "string",
+              "subject": "city",
+              "predicate": "is one of",
+              "objects": [
+                "1",
+                "2",
+                "3"
+              ]
+            }
+          ]
+        },
+        {
+          "serve": {
+            "select": 1
+          },
+          "conditions": [
+            {
+              "type": "segment",
+              "predicate": "in",
+              "objects": [
+                "some_segment1-fjoaefjaam"
+              ]
+            }
+          ]
+        }
+      ],
+      "variations": [
+        true,
+        false
+      ]
+    },
+    "number_toggle": {
+      "key": "number_toggle",
+      "forClient": true,
+      "enabled": true,
+      "version": 1,
+      "disabledServe": {
+        "select": 1
+      },
+      "defaultServe": {
+        "select": 0
+      },
+      "rules": [
+        {
+          "serve": {
+            "select": 0
+          },
+          "conditions": [
+            {
+              "type": "string",
+              "subject": "city",
+              "predicate": "is one of",
+              "objects": [
+                "1",
+                "2",
+                "3"
+              ]
+            }
+          ]
+        },
+        {
+          "serve": {
+            "select": 1
+          },
+          "conditions": [
+            {
+              "type": "segment",
+              "predicate": "in",
+              "objects": [
+                "some_segment1-fjoaefjaam"
+              ]
+            }
+          ]
+        }
+      ],
+      "variations": [
+        1,
+        2
+      ]
+    },
+    "string_toggle": {
+      "key": "string_toggle",
+      "forClient": true,
+      "enabled": true,
+      "version": 1,
+      "disabledServe": {
+        "select": 1
+      },
+      "defaultServe": {
+        "select": 0
+      },
+      "rules": [
+        {
+          "serve": {
+            "select": 0
+          },
+          "conditions": [
+            {
+              "type": "string",
+              "subject": "city",
+              "predicate": "is one of",
+              "objects": [
+                "1",
+                "2",
+                "3"
+              ]
+            }
+          ]
+        },
+        {
+          "serve": {
+            "select": 1
+          },
+          "conditions": [
+            {
+              "type": "segment",
+              "predicate": "in",
+              "objects": [
+                "some_segment1-fjoaefjaam"
+              ]
+            }
+          ]
+        }
+      ],
+      "variations": [
+        "1",
+        "2"
+      ]
+    },
+    "json_toggle": {
+      "key": "json_toggle",
+      "enabled": true,
+      "forClient": true,
+      "version": 1,
+      "disabledServe": {
+        "select": 1
+      },
+      "defaultServe": {
+        "split": {
+          "distribution": [
+            [
+              [
+                0,
+                3333
+              ]
+            ],
+            [
+              [
+                3333,
+                6666
+              ]
+            ],
+            [
+              [
+                6666,
+                10000
+              ]
+            ]
+          ],
+          "salt": "some_salt"
+        }
+      },
+      "rules": [
+        {
+          "serve": {
+            "select": 0
+          },
+          "conditions": [
+            {
+              "type": "string",
+              "subject": "city",
+              "predicate": "is one of",
+              "objects": [
+                "1",
+                "2",
+                "3"
+              ]
+            }
+          ]
+        },
+        {
+          "serve": {
+            "select": 1
+          },
+          "conditions": [
+            {
+              "type": "segment",
+              "predicate": "in",
+              "objects": [
+                "some_segment1-fjoaefjaam"
+              ]
+            }
+          ]
+        }
+      ],
+      "variations": [
+        {
+          "variation_0": "c2",
+          "v": "v1"
+        },
+        {
+          "variation_1": "v2"
+        },
+        {
+          "variation_2": "v3"
+        }
+      ]
+    },
+    "multi_condition_toggle": {
+      "key": "multi_condition_toggle",
+      "enabled": true,
+      "forClient": true,
+      "version": 1,
+      "disabledServe": {
+        "select": 1
+      },
+      "defaultServe": {
+        "select": 1
+      },
+      "rules": [
+        {
+          "serve": {
+            "select": 0
+          },
+          "conditions": [
+            {
+              "type": "string",
+              "subject": "city",
+              "predicate": "is one of",
+              "objects": [
+                "1",
+                "2",
+                "3"
+              ]
+            },
+            {
+              "type": "string",
+              "subject": "os",
+              "predicate": "is one of",
+              "objects": [
+                "mac",
+                "linux"
+              ]
+            }
+          ]
+        }
+      ],
+      "variations": [
+        {
+          "variation_0": ""
+        },
+        {
+          "disabled_key": "disabled_value"
+        }
+      ]
+    },
+    "disabled_toggle": {
+      "key": "disabled_toggle",
+      "enabled": false,
+      "forClient": true,
+      "version": 1,
+      "disabledServe": {
+        "select": 1
+      },
+      "defaultServe": {
+        "select": 0
+      },
+      "rules": [],
+      "variations": [
+        {},
+        {
+          "disabled_key": "disabled_value"
+        }
+      ]
+    },
+    "server_toggle": {
+      "key": "server_toggle",
+      "enabled": false,
+      "forClient": false,
+      "version": 1,
+      "disabledServe": {
+        "select": 1
+      },
+      "defaultServe": {
+        "select": 0
+      },
+      "rules": [],
+      "variations": [
+        {},
+        {
+          "disabled_key": "disabled_value"
+        }
+      ]
+    }
+  }
+}

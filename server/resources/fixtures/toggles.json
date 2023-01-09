@@ -1,0 +1,151 @@
+{
+    "toggles": {
+        "toggle_1": {
+            "key": "toggle_1",
+            "enabled": true,
+            "forClient": true,
+            "version": 1,
+            "disabledServe": {
+                "select": 1
+            },
+            "defaultServe": {
+                "split": {
+                    "distribution": [
+                        [
+                            [
+                                0,
+                                3333
+                            ]
+                        ],
+                        [
+                            [
+                                3333,
+                                6666
+                            ]
+                        ],
+                        [
+                            [
+                                6666,
+                                10000
+                            ]
+                        ]
+                    ],
+                    "bucketBy": "user_set_key",
+                    "salt": "some_salt"
+                }
+            },
+            "rules": [
+                {
+                    "serve": {
+                        "select": 0
+                    },
+                    "conditions": [
+                        {
+                            "type": "string",
+                            "subject": "city",
+                            "predicate": "in",
+                            "objects": [
+                                "1",
+                                "2",
+                                "3"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "serve": {
+                        "select": 1
+                    },
+                    "conditions": [
+                        {
+                            "type": "segment",
+                            "predicate": "in",
+                            "object": [
+                                "some_segment1-fjoaefjaam"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "variations": [
+                {
+                    "variation_0": "c2",
+                    "v": "v1"
+                },
+                {
+                    "variation_1": "v2"
+                },
+                {
+                    "variation_2": "v3"
+                }
+            ]
+        },
+        "multi_condition_toggle": {
+            "key": "multi_condition_toggle",
+            "enabled": true,
+            "forClient": true,
+            "version": 1,
+            "disabledServe": {
+                "select": 1
+            },
+            "defaultServe": {
+                "select": 1
+            },
+            "rules": [
+                {
+                    "serve": {
+                        "select": 0
+                    },
+                    "conditions": [
+                        {
+                            "type": "string",
+                            "subject": "city",
+                            "predicate": "in",
+                            "objects": [
+                                "1",
+                                "2",
+                                "3"
+                            ]
+                        },
+                        {
+                            "type": "string",
+                            "subject": "os",
+                            "predicate": "in",
+                            "objects": [
+                                "mac",
+                                "linux"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "variations": [
+                {
+                    "variation_0": ""
+                },
+                {
+                    "disabled_key": "disabled_value"
+                }
+            ]
+        },
+        "disabled_toggle": {
+            "key": "disabled_toggle",
+            "enabled": false,
+            "forClient": false,
+            "version": 1,
+            "disabledServe": {
+                "select": 1
+            },
+            "defaultServe": {
+                "select": 0
+            },
+            "rules": [],
+            "variations": [
+                {},
+                {
+                    "disabled_key": "disabled_value"
+                }
+            ]
+        }
+    }
+}

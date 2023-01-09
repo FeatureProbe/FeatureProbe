@@ -6,14 +6,14 @@
 
 
     <groupId>com.featureprobe</groupId>
-    <artifactId>feature-probe-api</artifactId>
+    <artifactId>api</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
     <modules>
-        <module>feature-probe-admin</module>
-        <module>feature-probe-dao</module>
-        <module>feature-probe-base</module>
+        <module>admin</module>
+        <module>dao</module>
+        <module>base</module>
     </modules>
 
     <parent>
@@ -178,17 +178,17 @@
         <dependencies>
             <dependency>
                 <groupId>com.featureprobe</groupId>
-                <artifactId>feature-probe-base</artifactId>
+                <artifactId>base</artifactId>
                 <version>${feature-probe-base.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.featureprobe</groupId>
-                <artifactId>feature-probe-cache</artifactId>
+                <artifactId>cache</artifactId>
                 <version>${feature-probe-cache.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.featureprobe</groupId>
-                <artifactId>feature-probe-dao</artifactId>
+                <artifactId>dao</artifactId>
                 <version>${feature-probe-dao.version}</version>
             </dependency>
             <dependency>

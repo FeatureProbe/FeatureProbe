@@ -63,10 +63,10 @@ The overall architecture of FeatureProbe is shown in the following figure
 ![FeatureProbe Architecture](./pictures/feature_probe_architecture.png)
 
 * Management Center
-   * front-end: [Admin UI](https://github.com/FeatureProbe/FeatureProbe/tree/main/feature-probe-ui), 
-   * back-end: [API](https://github.com/FeatureProbe/FeatureProbe/tree/main/feature-probe-api), 
+   * front-end: [Admin UI](https://github.com/FeatureProbe/FeatureProbe/tree/main/ui), 
+   * back-end: [API](https://github.com/FeatureProbe/FeatureProbe/tree/main/api), 
 
-* FeatureProbe [Server](https://github.com/FeatureProbe/feature-probe-server)
+* FeatureProbe [Server](https://github.com/FeatureProbe/FeatureProbe/tree/main/server)
 
 * SDKs
    * Client-Side SDKs

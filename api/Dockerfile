@@ -5,7 +5,7 @@ RUN apk --no-cache add curl
 
 ENV JVM_ARGS=${JVM_ARGS}
 
-COPY feature-probe-admin/target/feature-probe-api.jar feature-probe-api.jar
+COPY admin/target/api.jar feature-probe-api.jar
 
 
 
