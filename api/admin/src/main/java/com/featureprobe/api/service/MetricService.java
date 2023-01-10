@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -377,7 +378,7 @@ public class MetricService {
     }
 
     private Date toDate(LocalDateTime pointStartTime) {
-        return Date.from(pointStartTime.atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(pointStartTime.atZone(TimeZone.getDefault().toZoneId()).toInstant());
     }
 
 }
