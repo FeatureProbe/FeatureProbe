@@ -132,6 +132,27 @@ if __name__ == '__main__':
             print('feature for user ' + str(i) + ' is: ' + str(is_open))
 ~~~
 </TabItem>
+<TabItem value="nodejs" label="Node.js">
+
+~~~js title="demo.js"
+const FEATURE_PROBE_SERVER_URL = 'https://featureprobe.io/server';
+const FEATURE_PROBE_SERVER_SDK_KEY = // Fill in the server SDK key
+
+const fpClient = new featureProbe.FeatureProbe({
+  remoteUrl: FEATURE_PROBE_SERVER_URL,
+  serverSdkKey: FEATURE_PROBE_SERVER_SDK_KEY,
+  refreshInterval: 5000,
+});
+
+for(let i = 0; i < 100; i++) {
+// highlight-start
+  const user = new featureProbe.FPUser().stableRollout(i.toString());
+// highlight-end
+  const isOpen = fpClient.booleanValue(YOUR_TOGGLE_KEY, user, false);
+  console.log("feature for user " + i + " is :" + isOpen);
+}
+~~~
+</TabItem>
 </Tabs>
 
 3. 运行编辑后的服务端程序
@@ -140,27 +161,33 @@ if __name__ == '__main__':
    <TabItem value="java" label="Java" default>
 
 ~~~bash
-bash:> mvn package
-bash:> java -jar ./target/server-sdk-java-1.4.0.jar
+mvn package
+java -jar ./target/server-sdk-java-1.4.0.jar
 ~~~
 </TabItem>
 <TabItem value="golang" label="Go">
 
 ~~~bash
-bash:> go run example/main.go
+go run example/main.go
 ~~~
 </TabItem>
 <TabItem value="rust" label="Rust">
 
 ~~~bash
-bash:> cargo run --example demo
+cargo run --example demo
 ~~~
 </TabItem>
 <TabItem value="python" label="Python">
 
 ~~~bash
-bash:> pip3 install -r requirements.txt
-bash:> python3 demo.py
+pip3 install -r requirements.txt
+python3 demo.py
+~~~
+</TabItem>
+<TabItem value="nodejs" label="Node.js">
+
+~~~bash
+node demo.js
 ~~~
 </TabItem>
 </Tabs>
