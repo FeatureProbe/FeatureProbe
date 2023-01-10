@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# feature-probe-ui
+# UI
 
 ## 环境要求
 
@@ -14,7 +14,7 @@ sidebar_position: 1
 
 ```shell
 git clone git@github.com:FeatureProbe/FeatureProbe.git
-cd FeatureProbe/feature-probe-ui
+cd FeatureProbe/ui
 ```
 
 使用`yarn`安装依赖

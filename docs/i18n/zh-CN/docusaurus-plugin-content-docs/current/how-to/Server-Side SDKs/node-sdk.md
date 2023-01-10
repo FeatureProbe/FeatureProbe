@@ -13,7 +13,7 @@ sidebar_position: 4
 | ------------- | ------------------------------------------------------------ |
 | SDK API 文档  | [ SDK API docs](https://featureprobe.github.io/server-sdk-node/) |
 | GitHub 代码库 | [Server-SDK for Node.js](https://github.com/FeatureProbe/server-sdk-node) |
-| 接入示例      | [Demo code](https://github.com/FeatureProbe/server-sdk-node/blob/main/example/demo.js) (TypeScript) |
+| 接入示例      | [Demo code](https://github.com/FeatureProbe/server-sdk-node/blob/main/example/demo.js) (JavaScript) |
 | 已发布模块    | [ npm](https://www.npmjs.com/package/featureprobe-server-sdk-node) |
 
 :::

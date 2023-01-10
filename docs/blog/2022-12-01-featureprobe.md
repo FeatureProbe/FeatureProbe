@@ -68,6 +68,6 @@ FeatureProbe SDK 目前是 pull 模式和服务端通信，即启动后通过轮
 
 # 三、最终实现
 
-FeatureProbe Server 是 Rust 语言实现的，考虑到后续的性能和扩展性等原因，我们不想再引入一个 nodejs 的模块专门做长连接的管理，所以我用 **Rust** 实现了 SocketIO 的服务端 [socketio-rs](https://github.com/socket-iox/socket-io)（实现的rust方案已经开源到GitHub，点击[socketio-rs](https://github.com/socket-iox/socket-io)可访问），实际的 FeatureProbe [客户端业务代码](https://github.com/FeatureProbe/server-sdk-rust/blob/44e971551c8bc10069014b3797a735df20fdde8a/src/feature_probe.rs#L251-L280)和[服务端业务代码](https://github.com/FeatureProbe/feature-probe-server/blob/main/src/realtime.rs)都相对比较简洁。
+FeatureProbe Server 是 Rust 语言实现的，考虑到后续的性能和扩展性等原因，我们不想再引入一个 nodejs 的模块专门做长连接的管理，所以我用 **Rust** 实现了 SocketIO 的服务端 [socketio-rs](https://github.com/socket-iox/socket-io)（实现的rust方案已经开源到GitHub，点击[socketio-rs](https://github.com/socket-iox/socket-io)可访问），实际的 FeatureProbe [客户端业务代码](https://github.com/FeatureProbe/server-sdk-rust/blob/44e971551c8bc10069014b3797a735df20fdde8a/src/feature_probe.rs#L251-L280)和[服务端业务代码](https://github.com/FeatureProbe/FeatureProbe/blob/main/server/src/realtime.rs)都相对比较简洁。
 
 目前FeatureProbe 使用 Apache 2.0 License 协议已经完全开源。你可以从 [GitHub](https://github.com/FeatureProbe/FeatureProbe) 或 [Gitee](https://gitee.com/featureprobe/FeatureProbe) 上搜索FeatureProbe获取到所有源代码。

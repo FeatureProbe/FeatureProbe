@@ -9,7 +9,7 @@ sidebar_position: 1
 ![featureprobe architecture](/structure.png)
 
 * **FeatureProbe UI** - Provides users with a visual UI interface for managing and publishing feature switches.
-* **FeatureProbe API** - Provides data management capabilities for the UI and external Open API services, designed to strictly adhere to Restful specifications, and as a common API for feature management domain not only provides core data management capabilities for the UI, but you can also automate switch rule changes and publishing based on this API. View OpenAPI documentation
+* **FeatureProbe API** - Provides data management capabilities for the UI and external Open API services, designed to strictly adhere to [Restful specifications](https://www.redhat.com/zh/topics/api/what-is-a-rest-api), and as a common API for feature management domain not only provides core data management capabilities for the UI, but you can also automate switch rule changes and publishing based on this API. [View OpenAPI documentation](https://featureprobe.io/api-docs)
 * **FeatureProbe Server** - Provides a high-performance switch rule determination engine and second-level data distribution capabilities.
 * **FeatureProbe SDK** - We provide SDKs for all major languages to obtain switch rule determination results, allowing you to quickly access FeatureProbe in your application to implement the corresponding feature switching capabilities.
 
@@ -25,7 +25,7 @@ Since the SDK needs to be integrated into your application runtime environment, 
 
 ### Resilience
 
-FeatureProbe Server is implemented in Rust language and is naturally high-performance and highly reliable. As you can see in the figure below, the fast horizontal scaling allows you to easily handle large-scale traffic access. At the same time, we are already planning to further improve the performance of the Server by using Multiplexing + Publish & Subscribe mode, so that the switch rules can be issued and take effect in milliseconds after changes.
+[FeatureProbe Server ](https://github.com/FeatureProbe/FeatureProbe/tree/main/server) is implemented in Rust language and is naturally high-performance and highly reliable. As you can see in the figure below, the fast horizontal scaling allows you to easily handle large-scale traffic access. At the same time, we are already planning to further improve the performance of the Server by using Multiplexing + Publish & Subscribe mode, so that the switch rules can be issued and take effect in milliseconds after changes.
 
 ![featureprobe server](/feature-probe-server.png)
 

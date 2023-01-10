@@ -35,7 +35,7 @@ Please replace the above IP address with the actual IP address according to the 
 
 1. Run the MySQL database instance:
    :::tip
-   If you use other MySQL environments that you have already deployed (refer to [Database setup](/reference/database-setup) document), you can skip this step. Fill in your own MySQL environment configuration information in the startup parameters of the API service in the next step.
+   If you use other MySQL environments that you have already deployed (refer to [Setup database](/reference/database-setup)), you can skip this step. Fill in your own MySQL environment configuration information in the startup parameters of the API service in the next step.
    :::
 
    ```bash
@@ -47,7 +47,7 @@ Please replace the above IP address with the actual IP address according to the 
    ```
 
    :::tip
-      For more detailed configuration of database startup parameters, please refer to [Database Configuration](https://mariadb.com/kb/en/mariadb-docker-environment-variables/)
+      For more detailed configuration of database startup parameters, please refer to [Configure database](https://mariadb.com/kb/en/mariadb-docker-environment-variables/)
    :::
 
 
