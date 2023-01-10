@@ -2,7 +2,9 @@
   display: flex;
   background-color: #f8f9fa;
 
-  & tr, & td, & table {
+  & tr,
+  & td,
+  & table {
     border: 0 !important;
   }
 
