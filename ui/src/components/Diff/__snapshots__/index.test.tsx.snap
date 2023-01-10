@@ -1,0 +1,221 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Diff snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="box"
+  >
+    <div
+      class="tips"
+    >
+      <div>
+        <span
+          class="iconfont icon-warning-circle warning-circle"
+          customclass="warning-circle"
+          type="warning-circle"
+        />
+        The following is a before and after comparison of this change.
+        <span>
+          (1 changes)
+        </span>
+      </div>
+      <div>
+        <div>
+          <div
+            class="old-square"
+          />
+          Old/Delete
+        </div>
+        <div>
+          <div
+            class="new-square"
+          />
+          New/Create
+        </div>
+        <div>
+          <span
+            class="iconfont icon-angle-down icon-accordion"
+            customclass="icon-accordion"
+            type="angle-down"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="diff"
+      style="display: none;"
+    >
+      <div
+        class="diff-section"
+      >
+        <div
+          class="head-line"
+        >
+          <div
+            class="before"
+          >
+            <div
+              class="title"
+            >
+              Status
+            </div>
+          </div>
+          <div
+            class="after"
+          >
+            <div
+              class="title"
+            >
+              Status
+            </div>
+          </div>
+        </div>
+        <div
+          class="content"
+        >
+          <div
+            class="diff-status-content"
+          >
+            <div
+              class="diff-status-item"
+            >
+              <div
+                class="diff-status-field"
+              >
+                <div
+                  class="diff-field-value field-value-remove"
+                >
+                  disabled
+                </div>
+              </div>
+            </div>
+            <div
+              class="diff-status-item"
+            >
+              <div
+                class="diff-status-field"
+              >
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  enabled
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Diff snapshot 2`] = `
+<DocumentFragment>
+  <div
+    class="box"
+  >
+    <div
+      class="tips"
+    >
+      <div>
+        <span
+          class="iconfont icon-warning-circle warning-circle"
+          customclass="warning-circle"
+          type="warning-circle"
+        />
+        The following is a before and after comparison of this change.
+        <span>
+          (1 changes)
+        </span>
+      </div>
+      <div>
+        <div>
+          <div
+            class="old-square"
+          />
+          Old/Delete
+        </div>
+        <div>
+          <div
+            class="new-square"
+          />
+          New/Create
+        </div>
+        <div>
+          <span
+            class="iconfont icon-angle-up icon-accordion"
+            customclass="icon-accordion"
+            type="angle-up"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="diff"
+      style="display: block;"
+    >
+      <div
+        class="diff-section"
+      >
+        <div
+          class="head-line"
+        >
+          <div
+            class="before"
+          >
+            <div
+              class="title"
+            >
+              Status
+            </div>
+          </div>
+          <div
+            class="after"
+          >
+            <div
+              class="title"
+            >
+              Status
+            </div>
+          </div>
+        </div>
+        <div
+          class="content"
+        >
+          <div
+            class="diff-status-content"
+          >
+            <div
+              class="diff-status-item"
+            >
+              <div
+                class="diff-status-field"
+              >
+                <div
+                  class="diff-field-value field-value-remove"
+                >
+                  disabled
+                </div>
+              </div>
+            </div>
+            <div
+              class="diff-status-item"
+            >
+              <div
+                class="diff-status-field"
+              >
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  enabled
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

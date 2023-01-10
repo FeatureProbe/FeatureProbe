@@ -1,7 +1,6 @@
-import { ArrayChange } from 'diff';
 import { cloneDeep } from 'lodash';
-import { ReactNode, useMemo } from 'react';
-import idiff, { DiffParam, DiffResult } from './diff';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
+import idiff, { ChangeItem } from './diff';
 import styles from './DiffSection.module.scss';
 
 export interface DiffSectionProps {
@@ -9,13 +8,14 @@ export interface DiffSectionProps {
   before?: unknown;
   after?: unknown;
   diffKey: string;
-  renderContent: (diffContent: DiffResult) => ReactNode;
+  renderContent: (diffContent: ChangeItem[]) => ReactNode;
   beforeDiff?: (before: unknown, after: unknown) => unknown[];
   setCount?: (key: string, count: number) => void;
 }
 
 const DiffSection: React.FC<DiffSectionProps> = (props) => {
   const { title, before, after, renderContent, beforeDiff, setCount, diffKey } = props;
+  const [hide, setHide] = useState(false);
 
   const diffContent = useMemo(() => {
     let left, right;
@@ -25,42 +25,26 @@ const DiffSection: React.FC<DiffSectionProps> = (props) => {
       [left, right] = [before, after];
     }
 
-    const diffContent = before && after ? idiff(left as DiffParam, right as DiffParam) : undefined;
+    const diffContent = before && after ? idiff(left, right) : undefined;
 
     return diffContent;
   }, [before, after, beforeDiff]);
 
-  let hide = false;
-  if (!diffContent || (diffContent.length === 1 && !diffContent[0].removed && !diffContent[0].modified && !diffContent[0].added)) {
-    hide = true;
-  }
-  if(diffContent && diffContent.length === 1 && diffContent[0].modified) {
-    let count = 0;
-    diffContent[0].value.forEach((item) => {
-      if((item as ArrayChange<unknown>).value && (item as ArrayChange<unknown>).value.length === 1) {
-        count++;
+  useEffect(() => {
+    let modifyCount = 0;
+    diffContent?.forEach((item) => {
+      if (item.type !== 'same') {
+        if (diffKey === 'status' || diffKey === 'default' || diffKey === 'disabled') {
+          modifyCount = 1;
+        } else {
+          modifyCount++;
+        }
       }
     });
-    if(count === diffContent[0].value.length) {
-      hide = true;
-    }
-  }
 
-  let count = 0;
-  diffContent?.forEach((item) => {
-    if(item.removed || item.added) {
-      count += item.value.length;
-    } else if(item.modified) {
-      count += item.value.reduce<number>((pre, current) => {
-        if((current as ArrayChange<unknown>).value && (current as ArrayChange<unknown>).value.length !== 1) {
-          return pre + 1;
-        } else {
-          return pre;
-        }
-      }, 0);
-    }
-  });
-  setCount && setCount(diffKey, count);
+    setHide(modifyCount === 0);
+    setCount && setCount(diffKey, modifyCount);
+  }, [diffContent, diffKey, setCount]);
 
   return (
     <div hidden={hide} className={styles['diff-section']}>

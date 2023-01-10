@@ -9,8 +9,8 @@ export const DiffFieldValue = (props: { type?: diffType; value?: string | string
   if (value instanceof Array) {
     return (
       <div>
-        {value.map((item) => {
-          return <div style={style} className={`${styles['diff-field-value']} ${typeCls}`}>
+        {value.map((item, index) => {
+          return <div key={index} style={style} className={`${styles['diff-field-value']} ${typeCls}`}>
             {item}
           </div>;
         })}

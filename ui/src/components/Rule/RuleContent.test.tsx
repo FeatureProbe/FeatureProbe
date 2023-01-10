@@ -6,7 +6,6 @@ import userEvent from '@testing-library/user-event';
 import RuleContent from '.';
 import { IntlWrapper } from 'components/utils/wrapper';
 import { hooksFormContainer, ruleContainer, segmentContainer, variationContainer } from 'pages/targeting/provider';
-import sleep from 'utils/sleep';
 import { act } from 'react-test-renderer';
 
 const RuleData = {

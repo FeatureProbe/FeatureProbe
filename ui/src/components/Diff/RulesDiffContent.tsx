@@ -1,9 +1,8 @@
 import { ReactNode } from 'react';
-import { ArrayChange } from 'diff';
 import { Table } from 'semantic-ui-react';
 import { IntlShape } from 'react-intl';
 import { ICondition, IRule } from '../../interfaces/targeting';
-import { DiffResult } from './diff';
+import { ChangeItem, DiffResult } from './diff';
 import { DiffFieldValue } from './DiffFieldValue';
 import { renderField, renderFieldsItems } from './renderDiff';
 import { DiffServeContent } from './DiffServe';
@@ -15,16 +14,18 @@ export function I18NRules(rules: IRule[], intl: IntlShape) {
   rules.forEach((rule) => {
     rule.conditions.forEach((condition) => {
       const typeI18N = rulesI18NMap.get(condition.type);
-      const predicateI18N = rulesI18NMap.get(condition.predicate); 
-      if(condition.type === 'segment') {
-        condition.subject = intl.formatMessage({id: 'common.user.text'});
+      const predicateI18N = rulesI18NMap.get(condition.predicate);
+      if (condition.type === 'segment') {
+        condition.subject = intl.formatMessage({ id: 'common.user.text' });
       }
-      condition.type = typeI18N ? intl.formatMessage({id: rulesI18NMap.get(condition.type)}) : condition.type;
-      condition.predicate = predicateI18N ? intl.formatMessage({id: rulesI18NMap.get(condition.predicate)}) : condition.predicate;
+      condition.type = typeI18N ? intl.formatMessage({ id: rulesI18NMap.get(condition.type) }) : condition.type;
+      condition.predicate = predicateI18N
+        ? intl.formatMessage({ id: rulesI18NMap.get(condition.predicate) })
+        : condition.predicate;
     });
   });
   return rules;
-};
+}
 
 interface FieldValue {
   type: diffType;
@@ -49,11 +50,11 @@ export const RowFields: React.FC<RowFieldsProps> = (props) => {
   return (
     <>
       <Table.Cell>{!empty && (first ? 'if' : 'and')}</Table.Cell>
-      {values.map((item) => {
+      {values.map((item, index) => {
         return (
-          <Table.Cell>
+          <Table.Cell key={index}>
             {item.value instanceof Array && typeof item.value[0] === 'object' ? (
-              renderFieldsItems(item.value, type, (value, diffType, type) => {
+              renderFieldsItems(item.value, type, (value, diffType, type, index) => {
                 if (
                   (diffType === 'add' && type === 'after') ||
                   (diffType === 'remove' && type === 'before') ||
@@ -61,6 +62,7 @@ export const RowFields: React.FC<RowFieldsProps> = (props) => {
                 ) {
                   return (
                     <DiffFieldValue
+                      key={index}
                       style={{
                         background: diffType === 'same' ? 'rgba(33,37,41,0.08)' : 'unset',
                       }}
@@ -69,7 +71,7 @@ export const RowFields: React.FC<RowFieldsProps> = (props) => {
                     />
                   );
                 } else {
-                  return <></>;
+                  return null;
                 }
               })
             ) : (
@@ -90,7 +92,7 @@ export const RowFields: React.FC<RowFieldsProps> = (props) => {
             const count = 5 - values.length;
             const res = [];
             for (let i = 0; i < count; i++) {
-              res.push(<Table.Cell></Table.Cell>);
+              res.push(<Table.Cell key={`cell-${i}`}></Table.Cell>);
             }
             return res;
           })()}
@@ -239,7 +241,7 @@ const ConditiondiffEmptyItem: React.FC<ConditiondiffSameItemProps> = (props) => 
 };
 
 interface ConditiondiffModifyItemProps {
-  value: ArrayChange<DiffResult>;
+  value: ChangeItem[];
   type: positionType;
   first?: boolean;
 }
@@ -251,7 +253,7 @@ const ConditiondiffModifyItem: React.FC<ConditiondiffModifyItemProps> = (props) 
 
   return (
     <Table.Row className={`${fieldStyles['diff-item-normal']} ${styles['condition-diff-item']}`}>
-      {renderField((value as ArrayChange<unknown>).value as DiffResult, type, (map) => {
+      {renderField(value, type, (map) => {
         return (
           <RowFields
             values={keys.reduce<FieldValue[]>((pre, current) => {
@@ -287,34 +289,43 @@ const ConditionModifyContent: React.FC<ConditionContentProps> = (props) => {
       if (diffType === 'remove' && type === 'before') {
         return (
           <ConditiondiffRemoveItem
+            key={index}
             type={type}
             value={value as ICondition & StringField}
-            first={index - emptyCount === 1}
+            first={index - emptyCount === 0}
           />
         );
       } else if (diffType === 'add' && type === 'after') {
         return (
           <ConditiondiffAddItem
+            key={index}
             type={type}
             value={value as ICondition & StringField}
-            first={index - emptyCount === 1}
+            first={index - emptyCount === 0}
           />
         );
       } else if (diffType === 'modify') {
         return (
           <ConditiondiffModifyItem
+            key={index}
             type={type}
-            value={value as ArrayChange<DiffResult>}
-            first={index - emptyCount === 1}
+            value={value as ChangeItem[]}
+            first={index - emptyCount === 0}
           />
         );
       } else if (diffType === 'same') {
-        return <ConditiondiffSameItem value={value as ICondition & StringField} first={index - emptyCount === 1} />;
+        return (
+          <ConditiondiffSameItem
+            key={index}
+            value={value as ICondition & StringField}
+            first={index - emptyCount === 0}
+          />
+        );
       } else {
         if (emptyCount >= 0) {
           emptyCount++;
         }
-        return <ConditiondiffEmptyItem value={value as ICondition & StringField} first={index === 0} />;
+        return <ConditiondiffEmptyItem key={index} value={value as ICondition & StringField} first={index === 0} />;
       }
     });
   };
@@ -357,7 +368,12 @@ const ConditionRemoveContent: React.FC<ConditionRemoveContentProps> = (props) =>
           {content &&
             content.map((item, index) => {
               return (
-                <ConditiondiffRemoveItem first={index === 0} value={item as ICondition & StringField} type="before" />
+                <ConditiondiffRemoveItem
+                  key={index}
+                  first={index === 0}
+                  value={item as ICondition & StringField}
+                  type="before"
+                />
               );
             })}
           {serve && <DiffServeContent diffType="remove" content={serve} type="before" />}
@@ -381,7 +397,14 @@ const ConditionAddContent: React.FC<ConditionRemoveContentProps> = (props) => {
         <Table.Body>
           {content &&
             content.map((item, index) => {
-              return <ConditiondiffAddItem first={index === 0} value={item as ICondition & StringField} type="after" />;
+              return (
+                <ConditiondiffAddItem
+                  key={index}
+                  first={index === 0}
+                  value={item as ICondition & StringField}
+                  type="after"
+                />
+              );
             })}
           {serve && <DiffServeContent diffType="add" content={serve} type="after" />}
         </Table.Body>
@@ -408,7 +431,7 @@ const ConditionSameContent: React.FC<ConditionSameContentProps> = (props) => {
         <Table.Body>
           {content &&
             content.map((item, index) => {
-              return <ConditiondiffSameItem first={index === 0} value={item as ICondition & StringField} />;
+              return <ConditiondiffSameItem key={index} first={index === 0} value={item as ICondition & StringField} />;
             })}
           {serve && <DiffServeContent diffType="same" type={type} content={serve} />}
         </Table.Body>
@@ -430,8 +453,8 @@ const ConditionEmptyContent: React.FC<ConditionSameContentProps> = (props) => {
         </Table.Header>
         <Table.Body>
           {content &&
-            content.map((item) => {
-              return <ConditiondiffEmptyItem value={item as ICondition & StringField} />;
+            content.map((item, index) => {
+              return <ConditiondiffEmptyItem key={index} value={item as ICondition & StringField} />;
             })}
           {serve && <DiffServeContent diffType="same" type={type} content={serve} />}
         </Table.Body>
@@ -450,23 +473,25 @@ export const RulesDiffContent: React.FC<RulesDiffContentProps> = (props) => {
   return (
     <div className={styles['rule-content']}>
       <div>
-        {renderFieldsItems<IRule>(content, 'before', (value, type) => {
+        {renderFieldsItems<IRule>(content, 'before', (value, type, _, index) => {
           if (type === 'remove') {
             return (
               <ConditionRemoveContent
+                key={index}
                 title={(value as IRule).name}
                 serve={(value as IRule).serve}
                 content={(value as IRule).conditions}
               />
             );
           } else if (type === 'modify') {
-            return renderField((value as ArrayChange<unknown>).value as DiffResult, 'before', (map) => {
+            return renderField(value as DiffResult, 'before', (map) => {
               const conditions = map.get('conditions');
               const serve = map.get('serve');
               const name = map.get('name');
               if (conditions && conditions.type === 'modify') {
                 return (
                   <ConditionModifyContent
+                    key={index}
                     serve={serve?.value}
                     diffContent={conditions.value as DiffResult}
                     type="before"
@@ -482,6 +507,7 @@ export const RulesDiffContent: React.FC<RulesDiffContentProps> = (props) => {
               } else if (conditions && conditions.type === 'same') {
                 return (
                   <ConditionSameContent
+                    key={index}
                     title={
                       <RuleNameDiff
                         value={name?.value as string}
@@ -499,6 +525,7 @@ export const RulesDiffContent: React.FC<RulesDiffContentProps> = (props) => {
           } else if (type === 'add') {
             return (
               <ConditionEmptyContent
+                key={index}
                 serve={(value as IRule).serve}
                 content={(value as IRule).conditions}
                 type={'before'}
@@ -508,23 +535,25 @@ export const RulesDiffContent: React.FC<RulesDiffContentProps> = (props) => {
         })}
       </div>
       <div>
-        {renderFieldsItems<IRule>(content, 'after', (value, type) => {
+        {renderFieldsItems<IRule>(content, 'after', (value, type, _, index) => {
           if (type === 'add') {
             return (
               <ConditionAddContent
+                key={index}
                 title={(value as IRule).name}
                 serve={(value as IRule).serve}
                 content={(value as IRule).conditions}
               />
             );
           } else if (type === 'modify') {
-            return renderField((value as ArrayChange<unknown>).value as DiffResult, 'after', (map) => {
+            return renderField(value as ChangeItem[], 'after', (map) => {
               const conditions = map.get('conditions');
               const serve = map.get('serve');
               const name = map.get('name');
               if (conditions && conditions.type === 'modify') {
                 return (
                   <ConditionModifyContent
+                    key={index}
                     serve={serve?.value}
                     diffContent={conditions.value as DiffResult}
                     type="after"
@@ -540,6 +569,7 @@ export const RulesDiffContent: React.FC<RulesDiffContentProps> = (props) => {
               } else if (conditions && conditions.type === 'same') {
                 return (
                   <ConditionSameContent
+                    key={index}
                     title={
                       <RuleNameDiff
                         value={name?.value as string}
@@ -557,6 +587,7 @@ export const RulesDiffContent: React.FC<RulesDiffContentProps> = (props) => {
           } else if (type === 'remove') {
             return (
               <ConditionEmptyContent
+                key={index}
                 serve={(value as IRule).serve}
                 content={(value as IRule).conditions}
                 type={'before'}
