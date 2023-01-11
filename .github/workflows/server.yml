@@ -26,12 +26,14 @@ jobs:
       with:
         toolchain: nightly
         override: true
-
+      
     - name: Build
       run: cargo build --verbose
+      working-directory: ./server
 
     - name: Run Test
       run: cargo test --verbose
+      working-directory: ./server
 
   test:
     runs-on: ubuntu-latest
