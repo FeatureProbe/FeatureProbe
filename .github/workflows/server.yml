@@ -1,0 +1,56 @@
+name: Build Server & Tests
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'server/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'server/**'
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install nightly
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+        override: true
+      
+    - name: Build
+      run: cargo build --verbose
+      working-directory: ./server
+
+    - name: Run Test
+      run: cargo test --verbose
+      working-directory: ./server
+
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: xd009642/tarpaulin:develop-nightly
+      options: --security-opt seccomp=unconfined
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+
+      - name: generate code coverage
+        run: |
+          cargo +nightly tarpaulin --verbose --workspace --timeout 120 --out Xml
+        working-directory: ./server
+        
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          fail_ci_if_error: true
+          flags: server
