@@ -9,6 +9,7 @@ export const useWebHookInfo = () => {
     description: '',
     url: '',
     status: WebHookStatus.ENABLE,
+    secretKey: '',
   });
 
   const [ originWebHookInfo, saveOriginWebHookInfo ] = useState<IWebHookInfo>({
@@ -16,6 +17,7 @@ export const useWebHookInfo = () => {
     description: '',
     url: '',
     status: WebHookStatus.ENABLE,
+    secretKey: '',
   });
 
   const handleChange = (e: SyntheticEvent, detail: InputOnChangeData | TextAreaProps | DropdownProps | CheckboxProps, type: string) => {
@@ -36,12 +38,14 @@ export const useWebHookInfo = () => {
       description: '',
       url: '',
       status: WebHookStatus.ENABLE,
+      secretKey: '',
     });
     saveOriginWebHookInfo({
       name: '',
       description: '',
       url: '',
       status: WebHookStatus.ENABLE,
+      secretKey: '',
     });
   };
 

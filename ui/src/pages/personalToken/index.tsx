@@ -107,7 +107,7 @@ const ApiToken = () => {
                       {tokenList.length !== 0 && (
                         <Table.Body className={styles['table-body']}>
                           {tokenList.map((item) => {
-                            return <TokenItem token={item} refresh={load} />;
+                            return <TokenItem key={item.id} token={item} refresh={load} />;
                           })}
                         </Table.Body>
                       )}
