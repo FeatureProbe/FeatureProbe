@@ -198,8 +198,10 @@ jobs:
             --platform linux/amd64 \
             --output "type=image,push=true" \
             --tag featureprobe/server:latest \
-            --tag featureprobe/server:${DOCKER_TAG} \
+            --tag featureprobe/server:$DOCKER_TAG \
             --file ./Dockerfile ./
+        env:
+          DOCKER_TAG: ${{ inputs.tag }}
         working-directory: ./server
 
       -
