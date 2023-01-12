@@ -6,22 +6,22 @@ import TabItem from '@theme/TabItem';
 
 # 按百分比灰度放量
 
-我们将带领你使用FeatureProbe的平台，控制一个后端程序，让后端程序对接收到的用户请求，按百分比展示新功能。
+我们将带领你使用FeatureProbe的平台，控制一个后端/前端程序，让后端/前端程序对接收到的用户请求，按百分比展示新功能。
 
 ## 在平台创建开关
 
 1. 登录我们提供的FeatureProbe[演示平台](https://featureprobe.io)，如果是第一次登录，请输入邮箱。后续可以继续使用你的邮箱访问到属于你的数据。
 2. 点击`+开关`新建一个开关
 ![add](/tutorial_create_toggle_button_cn.png)
-3. 名字和标识都设置为`tutorial_rollout`，点击`创建`
+3. 名字和标识都设置为`tutorial_rollout`，点击`创建并发布`
 ![create](/tutorial_rollout_create_cn.png)
-7. 从开关列表中点击`tutorial_rollout`，打开设置详情页
+4. 从开关列表中点击`tutorial_rollout`，打开设置详情页
 ![list](/tutorial_list_click_cn.png)
-8. 将默认规则的返回值更改为`按百分比放量`
+5. 将默认规则的返回值更改为`按百分比放量`
 ![return](/tutorial_return_percentage_cn.png)
-9. 设置 10% 打开开关（返回true）， 90% 关闭开关（返回false）, 状态设置为 `生效`
+6. 设置 10% 打开开关（返回true）， 90% 关闭开关（返回false）, 状态设置为 `生效`
 ![10% true](/tutorial_rollout_enable_cn.png)
-10. 点击下方`发布`按钮，并`确认`变更
+7. 点击下方`发布`按钮，并`确认`变更
 ![confirm](/tutorial_rollout_confirm_cn.png)
 
 此时平台上就操作就完成了，我们创建了一个管理灰度发布的开关，下面我们要在程序中使用它，看看实际效果。
@@ -29,8 +29,6 @@ import TabItem from '@theme/TabItem';
 :::tip
 开关创建后，可以在后端程序中访问，也可以在前端程序中访问，以下我们分别介绍如何在 **后端代码** 和 [**前端代码**](#控制前端程序) 中使用这个开关，两者相互独立，您可以根据需要选择阅读您感兴趣的部分。
 :::
-
-
 
 ## 控制后端程序
 
@@ -44,8 +42,8 @@ import TabItem from '@theme/TabItem';
   <TabItem value="java" label="Java" default>
 
 ~~~bash
-bash:> git clone https://gitee.com/FeatureProbe/server-sdk-java.git
-bash:> cd server-sdk-java
+git clone https://gitee.com/FeatureProbe/server-sdk-java.git
+cd server-sdk-java
 ~~~
 用编辑器打开`src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java`文件。
 
@@ -53,30 +51,38 @@ bash:> cd server-sdk-java
   <TabItem value="golang" label="Go">
 
 ~~~bash
-bash:> git clone https://gitee.com/FeatureProbe/server-sdk-go.git
-bash:> cd server-sdk-go
+git clone https://gitee.com/FeatureProbe/server-sdk-go.git
+cd server-sdk-go
 ~~~
 用编辑器打开`example/main.go`文件。
   </TabItem>
   <TabItem value="rust" label="Rust">
 
 ~~~bash
-bash:> git clone https://gitee.com/FeatureProbe/server-sdk-rust.git
-bash:> cd server-sdk-rust
+git clone https://gitee.com/FeatureProbe/server-sdk-rust.git
+cd server-sdk-rust
 ~~~
 用编辑器打开`examples/demo.rs`文件。
   </TabItem>
   <TabItem value="python" label="Python">
 
 ~~~bash
-bash:> git clone https://gitee.com/FeatureProbe/server-sdk-python.git
-bash:> cd server-sdk-python
+git clone https://gitee.com/FeatureProbe/server-sdk-python.git
+cd server-sdk-python
 ~~~
 用编辑器打开`demo.py`文件。
   </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+~~~bash
+git clone https://github.com/FeatureProbe/server-sdk-node.git
+cd server-sdk-node
+~~~
+用编辑器打开`examples/demo.js`文件。
+  </TabItem>
 </Tabs>
 
-2. 打开FeatureProbe平台[项目列表页面](https://featureprobe.io/projects)， 可以在开关详情页点击`服务`来打开
+2. 打开FeatureProbe平台[项目列表页面](https://featureprobe.io/projects)， 可以在开关详情页点击`项目`来打开
 ![project](/tutorial_click_project_cn.png)
 3. 复制`服务端SDK密钥`
 ![sdk key](/tutorial_rollout_server_sdk_key_cn.png)
@@ -242,27 +248,27 @@ if __name__ == '__main__':
    <TabItem value="java" label="Java" default>
 
 ~~~bash
-bash:> mvn package
-bash:> java -jar ./target/server-sdk-java-1.4.0.jar
+mvn package
+java -jar ./target/server-sdk-java-1.4.0.jar
 ~~~
 </TabItem>
 <TabItem value="golang" label="Go">
 
 ~~~bash
-bash:> go run example/main.go
+go run example/main.go
 ~~~
 </TabItem>
 <TabItem value="rust" label="Rust">
 
 ~~~bash
-bash:> cargo run --example demo
+cargo run --example demo
 ~~~
 </TabItem>
 <TabItem value="python" label="Python">
 
 ~~~bash
-bash:> pip3 install -r requirements.txt
-bash:> python3 demo.py
+pip3 install -r requirements.txt
+python3 demo.py
 ~~~
 </TabItem>
 </Tabs>
@@ -315,13 +321,13 @@ feature for user 20 is :false
 1. 下载示例代码
 
 ~~~bash
-bash:> git clone https://gitee.com/FeatureProbe/client-sdk-js.git
-bash:> cd client-sdk-js
+git clone https://gitee.com/FeatureProbe/client-sdk-js.git
+cd client-sdk-js
 ~~~
 
 2. 打开[平台](https://featureprobe.io/projects)获取client sdk key
 :::info
-点击『服务』Tab，可以进入『服务』列表，获取各类SDK key，以及修改服务和环境信息。
+点击『项目』Tab，可以进入『项目』列表，获取各类SDK key，以及修改项目和环境信息。
 :::
 ![client sdk key](/tutorial_client_sdk_key_cn.png)
 
@@ -368,7 +374,7 @@ bash:> cd client-sdk-js
 <details>
   <summary>页面展示示例</summary>
 <Tabs>
-   <TabItem value="true" label="True" default>
+<TabItem value="true" label="True" default>
 
 ~~~
 FeatureProbe JS SDK demo
@@ -378,7 +384,7 @@ boolean type
 FeatureProbe evaluation boolean type toggle result is : true
 ~~~
 </TabItem>
- <TabItem value="false" label="False" >
+<TabItem value="false" label="False" >
 
 ~~~
 FeatureProbe JS SDK demo
@@ -394,5 +400,5 @@ FeatureProbe evaluation boolean type toggle result is : false
 可以回到平台的开关设置页面，调整灰度比例，然后重新刷新页面，看看拿到的 `true`/`false` 比例是否有变化。
 
 :::tip
-如果希望对同一个用户，不管他如何刷新，总是被灰度到。需要[使用FPUser的stableRollout接口](stable_rollout_tutorial.md)，传入用户的唯一ID。
+如果希望对同一个用户，不管他如何刷新，总是被灰度到。参考[用户稳定进入灰度组](stable_rollout_tutorial.md)，传入用户的唯一ID。
 :::
