@@ -163,10 +163,17 @@ jobs:
         with:
           toolchain: nightly
           override: true
-
+      
       - name: Build
-        run: cargo build --release --verbose
+        run: |
+          rustup target add x86_64-unknown-linux-musl
+          cargo build --release --verbose
         working-directory: ./server
+
+   #   - name: Build-musl
+   #     uses: gmiam/rust-musl-action@master
+   #     with:
+   #       args: cd ./server;cargo build --release --verbose 
 
       - name: Set up Docker Buildx
         uses: crazy-max/ghaction-docker-buildx@v3
