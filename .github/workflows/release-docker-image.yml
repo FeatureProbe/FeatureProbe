@@ -56,7 +56,7 @@ jobs:
         run: |
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
-            --platform linux/amd64,linux/arm64 \
+            --platform linux/amd64 \
             --output "type=image,push=true" \
             --tag featureprobe/api:${GITHUB_REF#refs/tags/} \
             --tag featureprobe/api:latest \
@@ -68,7 +68,7 @@ jobs:
         run: |
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
-            --platform linux/amd64,linux/arm64 \
+            --platform linux/amd64 \
             --output "type=image,push=true" \
             --tag featureprobe/api:$DOCKER_TAG \
             --tag featureprobe/api:latest \
