@@ -304,6 +304,32 @@ if __name__ == '__main__':
       # highlight-end
 ~~~
 </TabItem>
+<TabItem value="nodejs" label="Node.js">
+
+~~~js title="demo.js"
+const fpClient = new featureProbe.FeatureProbe({
+  remoteUrl: FEATURE_PROBE_SERVER_URL,
+  serverSdkKey: FEATURE_PROBE_SERVER_SDK_KEY,
+  refreshInterval: 5000,
+});
+
+// highlight-start
+const users = [
+    new featureProbe.FPUser().with("city", "上海").with("rank", "钻石"),
+    new featureProbe.FPUser().with("city", "上海").with("rank", "黄金"),
+    new featureProbe.FPUser().with("city", "北京").with("rank", "钻石"),
+    new featureProbe.FPUser().with("city", "北京").with("rank", "黄金"),
+    new featureProbe.FPUser().with("city", "天津").with("rank", "钻石"),
+];
+
+for(let i = 0; i < users.length; i++) {
+  const greeting = fpClient.stringValue("tutorial_variation", users[i], "你好");
+  console.log(greeting);
+}
+// highlight-end
+
+~~~
+</TabItem>
 </Tabs>
 
 :::tip
@@ -337,6 +363,12 @@ cargo run --example demo
 ~~~bash
 pip3 install -r requirements.txt
 python3 demo.py
+~~~
+</TabItem>
+<TabItem value="nodejs" label="Node.js">
+
+~~~bash
+node demo.js
 ~~~
 </TabItem>
 </Tabs>
@@ -405,7 +437,7 @@ cd client-sdk-js
 
 ~~~js title="example/index.html"
   <script>
-  //      highlight-next-line
+    //  highlight-next-line
     const user = new featureProbe.FPUser().with("city", "上海").with("rank", "钻石");
     const fpClient = new featureProbe.FeatureProbe({
       remoteUrl: "https://featureprobe.io/server",
@@ -416,10 +448,10 @@ cd client-sdk-js
   
     fpClient.start();
     fpClient.on("ready", function() {
-  //      highlight-start
-    const stringValue = fpClient.stringValue("tutorial_variation", "欢迎");
-    document.getElementById("string-result").innerText = stringValue;
-  //      highlight-end
+      // highlight-start
+      const stringValue = fpClient.stringValue("tutorial_variation", "欢迎");
+      document.getElementById("string-result").innerText = stringValue;
+      // highlight-end
     });
   </script>
 ~~~

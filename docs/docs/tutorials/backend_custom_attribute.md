@@ -422,38 +422,38 @@ Click the "Projects" tab to enter the "Projects" list, obtain various SDK keys, 
 3. Open `example/index.html` and fill in `Client SDK Key` and `FeatureProbe URL` ("https://featureprobe.io/server")
 
 ~~~js title="example/index.html"
-    const fpClient = new featureProbe. FeatureProbe({
-        // highlight-start
-        remoteUrl: "https://featureprobe.io/server",
-        clientSdkKey: // Paste client sdk key here,
-        // highlight-end
-        user,
-        refreshInterval: 5000,
-    });
+const fpClient = new featureProbe. FeatureProbe({
+    // highlight-start
+    remoteUrl: "https://featureprobe.io/server",
+    clientSdkKey: // Paste client sdk key here,
+    // highlight-end
+    user,
+    refreshInterval: 5000,
+});
 ~~~
 
 4. Simulate the "VIP" user from "Shanghai" to access the toggle `tutorial_variation` and get the toggle result directly
 
 ~~~js title="example/index.html"
-   <script>
-        // highlight-next-line
-        const user = new featureProbe.FPUser().with("city", "Shanghai").with("rank", "VIP");
+<script>
+    // highlight-next-line
+    const user = new featureProbe.FPUser().with("city", "Shanghai").with("rank", "VIP");
 
-        const fpClient = new featureProbe. FeatureProbe({
-            remoteUrl: "https://featureprobe.io/server",
-            clientSdkKey: // Paste client sdk key here,
-            user,
-            refreshInterval: 5000,
-        });
-  
-        fpClient.start();
-        fpClient.on("ready", function() {
-            // highlight-start
-            const stringValue = fpClient.stringValue("tutorial_variation", "Welcome");
-            document.getElementById("string-result").innerText = stringValue;
-            // highlight-end
-        });
-   </script>
+    const fpClient = new featureProbe. FeatureProbe({
+        remoteUrl: "https://featureprobe.io/server",
+        clientSdkKey: // Paste client sdk key here,
+        user,
+        refreshInterval: 5000,
+    });
+
+    fpClient.start();
+    fpClient.on("ready", function() {
+        // highlight-start
+        const stringValue = fpClient.stringValue("tutorial_variation", "Welcome");
+        document.getElementById("string-result").innerText = stringValue;
+        // highlight-end
+    });
+</script>
 ~~~
 
 ### Validate result
