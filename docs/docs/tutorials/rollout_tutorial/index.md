@@ -10,7 +10,7 @@ We will guide you to use the FeatureProbe platform to control a back-end or fron
 
 ## Create a toggle on the platform
 
-1. Log in to the FeatureProbe [demo platform] (https://featureprobe.io). If you log in for the first time, please enter your email address. You can continue to use your email to access your data in the future.
+1. Log in to the FeatureProbe [demo platform](https://featureprobe.io). If you log in for the first time, please enter your email address. You can continue to use your email to access your data in the future.
 2. Click `+Toggle` to create a new toggle.
 ![add](/tutorial_create_toggle_button_en.png)
 3. Set the name and key to `tutorial_rollout`, click `Create and publish`.
@@ -89,7 +89,7 @@ Open the `examples/demo.js` file with an editor.
 </TabItem>
 </Tabs>
 
-2. Open the FeatureProbe platform [project list page] (https://featureprobe.io/projects), you can click `Projects` on the toggle details page to open
+2. Open the FeatureProbe platform [project list page](https://featureprobe.io/projects), you can click `Projects` on the toggle details page to open
 ![project](/tutorial_click_project_en.png)
 
 3. Copy `Server SDK Key`
