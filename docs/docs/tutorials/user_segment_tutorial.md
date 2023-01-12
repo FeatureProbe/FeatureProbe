@@ -17,7 +17,7 @@ Suppose we want to implement the following scenario:
 
 ## Create a segment on the platform
 
-1. Log in to the FeatureProbe [demo platform] (https://featureprobe.io). If you log in for the first time, please enter your email address. You can continue to use your email to access your data in the future.
+1. Log in to the FeatureProbe [demo platform](https://featureprobe.io). If you log in for the first time, please enter your email address. You can continue to use your email to access your data in the future.
 2. Click `Segments/+Segment` to create a new segment.
 
 ![create segment](/tutorial_create_segment_en.png)
@@ -118,7 +118,7 @@ Open `example/demo.js` file with an editor.
 </TabItem>
 </Tabs>
 
-2. Open the FeatureProbe platform [project list page] (https://featureprobe.io/projects), you can click `Projects` on the toggle details page to open
+2. Open the FeatureProbe platform [project list page](https://featureprobe.io/projects), you can click `Projects` on the toggle details page to open
     ![project](/tutorial_click_project_en.png)
 3. Copy `Server SDK Key`
     ![sdk key](/tutorial_rollout_server_sdk_key_en.png)
@@ -449,7 +449,7 @@ Next, let's update the rules of the segment, and then verify that the updated re
 
 ### Rerun the program to see the result
 
-Run the program again according to the above [operation method] (##run-the-code) to view the log
+Run the program again according to the above [operation method](##run-the-code) to view the log
 
 ~~~bash
 tester_a@company.com see the new feature1
