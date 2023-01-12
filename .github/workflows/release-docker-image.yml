@@ -164,13 +164,10 @@ jobs:
           toolchain: nightly
           override: true
 
-      - name: Build
-        run: |
-          rustup target add x86_64-unknown-linux-musl
-          apt update && apt install -y musl-tools musl-dev build-essential
-          update-ca-certificates
-          cargo build --release --verbose
-        working-directory: ./server
+      - name: Build-musl
+        uses: gmiam/rust-musl-action@master
+        with:
+          args: cd ./server;cargo build --release --verbose
 
       - name: Set up Docker Buildx
         uses: crazy-max/ghaction-docker-buildx@v3
