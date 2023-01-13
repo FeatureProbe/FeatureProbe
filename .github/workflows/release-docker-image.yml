@@ -163,10 +163,17 @@ jobs:
         with:
           toolchain: nightly
           override: true
-
+      
       - name: Build
-        run: cargo build --release --verbose
+        run: |
+          rustup target add x86_64-unknown-linux-musl
+          cargo build --release --verbose
         working-directory: ./server
+
+   #   - name: Build-musl
+   #     uses: gmiam/rust-musl-action@master
+   #     with:
+   #       args: cd ./server;cargo build --release --verbose 
 
       - name: Set up Docker Buildx
         uses: crazy-max/ghaction-docker-buildx@v3
@@ -193,7 +200,7 @@ jobs:
         run: |
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
-            --platform linux/amd64,linux/arm64 \
+            --platform linux/amd64 \
             --output "type=image,push=true" \
             --tag featureprobe/server:latest \
             --tag featureprobe/server:${GITHUB_REF#refs/tags/} \
@@ -206,7 +213,7 @@ jobs:
         run: |
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
-            --platform linux/amd64,linux/arm64 \
+            --platform linux/amd64 \
             --output "type=image,push=true" \
             --tag featureprobe/server:latest \
             --tag featureprobe/server:$DOCKER_TAG \

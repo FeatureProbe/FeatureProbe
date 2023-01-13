@@ -15,7 +15,7 @@ Suppose we want to implement the following scenario:
 * For "Beijing" users (without distinguishing levels), display "Welcome customers from Beijing"
 * For users who do not meet the above two conditions, display "Welcome"
 
-1. Log in to the FeatureProbe [demo platform] (https://featureprobe.io). If you log in for the first time, please enter your email address. You can continue to use your email to access your data in the future.
+1. Log in to the FeatureProbe [demo platform](https://featureprobe.io). If you log in for the first time, please enter your email address. You can continue to use your email to access your data in the future.
 2. Click `+Toggle` to create a new toggle.
 * Fill in the name and key.
 * Select the string type as the return variation type.
@@ -108,7 +108,7 @@ Open the `example/demo.js` file with an editor.
 </TabItem>
 </Tabs>
 
-2. Open the FeatureProbe platform [projects page] (https://featureprobe.io/projects), you can click `Projects` on the toggle targeting page to open: ![project](/tutorial_click_project_en.png)
+2. Open the FeatureProbe platform [projects page](https://featureprobe.io/projects), you can click `Projects` on the toggle targeting page to open: ![project](/tutorial_click_project_en.png)
 
 3. Copy `Server SDK Key` ![sdk key](/tutorial_rollout_server_sdk_key_en.png)
 
