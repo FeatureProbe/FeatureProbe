@@ -32,7 +32,7 @@ const compared = (obj1: DiffObj | ArrayObj, obj2: DiffObj | ArrayObj) => {
       }
       return obj1.__value === obj2.__value;
     } else if ((obj1 as DiffObj)['conditions']) {
-      return diffObj(obj1, obj2).length === 1;
+      return false;
     }
     return diffObj(obj1 as DiffObj, obj2 as DiffObj).length === 1;
   } else {
