@@ -19,12 +19,12 @@ sidebar_position: 2
 
 1. 用git下载最新版本FeatureProbe代码
 ~~~bash
-bash:> git clone https://gitee.com/featureprobe/FeatureProbe.git
+git clone https://gitee.com/featureprobe/FeatureProbe.git
 ~~~
 2. 使用docker composer拉取镜像并启动
 ~~~bash
-bash:> cd FeatureProbe
-bash:> docker compose up
+cd FeatureProbe
+docker compose up
 ~~~
 3. 等待镜像拉取，视网络状况，可能需要5-10min
 4. 等待镜像启动，大约1min左右，启动成功后命令行可以看到日志滚动。也可在docker GUI工具中查看镜像启动状况，全部绿色即为启动成功：

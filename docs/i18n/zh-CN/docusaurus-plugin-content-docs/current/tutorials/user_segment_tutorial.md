@@ -70,7 +70,7 @@ import TabItem from '@theme/TabItem';
 1. 按你熟悉的语言，下载并打开相应的后端示例代码
 
 <Tabs groupId="language">
-  <TabItem value="java" label="Java" default>
+<TabItem value="java" label="Java" default>
 
 ~~~bash
 bash:> git clone https://gitee.com/FeatureProbe/server-sdk-java.git
@@ -78,8 +78,8 @@ bash:> cd server-sdk-java
 ~~~
 用编辑器打开`src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java`文件。
 
-  </TabItem>
-  <TabItem value="golang" label="Go">
+</TabItem>
+<TabItem value="golang" label="Go">
 
 ~~~bash
 bash:> git clone https://gitee.com/FeatureProbe/server-sdk-go.git
@@ -103,6 +103,15 @@ bash:> cd server-sdk-python
 ~~~
 用编辑器打开`demo.py`文件。
 </TabItem>
+<TabItem value="nodejs" label="Node.js">
+
+~~~bash
+git clone https://github.com/FeatureProbe/server-sdk-node.git
+cd server-sdk-node
+~~~
+Open `example/demo.js` file with an editor.
+
+</TabItem>
 </Tabs>
 
 2. 打开FeatureProbe平台[项目列表页面](https://featureprobe.io/projects)， 可以在开关详情页点击`服务`来打开
@@ -112,38 +121,45 @@ bash:> cd server-sdk-python
 4. 将`服务端SDK密钥`以及`FeatureProbe网址` ("https://featureprobe.io/server") 填入后端代码相应变量中
 
 <Tabs groupId="language">
-   <TabItem value="java" label="Java" default>
+<TabItem value="java" label="Java" default>
 
 ~~~java  title="src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java"
-    private static final String FEATURE_PROBE_SERVER_URL = "https://featureprobe.io/server";
-    private static final String FEATURE_PROBE_SERVER_SDK_KEY = // 填入 服务端SDK密钥 ;
+private static final String FEATURE_PROBE_SERVER_URL = "https://featureprobe.io/server";
+private static final String FEATURE_PROBE_SERVER_SDK_KEY = // 填入 服务端SDK密钥 ;
 ~~~
-  </TabItem>
-  <TabItem value="golang" label="Go">
+</TabItem>
+<TabItem value="golang" label="Go">
 
 ~~~go title="example/main.go"
-	config := featureprobe.FPConfig{
-	    // highlight-start
-		RemoteUrl: "https://featureprobe.io/server",
-		ServerSdkKey:    // 填入 服务端SDK密钥
-		// highlight-end
-		RefreshInterval: 5000, // ms
-		WaitFirstResp:   true,
-	}
+config := featureprobe.FPConfig{
+    // highlight-start
+    RemoteUrl: "https://featureprobe.io/server",
+    ServerSdkKey:    // 填入 服务端SDK密钥
+    // highlight-end
+    RefreshInterval: 5000, // ms
+    WaitFirstResp:   true,
+}
 ~~~
 </TabItem>
 <TabItem value="rust" label="Rust">
 
 ~~~rust title="examples/demo.rs"
-    let remote_url = "https://featureprobe.io/server";
-    let server_sdk_key = // 填入 服务端SDK密钥
+let remote_url = "https://featureprobe.io/server";
+let server_sdk_key = // 填入 服务端SDK密钥
 ~~~
 </TabItem>
 <TabItem value="python" label="Python">
 
 ~~~python title="demo.py"
-    FEATURE_PROBE_SERVER_URL = 'https://featureprobe.io/server'
-    FEATURE_PROBE_SERVER_SDK_KEY = # 填入 服务端SDK密钥
+FEATURE_PROBE_SERVER_URL = 'https://featureprobe.io/server'
+FEATURE_PROBE_SERVER_SDK_KEY = # 填入 服务端SDK密钥
+~~~
+</TabItem>
+<TabItem value="nodejs" label="Node.js">
+
+~~~js title="demo.js"
+const FEATURE_PROBE_SERVER_URL = 'https://featureprobe.io/server';
+const FEATURE_PROBE_SERVER_SDK_KEY = // Fill in the server SDK key
 ~~~
 </TabItem>
 </Tabs>
@@ -324,12 +340,45 @@ if __name__ == '__main__':
 
 ```
 </TabItem>
+<TabItem value="nodejs" label="Node.js">
+
+~~~js title="demo.js"
+const fpClient = new featureProbe.FeatureProbe({
+  remoteUrl: FEATURE_PROBE_SERVER_URL,
+  serverSdkKey: FEATURE_PROBE_SERVER_SDK_KEY,
+  refreshInterval: 5000,
+});
+
+// highlight-start
+const users = [
+    new featureProbe.FPUser().with("email", "tester_a@company.com"),
+    new featureProbe.FPUser().with("email", "tester_b@company.com"),
+    new featureProbe.FPUser().with("email", "tester_c@company.com"),
+];
+
+for(let i = 0; i < users.length; i++) {
+  if (fpClient.booleanValue("feature1", users[i], false)) {
+    console.log(users[i].get("email") + ' see the new feature1');
+  } else {
+    console.log(users[i].get("email") + ' see nothing');
+  }
+}
+
+for(let i = 0; i < users.length; i++) {
+  if (fpClient.booleanValue("feature2", users[i], false)) {
+    console.log(users[i].get("email") + ' see the new feature2');
+  } else {
+    console.log(users[i].get("email") + ' see nothing');
+  }
+}
+// highlight-end
+~~~
+</TabItem>
 </Tabs>
 
 :::tip
 除了Toggle的规则中显式用到的用户属性需要通过with方法传入SDK，Toggle中所使用的人群组中需要用到的用户属性（例如：email），也需要通过with方法传入FeatureProbe SDK。
 :::
-
 
 ### 运行验证
 
@@ -362,6 +411,12 @@ bash:> pip3 install -r requirements.txt
 bash:> python3 demo.py
 ~~~
 </TabItem>
+<TabItem value="nodejs" label="Node.js">
+
+~~~bash
+node example/demo.js
+~~~
+</TabItem>
 </Tabs>
 
 查看log验证结果，可以看到人群组中的两个测试email(tester_a和tester_b)能够看到两个新feature，而不在人群组中的email(tester_c)则看不到。
@@ -381,8 +436,8 @@ tester_c@company.com see nothing
 
 ### 页面上更新人群组
 
-1. 进入人群组qa_email的编辑页面
-2. 将email帐号test_b删除，添加email帐号test_c
+1. 进入人群组`qa_email`的编辑页面
+2. 将email帐号`test_b`删除，添加email帐号`test_c`
 
 ![tutorial_segment_after_update_cn.png](/tutorial_segment_after_update_cn.png)
 

@@ -22,8 +22,8 @@ import TabItem from '@theme/TabItem';
 * 填入名称和标识
 * 选择string类型作为返回值
 * 添加3个分组，分别将名称和值填入，值就是我们要返回的三个不同的提示语
-* 选择开关未生效时的默认返回的分组
-* 点击`创建`
+* 选择当开关未生效时的默认返回的分组
+* 点击`创建并发布`
 
 ![create toggle](/tutorial_variation_create_cn.png)
 
@@ -69,8 +69,8 @@ import TabItem from '@theme/TabItem';
   <TabItem value="java" label="Java" default>
 
 ~~~bash
-bash:> git clone https://gitee.com/FeatureProbe/server-sdk-java.git
-bash:> cd server-sdk-java
+git clone https://gitee.com/FeatureProbe/server-sdk-java.git
+cd server-sdk-java
 ~~~
 用编辑器打开`src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java`文件。
 
@@ -78,26 +78,34 @@ bash:> cd server-sdk-java
   <TabItem value="golang" label="Go">
 
 ~~~bash
-bash:> git clone https://gitee.com/FeatureProbe/server-sdk-go.git
-bash:> cd server-sdk-go
+git clone https://gitee.com/FeatureProbe/server-sdk-go.git
+cd server-sdk-go
 ~~~
 用编辑器打开`example/main.go`文件。
 </TabItem>
 <TabItem value="rust" label="Rust">
 
 ~~~bash
-bash:> git clone https://gitee.com/FeatureProbe/server-sdk-rust.git
-bash:> cd server-sdk-rust
+git clone https://gitee.com/FeatureProbe/server-sdk-rust.git
+cd server-sdk-rust
 ~~~
 用编辑器打开`examples/demo.rs`文件。
 </TabItem>
 <TabItem value="python" label="Python">
 
 ~~~bash
-bash:> git clone https://gitee.com/FeatureProbe/server-sdk-python.git
-bash:> cd server-sdk-python
+git clone https://gitee.com/FeatureProbe/server-sdk-python.git
+cd server-sdk-python
 ~~~
 用编辑器打开`demo.py`文件。
+</TabItem>
+<TabItem value="nodejs" label="Node.js">
+
+~~~bash
+git clone https://github.com/FeatureProbe/server-sdk-node.git
+cd server-sdk-node
+~~~
+用编辑器打开`example/demo.js`文件。
 </TabItem>
 </Tabs>
 
@@ -140,6 +148,13 @@ bash:> cd server-sdk-python
 ~~~python title="demo.py"
     FEATURE_PROBE_SERVER_URL = 'https://featureprobe.io/server'
     FEATURE_PROBE_SERVER_SDK_KEY = # 填入 服务端SDK密钥
+~~~
+</TabItem>
+<TabItem value="nodejs" label="Node.js">
+
+~~~js title="demo.js"
+const FEATURE_PROBE_SERVER_URL = 'https://featureprobe.io/server';
+const FEATURE_PROBE_SERVER_SDK_KEY = // 填入 服务端SDK密钥
 ~~~
 </TabItem>
 </Tabs>
@@ -289,11 +304,36 @@ if __name__ == '__main__':
       # highlight-end
 ~~~
 </TabItem>
+<TabItem value="nodejs" label="Node.js">
+
+~~~js title="demo.js"
+const fpClient = new featureProbe.FeatureProbe({
+  remoteUrl: FEATURE_PROBE_SERVER_URL,
+  serverSdkKey: FEATURE_PROBE_SERVER_SDK_KEY,
+  refreshInterval: 5000,
+});
+
+// highlight-start
+const users = [
+    new featureProbe.FPUser().with("city", "上海").with("rank", "钻石"),
+    new featureProbe.FPUser().with("city", "上海").with("rank", "黄金"),
+    new featureProbe.FPUser().with("city", "北京").with("rank", "钻石"),
+    new featureProbe.FPUser().with("city", "北京").with("rank", "黄金"),
+    new featureProbe.FPUser().with("city", "天津").with("rank", "钻石"),
+];
+
+for(let i = 0; i < users.length; i++) {
+  const greeting = fpClient.stringValue("tutorial_variation", users[i], "你好");
+  console.log(greeting);
+}
+// highlight-end
+
+~~~
+</TabItem>
 </Tabs>
 
 :::tip
-用户的属性（例如：所在城市、帐号级别）需要开发者通过其他方式在业务代码中获取到，然后通过With方法传入FeatureProbe SDK。 SDK只负责将规则应用到这些用户上，
-SDK无法在内部自己推断出用户的属性。
+用户的属性（例如：所在城市、帐号级别）需要开发者通过其他方式在业务代码中获取到，然后通过With方法传入FeatureProbe SDK。 SDK只负责将规则应用到这些用户上，SDK无法在内部自己推断出用户的属性。
 :::
 
 6. 运行编辑后的服务端程序
@@ -302,27 +342,33 @@ SDK无法在内部自己推断出用户的属性。
    <TabItem value="java" label="Java" default>
 
 ~~~bash
-bash:> mvn package
-bash:> java -jar ./target/server-sdk-java-1.4.0.jar
+mvn package
+java -jar ./target/server-sdk-java-1.4.0.jar
 ~~~
 </TabItem>
 <TabItem value="golang" label="Go">
 
 ~~~bash
-bash:> go run example/main.go
+go run example/main.go
 ~~~
 </TabItem>
 <TabItem value="rust" label="Rust">
 
 ~~~bash
-bash:> cargo run --example demo
+cargo run --example demo
 ~~~
 </TabItem>
 <TabItem value="python" label="Python">
 
 ~~~bash
-bash:> pip3 install -r requirements.txt
-bash:> python3 demo.py
+pip3 install -r requirements.txt
+python3 demo.py
+~~~
+</TabItem>
+<TabItem value="nodejs" label="Node.js">
+
+~~~bash
+node demo.js
 ~~~
 </TabItem>
 </Tabs>
@@ -363,8 +409,8 @@ bash:> python3 demo.py
 1. 下载示例代码
 
 ~~~bash
-bash:> git clone https://gitee.com/FeatureProbe/client-sdk-js.git
-bash:> cd client-sdk-js
+git clone https://gitee.com/FeatureProbe/client-sdk-js.git
+cd client-sdk-js
 ~~~
 
 2. 打开[平台](https://featureprobe.io/projects)获取client sdk key
@@ -391,7 +437,7 @@ bash:> cd client-sdk-js
 
 ~~~js title="example/index.html"
   <script>
-  //      highlight-next-line
+    //  highlight-next-line
     const user = new featureProbe.FPUser().with("city", "上海").with("rank", "钻石");
     const fpClient = new featureProbe.FeatureProbe({
       remoteUrl: "https://featureprobe.io/server",
@@ -402,10 +448,10 @@ bash:> cd client-sdk-js
   
     fpClient.start();
     fpClient.on("ready", function() {
-  //      highlight-start
-    const stringValue = fpClient.stringValue("tutorial_variation", "欢迎");
-    document.getElementById("string-result").innerText = stringValue;
-  //      highlight-end
+      // highlight-start
+      const stringValue = fpClient.stringValue("tutorial_variation", "欢迎");
+      document.getElementById("string-result").innerText = stringValue;
+      // highlight-end
     });
   </script>
 ~~~

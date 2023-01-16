@@ -10,7 +10,7 @@ sidebar_position: 1
 * 启用（Enable）一个开关
 * 将一个用户加入开关的白名单中
 * 修改一个开关的放量百分比
-* 增加一个返回值分组
+* 增加一个返回分组
 
 本教程没有任何编程能力要求，适合各类角色的用户了解平台功能。
 
@@ -20,8 +20,7 @@ sidebar_position: 1
 ![demo login](/demo_login_cn.png)
 
 :::info
-https://featureprobe.io/demo/ 是一个演示页面，我们将通过FeatureProbe平台来控制这个页面的展示。填入邮箱登录后，您可以通过演示页面的提示链接跳转到FeatureProbe平台，
-或者也可以直接访问 [https://featureprobe.io](https://featureprobe.io) 进入平台。
+https://featureprobe.io/demo/ 是一个演示页面，我们将通过FeatureProbe平台来控制这个页面的展示。填入邮箱登录后，您可以通过演示页面的提示链接跳转到FeatureProbe平台，或者也可以直接访问 [https://featureprobe.io](https://featureprobe.io) 进入平台。
 :::
 
 ## 开关『Enable』
@@ -45,7 +44,7 @@ https://featureprobe.io/demo/ 是一个演示页面，我们将通过FeatureProb
 
 ### 验证结果
 
-回到演示页面的链接：[https://featureprobe.io/demo/](https://featureprobe.io/demo/), 可以开到页面展示由
+回到演示页面的链接：[https://featureprobe.io/demo/](https://featureprobe.io/demo/), 可以看到页面展示由
 
 发布前：
 ![before_enable](/demo_enable_before_action_cn.png)
