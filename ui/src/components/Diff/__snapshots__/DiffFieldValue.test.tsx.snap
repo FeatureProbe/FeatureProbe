@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DiffFieldValue snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="diff-field-value field-value-same"
+  >
+    Test Text
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DiffFieldValue snapshot 2`] = `
+<DocumentFragment>
+  <div
+    class="diff-field-value field-value-remove"
+  >
+    Test Text
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DiffFieldValue snapshot 3`] = `
+<DocumentFragment>
+  <div
+    class="diff-field-value field-value-add"
+  >
+    Test Text
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DiffFieldValue snapshot 4`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="diff-field-value field-value-remove"
+    >
+      Test Text1
+    </div>
+    <div
+      class="diff-field-value field-value-remove"
+    >
+      Test text2
+    </div>
+  </div>
+</DocumentFragment>
+`;

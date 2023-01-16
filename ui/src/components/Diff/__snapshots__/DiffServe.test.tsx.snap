@@ -1,0 +1,513 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DiffServe snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="serve-diff"
+  >
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div
+                class="diff-field-value field-value-remove"
+              >
+                name 1
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div
+                class="diff-field-value field-value-add"
+              >
+                name 2
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DiffServe snapshot 2`] = `
+<DocumentFragment>
+  <div
+    class="serve-diff"
+  >
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div
+                class="diff-field-value field-value-remove"
+              >
+                name 1
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div>
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  50
+                </div>
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  20
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DiffServe snapshot 3`] = `
+<DocumentFragment>
+  <div
+    class="serve-diff"
+  >
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div
+                class="diff-field-value field-value-same"
+              >
+                name 1
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div
+                class="diff-field-value field-value-same"
+              >
+                name 1
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DiffServe snapshot 4`] = `
+<DocumentFragment>
+  <div
+    class="serve-diff"
+  >
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div
+                class="diff-field-value field-value-remove"
+              >
+                50
+              </div>
+              <div
+                class="diff-field-value field-value-remove"
+              >
+                50
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div
+                class="diff-field-value field-value-add"
+              >
+                40
+              </div>
+              <div
+                class="diff-field-value field-value-add"
+              >
+                60
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DiffServe snapshot 5`] = `
+<DocumentFragment>
+  <div
+    class="serve-diff"
+  >
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div>
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  10
+                </div>
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  90
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div>
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  10
+                </div>
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  90
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DiffServe snapshot 6`] = `
+<DocumentFragment>
+  <div
+    class="serve-diff"
+  >
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div
+                class="diff-field-value field-value-undefined"
+              >
+                name 1
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div
+                class="diff-field-value field-value-undefined"
+              >
+                name 1
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DiffServe snapshot 7`] = `
+<DocumentFragment>
+  <div
+    class="serve-diff"
+  >
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div
+                class="diff-field-value field-value-same"
+                style="background: rgba(33, 37, 41, 0.08);"
+              >
+                50
+              </div>
+              <div
+                class="diff-field-value field-value-remove"
+              >
+                50
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <table
+        class="ui table"
+      >
+        <tbody
+          class=""
+        >
+          <tr
+            class="diff-item-modify condition-diff-item"
+          >
+            <td
+              class=""
+            >
+              Serve
+            </td>
+            <td
+              class=""
+              colspan="5"
+            >
+              <div
+                class="diff-field-value field-value-same"
+                style="background: rgba(33, 37, 41, 0.08);"
+              >
+                50
+              </div>
+              <div
+                class="diff-field-value field-value-add"
+              >
+                60
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</DocumentFragment>
+`;

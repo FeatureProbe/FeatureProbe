@@ -1,15 +1,13 @@
 import { FormattedMessage } from 'react-intl';
 import { CSSProperties } from 'react';
-import { ArrayChange } from 'diff';
 import { Table } from 'semantic-ui-react';
-import { ArrayObj, DiffResult } from './diff';
+import { ChangeItem } from './diff';
 import { DiffFieldValue } from './DiffFieldValue';
 import { renderField, renderFieldsItems } from './renderDiff';
 import { diffType, positionType } from './constants';
 import conditionStyles from './RulesDiffContent.module.scss';
 import fieldStyles from './fields.module.scss';
 import styles from './DiffServe.module.scss';
-
 
 interface DiffServeContentProps {
   map?: Map<string, string>;
@@ -18,8 +16,7 @@ interface DiffServeContentProps {
         split?: number[];
         select?: string;
       }
-    | ArrayChange<ArrayObj>[]
-    | ArrayChange<number>[];
+    | ChangeItem[];
   type: positionType;
   diffType: diffType;
   rowStyle?: CSSProperties;
@@ -46,11 +43,11 @@ export const DiffServeContent: React.FC<DiffServeContentProps> = (props) => {
           if (split && split.value instanceof Array && typeof split.value[0] !== 'object') {
             return <DiffFieldValue type={split.type} value={split.value} />;
           } else {
-            return renderFieldsItems(split?.value as ArrayChange<ArrayObj>[], type, (value, diffType) => {
+            return renderFieldsItems(split?.value as ChangeItem[], type, (value, diffType, _, index) => {
               if (diffType === 'add' && type === 'after') {
-                return <DiffFieldValue type="add" value={value as string} />;
+                return <DiffFieldValue type="add" value={value as string} key={index} />;
               } else if (diffType === 'remove' && type === 'before') {
-                return <DiffFieldValue type="remove" value={value as string} />;
+                return <DiffFieldValue type="remove" value={value as string} key={index} />;
               } else if (diffType === 'same') {
                 return (
                   <DiffFieldValue
@@ -59,6 +56,7 @@ export const DiffServeContent: React.FC<DiffServeContentProps> = (props) => {
                     }}
                     type="same"
                     value={value as string}
+                    key={index}
                   />
                 );
               }
@@ -81,15 +79,18 @@ export const DiffServeContent: React.FC<DiffServeContentProps> = (props) => {
       <Table.Cell>
         <FormattedMessage id="common.serve.text" />
       </Table.Cell>
-      <Table.Cell colSpan="5">
-        {render()}
-      </Table.Cell>
+      <Table.Cell colSpan="5">{render()}</Table.Cell>
     </Table.Row>
   );
 };
 
 interface DiffServeProps {
-  content: DiffResult;
+  content:
+    | {
+        split?: number[];
+        select?: string;
+      }
+    | ChangeItem[];
 }
 
 export const DiffServe: React.FC<DiffServeProps> = (props) => {
@@ -98,10 +99,18 @@ export const DiffServe: React.FC<DiffServeProps> = (props) => {
   return (
     <div className={styles['serve-diff']}>
       <div>
-        <DiffServeContent diffType="modify" content={content as ArrayChange<ArrayObj>[]} type={'before'} />
+        <Table>
+          <Table.Body>
+            <DiffServeContent diffType="modify" content={content} type={'before'} />
+          </Table.Body>
+        </Table>
       </div>
       <div>
-        <DiffServeContent diffType="modify" content={content as ArrayChange<ArrayObj>[]} type={'after'} />
+        <Table>
+          <Table.Body>
+            <DiffServeContent diffType="modify" content={content} type={'after'} />
+          </Table.Body>
+        </Table>
       </div>
     </div>
   );

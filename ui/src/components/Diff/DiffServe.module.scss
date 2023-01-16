@@ -2,11 +2,21 @@
   display: flex;
   background-color: #f8f9fa;
 
+  & tr,
+  & td,
+  & table {
+    border: 0 !important;
+  }
+
   & > * {
     width: 100%;
     margin-left: 24px;
     overflow-x: auto;
     background-color: #fff;
+
+    &::-webkit-scrollbar {
+      height: 8px;
+    }
 
     & > * {
       display: flex;
