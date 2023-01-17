@@ -418,6 +418,13 @@ const Drawer = (props: IParams) => {
           <div className={styles.divider}></div>
           <Icon customclass={styles['title-close']} type='close' onClick={() => setDrawerVisible(false)} />
         </div>
+        {
+          !isAdd && (
+            <div className={styles['edit-tips']}>
+              <FormattedMessage id='toggles.edit.tips' />
+            </div> 
+          )
+        }
         <div className={styles['toggle-drawer-form-content']}>
           {/* Toggle Name */}
           <FormItemName
@@ -527,6 +534,7 @@ const Drawer = (props: IParams) => {
                 label={intl.formatMessage({id: 'toggles.sdk.yes'})}
                 className={styles['radio-group-item']}
                 checked={!!toggleInfo?.clientAvailability}
+                disabled={!isAdd} 
                 onChange={(e: FormEvent, detail: CheckboxProps) => handleChange(e, detail, 'clientAvailability')} 
               />
               <Form.Radio 
@@ -534,11 +542,12 @@ const Drawer = (props: IParams) => {
                 label={intl.formatMessage({id: 'toggles.sdk.no'})}
                 className={styles['radio-group-item']}
                 checked={!toggleInfo?.clientAvailability}
+                disabled={!isAdd} 
                 onChange={(e: FormEvent, detail: CheckboxProps) => handleChange(e, detail, 'clientAvailability')} 
               />
             </div>
           </Form.Field>
-          
+
           {/* Toggle Return Type */}
           <Form.Field className={`${styles.joyride} joyride-return-type`}>
             <label>
@@ -581,64 +590,68 @@ const Drawer = (props: IParams) => {
               </div> 
             )
           }
+          
+          {isAdd && (
+            <>
+              {/* Toggle Variations */}
+              <Form.Field>
+                <label>
+                  <span className={styles['label-required']}>*</span>
+                  <FormattedMessage id='common.variations.text' />
+                  <Popup
+                    inverted
+                    trigger={
+                      <Icon customclass={styles['icon-question']} type='question' />
+                    }
+                    content={intl.formatMessage({id: 'toggles.variations.tips'})}
+                    position='top center'
+                    className='popup-override'
+                  />
+                </label>
+                <Variations
+                  prefix='drawer'
+                  returnType={toggleInfo?.returnType}
+                  variationContainer={variationContainer}
+                  hooksFormContainer={hooksFormContainer}
+                  ruleContainer={ruleContainer}
+                  defaultServeContainer={defaultServeContainer}
+                />
+              </Form.Field>
 
-          {/* Toggle Variations */}
-          <Form.Field>
-            <label>
-              <span className={styles['label-required']}>*</span>
-              <FormattedMessage id='common.variations.text' />
-              <Popup
-                inverted
-                trigger={
-                  <Icon customclass={styles['icon-question']} type='question' />
-                }
-                content={intl.formatMessage({id: 'toggles.variations.tips'})}
-                position='top center'
-                className='popup-override'
-              />
-            </label>
-            <Variations
-              prefix='drawer'
-              returnType={toggleInfo?.returnType}
-              variationContainer={variationContainer}
-              hooksFormContainer={hooksFormContainer}
-              ruleContainer={ruleContainer}
-              defaultServeContainer={defaultServeContainer}
-            />
-          </Form.Field>
-
-          {/* Toggle Disabled Return Value */}
-          <Form.Field className={`${styles.joyride} joyride-disabled-return-value`}>
-            <label>
-              <span className={styles['label-required']}>*</span>
-              <FormattedMessage id='common.disabled.return.type.text' />
-              <Popup
-                inverted
-                trigger={<Icon customclass={styles['icon-question']} type='question' />}
-                content={intl.formatMessage({id: 'toggles.disabled.return.type.tips'})}
-                position='top center'
-                className='popup-override'
-              />
-            </label>
-            <Dropdown
-              floating
-              selection
-              name='disabledServe'
-              value={toggleInfo?.disabledServe}
-              error={ errors.disabledServe ? true : false }
-              onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
-                handleChange(e, detail, 'disabledServe');
-                setValue(detail.name, detail.value);
-                await trigger('disabledServe');
-              }}
-              className={styles['dropdown']}
-              options={options} 
-              placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})}
-              icon={
-                <Icon customclass={styles['angle-down']} type='angle-down' />
-              }
-            />
-          </Form.Field>
+              {/* Toggle Disabled Return Value */}
+              <Form.Field className={`${styles.joyride} joyride-disabled-return-value`}>
+                <label>
+                  <span className={styles['label-required']}>*</span>
+                  <FormattedMessage id='common.disabled.return.type.text' />
+                  <Popup
+                    inverted
+                    trigger={<Icon customclass={styles['icon-question']} type='question' />}
+                    content={intl.formatMessage({id: 'toggles.disabled.return.type.tips'})}
+                    position='top center'
+                    className='popup-override'
+                  />
+                </label>
+                <Dropdown
+                  floating
+                  selection
+                  name='disabledServe'
+                  value={toggleInfo?.disabledServe}
+                  error={ errors.disabledServe ? true : false }
+                  onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
+                    handleChange(e, detail, 'disabledServe');
+                    setValue(detail.name, detail.value);
+                    await trigger('disabledServe');
+                  }}
+                  className={styles['dropdown']}
+                  options={options} 
+                  placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})}
+                  icon={
+                    <Icon customclass={styles['angle-down']} type='angle-down' />
+                  }
+                />
+              </Form.Field>
+            </>
+          )}
 
           {/* Toggle Permanent */}
           <Form.Field>
