@@ -265,16 +265,19 @@ const Drawer = (props: IParams) => {
       required: true, 
     });
 
-    register('sdk-radio', {
-      required: true,
+    register('sdk-radio', { 
+      validate: (value?: boolean) => {
+        return value !== undefined;
+      },
     });
   }, [register]);
 
   useEffect(() => {
+    setValue('sdk-radio', toggleInfo.clientAvailability);
     if(toggleInfo.clientAvailability !== undefined) {
       clearErrors('sdk-radio');
     }
-  }, [clearErrors, toggleInfo.clientAvailability]);
+  }, [clearErrors, setValue, toggleInfo.clientAvailability]);
 
   const onSubmit = useCallback(async () => {
     setSubmitLoading(true);
