@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DiffSection snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="diff-section"
+  >
+    <div
+      class="head-line"
+    >
+      <div
+        class="before"
+      >
+        <div
+          class="title"
+        >
+          Test
+        </div>
+      </div>
+      <div
+        class="after"
+      >
+        <div
+          class="title"
+        >
+          Test
+        </div>
+      </div>
+    </div>
+    <div
+      class="content"
+    >
+      <div>
+        test
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DiffSection snapshot 2`] = `
+<DocumentFragment>
+  <div
+    class="diff-section"
+    hidden=""
+  >
+    <div
+      class="head-line"
+    >
+      <div
+        class="before"
+      >
+        <div
+          class="title"
+        >
+          Test
+        </div>
+      </div>
+      <div
+        class="after"
+      >
+        <div
+          class="title"
+        >
+          Test
+        </div>
+      </div>
+    </div>
+    <div
+      class="content"
+    >
+      <div>
+        test
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

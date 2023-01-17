@@ -1,0 +1,1294 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RulesDiffContent snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="rule-content"
+  >
+    <div>
+      <div>
+        <table
+          class="ui small unstackable very basic table"
+        >
+          <thead
+            class="table-header"
+          >
+            <tr
+              class=""
+            >
+              <th
+                class=""
+                colspan="6"
+              >
+                <div
+                  class="diff-field-value field-value-remove"
+                >
+                  Rule 1
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                if
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  string
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  str
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  is not any of
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-remove"
+                >
+                  aaa
+                </div>
+                <div
+                  class="diff-field-value field-value-same"
+                  style="background: rgba(33, 37, 41, 0.08);"
+                >
+                  222
+                </div>
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                and
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  number
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  num
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  =
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                  style="background: rgba(33, 37, 41, 0.08);"
+                >
+                  222
+                </div>
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-remove condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                and
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-remove"
+                >
+                  datetime
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-remove"
+                >
+                  time
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-remove"
+                >
+                  before
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-remove"
+                  >
+                    2023-01-10T10:14:06+08:00
+                  </div>
+                </div>
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                and
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  semver
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  ver
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  !=
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-same"
+                    style="background: rgba(33, 37, 41, 0.08);"
+                  >
+                    0.0.1
+                  </div>
+                </div>
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                and
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  segment
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  is not in
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-same"
+                    style="background: rgba(33, 37, 41, 0.08);"
+                  >
+                    _cn
+                  </div>
+                </div>
+              </td>
+              <td
+                class=""
+              />
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              />
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-modify condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                Serve
+              </td>
+              <td
+                class=""
+                colspan="5"
+              >
+                <div
+                  class="diff-field-value field-value-remove"
+                >
+                  0
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <table
+          class="ui small unstackable very basic table"
+        >
+          <thead
+            class="table-header"
+          >
+            <tr
+              class=""
+            >
+              <th
+                class=""
+                colspan="6"
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  Rule2
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                if
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  string
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  str
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  is one of
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-same"
+                    style="background: rgba(33, 37, 41, 0.08);"
+                  >
+                    ioio
+                  </div>
+                </div>
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-same condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                Serve
+              </td>
+              <td
+                class=""
+                colspan="5"
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-remove"
+                  >
+                    10000
+                  </div>
+                  <div
+                    class="diff-field-value field-value-remove"
+                  >
+                    0
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div>
+        <table
+          class="ui small unstackable very basic table"
+        >
+          <thead
+            class="table-header"
+          >
+            <tr
+              class=""
+            >
+              <th
+                class=""
+                colspan="6"
+              >
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  Rule 1M
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                if
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  string
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  str
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  is not any of
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                  style="background: rgba(33, 37, 41, 0.08);"
+                >
+                  222
+                </div>
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                and
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  number
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  num
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  =
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                  style="background: rgba(33, 37, 41, 0.08);"
+                >
+                  222
+                </div>
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  333
+                </div>
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              />
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                and
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  semver
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  ver
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  !=
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-same"
+                    style="background: rgba(33, 37, 41, 0.08);"
+                  >
+                    0.0.1
+                  </div>
+                </div>
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                and
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  segment
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  is not in
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-same"
+                    style="background: rgba(33, 37, 41, 0.08);"
+                  >
+                    _cn
+                  </div>
+                </div>
+              </td>
+              <td
+                class=""
+              />
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-add condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                and
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  string
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  str2
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  is not any of
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-add"
+                  >
+                    333
+                  </div>
+                </div>
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-modify condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                Serve
+              </td>
+              <td
+                class=""
+                colspan="5"
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-add"
+                  >
+                    5000
+                  </div>
+                  <div
+                    class="diff-field-value field-value-add"
+                  >
+                    5000
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <table
+          class="ui small unstackable very basic table"
+        >
+          <thead
+            class="table-header"
+          >
+            <tr
+              class=""
+            >
+              <th
+                class=""
+                colspan="6"
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  Rule2
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                if
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  string
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  str
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  is one of
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-same"
+                    style="background: rgba(33, 37, 41, 0.08);"
+                  >
+                    ioio
+                  </div>
+                </div>
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-same condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                Serve
+              </td>
+              <td
+                class=""
+                colspan="5"
+              >
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  0
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`RulesDiffContent snapshot 2`] = `
+<DocumentFragment>
+  <div
+    class="rule-content"
+  >
+    <div>
+      <div
+        class="empty"
+      >
+        <table
+          class="ui small unstackable very basic table"
+        >
+          <thead
+            class="table-header"
+          >
+            <tr
+              class=""
+            >
+              <th
+                class=""
+                colspan="6"
+              />
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              />
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-same condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                Serve
+              </td>
+              <td
+                class=""
+                colspan="5"
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-undefined"
+                  >
+                    10000
+                  </div>
+                  <div
+                    class="diff-field-value field-value-undefined"
+                  >
+                    0
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div>
+        <table
+          class="ui small unstackable very basic table"
+        >
+          <thead
+            class="table-header diff-item-add"
+          >
+            <tr
+              class=""
+            >
+              <th
+                class=""
+                colspan="6"
+              >
+                Rule3
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="diff-item-add condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                if
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  string
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  str
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  is one of
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-add"
+                  >
+                    ioio
+                  </div>
+                </div>
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-add condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                Serve
+              </td>
+              <td
+                class=""
+                colspan="5"
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-undefined"
+                  >
+                    10000
+                  </div>
+                  <div
+                    class="diff-field-value field-value-undefined"
+                  >
+                    0
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`RulesDiffContent snapshot 3`] = `
+<DocumentFragment>
+  <div
+    class="rule-content"
+  >
+    <div>
+      <div>
+        <table
+          class="ui small unstackable very basic table"
+        >
+          <thead
+            class="table-header diff-item-remove"
+          >
+            <tr
+              class=""
+            >
+              <th
+                class=""
+                colspan="6"
+              >
+                Rule3
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="diff-item-remove condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                if
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-remove"
+                >
+                  string
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-remove"
+                >
+                  str
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-remove"
+                >
+                  is one of
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-remove"
+                  >
+                    ioio
+                  </div>
+                </div>
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-remove condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                Serve
+              </td>
+              <td
+                class=""
+                colspan="5"
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-undefined"
+                  >
+                    10000
+                  </div>
+                  <div
+                    class="diff-field-value field-value-undefined"
+                  >
+                    0
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div
+        class="empty"
+      >
+        <table
+          class="ui small unstackable very basic table"
+        >
+          <thead
+            class="table-header"
+          >
+            <tr
+              class=""
+            >
+              <th
+                class=""
+                colspan="6"
+              />
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="diff-item-normal condition-diff-item"
+            >
+              <td
+                class=""
+              />
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                />
+              </td>
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item-same condition-diff-item"
+            >
+              <td
+                class=""
+              >
+                Serve
+              </td>
+              <td
+                class=""
+                colspan="5"
+              >
+                <div>
+                  <div
+                    class="diff-field-value field-value-undefined"
+                  >
+                    10000
+                  </div>
+                  <div
+                    class="diff-field-value field-value-undefined"
+                  >
+                    0
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

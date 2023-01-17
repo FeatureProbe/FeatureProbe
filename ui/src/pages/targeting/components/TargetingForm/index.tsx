@@ -254,7 +254,8 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       saveDefaultServe(targeting.defaultServe);
       saveDisabledServe(targeting.disabledServe);
     }
-  }, [targeting, saveVariations, saveRules, saveDefaultServe, saveDisabledServe, intl]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targeting, saveVariations, saveRules, saveDefaultServe, saveDisabledServe]);
 
   useEffect(() => {
     saveSegmentList(segmentList);

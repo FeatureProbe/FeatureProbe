@@ -1,10 +1,9 @@
-import { ArrayChange } from 'diff';
-import { ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Table } from 'semantic-ui-react';
 import { diffType, positionType } from './constants';
-import { ArrayObj, DiffResult } from './diff';
+import { DiffResult } from './diff';
 import { DiffFieldValue } from './DiffFieldValue';
+import { renderField, renderFieldsItems } from './renderDiff';
 import fieldStyles from './fields.module.scss';
 import styles from './VariationsDiffContent.module.scss';
 
@@ -12,12 +11,6 @@ type DiffFieldValue = {
   type: diffType;
   value: string;
 };
-
-interface VariationsFieldType {
-  name?: DiffFieldValue;
-  value?: DiffFieldValue;
-  description?: DiffFieldValue;
-}
 
 interface VariationsField {
   name?: string;
@@ -27,49 +20,27 @@ interface VariationsField {
 
 const VariationsModifyDiffItem: React.FC<{ content: DiffResult; type: positionType }> = (props) => {
   const { content, type } = props;
-  const after = type === 'after';
-  const obj: VariationsFieldType = content.reduce((pre, current) => {
-    let results = null;
-    let type = '';
-    if (current.added && !after) {
-      return pre;
-    }
-    if (current.removed && after) {
-      return pre;
-    }
-    if (current.added) {
-      type = 'add';
-    }
-    if (current.removed) {
-      type = 'remove';
-    }
-    results = current.value.reduce<VariationsFieldType>((pre, current) => {
-      if ((current as ArrayObj).__key) {
-        Object.defineProperty(pre, (current as ArrayObj).__key as string, {
-          value: {
-            type,
-            value: (current as ArrayObj).__value,
-          },
-          enumerable: true,
-        });
-      }
-      return pre;
-    }, {});
-    return {
-      ...pre,
-      ...results,
-    };
-  }, {});
 
   return (
     <Table.Row className={styles['diff-item']}>
-      <Table.Cell className={styles['table-item-name']}>
-        {obj.name ? <DiffFieldValue type={obj.name.type} value={obj.name.value} /> : 'null'}
-      </Table.Cell>
-      <Table.Cell>{obj.value ? <DiffFieldValue type={obj.value.type} value={obj.value.value} /> : 'null'}</Table.Cell>
-      <Table.Cell>
-        {obj.description ? <DiffFieldValue type={obj.description.type} value={obj.description.value} /> : 'null'}
-      </Table.Cell>
+      {renderField(content, type, (map) => {
+        const name = map.get('name');
+        const value = map.get('value');
+        const description = map.get('description');
+        return (
+          <>
+            <Table.Cell className={styles['table-item-name']}>
+              {name ? <DiffFieldValue type={name.type} value={name.value as string} /> : 'null'}
+            </Table.Cell>
+            <Table.Cell>
+              {value ? <DiffFieldValue type={value.type} value={value.value as string} /> : 'null'}
+            </Table.Cell>
+            <Table.Cell>
+              {description ? <DiffFieldValue type={description.type} value={description.value as string} /> : 'null'}
+            </Table.Cell>
+          </>
+        );
+      })}
     </Table.Row>
   );
 };
@@ -98,39 +69,6 @@ interface VariationsDiffContentProps {
   content: DiffResult;
 }
 
-const renderFields = (diffContent: DiffResult, type: positionType) => {
-  let values: ReactNode[] = [];
-  for (let i = 0; i < diffContent.length; i++) {
-    const diffItem = diffContent[i];
-    if (diffItem.modified) {
-      values = values.concat(
-        diffItem.value.map((item) => {
-          return <VariationsModifyDiffItem content={(item as ArrayChange<ArrayChange<unknown>>).value} type={type} />;
-        })
-      );
-    } else if (diffItem.removed) {
-      values = values.concat(
-        diffItem.value.map((item) => {
-          return <VariationsCountDiffItem type={type} content={item as VariationsField} diffType="remove" />;
-        })
-      );
-    } else if (diffItem.added) {
-      values = values.concat(
-        diffItem.value.map((item) => {
-          return <VariationsCountDiffItem type={type} content={item as VariationsField} diffType="add" />;
-        })
-      );
-    } else {
-      values = values.concat(
-        diffItem.value.map((item) => {
-          return <VariationsCountDiffItem type={type} content={item as VariationsField} diffType="same" />;
-        })
-      );
-    }
-  }
-  return values;
-};
-
 const VariationsDiffContent: React.FC<VariationsDiffContentProps> = (props) => {
   const { content } = props;
 
@@ -152,7 +90,18 @@ const VariationsDiffContent: React.FC<VariationsDiffContentProps> = (props) => {
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
-            <Table.Body>{content && renderFields(content, 'before')}</Table.Body>
+            <Table.Body>
+              {content &&
+                renderFieldsItems<VariationsField>(content, 'before', (value, diffType, _, index) => {
+                  if (diffType === 'modify') {
+                    return <VariationsModifyDiffItem key={index} type="before" content={value as DiffResult} />;
+                  } else {
+                    return (
+                      <VariationsCountDiffItem key={index} diffType={diffType} type="before" content={value as VariationsField} />
+                    );
+                  }
+                })}
+            </Table.Body>
           </Table>
         </div>
       </div>
@@ -172,7 +121,18 @@ const VariationsDiffContent: React.FC<VariationsDiffContentProps> = (props) => {
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
-            <Table.Body>{content && renderFields(content, 'after')}</Table.Body>
+            <Table.Body>
+              {content &&
+                renderFieldsItems<VariationsField>(content, 'after', (value, diffType, _, index) => {
+                  if (diffType === 'modify') {
+                    return <VariationsModifyDiffItem key={index} type="after" content={value as DiffResult} />;
+                  } else {
+                    return (
+                      <VariationsCountDiffItem key={index} diffType={diffType} type="after" content={value as VariationsField} />
+                    );
+                  }
+                })}
+            </Table.Body>
           </Table>
         </div>
       </div>

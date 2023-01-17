@@ -17,7 +17,15 @@ const ruleData = {
   name: '',
   serve: undefined,
   conditions: [
-    { id: 'c-test-id', type: 'string', subject: 'test', predicate: 'is one of', objects: ['test'], timezone: '+08:00' },
+    {
+      id: 'c-test-id',
+      type: 'string',
+      subject: 'test',
+      predicate: 'is one of',
+      objects: ['2022-11-09T10:14:06+08:00'],
+      timezone: '+08:00',
+      datetime: '2022-11-09T10:14:06+08:00',
+    },
   ],
   active: true,
 };
@@ -280,7 +288,15 @@ test('RuleContent datetime input', (done) => {
       ...ruleData,
     };
     datetimeData.conditions = [
-      { id: 'c-test-id', type: 'datetime', subject: '', predicate: '', objects: [], timezone: '+08:00' },
+      {
+        id: 'c-test-id',
+        type: 'datetime',
+        subject: '',
+        predicate: '',
+        objects: ['2022-11-09T10:14:06+08:00'],
+        timezone: '+08:00',
+        datetime: '2022-11-09T10:14:06+08:00',
+      },
     ];
 
     const { baseElement } = render(
@@ -319,7 +335,15 @@ test('RuleContent segment render', (done) => {
       ...ruleData,
     };
     datetimeData.conditions = [
-      { id: 'c-test-id', type: 'segment', subject: '', predicate: '', objects: [], timezone: '+08:00' },
+      {
+        id: 'c-test-id',
+        type: 'segment',
+        subject: '',
+        predicate: '',
+        objects: [],
+        timezone: '+08:00',
+        datetime: '2022-11-09T10:14:06+08:00',
+      },
     ];
 
     const { baseElement } = render(

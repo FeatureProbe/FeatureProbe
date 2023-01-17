@@ -67,8 +67,8 @@ const TokenModal: React.FC<IProps> = (props) => {
         (tokenEle as HTMLInputElement).select();
         document.execCommand('copy');
       }
-      onClose();
       message.success(intl.formatMessage({ id: 'common.copy.success.text' }));
+      onClose();
     } catch (err) {
       console.error(err);
       message.error(intl.formatMessage({ id: 'common.copy.error.text' }));
@@ -157,7 +157,7 @@ const TokenModal: React.FC<IProps> = (props) => {
             <div className={styles['copy-token']}>
               <TextLimit text={tokenInfo.name} maxWidth={80} />
               <div>:</div>
-              <input id="token" className={styles['token']} value={token} />
+              <input id="token" className={styles['token']} readOnly value={token} />
             </div>
             <div
               className={styles['footer']}
