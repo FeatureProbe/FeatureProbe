@@ -164,17 +164,6 @@ jobs:
           toolchain: nightly
           override: true
       
-      - name: Build
-        run: |
-          rustup target add x86_64-unknown-linux-musl
-          cargo build --release --verbose
-        working-directory: ./server
-
-   #   - name: Build-musl
-   #     uses: gmiam/rust-musl-action@master
-   #     with:
-   #       args: cd ./server;cargo build --release --verbose 
-
       - name: Set up Docker Buildx
         uses: crazy-max/ghaction-docker-buildx@v3
 
@@ -204,9 +193,7 @@ jobs:
             --output "type=image,push=true" \
             --tag featureprobe/server:latest \
             --tag featureprobe/server:${GITHUB_REF#refs/tags/} \
-            --file ./Dockerfile ./
-        working-directory: ./server
-    
+            --file server/Dockerfile .
       -
         name: Docker Buildx (workflow_dispatch)
         if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -217,10 +204,9 @@ jobs:
             --output "type=image,push=true" \
             --tag featureprobe/server:latest \
             --tag featureprobe/server:$DOCKER_TAG \
-            --file ./Dockerfile ./
+            --file server/Dockerfile .
         env:
           DOCKER_TAG: ${{ inputs.tag }}
-        working-directory: ./server
 
       -
         name: Inspect image
