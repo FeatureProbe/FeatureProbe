@@ -236,6 +236,7 @@
   "toggles.sdk.tips": "If the toggle will use the client SDK later, please select “yes”, which determines the type of language used to access the SDK. Cannot be changed after creation.",
   "toggles.sdk.yes": "yes",
   "toggles.sdk.no": "no",
+  "toggles.sdk.errortext": "Please select SDK type",
   "toggles.returntype": "Return type",
   "toggles.returntype.tips": "Return types decide the toggle's return type in your code. Cannot be changed after creation.",
   "toggles.returntype.placeholder": "Please select",

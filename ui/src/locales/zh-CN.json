@@ -236,6 +236,7 @@
   "toggles.sdk.tips": "如果该开关后续会用到客户端SDK，请选择“使用”，它决定了接入SDK语言的种类，创建后不可修改",
   "toggles.sdk.yes": "使用",
   "toggles.sdk.no": "未使用",
+  "toggles.sdk.errortext": "请选择SDK类型",
   "toggles.returntype": "返回类型",
   "toggles.returntype.tips": "返回类型决定了代码中能读到的开关返回值类型，创建后不可修改",
   "toggles.returntype.placeholder": "请选择",

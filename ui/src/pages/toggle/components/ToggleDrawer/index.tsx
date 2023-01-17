@@ -206,7 +206,7 @@ const Drawer = (props: IParams) => {
         key: '',
         desc: '',
         tags: [],
-        clientAvailability: false,
+        clientAvailability: undefined,
         returnType: 'boolean',
         disabledServe: 0,
         permanent: false,
@@ -216,7 +216,7 @@ const Drawer = (props: IParams) => {
         key: '',
         desc: '',
         tags: [],
-        clientAvailability: false,
+        clientAvailability: undefined,
         returnType: 'boolean',
         disabledServe: 0,
         permanent: false,
@@ -264,7 +264,17 @@ const Drawer = (props: IParams) => {
     register('disabledServe', { 
       required: true, 
     });
+
+    register('sdk-radio', {
+      required: true,
+    });
   }, [register]);
+
+  useEffect(() => {
+    if(toggleInfo.clientAvailability !== undefined) {
+      clearErrors('sdk-radio');
+    }
+  }, [clearErrors, toggleInfo.clientAvailability]);
 
   const onSubmit = useCallback(async () => {
     setSubmitLoading(true);
@@ -517,6 +527,7 @@ const Drawer = (props: IParams) => {
           {/* Toggle SDK Type */}
           <Form.Field className={`${styles.joyride} joyride-sdk-type`}>
             <label>
+              <span className={styles['label-required']}>*</span>
               <FormattedMessage id='toggles.sdk.type' />
               <Popup
                 inverted
@@ -530,23 +541,34 @@ const Drawer = (props: IParams) => {
             </label>
             <div className={styles['radio-group']}>
               <Form.Radio
-                name='yes'
+                name='sdk-radio'
                 label={intl.formatMessage({id: 'toggles.sdk.yes'})}
                 className={styles['radio-group-item']}
-                checked={!!toggleInfo?.clientAvailability}
+                checked={toggleInfo?.clientAvailability === true}
+                value="yes"
                 disabled={!isAdd} 
+                error={!!errors['sdk-radio']}
                 onChange={(e: FormEvent, detail: CheckboxProps) => handleChange(e, detail, 'clientAvailability')} 
               />
-              <Form.Radio 
-                name='no'
+              <Form.Radio
+                name='sdk-radio'
                 label={intl.formatMessage({id: 'toggles.sdk.no'})}
                 className={styles['radio-group-item']}
-                checked={!toggleInfo?.clientAvailability}
+                checked={toggleInfo?.clientAvailability === false}
+                value="no"
                 disabled={!isAdd} 
+                error={!!errors['sdk-radio']}
                 onChange={(e: FormEvent, detail: CheckboxProps) => handleChange(e, detail, 'clientAvailability')} 
               />
             </div>
           </Form.Field>
+          { 
+            errors['sdk-radio'] && (
+              <div className={styles['error-text']}>
+                <FormattedMessage id='toggles.sdk.errortext' />
+              </div> 
+            )
+          }
 
           {/* Toggle Return Type */}
           <Form.Field className={`${styles.joyride} joyride-return-type`}>
