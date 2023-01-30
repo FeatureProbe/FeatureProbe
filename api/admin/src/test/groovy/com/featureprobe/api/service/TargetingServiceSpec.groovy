@@ -167,7 +167,7 @@ class TargetingServiceSpec extends Specification {
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(enableApproval: false, version: 1))
         1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >>
                 Optional.of(new Targeting(id: 1, toggleKey: toggleKey, environmentKey: environmentKey,
-                        content: "", disabled: true, version: 1))
+                        content: content, disabled: true, version: 1))
         1 * targetingRepository.saveAndFlush(_) >> new Targeting(id: 1, toggleKey: toggleKey, environmentKey: environmentKey,
                 content: "", disabled: false, version: 2)
 
@@ -208,6 +208,10 @@ class TargetingServiceSpec extends Specification {
         targetingRequest.setDisabled(false)
         targetingService.publish(projectKey, environmentKey, toggleKey, targetingRequest)
         then:
+        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(enableApproval: false, version: 1))
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >>
+                Optional.of(new Targeting(id: 1, toggleKey: toggleKey, environmentKey: environmentKey,
+                        content: content, disabled: true, version: 1))
         segmentRepository.existsByProjectKeyAndKey(projectKey, _) >> false
         then:
         thrown(ResourceNotFoundException)
@@ -220,6 +224,10 @@ class TargetingServiceSpec extends Specification {
         targetingRequest.setContent(targetingContent)
         targetingService.publish(projectKey, environmentKey, toggleKey, targetingRequest)
         then:
+        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(enableApproval: false, version: 1))
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >>
+                Optional.of(new Targeting(id: 1, toggleKey: toggleKey, environmentKey: environmentKey,
+                        content: content, disabled: true, version: 1))
         1 * segmentRepository.existsByProjectKeyAndKey(projectKey, _) >> true
         thrown(IllegalArgumentException)
     }
@@ -231,6 +239,10 @@ class TargetingServiceSpec extends Specification {
         targetingRequest.setContent(targetingContent)
         targetingService.publish(projectKey, environmentKey, toggleKey, targetingRequest)
         then:
+        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(enableApproval: false, version: 1))
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >>
+                Optional.of(new Targeting(id: 1, toggleKey: toggleKey, environmentKey: environmentKey,
+                        content: content, disabled: true, version: 1))
         1 * segmentRepository.existsByProjectKeyAndKey(projectKey, _) >> true
         thrown(IllegalArgumentException)
     }
@@ -242,6 +254,10 @@ class TargetingServiceSpec extends Specification {
         targetingRequest.setContent(targetingContent)
         targetingService.publish(projectKey, environmentKey, toggleKey, targetingRequest)
         then:
+        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(enableApproval: false, version: 1))
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >>
+                Optional.of(new Targeting(id: 1, toggleKey: toggleKey, environmentKey: environmentKey,
+                        content: content, disabled: true, version: 1))
         1 * segmentRepository.existsByProjectKeyAndKey(projectKey, _) >> true
         thrown(IllegalArgumentException)
     }
@@ -357,6 +373,7 @@ class TargetingServiceSpec extends Specification {
         when:
         targetingService.updateApprovalStatus(projectKey, environmentKey, toggleKey, new UpdateApprovalStatusRequest(status: ApprovalStatusEnum.JUMP, comment: "Pass"))
         then:
+        segmentRepository.existsByProjectKeyAndKey(projectKey, _) >> true
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(enableApproval: false, version: 1))
         2 * approvalRecordRepository.findAll(_, _) >> new PageImpl<>([approvalRecord], Pageable.ofSize(1), 1)
         2 * targetingSketchRepository.findAll(_, _) >> new PageImpl<>([targetingSketch], Pageable.ofSize(1), 1)
@@ -366,7 +383,7 @@ class TargetingServiceSpec extends Specification {
         1 * targetingSketchRepository.save(_)
         1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey,
                 toggleKey) >> Optional.of(new Targeting(id: 1, toggleKey: toggleKey, environmentKey: environmentKey,
-                content: "", disabled: true, version: 1))
+                content: "{}", disabled: true, version: 1))
         1 * targetingRepository.saveAndFlush(_) >> new Targeting(id: 1, toggleKey: toggleKey, environmentKey: environmentKey,
                 content: "", disabled: false, version: 2)
         1 * targetingSegmentRepository.deleteByTargetingId(1)

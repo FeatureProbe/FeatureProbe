@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-@Schema(description = "This is where you can express complex rules on attributes with conditions and operators.")
+@Schema(description = "This is where you can express complex rules on attributes with conditions and operators. " +
+        "<br/> rules、disabledServe、defaultServe、variations support independent update.")
 public class TargetingContent {
 
     @Schema(description = "Server a variation to specific users based on their attributes. " +
