@@ -17,13 +17,13 @@ git clone git@github.com:FeatureProbe/FeatureProbe.git
 cd FeatureProbe/ui
 ```
 
-使用`yarn`安装依赖
+<!-- 使用`yarn`安装依赖 -->
 
 ```shell
-yarn install
+npm install
 ```
 
-:::info
+<!-- :::info
 我们推荐您使用`yarn`作为包管理工具，如果您使用`npm install`安装依赖并遇到如下报错，请使用
 
 ~~~shell
@@ -31,12 +31,12 @@ npm install --legacy-peer-deps
 ~~~
 
 ![toggles screenshot](/local_develop_install_error.png)
-:::
+::: -->
 
 ## 启动本地服务
 
 ```shell
-yarn start
+npm run start
 ```
 
 该命令启动一个本地开发服务器并打开一个浏览器窗口，默认端口为3000。访问 `http://localhost:3000` 来查看UI项目。
