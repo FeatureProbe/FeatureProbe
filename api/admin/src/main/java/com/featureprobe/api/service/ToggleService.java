@@ -2,36 +2,25 @@ package com.featureprobe.api.service;
 
 import com.featureprobe.api.auth.TokenHelper;
 import com.featureprobe.api.base.db.Archived;
-import com.featureprobe.api.base.model.TargetingContent;
-import com.featureprobe.api.base.model.Variation;
-import com.featureprobe.api.component.SpringBeanManager;
-import com.featureprobe.api.config.AppConfig;
-import com.featureprobe.api.dao.exception.ResourceConflictException;
-import com.featureprobe.api.dao.exception.ResourceNotFoundException;
-import com.featureprobe.api.dao.exception.ResourceOverflowException;
-import com.featureprobe.api.dao.utils.PageRequestUtil;
-import com.featureprobe.api.dto.ToggleCreateRequest;
-import com.featureprobe.api.dto.ToggleItemResponse;
-import com.featureprobe.api.dto.ToggleResponse;
-import com.featureprobe.api.dto.ToggleSearchRequest;
-import com.featureprobe.api.dto.ToggleUpdateRequest;
-import com.featureprobe.api.dao.entity.Environment;
-import com.featureprobe.api.dao.entity.MetricsCache;
-import com.featureprobe.api.dao.entity.Project;
-import com.featureprobe.api.dao.entity.Tag;
-import com.featureprobe.api.dao.entity.Targeting;
-import com.featureprobe.api.dao.entity.TargetingSketch;
-import com.featureprobe.api.dao.entity.TargetingVersion;
-import com.featureprobe.api.dao.entity.Toggle;
-import com.featureprobe.api.dao.entity.ToggleTagRelation;
-import com.featureprobe.api.dao.entity.VariationHistory;
 import com.featureprobe.api.base.enums.ChangeLogType;
 import com.featureprobe.api.base.enums.MetricsCacheTypeEnum;
 import com.featureprobe.api.base.enums.ResourceType;
 import com.featureprobe.api.base.enums.SketchStatusEnum;
 import com.featureprobe.api.base.enums.ToggleReleaseStatusEnum;
 import com.featureprobe.api.base.enums.VisitFilter;
-import com.featureprobe.api.mapper.ToggleMapper;
+import com.featureprobe.api.component.SpringBeanManager;
+import com.featureprobe.api.config.AppConfig;
+import com.featureprobe.api.dao.entity.Environment;
+import com.featureprobe.api.dao.entity.MetricsCache;
+import com.featureprobe.api.dao.entity.Project;
+import com.featureprobe.api.dao.entity.Tag;
+import com.featureprobe.api.dao.entity.Targeting;
+import com.featureprobe.api.dao.entity.TargetingSketch;
+import com.featureprobe.api.dao.entity.Toggle;
+import com.featureprobe.api.dao.entity.ToggleTagRelation;
+import com.featureprobe.api.dao.exception.ResourceConflictException;
+import com.featureprobe.api.dao.exception.ResourceNotFoundException;
+import com.featureprobe.api.dao.exception.ResourceOverflowException;
 import com.featureprobe.api.dao.repository.EnvironmentRepository;
 import com.featureprobe.api.dao.repository.EventRepository;
 import com.featureprobe.api.dao.repository.MetricsCacheRepository;
@@ -39,11 +28,15 @@ import com.featureprobe.api.dao.repository.ProjectRepository;
 import com.featureprobe.api.dao.repository.TagRepository;
 import com.featureprobe.api.dao.repository.TargetingRepository;
 import com.featureprobe.api.dao.repository.TargetingSketchRepository;
-import com.featureprobe.api.dao.repository.TargetingVersionRepository;
 import com.featureprobe.api.dao.repository.ToggleRepository;
 import com.featureprobe.api.dao.repository.ToggleTagRepository;
-import com.featureprobe.api.dao.repository.VariationHistoryRepository;
-import com.featureprobe.api.base.util.JsonMapper;
+import com.featureprobe.api.dao.utils.PageRequestUtil;
+import com.featureprobe.api.dto.ToggleCreateRequest;
+import com.featureprobe.api.dto.ToggleItemResponse;
+import com.featureprobe.api.dto.ToggleResponse;
+import com.featureprobe.api.dto.ToggleSearchRequest;
+import com.featureprobe.api.dto.ToggleUpdateRequest;
+import com.featureprobe.api.mapper.ToggleMapper;
 import com.featureprobe.sdk.server.FPUser;
 import com.featureprobe.sdk.server.FeatureProbe;
 import lombok.AllArgsConstructor;
@@ -76,7 +69,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -94,10 +86,6 @@ public class ToggleService {
 
     private EventRepository eventRepository;
 
-    private TargetingVersionRepository targetingVersionRepository;
-
-    private VariationHistoryRepository variationHistoryRepository;
-
     private TargetingSketchRepository targetingSketchRepository;
 
     private MetricsCacheRepository metricsCacheRepository;
@@ -108,6 +96,8 @@ public class ToggleService {
 
     private ProjectRepository projectRepository;
 
+    private TargetingService targetingService;
+
     @PersistenceContext
     public EntityManager entityManager;
 
@@ -117,10 +107,16 @@ public class ToggleService {
     public ToggleResponse create(String projectKey, ToggleCreateRequest createRequest) {
         validateLimit(projectKey);
         Toggle toggle = createToggle(projectKey, createRequest);
-        createDefaultTargetingEntities(projectKey, toggle);
+        targetingService.createDefaultTargetingEntities(projectKey, toggle);
         return ToggleMapper.INSTANCE.entityToResponse(toggle, appConfig.getToggleDeadline());
     }
 
+    protected Toggle createToggle(String projectKey, ToggleCreateRequest createRequest) {
+        Toggle toggle = ToggleMapper.INSTANCE.requestToEntity(createRequest);
+        toggle.setProjectKey(projectKey);
+        setToggleTagRefs(toggle, createRequest.getTags());
+        return toggleRepository.save(toggle);
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public ToggleResponse update(String projectKey, String toggleKey, ToggleUpdateRequest updateRequest) {
@@ -230,42 +226,6 @@ public class ToggleService {
         }
     }
 
-    protected Toggle createToggle(String projectKey, ToggleCreateRequest createRequest) {
-        Toggle toggle = ToggleMapper.INSTANCE.requestToEntity(createRequest);
-        toggle.setProjectKey(projectKey);
-        setToggleTagRefs(toggle, createRequest.getTags());
-        return toggleRepository.save(toggle);
-    }
-
-    private void createDefaultTargetingEntities(String projectKey, Toggle toggle) {
-        List<Environment> environments = environmentRepository.findAllByProjectKey(projectKey);
-        if (CollectionUtils.isEmpty(environments)) {
-            log.info("{} environment is empty, ignore create targeting", projectKey);
-            return;
-        }
-        List<Targeting> targetingList = environments.stream().map(environment ->
-                createDefaultTargeting(toggle, environment)).collect(Collectors.toList());
-        List<Targeting> savedTargetingList = targetingRepository.saveAll(targetingList);
-        for (Targeting targeting : savedTargetingList) {
-            saveTargetingVersion(buildTargetingVersion(targeting, ""));
-            saveVariationHistory(targeting);
-        }
-    }
-
-    private void saveTargetingVersion(TargetingVersion targetingVersion) {
-        targetingVersionRepository.save(targetingVersion);
-    }
-
-    private void saveVariationHistory(Targeting targeting) {
-        List<Variation> variations = JsonMapper.toObject(targeting.getContent(), TargetingContent.class)
-                .getVariations();
-
-        List<VariationHistory> variationHistories = IntStream.range(0, variations.size())
-                .mapToObj(index -> convertVariationToEntity(targeting, index,
-                        variations.get(index)))
-                .collect(Collectors.toList());
-        variationHistoryRepository.saveAll(variationHistories);
-    }
 
     private void validateName(String projectKey, String name) {
         if (toggleRepository.existsByProjectKeyAndName(projectKey, name)) {
@@ -278,43 +238,6 @@ public class ToggleService {
         toggle.setTags(tags);
     }
 
-    private VariationHistory convertVariationToEntity(Targeting targeting, int index, Variation variation) {
-        VariationHistory variationHistory = new VariationHistory();
-        variationHistory.setEnvironmentKey(targeting.getEnvironmentKey());
-        variationHistory.setProjectKey(targeting.getProjectKey());
-        variationHistory.setToggleKey(targeting.getToggleKey());
-        variationHistory.setValue(variation.getValue());
-        variationHistory.setName(variation.getName());
-        variationHistory.setToggleVersion(targeting.getVersion());
-        variationHistory.setValueIndex(index);
-        return variationHistory;
-    }
-
-    private TargetingVersion buildTargetingVersion(Targeting targeting, String comment) {
-        TargetingVersion targetingVersion = new TargetingVersion();
-        targetingVersion.setProjectKey(targeting.getProjectKey());
-        targetingVersion.setEnvironmentKey(targeting.getEnvironmentKey());
-        targetingVersion.setToggleKey(targeting.getToggleKey());
-        targetingVersion.setContent(targeting.getContent());
-        targetingVersion.setDisabled(targeting.isDisabled());
-        targetingVersion.setVersion(targeting.getVersion());
-        targetingVersion.setComment(comment);
-        return targetingVersion;
-    }
-
-    private Targeting createDefaultTargeting(Toggle toggle, Environment environment) {
-        Targeting targeting = new Targeting();
-        targeting.setDeleted(false);
-        targeting.setVersion(1L);
-        targeting.setProjectKey(toggle.getProjectKey());
-        targeting.setDisabled(true);
-        targeting.setContent(TargetingContent.newDefault(toggle.getVariations(),
-                toggle.getDisabledServe()).toJson());
-        targeting.setToggleKey(toggle.getKey());
-        targeting.setEnvironmentKey(environment.getKey());
-        targeting.setPublishTime(new Date());
-        return targeting;
-    }
 
     private Map<String, Set<String>> queryTagMap(List<String> toggleKeys) {
         List<ToggleTagRelation> toggleTags = toggleTagRepository.findByToggleKeyIn(toggleKeys);

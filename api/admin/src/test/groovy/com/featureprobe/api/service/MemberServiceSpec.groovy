@@ -17,7 +17,6 @@ import com.featureprobe.api.dao.entity.OrganizationMember
 import com.featureprobe.api.dao.repository.MemberRepository
 import com.featureprobe.api.dao.repository.OrganizationRepository
 import com.featureprobe.api.dao.repository.OrganizationMemberRepository
-import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode
 import org.hibernate.internal.SessionImpl
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest

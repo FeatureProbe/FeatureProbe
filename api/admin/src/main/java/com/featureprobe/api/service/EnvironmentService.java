@@ -22,7 +22,6 @@ import com.featureprobe.api.mapper.EnvironmentMapper;
 import com.featureprobe.api.dao.repository.EnvironmentRepository;
 import com.featureprobe.api.dao.repository.ProjectRepository;
 import com.featureprobe.api.dao.repository.TargetingRepository;
-import com.featureprobe.api.dao.repository.ToggleRepository;
 import com.featureprobe.api.base.util.KeyGenerateUtil;
 import com.featureprobe.sdk.server.FPUser;
 import com.featureprobe.sdk.server.FeatureProbe;
@@ -33,9 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -46,13 +45,13 @@ public class EnvironmentService {
 
     private ProjectRepository projectRepository;
 
-    private ToggleRepository toggleRepository;
-
     private TargetingRepository targetingRepository;
 
     private ChangeLogService changeLogService;
 
     private IncludeArchivedToggleService includeArchivedToggleService;
+
+    private TargetingService targetingService;
 
     @PersistenceContext
     public EntityManager entityManager;
@@ -67,8 +66,9 @@ public class EnvironmentService {
         environment.setServerSdkKey(KeyGenerateUtil.getServerSdkKey());
         environment.setClientSdkKey(KeyGenerateUtil.getClientSdkKey());
         environment.setProject(project);
-        initEnvironmentTargeting(projectKey, createRequest.getKey());
+        createEnvironmentTargetingList(projectKey, createRequest.getKey(), createRequest.getCopyFrom());
         changeLogService.create(environment, ChangeLogType.ADD);
+
         return EnvironmentMapper.INSTANCE.entityToResponse(environmentRepository.save(environment));
     }
 
@@ -138,26 +138,54 @@ public class EnvironmentService {
         }
     }
 
-    private void initEnvironmentTargeting(String projectKey, String environmentKey) {
-        List<Toggle> toggles = includeArchivedToggleService.findAllByProjectKey(projectKey);
-        List<Targeting> targetingList = toggles.stream().map(toggle -> createDefaultTargeting(toggle, environmentKey))
-                .collect(Collectors.toList());
-        targetingRepository.saveAll(targetingList);
+    private List<Targeting> createEnvironmentTargetingList(String projectKey, String environmentKey,
+                                                           String copyFromEnvKey) {
+        List<Targeting> targetingList;
+        if (StringUtils.isBlank(copyFromEnvKey)) {
+            targetingList = includeArchivedToggleService.findAllByProjectKey(projectKey).stream()
+                    .map(toggle -> createTargetingByToggle(toggle, environmentKey))
+                    .collect(Collectors.toList());
+        } else {
+            targetingList = targetingRepository.findAllByProjectKeyAndEnvironmentKey(projectKey, copyFromEnvKey)
+                    .stream()
+                    .map(targeting -> copyTargeting(environmentKey, targeting)).collect(Collectors.toList());
+        }
+        if (targetingList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        targetingService.createTargetingEntities(targetingList);
+        return targetingList;
     }
 
-    private Targeting createDefaultTargeting(Toggle toggle, String environmentKey) {
+    private Targeting copyTargeting(String newEnvironmentKey, Targeting sourceTargeting) {
+        Targeting newTargeting = this.createTargeting(sourceTargeting.getProjectKey(), newEnvironmentKey,
+                sourceTargeting.getToggleKey(), sourceTargeting.getContent());
+        newTargeting.setDeleted(sourceTargeting.isDeleted());
+        newTargeting.setDisabled(sourceTargeting.isDisabled());
+        newTargeting.setStatus(sourceTargeting.getStatus());
+        return newTargeting;
+    }
+
+    private Targeting createTargetingByToggle(Toggle toggle, String environmentKey) {
+        String defaultContent = TargetingContent.newDefault(toggle.getVariations(),
+                toggle.getDisabledServe()).toJson();
+        return this.createTargeting(toggle.getProjectKey(), environmentKey, toggle.getKey(), defaultContent);
+    }
+
+    private Targeting createTargeting(String projectKey, String environmentKey, String toggleKey,
+                                      String content) {
         Targeting targeting = new Targeting();
-        targeting.setDeleted(false);
-        targeting.setVersion(1L);
-        targeting.setProjectKey(toggle.getProjectKey());
         targeting.setDisabled(true);
-        targeting.setContent(TargetingContent.newDefault(toggle.getVariations(),
-                toggle.getDisabledServe()).toJson());
-        targeting.setToggleKey(toggle.getKey());
+        targeting.setDeleted(false);
+        targeting.setContent(content);
+        targeting.setVersion(1L);
+        targeting.setProjectKey(projectKey);
+        targeting.setToggleKey(toggleKey);
         targeting.setEnvironmentKey(environmentKey);
         targeting.setPublishTime(new Date());
         return targeting;
     }
+
 
     private void validateEnvironmentByName(String projectKey, String name) {
         if (environmentRepository.existsByProjectKeyAndName(projectKey, name)) {

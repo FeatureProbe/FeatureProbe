@@ -8,6 +8,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +37,7 @@ public class SdkVersionScheduler {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Scheduled(cron = "0 0 0 * * ?")  // every day at 0:00
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void fetchLatestJavaSdkVersion() {
         String latestVersion = getSdkVersionFromSearchMavenOrg("server-sdk-java");
         if (StringUtils.isBlank(latestVersion)) {
@@ -45,7 +47,7 @@ public class SdkVersionScheduler {
     }
 
     @Scheduled(cron = "0 1 0 * * ?")  // every day at 0:01
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void fetchLatestAndroidSdkVersion() {
         String latestVersion = getSdkVersionFromSearchMavenOrg("client-sdk-android");
         if (StringUtils.isBlank(latestVersion)) {
@@ -55,7 +57,7 @@ public class SdkVersionScheduler {
     }
 
     @Scheduled(cron = "0 2 0 * * ?")  // every day at 0:02
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void fetchLatestRustSdkVersion() {
         String latestVersion = getRustSdkVersionFromCratesIo();
         latestVersions.put(RUST_SDK_VERSION, latestVersion);
