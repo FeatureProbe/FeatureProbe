@@ -1,4 +1,4 @@
-const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
+// const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 
 module.exports = {
   plugins: [
@@ -54,9 +54,9 @@ module.exports = {
       ],
     },
     plugins: [
-      new FilterWarningsPlugin({
-        exclude: /Conflicting order./,
-      }),
+      // new FilterWarningsPlugin({
+      //   exclude: /Conflicting order./,
+      // }),
     ],
   }
 };
