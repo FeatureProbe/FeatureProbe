@@ -1,5 +1,3 @@
-// const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
-
 module.exports = {
   plugins: [
     { plugin: require('@semantic-ui-react/craco-less') },
@@ -52,11 +50,9 @@ module.exports = {
           );
         },
       ],
+      stats: {
+        warningsFilter: /Conflicting order./,
+      },
     },
-    plugins: [
-      // new FilterWarningsPlugin({
-      //   exclude: /Conflicting order./,
-      // }),
-    ],
   }
 };
