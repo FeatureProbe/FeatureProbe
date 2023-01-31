@@ -1,4 +1,14 @@
-const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
+class CustomFilterPlugin {
+  constructor({ exclude }) {
+    this.exclude = exclude;
+  }
+
+  apply(compiler) {
+    compiler.hooks.afterEmit.tap('CustomFilterPlugin', compilation => {
+      compilation.warnings = compilation.warnings.filter(warning => !this.exclude.test(warning.message));
+    });
+  }
+};
 
 module.exports = {
   plugins: [
@@ -52,11 +62,14 @@ module.exports = {
           );
         },
       ],
+      stats: {
+        warningsFilter: /Conflicting order./,
+      },
     },
     plugins: [
-      new FilterWarningsPlugin({
-        exclude: /Conflicting order./,
-      }),
+      new CustomFilterPlugin({
+        exclude: /Conflicting order./
+      })
     ],
   }
 };

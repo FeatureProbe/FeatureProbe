@@ -93,8 +93,8 @@
     ]
   },
   "devDependencies": {
-    "@craco/craco": "^5.9.0",
-    "@semantic-ui-react/craco-less": "^2.0.2",
+    "@craco/craco": "^7.0.0",
+    "@semantic-ui-react/craco-less": "^3.0.0",
     "@semantic-ui-react/css-patch": "^1.0.0",
     "@testing-library/react": "12.1.5",
     "@types/codemirror": "^5.60.5",
@@ -122,8 +122,7 @@
     "react-scripts": "^5.0.1",
     "react-test-renderer": "17.0.2",
     "source-map-explorer": "^2.5.2",
-    "webpack": "^5.72.1",
-    "webpack-filter-warnings-plugin": "^1.2.1"
+    "webpack": "^5.72.1"
   },
   "resolutions": {
     "@types/react": "17.0.43"
