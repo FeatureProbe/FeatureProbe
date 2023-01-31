@@ -85,22 +85,9 @@ curl -i 'https://featureprobe.io/api/projects/My_Project/environments/online/tog
 	"comment": "打开开关",
 	"disabled": false,
 	"content": {
-		"rules": [],
-		"disabledServe": {
-			"select": 0
-		},
 		"defaultServe": {
 			"select": 1
-		},
-		"variations": [{
-			"value": "false",
-			"name": "关闭",
-			"description": "关闭新功能"
-		}, {
-			"value": "true",
-			"name": "打开",
-			"description": "打开新功能"
-		}]
+		}
 	}
 }'
 ```
