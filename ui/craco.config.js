@@ -1,3 +1,15 @@
+class CustomFilterPlugin {
+  constructor({ exclude }) {
+    this.exclude = exclude;
+  }
+
+  apply(compiler) {
+    compiler.hooks.afterEmit.tap('CustomFilterPlugin', compilation => {
+      compilation.warnings = compilation.warnings.filter(warning => !this.exclude.test(warning.message));
+    });
+  }
+};
+
 module.exports = {
   plugins: [
     { plugin: require('@semantic-ui-react/craco-less') },
@@ -54,5 +66,10 @@ module.exports = {
         warningsFilter: /Conflicting order./,
       },
     },
+    plugins: [
+      new CustomFilterPlugin({
+        exclude: /Conflicting order./
+      })
+    ],
   }
 };
