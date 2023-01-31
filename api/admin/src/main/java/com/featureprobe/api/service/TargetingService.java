@@ -110,7 +110,6 @@ public class TargetingService {
     @Transactional(rollbackFor = Exception.class)
     public TargetingResponse publish(String projectKey, String environmentKey, String toggleKey,
                                     TargetingPublishRequest targetingPublishRequest) {
-        validateTargetingContent(projectKey, targetingPublishRequest.getContent());
         Environment environment = selectEnvironment(projectKey, environmentKey);
         changeLogService.create(environment, ChangeLogType.CHANGE);
         return publishTargeting(projectKey, environmentKey, toggleKey, targetingPublishRequest, null);
@@ -361,7 +360,7 @@ public class TargetingService {
                                                TargetingPublishRequest targetingPublishRequest, Long approvalId) {
         Targeting existedTargeting = selectTargeting(projectKey, environmentKey, toggleKey);
         long oldVersion = existedTargeting.getVersion();
-        Targeting updatedTargeting = updateTargeting(existedTargeting, targetingPublishRequest);
+        Targeting updatedTargeting = updateTargeting(projectKey, existedTargeting, targetingPublishRequest);
         if (updatedTargeting.getVersion() > oldVersion) {
             saveTargetingSegmentRefs(projectKey, updatedTargeting, targetingPublishRequest.getContent());
             saveTargetingVersion(buildTargetingVersion(updatedTargeting,
@@ -401,8 +400,13 @@ public class TargetingService {
         return sketch;
     }
 
-    private Targeting updateTargeting(Targeting currentTargeting,
+    private Targeting updateTargeting(String projectKey, Targeting currentTargeting,
                                       TargetingPublishRequest updateTargetingPublishRequest) {
+        TargetingContent currentTargetingContent = JsonMapper.toObject(currentTargeting.getContent(),
+                TargetingContent.class);
+        TargetingMapper.INSTANCE.mapContentEntity(updateTargetingPublishRequest.getContent(), currentTargetingContent);
+        validateTargetingContent(projectKey, currentTargetingContent);
+        updateTargetingPublishRequest.setContent(currentTargetingContent);
         TargetingMapper.INSTANCE.mapEntity(updateTargetingPublishRequest, currentTargeting);
         currentTargeting.setVersion(currentTargeting.getVersion() + 1);
         currentTargeting.setPublishTime(new Date());
@@ -504,7 +508,7 @@ public class TargetingService {
     }
 
     private void validateTargetingContent(String projectKey, TargetingContent content) {
-        if (CollectionUtils.isEmpty(content.getRules())) {
+        if (Objects.isNull(content) && CollectionUtils.isEmpty(content.getRules())) {
             return;
         }
         content.getRules()
