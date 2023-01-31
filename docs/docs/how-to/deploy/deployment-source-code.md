@@ -204,6 +204,7 @@ mvn clean package
 1. Environment preparation
 
     * Node.js 16.13+ : [Download](https://nodejs.org/zh-cn/download/)
+
     <!-- * yarn
       * Install: `npm install -g yarn`
     * python3
