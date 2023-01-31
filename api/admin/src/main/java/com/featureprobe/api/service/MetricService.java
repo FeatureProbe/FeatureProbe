@@ -139,7 +139,6 @@ public class MetricService {
 
     private List<AccessEventPoint> queryAccessEventPoints(String serverSdkKey, String toggleKey, Targeting targeting,
                                                           int lastHours) {
-        long time = System.currentTimeMillis();
         int pointIntervalCount = getPointIntervalCount(lastHours);
         int pointCount = lastHours / pointIntervalCount;
 

@@ -31,6 +31,9 @@ public interface TargetingMapper extends BaseMapper {
             expression = "java(toTargetingContentString(publishRequest.getContent(), targeting))")
     void mapEntity(TargetingPublishRequest publishRequest, @MappingTarget Targeting targeting);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void mapContentEntity(TargetingContent content, @MappingTarget TargetingContent currentContent);
+
     default String toTargetingContentString(TargetingContent content, Targeting targeting) {
         if (Objects.nonNull(content)) {
             return JsonMapper.toJSONString(content);

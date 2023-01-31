@@ -1,8 +1,6 @@
 package com.featureprobe.api.controller;
 
 import com.featureprobe.api.base.db.ExcludeTenant;
-import com.featureprobe.api.base.doc.CreateApiResponse;
-import com.featureprobe.api.base.doc.GetApiResponse;
 import com.featureprobe.api.dto.EventCreateRequest;
 import com.featureprobe.api.dto.SdkKeyResponse;
 import com.featureprobe.api.dto.ServerResponse;
@@ -10,9 +8,7 @@ import com.featureprobe.api.server.ServerDataSource;
 import com.featureprobe.api.service.EnvironmentService;
 import com.featureprobe.api.service.EventService;
 import io.swagger.v3.oas.annotations.Hidden;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
