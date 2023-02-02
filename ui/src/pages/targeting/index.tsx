@@ -388,7 +388,7 @@ const Targeting = () => {
               </Menu.Item>
             </Menu>
             {
-              (activeItem === 'targeting' || activeItem === 'analysis') && (
+              activeItem === 'targeting' && (
                 <div className={styles.history}>
                   <Button 
                     secondary

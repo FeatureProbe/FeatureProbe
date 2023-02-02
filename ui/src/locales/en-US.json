@@ -588,5 +588,10 @@
   "analysis.event.required": "Please select an event",
   "analysis.event.save.success": "Event saved successfully",
   "analysis.event.save.error": "Error saving event",
-  "analysis.event.get.error": "Error getting event"
+  "analysis.event.get.error": "Error getting event",
+
+  "analysis.result.tip": "Please save Metric first, then click [Collect Data]",
+  "analysis.result.collect.time": "Start collection time: ",
+  "analysis.result.collect.start": "Start collecting", 
+  "analysis.result.collect.stop": "Stop collecting"
 }
