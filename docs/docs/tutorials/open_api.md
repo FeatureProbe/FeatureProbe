@@ -86,22 +86,9 @@ curl -i 'https://featureprobe.io/api/projects/My_Project/environments/online/tog
 	"comment": "Open toggle.",
 	"disabled": false,
 	"content": {
-		"rules": [],
-		"disabledServe": {
-			"select": 0
-		},
 		"defaultServe": {
 			"select": 1
-		},
-		"variations": [{
-			"value": "false",
-			"name": "Close",
-			"description": "Close new feature."
-		}, {
-			"value": "true",
-			"name": "Open",
-			"description": "Open new feature."
-		}]
+		}
 	}
 }'
 ```

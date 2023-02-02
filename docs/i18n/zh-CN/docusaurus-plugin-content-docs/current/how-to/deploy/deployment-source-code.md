@@ -212,10 +212,11 @@ mvn clean package
 1. 环境准备
 
    * Node.js 16.13+ : [下载](https://nodejs.org/zh-cn/download/)
-   * yarn
+   
+   <!-- * yarn
      * 安装： `npm install -g yarn`
    * python3
-     * [安装](https://realpython.com/installing-python/#)
+     * [安装](https://realpython.com/installing-python/#) -->
      
    :::info
    国内建议切换为 npm 中国镜像站：`npm config set registry https://registry.npmmirror.com/`
@@ -226,8 +227,8 @@ mvn clean package
    ```bash
    git clone https://gitee.com/FeatureProbe/FeatureProbe.git
    cd FeatureProbe/ui
-   yarn install --frozen-lockfile
-   yarn build
+   npm install
+   npm run build
    ```
    
    完成编译后会在 `build` 目录下生成可部署的静态文件。如下所示：

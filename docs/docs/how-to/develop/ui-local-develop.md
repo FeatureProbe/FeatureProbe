@@ -17,13 +17,13 @@ git clone git@github.com:FeatureProbe/FeatureProbe.git
 cd FeatureProbe/ui
 ```
 
-Use `yarn` to install dependencies
+<!-- Use `yarn` to install dependencies -->
 
 ```shell
-yarn install
+npm install
 ```
 
-:::info
+<!-- :::info
 It is highly recommended that use `yarn` as the package manager.If you are using `npm install` to install and encountering this error as below, use `npm install --legacy-peer-deps` instead
 
 ![toggles screenshot](/local_develop_install_error.png)
@@ -32,12 +32,12 @@ It is highly recommended that use `yarn` as the package manager.If you are using
 
 ```shell
 npm install --legacy-peer-deps
-```
+``` -->
 
 ### Start development server
 
 ```
-yarn start
+npm run start
 ```
 
 This command starts a local development server and opens up a browser window, the default port is 3000. Visit `http://localhost:3000` to get the UI page.
