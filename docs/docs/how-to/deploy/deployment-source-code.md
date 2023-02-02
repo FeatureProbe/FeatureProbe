@@ -204,10 +204,11 @@ mvn clean package
 1. Environment preparation
 
     * Node.js 16.13+ : [Download](https://nodejs.org/zh-cn/download/)
-    * yarn
+
+    <!-- * yarn
       * Install: `npm install -g yarn`
     * python3
-      * [Installation](https://realpython.com/installing-python/#)
+      * [Installation](https://realpython.com/installing-python/#) -->
      
     :::info
     It is recommended to switch to the npm China mirror station in China: `npm config set registry https://registry.npmmirror.com/`
@@ -218,8 +219,8 @@ mvn clean package
     ```bash
     git clone https://gitee.com/FeatureProbe/FeatureProbe.git
     cd FeatureProbe/ui
-    yarn install --frozen-lockfile
-    yarn build
+    npm install
+    npm run build
     ```
    
     After compiling, deployable static files will be generated in the `build` directory. As follows:
