@@ -1,0 +1,136 @@
+
+.metrics {
+  background: #ffffff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.metrics-content {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 24px 16px;
+  margin-top: 8px;
+}
+
+.angle-down {
+  position: absolute;
+  right: 10px;
+  color: #74788d;
+  top: 9px;
+}
+
+.label {
+  width: 98px !important;
+  margin: 0 12px 0 0 !important;
+  text-align: right;
+}
+
+.label-required {
+  color: #ff5f57;
+  font-size: 20px;
+  vertical-align: middle;
+  margin-right: 4px;
+  height: 16px;
+  display: inline-block;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+}
+
+.field-middle {
+  width: 80px !important;
+  margin-right: 12px !important;
+}
+
+.field-right {
+  flex: 1;
+}
+
+.row {
+  margin-bottom: 24px;
+}
+
+.row:last-child {
+  margin-bottom: 0;
+}
+
+.custom-metric-row {
+  display: flex;
+  margin-left: 114px;
+}
+
+.custom-metric-radio {
+  flex: 1;
+}
+
+.custom-metric-desc {
+  background: #ececf6;
+  border-radius: 4px;
+  color: #495057;
+  font-size: 12px;
+  transform: scale(0.83);
+  padding: 1px 4px;
+  margin-left: 20px;
+}
+
+.custom-metric-desc-disabled {
+  background: #ececf6;
+  border-radius: 4px;
+  color: #495057;
+  font-size: 12px;
+  transform: scale(0.83);
+  padding: 1px 4px;
+  margin-left: 20px;
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.custom-metric {
+  margin-bottom: 3px !important;
+}
+
+.metrics-save {
+  margin-left: 114px;
+  margin-top: 24px;
+}
+
+.btn {
+  width: 80px;
+}
+
+.icon-question {
+  vertical-align: middle;
+  margin-left: 4px;
+  color: #74788d;
+}
+
+.error-text {
+  color: #f46a6a;
+  font-size: 12px;
+  position: absolute;
+  top: 32px;
+  left: 136px;
+}
+
+.error-text-url {
+  color: #f46a6a;
+  font-size: 12px;
+  position: absolute;
+  top: 32px;
+  left: 346px;
+}
+
+.error-text-event {
+  color: #f46a6a;
+  font-size: 12px;
+  position: absolute;
+  top: 42px;
+  left: 136px;
+}
+
+.column {
+  position: relative;
+}

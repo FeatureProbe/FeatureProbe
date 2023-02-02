@@ -231,7 +231,7 @@ const ProjectCard = (props: IProps) => {
                 <div className={styles['no-data']}>
                   <img className={styles['no-data-img']} src={require('images/no-data-available.png')} alt='no-data' />
                   <div className={styles['no-data-text']}>
-                    <FormattedMessage id='targeting.metrics.no.data.text' />
+                    <FormattedMessage id='targeting.traffic.no.data.text' />
                   </div>
                 </div>
               )

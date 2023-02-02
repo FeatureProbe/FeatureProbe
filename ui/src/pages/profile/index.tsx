@@ -116,7 +116,7 @@ const Member = () => {
                   />
                   <div className={styles['demo-tips']}>
                     <FormattedMessage id='login.demo.password.tip' />
-                  </div> 
+                  </div>
                 </div>
               ) : (
                 <>

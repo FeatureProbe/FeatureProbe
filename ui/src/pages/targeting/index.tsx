@@ -12,7 +12,8 @@ import Icon from 'components/Icon';
 import ProjectLayout from 'layout/projectLayout';
 import TargetingForm from './components/TargetingForm';
 import Loading from 'components/Loading';
-import Metrics from './components/Metrics';
+import Traffic from '../traffic';
+import Analysis from '../analysis';
 import Info from './components/Info';
 import FlowExplain from './components/FlowExplain';
 import History from 'components/History';
@@ -372,15 +373,22 @@ const Targeting = () => {
                 <FormattedMessage id='common.targeting.text' />
               </Menu.Item>
               <Menu.Item
-                name='metrics'
-                active={activeItem === 'metrics'}
+                name='traffic'
+                active={activeItem === 'traffic'}
                 onClick={handleItemClick}
               >
-                <FormattedMessage id='common.metrics.text' />
+                <FormattedMessage id='common.traffic.text' />
+              </Menu.Item>
+              <Menu.Item
+                name='analysis'
+                active={activeItem === 'analysis'}
+                onClick={handleItemClick}
+              >
+                <FormattedMessage id='common.analysis.text' />
               </Menu.Item>
             </Menu>
             {
-              activeItem === 'targeting' && (
+              (activeItem === 'targeting' || activeItem === 'analysis') && (
                 <div className={styles.history}>
                   <Button 
                     secondary
@@ -446,8 +454,13 @@ const Targeting = () => {
                       )
                     }
                     {
-                      activeItem === 'metrics' && (
-                        <Metrics />
+                      activeItem === 'traffic' && (
+                        <Traffic />
+                      )
+                    }
+                    {
+                      activeItem === 'analysis' && (
+                        <Analysis />
                       )
                     }
                   </div>
