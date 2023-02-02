@@ -8,12 +8,12 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class MetricResponse {
+public class TrafficResponse {
 
     @Schema(description = "Whether the toggle is access successfully.")
     private Boolean isAccess;
 
-    private List<AccessEventPoint> metrics;
+    private List<TrafficPoint> traffic;
 
     private List<VariationAccessCounter> summary;
 

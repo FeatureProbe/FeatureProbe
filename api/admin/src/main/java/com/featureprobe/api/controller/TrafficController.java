@@ -6,9 +6,9 @@ import com.featureprobe.api.base.doc.GetApiResponse;
 import com.featureprobe.api.base.doc.ProjectKeyParameter;
 import com.featureprobe.api.base.doc.ToggleKeyParameter;
 import com.featureprobe.api.dto.AccessStatusResponse;
-import com.featureprobe.api.dto.MetricResponse;
-import com.featureprobe.api.base.enums.MetricType;
-import com.featureprobe.api.service.MetricService;
+import com.featureprobe.api.dto.TrafficResponse;
+import com.featureprobe.api.base.enums.TrafficType;
+import com.featureprobe.api.service.TrafficChartService;
 import com.featureprobe.api.validate.ResourceExistsValidate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,25 +30,25 @@ import org.springframework.web.bind.annotation.RestController;
 @ToggleKeyParameter
 @EnvironmentKeyParameter
 @ResourceExistsValidate
-@Tag(name = "Metrics", description = "The metrics API allows you to statistics toggle access events.")
-public class MetricController {
+@Tag(name = "Traffic", description = "The traffic API allows you to statistics toggle access events.")
+public class TrafficController {
 
-    private MetricService metricService;
+    private TrafficChartService trafficChartService;
 
     @GetApiResponse
-    @GetMapping("/metrics")
-    @Operation(summary = "Query Metrics", description = "Get the access statistics report of the toggle" +
+    @GetMapping("/traffic")
+    @Operation(summary = "Query Traffic", description = "Get the access statistics report of the toggle" +
             " for a period of time.")
-    public MetricResponse query(@PathVariable("projectKey") String projectKey,
-                                @PathVariable("environmentKey") String environmentKey,
-                                @PathVariable("toggleKey") String toggleKey,
-                                @Schema(description = "Metrics group type.")
-                                @RequestParam(value = "metricType", defaultValue = "VALUE")
-                                MetricType metricType,
-                                @Schema(description = "Metrics statistical time granularity.")
+    public TrafficResponse query(@PathVariable("projectKey") String projectKey,
+                                 @PathVariable("environmentKey") String environmentKey,
+                                 @PathVariable("toggleKey") String toggleKey,
+                                 @Schema(description = "Metrics group type.")
+                                @RequestParam(value = "trafficType", defaultValue = "VALUE")
+                                    TrafficType trafficType,
+                                 @Schema(description = "Metrics statistical time granularity.")
                                 @RequestParam(value = "lastHours", defaultValue = "24") int lastHours) {
 
-        return metricService.query(projectKey, environmentKey, toggleKey, metricType, lastHours);
+        return trafficChartService.query(projectKey, environmentKey, toggleKey, trafficType, lastHours);
     }
 
     @GetApiResponse
@@ -57,7 +57,7 @@ public class MetricController {
     public AccessStatusResponse query(@PathVariable("projectKey") String projectKey,
                                       @PathVariable("environmentKey") String environmentKey,
                                       @PathVariable("toggleKey") String toggleKey) {
-        return metricService.isAccess(projectKey, environmentKey, toggleKey);
+        return trafficChartService.isAccess(projectKey, environmentKey, toggleKey);
     }
 
 }

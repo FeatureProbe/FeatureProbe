@@ -1,52 +1,117 @@
 package com.featureprobe.api.service
 
-import com.featureprobe.api.dao.entity.Environment
-import com.featureprobe.api.dao.entity.Project
-import com.featureprobe.api.dao.repository.EnvironmentRepository
+import com.featureprobe.api.base.enums.EventTypeEnum
+import com.featureprobe.api.base.enums.MatcherTypeEnum
+import com.featureprobe.api.dao.entity.Event
+import com.featureprobe.api.dao.entity.TargetingEvent
+import com.featureprobe.api.dao.exception.ResourceNotFoundException
 import com.featureprobe.api.dao.repository.EventRepository
-import com.featureprobe.api.dao.repository.MetricsCacheRepository
-import com.featureprobe.api.dto.AccessSummary
+import com.featureprobe.api.dao.repository.TargetingEventRepository
 import com.featureprobe.api.dto.EventCreateRequest
-import com.featureprobe.api.dto.VariationAccessCounter
+import org.hibernate.internal.SessionImpl
 import spock.lang.Specification
+import javax.persistence.EntityManager
 
-class EventServiceSpec extends Specification {
+class EventServiceSpec extends Specification{
+
+    EventRepository eventRepository
+
+    TargetingEventRepository targetingEventRepository
+
+    EntityManager entityManager
 
     EventService eventService
-    EventRepository eventRepository
-    EnvironmentRepository environmentRepository
-    MetricsCacheRepository metricsCacheRepository
+
+    def projectKey
+    def environmentKey
+    def toggleKey
 
     def setup() {
         eventRepository = Mock(EventRepository)
-        environmentRepository = Mock(EnvironmentRepository)
-        metricsCacheRepository = Mock(MetricsCacheRepository)
-        eventService = new EventService(eventRepository, environmentRepository, metricsCacheRepository)
+        targetingEventRepository = Mock(TargetingEventRepository)
+        entityManager = Mock(SessionImpl)
+        eventService = new EventService(eventRepository, targetingEventRepository, entityManager)
+        projectKey = "Test_Project"
+        environmentKey = "online"
+        toggleKey = "Test_Toggle"
     }
 
-    def "test create access events"() {
-        def savedEvents
-
+    def "create a new event"(){
+        given:
+        EventCreateRequest request = new EventCreateRequest(type: EventTypeEnum.CONVERSION, name: "access_feature")
         when:
-        this.eventService.create("server-key-test", "java/1.0.0", [new EventCreateRequest(access: new AccessSummary(
-                startTime: 10010101010,
-                endTime: 202020202020,
-                counters: [
-                        "key1": [new VariationAccessCounter(value: "true", count: 100),
-                                 new VariationAccessCounter(value: "false", count: 10)]
-                ]
-        ))])
-
+        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
         then:
-        1 * environmentRepository.findByServerSdkKey("server-key-test") >>
-                Optional.of(new Environment(name: "test", project: new Project(key: "test_prj")))
-        1 * eventRepository.saveAll(_) >> { it -> savedEvents = it[0] }
-        savedEvents
-        2 == savedEvents.size()
-
-        with(savedEvents[0]) {
-            "access" == it.type
-        }
+        1 * targetingEventRepository.deleteByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey,
+                environmentKey, toggleKey)
+        1 * eventRepository.findByName("access_feature") >> Optional.empty()
+        1 * eventRepository.save(_) >> new Event(id: 1, type: EventTypeEnum.CONVERSION, name: "access_feature")
+        1 * targetingEventRepository.save(_) >> new TargetingEvent(event: new Event(id: 1, type: EventTypeEnum.CONVERSION, name: "access_feature"))
+        EventTypeEnum.CONVERSION.name() == created.type.name()
+        "access_feature" == created.name
     }
 
+    def "update a exists event "(){
+        given:
+        EventCreateRequest request = new EventCreateRequest(type: EventTypeEnum.CONVERSION, name: "access_feature2")
+        when:
+        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
+        then:
+        1 * targetingEventRepository.deleteByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey,
+                environmentKey, toggleKey)
+        1 * eventRepository.findByName("access_feature2") >> Optional.of(new Event(id: 1, type: EventTypeEnum.CONVERSION, name: "access_feature2"))
+        1 * targetingEventRepository.save(_) >> new TargetingEvent(event: new Event(id: 1, type: EventTypeEnum.CONVERSION, name: "access_feature2"))
+        EventTypeEnum.CONVERSION.name() == created.type.name()
+        "access_feature2" == created.name
+    }
+
+
+    def "create a event: name is required"(){
+        given:
+        EventCreateRequest request = new EventCreateRequest(type: EventTypeEnum.CONVERSION)
+        when:
+        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "create a event error: url is required"(){
+        given:
+        EventCreateRequest request = new EventCreateRequest(type: EventTypeEnum.PAGE_VIEW)
+        when:
+        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "create a event error: selector is required"(){
+        given:
+        EventCreateRequest request = new EventCreateRequest(type: EventTypeEnum.CLICK, matcher: MatcherTypeEnum.SIMPLE, url: "https://127.0.0.1/test")
+        when:
+        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+
+    def "query a event by toggle"(){
+        when:
+        def indicator = eventService.query(projectKey, environmentKey, toggleKey)
+        then:
+        1 * targetingEventRepository
+                .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >>
+                Optional.of(new TargetingEvent(id: 1, event: new Event(id: 1, type: EventTypeEnum.CONVERSION, name: "access_feature")))
+        EventTypeEnum.CONVERSION.name() == indicator.type.name()
+        "access_feature" == indicator.name
+    }
+
+    def "query a not exists event by toggle"(){
+        when:
+        def indicator = eventService.query(projectKey, environmentKey, toggleKey)
+        then:
+        1 * targetingEventRepository
+                .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >>
+                Optional.empty()
+        thrown(ResourceNotFoundException)
+    }
 }

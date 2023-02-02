@@ -10,7 +10,8 @@ public enum ResourceType {
     SEGMENT("segment"), DICTIONARY("dictionary"),
     ORGANIZATION_MEMBER("organization_member"),
     WEBHOOK("name"),
-    ACCESS_TOKEN("access_token");
+    ACCESS_TOKEN("access_token"),
+    EVENT("projectKey_environmentKey_toggleKey");
 
     private String paramName;
 

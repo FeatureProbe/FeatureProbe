@@ -1,23 +1,21 @@
 package com.featureprobe.api.service
 
-import com.featureprobe.api.base.enums.MetricType
-import com.featureprobe.api.base.enums.MetricsCacheTypeEnum
+import com.featureprobe.api.base.enums.TrafficType
 import com.featureprobe.api.base.enums.OrganizationRoleEnum
 import com.featureprobe.api.base.model.OrganizationMemberModel
 import com.featureprobe.api.base.model.TargetingContent
 import com.featureprobe.api.base.model.Variation
 import com.featureprobe.api.base.tenant.TenantContext
-import com.featureprobe.api.dto.AccessEventPoint
-import com.featureprobe.api.dto.MetricResponse
+import com.featureprobe.api.dto.TrafficPoint
+import com.featureprobe.api.dto.TrafficResponse
 import com.featureprobe.api.dao.entity.Environment
-import com.featureprobe.api.dao.entity.Event
+import com.featureprobe.api.dao.entity.Traffic
 import com.featureprobe.api.dao.entity.Targeting
 import com.featureprobe.api.dao.entity.VariationHistory
 
 
 import com.featureprobe.api.dao.repository.EnvironmentRepository
-import com.featureprobe.api.dao.repository.EventRepository
-import com.featureprobe.api.dao.repository.MetricsCacheRepository
+import com.featureprobe.api.dao.repository.TrafficRepository
 import com.featureprobe.api.dao.repository.TargetingRepository
 import com.featureprobe.api.dao.repository.TargetingVersionRepository
 import com.featureprobe.api.dao.repository.VariationHistoryRepository
@@ -33,33 +31,31 @@ import javax.persistence.EntityManager
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class MetricServiceSpec extends Specification {
+class TrafficChartServiceSpec extends Specification {
 
-    MetricService metricService
+    TrafficChartService trafficService
     EnvironmentRepository environmentRepository
-    EventRepository eventRepository
+    TrafficRepository trafficRepository
     VariationHistoryRepository variationHistoryRepository
     TargetingVersionRepository targetingVersionRepository
     TargetingRepository targetingRepository
-    MetricsCacheRepository metricsCacheRepository
     EntityManager entityManager
 
     def setup() {
         environmentRepository = Mock(EnvironmentRepository)
-        eventRepository = Mock(EventRepository)
+        trafficRepository = Mock(TrafficRepository)
         variationHistoryRepository = Mock(VariationHistoryRepository)
         targetingVersionRepository = Mock(TargetingVersionRepository)
         targetingRepository = Mock(TargetingRepository)
-        metricsCacheRepository = Mock(MetricsCacheRepository)
         entityManager = Mock(SessionImpl)
-        metricService = new MetricService(environmentRepository, eventRepository, variationHistoryRepository,
-                targetingVersionRepository, targetingRepository, metricsCacheRepository, entityManager)
+        trafficService = new TrafficChartService(environmentRepository, trafficRepository, variationHistoryRepository,
+                targetingVersionRepository, targetingRepository, entityManager)
         TenantContext.setCurrentTenant("1")
         TenantContext.setCurrentOrganization(new OrganizationMemberModel(1,
                 "organization", OrganizationRoleEnum.OWNER))
     }
 
-    def "test find the last 3 hours of data by metric type"() {
+    def "test find the last 3 hours of data by traffic type"() {
         given:
         def toggleKey = "myToggle"
         def envKey = "test"
@@ -67,16 +63,16 @@ class MetricServiceSpec extends Specification {
         def serverSdkKey = "sdkKey-001"
 
         when:
-        MetricResponse response = metricService.query("prj-key",
-                "test", "myToggle", MetricType.NAME, 3)
+        TrafficResponse response = trafficService.query("prj-key",
+                "test", "myToggle", TrafficType.NAME, 3)
 
         then:
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, envKey) >> Optional.of(new Environment(serverSdkKey: serverSdkKey))
         1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, envKey, toggleKey) >> Optional.of(new Targeting(id: 1, content: "{}"))
-        1 * eventRepository.findBySdkKeyAndToggleKeyAndStartDateGreaterThanEqualAndEndDateLessThanEqual(serverSdkKey, toggleKey,
+        1 * trafficRepository.findBySdkKeyAndToggleKeyAndStartDateGreaterThanEqualAndEndDateLessThanEqual(serverSdkKey, toggleKey,
                 _, _) >> []
         1 * variationHistoryRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, envKey, toggleKey) >> []
-        1 * eventRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey) >> true
+        1 * trafficRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey) >> true
         0 == response.summary.size()
         response.isAccess
     }
@@ -91,7 +87,7 @@ class MetricServiceSpec extends Specification {
                                                                                              new Variation(name: "green")]).toJson())
 
         when:
-        metricService.appendLatestVariations(accessCounters, latestTargeting, MetricType.NAME)
+        trafficService.appendLatestVariations(accessCounters, latestTargeting, TrafficType.NAME)
 
         then:
         3 == accessCounters.size()
@@ -99,10 +95,10 @@ class MetricServiceSpec extends Specification {
 
     def "test event entities convert to access counter"() {
         when:
-        def accessCounters = metricService.toAccessEvent([
-                new Event(valueIndex: 0, toggleVersion: 10, count: 10),
-                new Event(valueIndex: 1, toggleVersion: 11, count: 20),
-                new Event(valueIndex: 0, toggleVersion: 10, count: 30)
+        def accessCounters = trafficService.toAccessEvent([
+                new Traffic(valueIndex: 0, toggleVersion: 10, count: 10),
+                new Traffic(valueIndex: 1, toggleVersion: 11, count: 20),
+                new Traffic(valueIndex: 0, toggleVersion: 10, count: 30)
         ])
 
         then:
@@ -112,13 +108,13 @@ class MetricServiceSpec extends Specification {
         }
     }
 
-    def "test aggregate point by metric type "() {
+    def "test aggregate point by traffic type "() {
         when:
-        List<AccessEventPoint> accessEventPoints = metricService.aggregatePointByMetricType([
+        List<TrafficPoint> accessEventPoints = trafficService.aggregatePointByTrafficType([
                 "1_10": new VariationHistory(id: 3, name: "blue"),
                 "1_11": new VariationHistory(id: 3, name: "blue")],
-                [new AccessEventPoint("10", [new VariationAccessCounter(value: "1_10", count: 15),
-                                             new VariationAccessCounter(value: "1_11", count: 5)], 1, 1)], MetricType.NAME)
+                [new TrafficPoint("10", [new VariationAccessCounter(value: "1_10", count: 15),
+                                         new VariationAccessCounter(value: "1_11", count: 5)], 1, 1)], TrafficType.NAME)
 
         then:
         1 == accessEventPoints.size()
@@ -128,11 +124,11 @@ class MetricServiceSpec extends Specification {
 
     def "test sort access counters"() {
         when:
-        def counters = metricService.sortAccessCounters([new VariationAccessCounter(count: 15),
-                                                         new VariationAccessCounter(count: 100),
-                                                         new VariationAccessCounter(count: 19, deleted: true),
-                                                         new VariationAccessCounter(count: 99, deleted: true),
-                                                         new VariationAccessCounter(count: 129)])
+        def counters = trafficService.sortAccessCounters([new VariationAccessCounter(count: 15),
+                                                          new VariationAccessCounter(count: 100),
+                                                          new VariationAccessCounter(count: 19, deleted: true),
+                                                          new VariationAccessCounter(count: 99, deleted: true),
+                                                          new VariationAccessCounter(count: 129)])
 
         then:
         129 == counters.get(0).count
@@ -142,7 +138,7 @@ class MetricServiceSpec extends Specification {
 
     def "test `isGroupByDay`"() {
         expect:
-        groupByDay == metricService.isGroupByDay(lastHours)
+        groupByDay == trafficService.isGroupByDay(lastHours)
 
         where:
         groupByDay | lastHours
@@ -154,7 +150,7 @@ class MetricServiceSpec extends Specification {
 
     def "test `getPointIntervalCount`"() {
         expect:
-        intervalCount == metricService.getPointIntervalCount(lastHours)
+        intervalCount == trafficService.getPointIntervalCount(lastHours)
 
         where:
         intervalCount | lastHours
@@ -165,7 +161,7 @@ class MetricServiceSpec extends Specification {
 
     def "test `getPointNameFormat`"() {
         expect:
-        formatName == metricService.getPointNameFormat(lastHours)
+        formatName == trafficService.getPointNameFormat(lastHours)
 
         where:
         formatName | lastHours
@@ -176,7 +172,7 @@ class MetricServiceSpec extends Specification {
 
     def "test `getQueryStartDateTime`"() {
         expect:
-        dateTime == metricService.getQueryStartDateTime(now, lastHours)
+        dateTime == trafficService.getQueryStartDateTime(now, lastHours)
                 .format(DateTimeFormatter.ofPattern("MM/dd HH"))
 
         where:
@@ -187,10 +183,10 @@ class MetricServiceSpec extends Specification {
 
     def "test `summaryAccessEvents`"() {
         when:
-        def events = metricService.summaryAccessEvents([new AccessEventPoint("10", [new VariationAccessCounter(value: "true", count: 1)], null, 1),
-                                                        new AccessEventPoint("11", [new VariationAccessCounter(value: "false", count: 4),
-                                                                                    new VariationAccessCounter(value: "true", count: 9)], null, 2),
-                                                        new AccessEventPoint("12", [new VariationAccessCounter(value: "true", count: 2)], null, 3),
+        def events = trafficService.summaryAccessEvents([new TrafficPoint("10", [new VariationAccessCounter(value: "true", count: 1)], null, 1),
+                                                         new TrafficPoint("11", [new VariationAccessCounter(value: "false", count: 4),
+                                                                                 new VariationAccessCounter(value: "true", count: 9)], null, 2),
+                                                         new TrafficPoint("12", [new VariationAccessCounter(value: "true", count: 2)], null, 3),
         ])
 
         then:
@@ -205,10 +201,10 @@ class MetricServiceSpec extends Specification {
 
     def "query access status"() {
         when:
-        def isAccess = metricService.isAccess("projectKey", "dev", "toggleKey")
+        def isAccess = trafficService.isAccess("projectKey", "dev", "toggleKey")
         then:
         1 * environmentRepository.findByProjectKeyAndKey("projectKey", "dev") >> Optional.of(new Environment(serverSdkKey: "123"))
-        1 * eventRepository.existsBySdkKeyAndToggleKey("123", "toggleKey") >> true
+        1 * trafficRepository.existsBySdkKeyAndToggleKey("123", "toggleKey") >> true
         true == isAccess.getIsAccess()
     }
 

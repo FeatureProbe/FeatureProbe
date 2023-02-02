@@ -1,8 +1,5 @@
 package com.featureprobe.api.dao.entity;
 
-import com.featureprobe.api.base.enums.EventMetricEnum;
-import com.featureprobe.api.base.enums.EventTypeEnum;
-import com.featureprobe.api.base.enums.MatcherTypeEnum;
 import com.featureprobe.api.dao.listener.TenantEntityListener;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,8 +14,8 @@ import org.hibernate.annotations.ParamDef;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -28,30 +25,27 @@ import java.io.Serializable;
 @Setter
 @Builder
 @Entity
-@Table(name = "event")
+@Table(name = "targeting_event")
 @DynamicInsert
 @EntityListeners(TenantEntityListener.class)
 @ToString(callSuper = true)
 @FilterDef(name = "tenantFilter", parameters = {@ParamDef(name = "organizationId", type = "long")})
 @Filter(name = "tenantFilter", condition = "organization_id = :organizationId")
-public class Event extends AbstractAuditEntity implements TenantSupport, Serializable {
+public class TargetingEvent extends AbstractAuditEntity implements TenantSupport, Serializable {
 
     @Column(name = "organization_id")
     private Long organizationId;
 
-    @Enumerated(EnumType.STRING)
-    private EventTypeEnum type;
+    @Column(name = "toggle_key")
+    private String toggleKey;
 
-    private String name;
+    @Column(name = "environment_key")
+    private String environmentKey;
 
-    @Enumerated(EnumType.STRING)
-    private EventMetricEnum metric;
+    @Column(name = "project_key")
+    private String projectKey;
 
-    @Enumerated(EnumType.STRING)
-    private MatcherTypeEnum matcher;
-
-    private String url;
-
-    private String selector;
-
+    @ManyToOne
+    @JoinColumn(name = "event_id", referencedColumnName = "id", nullable = false, updatable = false)
+    private Event event;
 }

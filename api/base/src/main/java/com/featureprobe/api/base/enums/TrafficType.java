@@ -1,12 +1,11 @@
 package com.featureprobe.api.base.enums;
 
-public enum MetricType {
+public enum TrafficType {
 
     VALUE, NAME;
 
-
     public boolean isNameType() {
-        return this == MetricType.NAME;
+        return this == TrafficType.NAME;
 
     }
 }

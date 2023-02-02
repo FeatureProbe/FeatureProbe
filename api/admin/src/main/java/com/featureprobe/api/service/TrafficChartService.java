@@ -2,20 +2,19 @@ package com.featureprobe.api.service;
 
 import com.featureprobe.api.base.model.TargetingContent;
 import com.featureprobe.api.base.model.Variation;
-import com.featureprobe.api.dto.AccessEventPoint;
+import com.featureprobe.api.dto.TrafficPoint;
 import com.featureprobe.api.dto.AccessStatusResponse;
-import com.featureprobe.api.dto.MetricResponse;
+import com.featureprobe.api.dto.TrafficResponse;
 import com.featureprobe.api.dao.entity.Environment;
-import com.featureprobe.api.dao.entity.Event;
+import com.featureprobe.api.dao.entity.Traffic;
 import com.featureprobe.api.dao.entity.Targeting;
 import com.featureprobe.api.dao.entity.TargetingVersion;
 import com.featureprobe.api.dao.entity.VariationHistory;
-import com.featureprobe.api.base.enums.MetricType;
+import com.featureprobe.api.base.enums.TrafficType;
 import com.featureprobe.api.dto.VariationAccessCounter;
 import com.featureprobe.api.mapper.TargetingVersionMapper;
 import com.featureprobe.api.dao.repository.EnvironmentRepository;
-import com.featureprobe.api.dao.repository.EventRepository;
-import com.featureprobe.api.dao.repository.MetricsCacheRepository;
+import com.featureprobe.api.dao.repository.TrafficRepository;
 import com.featureprobe.api.dao.repository.TargetingRepository;
 import com.featureprobe.api.dao.repository.TargetingVersionRepository;
 import com.featureprobe.api.dao.repository.VariationHistoryRepository;
@@ -32,7 +31,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,17 +51,16 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class MetricService {
+public class TrafficChartService {
 
     private static final ExecutorService taskExecutor = new ThreadPoolExecutor(3, 50,
             30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1000));
 
     private EnvironmentRepository environmentRepository;
-    private EventRepository eventRepository;
+    private TrafficRepository trafficRepository;
     private VariationHistoryRepository variationHistoryRepository;
     private TargetingVersionRepository targetingVersionRepository;
     private TargetingRepository targetingRepository;
-    private MetricsCacheRepository metricsCacheRepository;
 
     @PersistenceContext
     public EntityManager entityManager;
@@ -74,30 +71,30 @@ public class MetricService {
 
     public AccessStatusResponse isAccess(String projectKey, String environmentKey, String toggleKey) {
         String serverSdkKey = queryEnvironmentServerSdkKey(projectKey, environmentKey);
-        boolean isAccess = eventRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey);
+        boolean isAccess = trafficRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey);
         return new AccessStatusResponse(isAccess);
     }
 
-    public MetricResponse query(String projectKey, String environmentKey, String toggleKey, MetricType metricType,
-                                int lastHours) {
+    public TrafficResponse query(String projectKey, String environmentKey, String toggleKey, TrafficType trafficType,
+                                 int lastHours) {
         int queryLastHours = Math.min(lastHours, MAX_QUERY_HOURS);
         String serverSdkKey = queryEnvironmentServerSdkKey(projectKey, environmentKey);
-        boolean isAccess = eventRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey);
+        boolean isAccess = trafficRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey);
         if (!isAccess) {
-            return new MetricResponse(false, Collections.emptyList(),
+            return new TrafficResponse(false, Collections.emptyList(),
                     sortAccessCounters(Collections.emptyList()));
         }
         Targeting targeting = targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey,
                 environmentKey, toggleKey).get();
         Map<String, VariationHistory> variationVersionMap = buildVariationVersionMap(projectKey,
                 environmentKey, toggleKey);
-        List<AccessEventPoint> accessEventPoints = queryAccessEventPoints(serverSdkKey, toggleKey, targeting,
+        List<TrafficPoint> trafficPoints = queryAccessEventPoints(serverSdkKey, toggleKey, targeting,
                 queryLastHours);
-        List<AccessEventPoint> aggregatedAccessEventPoints = aggregatePointByMetricType(variationVersionMap,
-                accessEventPoints, metricType);
-        List<VariationAccessCounter> accessCounters = summaryAccessEvents(aggregatedAccessEventPoints);
-        appendLatestVariations(accessCounters, targeting, metricType);
-        return new MetricResponse(isAccess, accessEventPoints, sortAccessCounters(accessCounters));
+        List<TrafficPoint> aggregatedTrafficPoints = aggregatePointByTrafficType(variationVersionMap,
+                trafficPoints, trafficType);
+        List<VariationAccessCounter> accessCounters = summaryAccessEvents(aggregatedTrafficPoints);
+        appendLatestVariations(accessCounters, targeting, trafficType);
+        return new TrafficResponse(isAccess, trafficPoints, sortAccessCounters(accessCounters));
     }
 
     private Map<String, VariationHistory> buildVariationVersionMap(String projectKey, String environmentKey,
@@ -108,12 +105,12 @@ public class MetricService {
         return variationHistories.stream().collect(Collectors.toMap(this::toIndexValue, Function.identity()));
     }
 
-    protected List<AccessEventPoint> aggregatePointByMetricType(Map<String, VariationHistory> variationVersionMap,
-                                                                List<AccessEventPoint> accessEventPoints,
-                                                                MetricType metricType) {
+    protected List<TrafficPoint> aggregatePointByTrafficType(Map<String, VariationHistory> variationVersionMap,
+                                                             List<TrafficPoint> trafficPoints,
+                                                             TrafficType trafficType) {
 
-        accessEventPoints.forEach(accessEventPoint -> {
-            List<VariationAccessCounter> variationAccessCounters = accessEventPoint.getValues();
+        trafficPoints.forEach(trafficPoint -> {
+            List<VariationAccessCounter> variationAccessCounters = trafficPoint.getValues();
 
             List<VariationAccessCounter> filteredVariationAccessCounters = variationAccessCounters.stream()
                     .filter(variationAccessCounter ->
@@ -121,42 +118,42 @@ public class MetricService {
                     .collect(Collectors.toList());
             filteredVariationAccessCounters.stream().forEach(variationAccessCounter -> {
                 VariationHistory variationHistory = variationVersionMap.get(variationAccessCounter.getValue());
-                variationAccessCounter.setValue(metricType.isNameType() ? variationHistory.getName() :
+                variationAccessCounter.setValue(trafficType.isNameType() ? variationHistory.getName() :
                         variationHistory.getValue());
             });
-            accessEventPoint.setValues(filteredVariationAccessCounters);
+            trafficPoint.setValues(filteredVariationAccessCounters);
             Map<String, Long> variationCounts =
-                    accessEventPoint.getValues().stream().collect(Collectors.toMap(VariationAccessCounter::getValue,
+                    trafficPoint.getValues().stream().collect(Collectors.toMap(VariationAccessCounter::getValue,
                             VariationAccessCounter::getCount, Long::sum));
 
             List<VariationAccessCounter> values = variationCounts.entrySet().stream().map(e ->
                             new VariationAccessCounter(e.getKey(), e.getValue()))
                     .collect(Collectors.toList());
-            accessEventPoint.setValues(values);
+            trafficPoint.setValues(values);
         });
-        return accessEventPoints;
+        return trafficPoints;
     }
 
-    private List<AccessEventPoint> queryAccessEventPoints(String serverSdkKey, String toggleKey, Targeting targeting,
-                                                          int lastHours) {
+    private List<TrafficPoint> queryAccessEventPoints(String serverSdkKey, String toggleKey, Targeting targeting,
+                                                      int lastHours) {
         int pointIntervalCount = getPointIntervalCount(lastHours);
         int pointCount = lastHours / pointIntervalCount;
 
         LocalDateTime pointStartTime = getQueryStartDateTime(lastHours);
         String pointNameFormat = getPointNameFormat(lastHours);
-        List<Event> events =
-                eventRepository.findBySdkKeyAndToggleKeyAndStartDateGreaterThanEqualAndEndDateLessThanEqual(
+        List<Traffic> events =
+                trafficRepository.findBySdkKeyAndToggleKeyAndStartDateGreaterThanEqualAndEndDateLessThanEqual(
                         serverSdkKey, toggleKey, toDate(pointStartTime),
                         toDate(pointStartTime.plusHours(pointIntervalCount * pointCount)));
         List<TargetingVersion> versions = queryAllTargetingVersion(targeting, pointStartTime,
                 pointStartTime.plusHours(pointIntervalCount * pointCount),
                 Long.parseLong(TenantContext.getCurrentTenant()));
-        List<AccessEventPoint> accessEventPoints = Collections.synchronizedList(new ArrayList<>());
+        List<TrafficPoint> trafficPoints = Collections.synchronizedList(new ArrayList<>());
         CountDownLatch counter = new CountDownLatch(pointCount);
         for (int i = 1; i <= pointCount; i++) {
             LocalDateTime pointEndTime = pointStartTime.plusHours(pointIntervalCount);
             AccessEventPointFilterTask task = new AccessEventPointFilterTask(events, versions, pointStartTime,
-                    pointEndTime, pointNameFormat, targeting, accessEventPoints, i,
+                    pointEndTime, pointNameFormat, targeting, trafficPoints, i,
                     Long.parseLong(TenantContext.getCurrentTenant()), counter);
             taskExecutor.submit(task);
             pointStartTime = pointEndTime;
@@ -166,30 +163,30 @@ public class MetricService {
         } catch (InterruptedException e) {
             log.error("System error", e);
         }
-        return accessEventPoints.stream().
-                sorted(Comparator.comparing(AccessEventPoint::getSorted)).collect(Collectors.toList());
+        return trafficPoints.stream().
+                sorted(Comparator.comparing(TrafficPoint::getSorted)).collect(Collectors.toList());
     }
 
     class AccessEventPointFilterTask implements Runnable {
 
-        List<Event> pointEvents;
+        List<Traffic> pointEvents;
         List<TargetingVersion> versions;
         LocalDateTime pointStartTime;
         LocalDateTime pointEndTime;
         String pointNameFormat;
         Targeting targeting;
-        List<AccessEventPoint> accessEventPoints;
+        List<TrafficPoint> trafficPoints;
         Integer sorted;
         Long tenantId;
         CountDownLatch counter;
 
-        public AccessEventPointFilterTask(List<Event> pointEvents,
+        public AccessEventPointFilterTask(List<Traffic> pointEvents,
                                           List<TargetingVersion> versions,
                                           LocalDateTime pointStartTime,
                                           LocalDateTime pointEndTime,
                                           String pointNameFormat,
                                           Targeting targeting,
-                                          List<AccessEventPoint> accessEventPoints,
+                                          List<TrafficPoint> trafficPoints,
                                           Integer sorted,
                                           Long tenantId,
                                           CountDownLatch counter) {
@@ -199,7 +196,7 @@ public class MetricService {
             this.pointEndTime = pointEndTime;
             this.pointNameFormat = pointNameFormat;
             this.targeting = targeting;
-            this.accessEventPoints = accessEventPoints;
+            this.trafficPoints = trafficPoints;
             this.sorted = sorted;
             this.tenantId = tenantId;
             this.counter = counter;
@@ -208,7 +205,7 @@ public class MetricService {
         @Override
         public void run() {
             try {
-                List<Event> currentPointEvents = pointEvents.stream()
+                List<Traffic> currentPointEvents = pointEvents.stream()
                         .filter(event -> event.getStartDate().getTime() >= toDate(pointStartTime).getTime()
                                 && event.getEndDate().getTime() <= toDate(pointEndTime).getTime())
                         .collect(Collectors.toList());
@@ -222,7 +219,7 @@ public class MetricService {
                         pointEndTime.format(DateTimeFormatter.ofPattern(pointNameFormat)));
                 Long lastTargetingVersion = CollectionUtils.isEmpty(versionList) ? null :
                         versionList.get(versionList.size() - 1).getVersion();
-                accessEventPoints.add(new AccessEventPoint(pointName, accessEvents, lastTargetingVersion, sorted));
+                trafficPoints.add(new TrafficPoint(pointName, accessEvents, lastTargetingVersion, sorted));
             } catch (Exception e) {
                 log.error("Query AccessEventPoint Task Exception.", e);
             } finally {
@@ -261,17 +258,17 @@ public class MetricService {
         };
     }
 
-    protected List<VariationAccessCounter> toAccessEvent(List<Event> events) {
+    protected List<VariationAccessCounter> toAccessEvent(List<Traffic> events) {
         if (CollectionUtils.isEmpty(events)) {
             return Collections.emptyList();
         }
         Map<String, Long> variationCounts =
-                events.stream().collect(Collectors.toMap(this::toIndexValue, Event::getCount, Long::sum));
+                events.stream().collect(Collectors.toMap(this::toIndexValue, Traffic::getCount, Long::sum));
         return variationCounts.entrySet().stream().map(e ->
                 new VariationAccessCounter(e.getKey(), e.getValue())).collect(Collectors.toList());
     }
 
-    private String toIndexValue(Event event) {
+    private String toIndexValue(Traffic event) {
         return event.getToggleVersion() + "_" + event.getValueIndex();
     }
 
@@ -296,11 +293,11 @@ public class MetricService {
         return getQueryStartDateTime(LocalDateTime.now(), queryLastHours);
     }
 
-    protected List<VariationAccessCounter> summaryAccessEvents(List<AccessEventPoint> accessEventPoints) {
+    protected List<VariationAccessCounter> summaryAccessEvents(List<TrafficPoint> trafficPoints) {
 
         List<VariationAccessCounter> summaryEvents = Lists.newArrayList();
-        accessEventPoints.forEach(accessEventPoint -> {
-            Map<String, Long> variationCount = accessEventPoint.getValues().stream().collect(
+        trafficPoints.forEach(trafficPoint -> {
+            Map<String, Long> variationCount = trafficPoint.getValues().stream().collect(
                     Collectors.toMap(VariationAccessCounter::getValue, VariationAccessCounter::getCount));
             variationCount.keySet().forEach(key -> {
                 VariationAccessCounter findingToggleCounter = summaryEvents.stream().filter(toggleCounter ->
@@ -318,7 +315,7 @@ public class MetricService {
     }
 
     protected void appendLatestVariations(List<VariationAccessCounter> accessCounters, Targeting latestTargeting,
-                                          MetricType metricType) {
+                                          TrafficType trafficType) {
         TargetingContent targetingContent = TargetingVersionMapper.INSTANCE.toTargetingContent(
                 latestTargeting.getContent());
 
@@ -327,7 +324,7 @@ public class MetricService {
         }
         List<String> latestVariations = targetingContent.getVariations()
                 .stream()
-                .map(metricType.isNameType() ? Variation::getName : Variation::getValue)
+                .map(trafficType.isNameType() ? Variation::getName : Variation::getValue)
                 .collect(Collectors.toList());
 
         setVariationDeletedIfNotInLatest(accessCounters, latestVariations);

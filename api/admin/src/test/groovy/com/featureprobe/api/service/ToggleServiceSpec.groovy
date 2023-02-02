@@ -6,14 +6,13 @@ import com.featureprobe.api.config.AppConfig
 import com.featureprobe.api.base.enums.SketchStatusEnum
 import com.featureprobe.api.base.enums.ValidateTypeEnum
 import com.featureprobe.api.base.enums.VisitFilter
-import com.featureprobe.api.dao.entity.Dictionary
 import com.featureprobe.api.dao.exception.ResourceConflictException
 import com.featureprobe.api.dto.ToggleCreateRequest
 import com.featureprobe.api.dto.ToggleSearchRequest
 import com.featureprobe.api.dto.ToggleUpdateRequest
 import com.featureprobe.api.dao.entity.Environment
 import com.featureprobe.api.dao.entity.Member
-import com.featureprobe.api.dao.entity.MetricsCache
+import com.featureprobe.api.dao.entity.TrafficCache
 import com.featureprobe.api.dao.entity.Project
 import com.featureprobe.api.dao.entity.Tag
 import com.featureprobe.api.dao.entity.Targeting
@@ -23,8 +22,8 @@ import com.featureprobe.api.dao.entity.ToggleTagRelation
 import com.featureprobe.api.dao.repository.PublishMessageRepository
 import com.featureprobe.api.dao.repository.DictionaryRepository
 import com.featureprobe.api.dao.repository.EnvironmentRepository
-import com.featureprobe.api.dao.repository.EventRepository
-import com.featureprobe.api.dao.repository.MetricsCacheRepository
+import com.featureprobe.api.dao.repository.TrafficRepository
+import com.featureprobe.api.dao.repository.TrafficCacheRepository
 import com.featureprobe.api.dao.repository.ProjectRepository
 import com.featureprobe.api.dao.repository.TagRepository
 import com.featureprobe.api.dao.repository.TargetingRepository
@@ -64,7 +63,7 @@ class ToggleServiceSpec extends Specification {
 
     EnvironmentRepository environmentRepository
 
-    EventRepository eventRepository
+    TrafficRepository eventRepository
 
     TargetingVersionRepository targetingVersionRepository
 
@@ -72,7 +71,7 @@ class ToggleServiceSpec extends Specification {
 
     TargetingSketchRepository targetingSketchRepository
 
-    MetricsCacheRepository metricsCacheRepository
+    TrafficCacheRepository trafficCacheRepository
 
     ChangeLogService changeLogService
 
@@ -105,11 +104,11 @@ class ToggleServiceSpec extends Specification {
         toggleTagRepository = Mock(ToggleTagRepository)
         targetingRepository = Mock(TargetingRepository)
         environmentRepository = Mock(EnvironmentRepository)
-        eventRepository = Mock(EventRepository)
+        eventRepository = Mock(TrafficRepository)
         targetingVersionRepository = Mock(TargetingVersionRepository)
         variationHistoryRepository = Mock(VariationHistoryRepository)
         targetingSketchRepository = Mock(TargetingSketchRepository)
-        metricsCacheRepository = Mock(MetricsCacheRepository)
+        trafficCacheRepository = Mock(TrafficCacheRepository)
         toggleTagRepository = Mock(ToggleTagRepository)
         projectRepository = Mock(ProjectRepository)
         publishMessageRepository = Mock(PublishMessageRepository)
@@ -118,7 +117,7 @@ class ToggleServiceSpec extends Specification {
         entityManager = Mock(SessionImpl)
         toggleService = new ToggleService(appConfig, toggleRepository, tagRepository, targetingRepository,
                 environmentRepository, eventRepository, targetingVersionRepository,
-                variationHistoryRepository, targetingSketchRepository, metricsCacheRepository,
+                variationHistoryRepository, targetingSketchRepository, trafficCacheRepository,
                 toggleTagRepository, changeLogService, projectRepository, entityManager)
         includeArchivedToggleService = new IncludeArchivedToggleService(toggleRepository, entityManager)
         projectKey = "feature_probe"
@@ -202,7 +201,7 @@ class ToggleServiceSpec extends Specification {
                 content: rules, disabled: false, oldVersion: 1, status: SketchStatusEnum.PENDING, createdBy: new Member(account: "Admin"))]
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>
                 Optional.of(new Environment(key: environmentKey, serverSdkKey: "123", clientSdkKey: "123"))
-        1 * metricsCacheRepository.findAll(_) >> [new MetricsCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
+        1 * trafficCacheRepository.findAll(_) >> [new TrafficCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
         1 * toggleTagRepository.findByToggleKeyIn(_) >> [new ToggleTagRelation(tagId: 1, toggleKey: toggleKey)]
         1 * tagRepository.findAllById(_) >> [new Tag(name: "tagName", id: 1)]
         with(page) {
@@ -237,7 +236,7 @@ class ToggleServiceSpec extends Specification {
                 content: rules, disabled: false, oldVersion: 1, status: SketchStatusEnum.PENDING, createdBy: new Member(account: "Admin"))]
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>
                 Optional.of(new Environment(key: environmentKey, serverSdkKey: "123", clientSdkKey: "123"))
-        1 * metricsCacheRepository.findAll(_) >> [new MetricsCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
+        1 * trafficCacheRepository.findAll(_) >> [new TrafficCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
         1 * toggleTagRepository.findByToggleKeyIn(_) >> [new ToggleTagRelation(tagId: 1, toggleKey: toggleKey)]
         1 * tagRepository.findAllById(_) >> [new Tag(name: "tagName", id: 1)]
         with(page) {
@@ -272,7 +271,7 @@ class ToggleServiceSpec extends Specification {
                 content: rules, disabled: false, oldVersion: 1, status: SketchStatusEnum.PENDING, createdBy: new Member(account: "Admin"))]
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>
                 Optional.of(new Environment(key: environmentKey, serverSdkKey: "123", clientSdkKey: "123"))
-        1 * metricsCacheRepository.findAll(_) >> [new MetricsCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
+        1 * trafficCacheRepository.findAll(_) >> [new TrafficCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
         1 * toggleTagRepository.findByToggleKeyIn(_) >> [new ToggleTagRelation(tagId: 1, toggleKey: toggleKey)]
         1 * tagRepository.findAllById(_) >> [new Tag(name: "tagName", id: 1)]
         with(page) {
@@ -308,7 +307,7 @@ class ToggleServiceSpec extends Specification {
                 content: rules, disabled: false, oldVersion: 1, status: SketchStatusEnum.PENDING, createdBy: new Member(account: "Admin"))]
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>
                 Optional.of(new Environment(key: environmentKey, serverSdkKey: "123", clientSdkKey: "123"))
-        1 * metricsCacheRepository.findAll(_) >> [new MetricsCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
+        1 * trafficCacheRepository.findAll(_) >> [new TrafficCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
         1 * toggleTagRepository.findByToggleKeyIn(_) >> [new ToggleTagRelation(tagId: 1, toggleKey: toggleKey)]
         1 * tagRepository.findAllById(_) >> [new Tag(name: "tagName", id: 1)]
         with(page) {

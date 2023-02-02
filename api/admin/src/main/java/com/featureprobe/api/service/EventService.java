@@ -1,136 +1,111 @@
 package com.featureprobe.api.service;
 
-import com.featureprobe.api.base.db.ExcludeTenant;
-import com.featureprobe.api.base.enums.MetricsCacheTypeEnum;
+import com.featureprobe.api.base.enums.EventTypeEnum;
 import com.featureprobe.api.base.enums.ResourceType;
-import com.featureprobe.api.dao.entity.Environment;
 import com.featureprobe.api.dao.entity.Event;
-import com.featureprobe.api.dao.entity.MetricsCache;
+import com.featureprobe.api.dao.entity.TargetingEvent;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
-import com.featureprobe.api.dao.repository.EnvironmentRepository;
 import com.featureprobe.api.dao.repository.EventRepository;
-import com.featureprobe.api.dao.repository.MetricsCacheRepository;
+import com.featureprobe.api.dao.repository.TargetingEventRepository;
 import com.featureprobe.api.dto.EventCreateRequest;
-import com.featureprobe.api.dto.VariationAccessCounter;
+import com.featureprobe.api.dto.EventResponse;
+import com.featureprobe.api.mapper.EventMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
-@Service
 @AllArgsConstructor
-@ExcludeTenant
+@Service
 public class EventService {
 
     private EventRepository eventRepository;
-    private EnvironmentRepository environmentRepository;
-    private MetricsCacheRepository metricsCacheRepository;
+
+    private TargetingEventRepository targetingEventRepository;
+
+    @PersistenceContext
+    public EntityManager entityManager;
 
     @Transactional(rollbackFor = Exception.class)
-    public void create(String serverSdkKey, String userAgent, List<EventCreateRequest> requests) {
-        Environment environment = environmentRepository.findByServerSdkKey(serverSdkKey)
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceType.ENVIRONMENT, serverSdkKey));
+    public EventResponse create(String projectKey, String environmentKey, String toggleKey,
+                                EventCreateRequest request) {
+        validate(request);
+        if (EventTypeEnum.PAGE_VIEW.equals(request.getType()) ||
+                EventTypeEnum.CLICK.equals(request.getType())) {
+            request.setName(generateUniqueName(request));
+        }
+        targetingEventRepository.deleteByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey,
+                environmentKey, toggleKey);
+        Optional<Event> eventOptional = eventRepository.findByName(request.getName());
+        Event savedEvent;
+        if (eventOptional.isPresent()) {
+            savedEvent = eventOptional.get();
+        } else {
+            savedEvent = eventRepository.save(EventMapper.INSTANCE.requestToEntity(request));
+        }
+        saveTargetingEvent(projectKey, environmentKey, toggleKey, savedEvent);
+        return EventMapper.INSTANCE.entityToResponse(savedEvent);
+    }
 
-        requests.forEach(request -> {
-            if (request.getAccess() == null) {
-                return;
+    public EventResponse query(String projectKey, String environmentKey, String toggleKey) {
+        TargetingEvent targetingEvent = targetingEventRepository
+                .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey)
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceType.EVENT, projectKey + "-"
+                        + environmentKey + "-" + toggleKey));
+        return EventMapper.INSTANCE.entityToResponse(targetingEvent.getEvent());
+    }
+
+    private TargetingEvent saveTargetingEvent(String projectKey, String environmentKey, String toggleKey,
+                                              Event event) {
+        TargetingEvent targetingEvent = new TargetingEvent();
+        targetingEvent.setEvent(event);
+        targetingEvent.setProjectKey(projectKey);
+        targetingEvent.setEnvironmentKey(environmentKey);
+        targetingEvent.setToggleKey(toggleKey);
+        return targetingEventRepository.save(targetingEvent);
+    }
+
+    private String generateUniqueName(EventCreateRequest request) {
+        String encodeStr = "";
+        if (EventTypeEnum.PAGE_VIEW.equals(request.getType())) {
+            encodeStr = request.getType().name() + request.getMatcher().name() + request.getUrl();
+        } else if (EventTypeEnum.CLICK.equals(request.getType())) {
+            encodeStr = request.getType().name() + request.getMatcher().name() + request.getUrl() +
+                    request.getSelector();
+        }
+        return DigestUtils.md2Hex(encodeStr.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void validate(EventCreateRequest request) {
+
+        if (EventTypeEnum.CUSTOM.equals(request.getType())) {
+            if (StringUtils.isBlank(request.getName()) || Objects.isNull(request.getMetric())) {
+                throw new IllegalArgumentException("validate.event_name_required");
             }
-            List<Event> events = Optional.of(request.getAccess().getCounters())
-                    .orElse(Collections.emptyMap())
-                    .entrySet()
-                    .stream()
-                    .flatMap(entry -> createEventEntities(entry).stream())
-                    .map(event -> wrapEvent(event, userAgent, environment, request))
-                    .collect(Collectors.toList());
-            if (!events.isEmpty()) {
-                eventRepository.saveAll(events);
-                saveAllEvaluation(events);
+        }
+
+        if (EventTypeEnum.PAGE_VIEW.equals(request.getType()) ||
+                EventTypeEnum.CLICK.equals(request.getType())) {
+            if (request.getMatcher() == null || StringUtils.isBlank(request.getUrl())) {
+                throw new IllegalArgumentException("validate.event_url_required");
             }
-        });
-    }
-
-
-    public void saveAllEvaluation(List<Event> events) {
-        Map<String, Event> eventMap = events.stream()
-                .collect(Collectors.toMap(Event::uniqueKey, u -> u, (k1, k2) -> k2));
-        for (String key : eventMap.keySet()) {
-            metricsCacheRepository.deleteBySdkKeyAndToggleKey(eventMap.get(key).getSdkKey(),
-                    eventMap.get(key).getToggleKey());
         }
-        List<Event> uniqueEvents = eventMap.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
-        List<MetricsCache> metricsCaches = uniqueEvents.stream().map(e -> toMetricsCache(e))
-                .collect(Collectors.toList());
-        metricsCacheRepository.saveAll(metricsCaches);
-    }
 
-    private MetricsCache toMetricsCache(Event event) {
-        MetricsCache metricsCache = new MetricsCache();
-        metricsCache.setSdkKey(event.getSdkKey());
-        metricsCache.setToggleKey(event.getToggleKey());
-        metricsCache.setEndDate(event.getEndDate());
-        metricsCache.setStartDate(event.getStartDate());
-        metricsCache.setType(MetricsCacheTypeEnum.EVALUATION);
-        return metricsCache;
-    }
-
-    private List<Event> createEventEntities(Map.Entry<String, List<VariationAccessCounter>> toggleToAccessCounter) {
-        String toggleKey = toggleToAccessCounter.getKey();
-
-        return Optional.of(toggleToAccessCounter.getValue())
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(accessEvent -> this.createEventEntity(toggleKey, accessEvent))
-                .collect(Collectors.toList());
-    }
-
-    private Event createEventEntity(String toggleKey, VariationAccessCounter accessCounter) {
-        Event event = new Event();
-        event.setToggleKey(toggleKey);
-        event.setCount(accessCounter.getCount());
-        event.setValueIndex(accessCounter.getIndex());
-        event.setToggleVersion(accessCounter.getVersion());
-
-        return event;
-    }
-
-    private Event wrapEvent(Event event, String userAgent, Environment environment, EventCreateRequest request) {
-        if (request.getAccess() == null) {
-            return event;
+        if (EventTypeEnum.CLICK.equals(request.getType())) {
+            if (request.getMatcher() == null || StringUtils.isBlank(request.getUrl()) ||
+                    StringUtils.isBlank(request.getSelector())) {
+                throw new IllegalArgumentException("validate.event_selector_required");
+            }
         }
-        event.setSdkKey(environment.getServerSdkKey());
-        event.setProjectKey(environment.getProject().getKey());
-        event.setEnvironmentKey(environment.getKey());
-        event.setType("access");
-        event.setSdkType(getSdkType(userAgent));
-        event.setSdkVersion(getSdkVersion(userAgent));
-        event.setStartDate(new Date(request.getAccess().getStartTime()));
-        event.setEndDate(new Date(request.getAccess().getEndTime()));
-        return event;
-    }
 
-    private String getSdkType(String userAgent) {
-        if (StringUtils.isNotBlank(userAgent) && userAgent.contains("/")) {
-            return userAgent.split("/")[0];
-        }
-        log.error("[Event] SDK user-agent format error. {} ", userAgent);
-        return "";
     }
-
-    private String getSdkVersion(String userAgent) {
-        if (StringUtils.isNotBlank(userAgent) && userAgent.contains("/")) {
-            return userAgent.split("/").length > 1 ? userAgent.split("/")[1] : null;
-        }
-        log.error("[Event] SDK user-agent format error. {} ", userAgent);
-        return "";
-    }
-
 }
