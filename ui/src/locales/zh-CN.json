@@ -212,7 +212,7 @@
   "projects.environment.restore.error": "环境恢复失败",
   "projects.environment.crete.copyEnvLabel": "选择要复制的环境",
   "projects.environment.crete.copyEnvPlaceholder": "请选择要复制的环境",
-  "projects.environment.crete.copyEnvTips": "该环境下的开关、实验将全部复制到新建环境中",
+  "projects.environment.crete.copyEnvTips": "该环境下的开关将全部复制到新建环境中",
   "projects.description": "项目是开关的集合，我们推荐按实际业务的服务（微服务）粒度来创建对应的项目。",
 
   "toggles.filter.evaluated": "访问",
