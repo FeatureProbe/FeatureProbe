@@ -15,8 +15,9 @@ import swift from 'images/swift.svg';
 import apple from 'images/apple.svg';
 import miniprogram from 'images/wechat-miniprogram.png';
 import reactLogo from 'images/react.svg';
-import styles from '../Steps/index.module.scss';
 import { SdkLanguage } from '../StepSecond';
+
+import styles from '../Steps/index.module.scss';
 
 const SDK_LOGOS: {[key in SdkLanguage]: string} = {
   // 'null': null,

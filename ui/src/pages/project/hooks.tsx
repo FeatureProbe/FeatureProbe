@@ -37,13 +37,13 @@ export const useEnvironmentInfo = () => {
   const [ environmentInfo, saveEnvironmentInfo ] = useState<IInfo>({
     name: '',
     key: '',
-    copy: ''
+    copyFrom: ''
   });
 
   const [ originEnvironmentInfo, saveOriginEnvironmentInfo ] = useState<IInfo>({
     name: '',
     key: '',
-    copy: ''
+    copyFrom: ''
   });
 
   const handleChange = (e: SyntheticEvent, detail: InputOnChangeData | TextAreaProps , type: string) => {

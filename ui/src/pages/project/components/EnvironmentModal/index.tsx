@@ -55,12 +55,12 @@ const EnvironmentModal = (props: IProps) => {
       saveEnvironmentInfo({
         key: '',
         name: '',
-        copy: ''
+        copyFrom: ''
       });
       saveOriginEnvironmentInfo({
         key: '',
         name: '',
-        copy: ''
+        copyFrom: ''
       });
     }
   }, [open, clearErrors, saveEnvironmentInfo, saveOriginEnvironmentInfo]);
@@ -72,11 +72,11 @@ const EnvironmentModal = (props: IProps) => {
 
   useEffect(() => {
     if (open && isAdd) {
-      register('copyEnv', {
+      register('copyFrom', {
         required: true,
       });
     } else {
-      unregister('copyEnv');
+      unregister('copyFrom');
     }
   }, [register, open, clearErrors, unregister, isAdd]);
 
@@ -249,17 +249,17 @@ const EnvironmentModal = (props: IProps) => {
                   </label>
                   <Select
                     floating
-                    name="copyEnv"
+                    name='copyFrom'
                     placeholder={intl.formatMessage({ id: 'projects.environment.crete.copyEnvPlaceholder' })}
                     className={styles['dropdown']}
                     disabled={!isAdd}
-                    error={errors.copyEnv ? true : false}
+                    error={errors.copyFrom ? true : false}
                     onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
-                      handleChange(e, detail, 'copyEnv');
+                      handleChange(e, detail, 'copyFrom');
                       setValue(detail.name, detail.value);
-                      await trigger('copyEnv');
+                      await trigger('copyFrom');
                     }}
-                    value={environmentInfo?.copyEnv}
+                    value={environmentInfo?.copyFrom}
                     options={
                       environments?.map((item) => {
                         return {
@@ -269,10 +269,10 @@ const EnvironmentModal = (props: IProps) => {
                         };
                       }) ?? []
                     }
-                    icon={<Icon customclass={styles['angle-down']} type="angle-down" />}
+                    icon={<Icon customclass={'angle-down'} type="angle-down" />}
                   />
                 </Form.Field>
-                {errors.copyEnv && (
+                {errors.copyFrom && (
                   <div className={styles['error-text']}>
                     <FormattedMessage id="projects.environment.crete.copyEnvPlaceholder" />
                   </div>
