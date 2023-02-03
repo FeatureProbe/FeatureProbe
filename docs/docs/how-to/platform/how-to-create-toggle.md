@@ -34,9 +34,11 @@ After the toggle is successfully created, it will be synchronized to all environ
 ## Edit the toggle
 After successful editing, it will take effect in all environments under the entire project.
 
+![edit toggle screenshot](/edit_toggle_en.png)
+
 ## Archive and restore toggle
 
-![edit environment screenshot](/archived_toggle_en.png)
+![archive toggle screenshot](/archived_toggle_en.png)
 
 Archive toggle:
 1. Click "Archive" to offline toggle at any time. After Archived, it cannot be edited or published，and this toggle will be displayed in the [Archived toggle List]
