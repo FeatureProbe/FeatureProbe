@@ -10,7 +10,6 @@ function checkStatus(response: Response) {
     (response.status >= 200 && response.status < 300) 
     || response.status === 400 
     || response.status === 403
-    || response.status === 404
   ) {
     return response;
   } 

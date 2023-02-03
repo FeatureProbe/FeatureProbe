@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import SectionTitle from 'components/SectionTitle';
 import NoData from 'components/NoData';
@@ -14,6 +15,7 @@ interface IProps {
 
 const Results = (props: IProps) => {
   const { eventInfo } = props;
+  const [ isCollecting, saveIsCollecting ] = useState<boolean>(false);
 
   const intl = useIntl();
   const time = '2022-02-09 22:22:22';
@@ -25,15 +27,24 @@ const Results = (props: IProps) => {
         showTooltip={false}
       />
       <div className={styles.start}>
-        <span className={styles['start-time']}>
-          <FormattedMessage id='analysis.result.collect.time' />{time}
-        </span>
-        <Button primary className={styles['start-btn']}>
-          <FormattedMessage id='analysis.result.collect.start' />
-        </Button>
-        <Button secondary className={styles['start-btn']}>
-          <FormattedMessage id='analysis.result.collect.stop' />
-        </Button>
+        {
+          isCollecting && (
+            <span className={styles['start-time']}>
+              <FormattedMessage id='analysis.result.collect.time' />{time}
+            </span>
+          )
+        }
+        {
+          !isCollecting ? (
+            <Button primary className={styles['start-btn']} disabled={!eventInfo}>
+              <FormattedMessage id='analysis.result.collect.start' />
+            </Button>
+          ) : (
+            <Button secondary className={styles['start-btn']}>
+              <FormattedMessage id='analysis.result.collect.stop' />
+            </Button>
+          )
+        }
       </div>
       {
         eventInfo ? (
@@ -41,7 +52,7 @@ const Results = (props: IProps) => {
             <ResultTable />
           </div>
         ) : (
-          <div>
+          <div className={styles['no-data']}>
             <div className={styles.tips}>
               <Icon customclass={styles['warning-circle']} type='warning-circle' />
               <FormattedMessage id='analysis.result.tip' />

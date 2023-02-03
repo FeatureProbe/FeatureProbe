@@ -7,16 +7,17 @@
 .warning-circle {
   color: #0a70f5;
   margin-right: 8px;
+  font-size: 17px !important;
 }
 
 .tips {
   display: flex;
   justify-content: space-between;
-  padding: 6px 0 6px 24px;
+  padding: 6px 0 6px 14px;
   font-family: PingFangSC-Regular, Arial, Helvetica, sans-serif;
   font-size: 12px;
   color: #0a70f5;
-  line-height: 18px;
+  line-height: 20px;
   background-color: #eff8ff;
   cursor: pointer;
 

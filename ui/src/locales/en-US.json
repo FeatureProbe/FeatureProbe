@@ -287,6 +287,8 @@
   "targeting.publish.modal.comment": "Changes description",
   "targeting.publish.error.text": "Cannot publish, please check!",
   "targeting.publish.success.text": "Published successfully",
+  "targeting.publish.tips": "In order to ensure the accuracy results, after publishing this change, the collection of data will be restarted.",
+  "targeting.publish.start.collect": "The collection of analysis data is currently not started. Do you want to start data collection at the same time?",
   "targeting.status.text": "Status",
   "targeting.status.disabled.text": "disabled, serving ",
   "targeting.variations.evaluations.text": "variation {type} Evaluations",
@@ -333,6 +335,7 @@
   "targeting.semver.explain": "What is semver?",
   "targeting.semver.more": "Learn more",
   "targeting.rule.not.empty": "Please add a rule condition",
+  "targeting.edit.tips": "Changes other than the name and description will clear the analysis data and start collecting data again.",
 
   "targeting.approval.tips": "Owner can set approval reviewers for this environment.",
   "targeting.approval.operation.skip.approval": "Skip Approval and Publish",
@@ -564,8 +567,8 @@
   "diff.old.text": "Old/Delete",
   "diff.create.text": "New/Create",
 
-  "analysis.event.kind": "Event kind",
-  "analysis.event.kind.placeholder": "Please select an event kind",
+  "analysis.event.kind": "Event type",
+  "analysis.event.kind.placeholder": "Please select an event type",
   "analysis.event.name": "Event name",
   "analysis.event.name.placeholder": "Please input event name",
   "analysis.event.target.url": "Target URL",
@@ -590,8 +593,9 @@
   "analysis.event.save.error": "Error saving event",
   "analysis.event.get.error": "Error getting event",
 
-  "analysis.result.tip": "Please save Metric first, then click [Collect Data]",
+  "analysis.result.tip": "Please save a metric first, then click [Start collecting]",
   "analysis.result.collect.time": "Start collection time: ",
   "analysis.result.collect.start": "Start collecting", 
-  "analysis.result.collect.stop": "Stop collecting"
+  "analysis.result.collect.stop": "Stop collecting",
+  "analysis.ongoing": "Analysis data is collecting"
 }
