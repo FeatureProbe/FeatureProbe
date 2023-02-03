@@ -243,6 +243,7 @@ const ProjectCard = (props: IProps) => {
         open={modalOpen}
         isAdd={isAddEnvironment}
         projectKey={project.key}
+        environments={project.environments}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
       />
