@@ -1,7 +1,5 @@
 package com.featureprobe.api.dao.entity;
 
-import com.featureprobe.api.base.enums.EventMetricEnum;
-import com.featureprobe.api.base.enums.EventTypeEnum;
 import com.featureprobe.api.base.enums.MatcherTypeEnum;
 import com.featureprobe.api.dao.listener.TenantEntityListener;
 import lombok.AllArgsConstructor;
@@ -20,7 +18,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,18 +31,12 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 @FilterDef(name = "tenantFilter", parameters = {@ParamDef(name = "organizationId", type = "long")})
 @Filter(name = "tenantFilter", condition = "organization_id = :organizationId")
-public class Event extends AbstractAuditEntity implements TenantSupport, Serializable {
+public class Event extends AbstractAuditEntity implements TenantSupport, Comparable<Event> {
 
     @Column(name = "organization_id")
     private Long organizationId;
 
-    @Enumerated(EnumType.STRING)
-    private EventTypeEnum type;
-
     private String name;
-
-    @Enumerated(EnumType.STRING)
-    private EventMetricEnum metric;
 
     @Enumerated(EnumType.STRING)
     private MatcherTypeEnum matcher;
@@ -54,4 +45,25 @@ public class Event extends AbstractAuditEntity implements TenantSupport, Seriali
 
     private String selector;
 
+    public Event(String name, MatcherTypeEnum matcher, String url) {
+        this.name = name;
+        this.matcher = matcher;
+        this.url = url;
+    }
+
+    public Event(String name, MatcherTypeEnum matcher, String url, String selector) {
+        this.name = name;
+        this.matcher = matcher;
+        this.url = url;
+        this.selector = selector;
+    }
+
+
+    @Override
+    public int compareTo(Event o) {
+        if (this.name.equals(o.name)) {
+            return 0;
+        }
+        return -1;
+    }
 }

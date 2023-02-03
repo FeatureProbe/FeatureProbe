@@ -1,5 +1,6 @@
 package com.featureprobe.api.dto;
 
+import com.featureprobe.api.base.model.JSEvent;
 import com.featureprobe.sdk.server.model.Segment;
 import com.featureprobe.sdk.server.model.Toggle;
 import lombok.Data;
@@ -18,9 +19,13 @@ public class ServerResponse {
     private Map<String, Toggle> toggles;
     private Map<String, Segment> segments;
 
-    public ServerResponse(List<Toggle> toggleMessages, List<Segment> segmentMessages, Long version) {
+    private Map<String, JSEvent> events;
+
+    public ServerResponse(List<Toggle> toggleMessages, List<Segment> segmentMessages, List<JSEvent> eventMassages,
+                          Long version) {
         toggles = toggleMessages.stream().collect(Collectors.toMap(Toggle::getKey, Function.identity()));
         segments = segmentMessages.stream().collect(Collectors.toMap(Segment::getUniqueId, Function.identity()));
+        events = eventMassages.stream().collect(Collectors.toMap(JSEvent::getName, Function.identity()));
         this.version = version;
     }
 

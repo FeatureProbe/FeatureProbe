@@ -81,6 +81,7 @@ class BaseServerServiceSpec extends Specification {
         1 * targetingRepository.findAllByProjectKeyAndEnvironmentKeyAndOrganizationIdAndDeleted(projectKey, environmentKey, 1, false) >>
                 [new Targeting(projectKey: projectKey, environmentKey: environmentKey,
                         toggleKey: toggleKey, content: rules, disabled: false)]
+        1 * environmentRepository.findAllServerEventBySdkKey(sdkKey) >> []
         with(serverResponse) {
             1 == toggles.size()
             1 == segments.size()

@@ -11,7 +11,7 @@ public enum ResourceType {
     ORGANIZATION_MEMBER("organization_member"),
     WEBHOOK("name"),
     ACCESS_TOKEN("access_token"),
-    EVENT("projectKey_environmentKey_toggleKey");
+    METRIC("projectKey_environmentKey_toggleKey");
 
     private String paramName;
 

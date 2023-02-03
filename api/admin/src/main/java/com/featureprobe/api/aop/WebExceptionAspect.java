@@ -29,7 +29,7 @@ public class WebExceptionAspect {
     @ExceptionHandler(value = ResourceNotFoundException.class)
     public void resourceNotFoundHandler(HttpServletResponse response, ResourceNotFoundException e)
             throws IOException {
-        response.setStatus(HttpStatus.NOT_FOUND.value());
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         String resourceNameMessage = i18nConverter.getResourceNameMessage(e.resourceType);
         String resourceNotFoundMessage = i18nConverter.get(ResponseCode.NOT_FOUND.messageKey(),

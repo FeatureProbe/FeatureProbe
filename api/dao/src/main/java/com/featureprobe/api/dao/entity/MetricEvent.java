@@ -11,13 +11,11 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,27 +23,22 @@ import java.io.Serializable;
 @Setter
 @Builder
 @Entity
-@Table(name = "targeting_event")
+@Table(name = "metric_event")
 @DynamicInsert
 @EntityListeners(TenantEntityListener.class)
 @ToString(callSuper = true)
 @FilterDef(name = "tenantFilter", parameters = {@ParamDef(name = "organizationId", type = "long")})
 @Filter(name = "tenantFilter", condition = "organization_id = :organizationId")
-public class TargetingEvent extends AbstractAuditEntity implements TenantSupport, Serializable {
+public class MetricEvent extends AbstractAuditEntity implements TenantSupport {
+
 
     @Column(name = "organization_id")
     private Long organizationId;
 
-    @Column(name = "toggle_key")
-    private String toggleKey;
+    @Column(name = "metric_id")
+    private Long metricId;
 
-    @Column(name = "environment_key")
-    private String environmentKey;
+    @Column(name = "event_id")
+    private Long eventId;
 
-    @Column(name = "project_key")
-    private String projectKey;
-
-    @ManyToOne
-    @JoinColumn(name = "event_id", referencedColumnName = "id", nullable = false, updatable = false)
-    private Event event;
 }
