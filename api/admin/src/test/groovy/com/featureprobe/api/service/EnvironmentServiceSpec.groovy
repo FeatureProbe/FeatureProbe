@@ -235,7 +235,7 @@ class EnvironmentServiceSpec extends Specification {
         when:
         def list = environmentService.list(projectKey, new EnvironmentQueryRequest(archived: true))
         then:
-        1 * environmentRepository.findAllByProjectKeyAndArchived(projectKey, true) >> [new Environment()]
+        1 * environmentRepository.findAllByProjectKeyAndArchivedOrderByCreatedTimeAsc(projectKey, true) >> [new Environment()]
         1 == list.size()
     }
 

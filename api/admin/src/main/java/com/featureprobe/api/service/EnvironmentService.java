@@ -122,7 +122,7 @@ public class EnvironmentService {
     @Archived
     public List<EnvironmentResponse> list(String projectKey, EnvironmentQueryRequest queryRequest) {
         List<Environment> environments = environmentRepository
-                .findAllByProjectKeyAndArchived(projectKey, queryRequest.isArchived());
+                .findAllByProjectKeyAndArchivedOrderByCreatedTimeAsc(projectKey, queryRequest.isArchived());
         return environments.stream().map(environment -> EnvironmentMapper.INSTANCE.entityToResponse(environment))
                 .collect(Collectors.toList());
     }
