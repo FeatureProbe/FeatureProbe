@@ -35,6 +35,8 @@ FeatureProbe平台提供了强大的功能开关管理模块，功能开关通�
 ## 编辑开关
 编辑成功后，将在整个项目下的所有环境内生效。
 
+![edit toggle screenshot](/edit_toggle.png)
+
 ## 下线及恢复开关
 
 ![edit environment screenshot](/archived_toggle.png)
