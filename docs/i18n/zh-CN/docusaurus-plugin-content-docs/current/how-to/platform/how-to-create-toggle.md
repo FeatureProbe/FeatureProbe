@@ -39,7 +39,7 @@ FeatureProbe平台提供了强大的功能开关管理模块，功能开关通�
 
 ## 下线及恢复开关
 
-![edit environment screenshot](/archived_toggle.png)
+![archived toggle screenshot](/archived_toggle.png)
 
 开关的下线：
 1. 点击“下线”可随时下线开关，下线后，不可编辑及发布，且该开关将展示在【下线开关列表】中
