@@ -18,6 +18,7 @@ import {
   Dropdown,
   DropdownItemProps,
   Popup,
+  RadioProps,
 } from 'semantic-ui-react';
 import { useParams, useHistory, Prompt } from 'react-router-dom';
 import isEqual from 'lodash/isEqual';
@@ -157,6 +158,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   const [options, saveOptions] = useState<IOption[]>();
   const [run, saveRun] = useState<boolean>(false);
   const [stepIndex, saveStepIndex] = useState<number>(0);
+  const [isCollect, saveIsCollect] = useState<string>('');
   const history = useHistory();
   const intl = useIntl();
   const formRef = useRef();
@@ -372,6 +374,9 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     newRegister('reason', {
       required: approvalInfo?.enableApproval,
     });
+    newRegister('radioGroup', {
+      required: true,
+    });
   }, [newRegister, approvalInfo]);
 
   const validateForm = useCallback(() => {
@@ -422,13 +427,19 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   const handlePublishCancel = useCallback(() => {
     setOpen(false);
     setComment('');
-    setValue('reason', '');
+    newSetValue('reason', '');
+    newSetValue('radioGroup', '');
     clearErrors();
-  }, [setValue, clearErrors]);
+  }, [newSetValue, clearErrors]);
 
   const handlePublishConfirm = useCallback(async () => {
     if (approvalInfo && approvalInfo?.enableApproval && comment === '') {
       await newTrigger('reason');
+      return;
+    }
+
+    if (isCollect === '') {
+      await newTrigger('radioGroup');
       return;
     }
     setOpen(false);
@@ -457,20 +468,10 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
         setComment('');
       }
       newSetValue('reason', '');
+      newSetValue('radioGroup', '');
       setLoading(false);
     }
-  }, [
-    intl,
-    comment,
-    projectKey,
-    environmentKey,
-    toggleKey,
-    publishTargeting,
-    approvalInfo,
-    initTargeting,
-    newTrigger,
-    newSetValue,
-  ]);
+  }, [approvalInfo, comment, isCollect, publishTargeting, newTrigger, newSetValue, projectKey, environmentKey, toggleKey, initTargeting, intl]);
 
   const disabledText = useMemo(() => {
     if (variations[disabledServe.select]) {
@@ -519,7 +520,6 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
         return `${variations[index].name}: ${item / 100}%`;
       });
     }
-
     return obj;
   }, []);
 
@@ -557,6 +557,13 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     },
     [preDiffServe, initialTargeting?.content.variations, publishTargeting?.content.variations, intl]
   );
+
+  const handleRadioChange = useCallback(async (e: SyntheticEvent, detail: RadioProps) => {
+    console.log(detail.value);
+    saveIsCollect(detail.value as string);
+    // setValue('radioGroup', detail.value);
+    // await newTrigger('radioGroup');
+  }, []);
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} autoComplete="off" ref={formRef}>
@@ -748,20 +755,39 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                   </div>
                   <div className={styles['collect-content']}>
                     <Form.Field className={styles['collect-radio']}>
-                      <Radio
+                      <Form.Radio
                         label={intl.formatMessage({id: 'common.yes.text'})}
                         name='radioGroup'
-                        value='this'
+                        value='yes'
+                        checked={isCollect === 'yes'}
+                        error={newFormState.errors.radioGroup ? true : false}
+                        onChange={async (e: SyntheticEvent, detail: RadioProps) => {
+                          handleRadioChange(e, detail);
+                          newSetValue(detail.name || 'radioGroup', detail.value);
+                          await newTrigger('radioGroup');
+                        }}
                       />
                     </Form.Field>
                     <Form.Field>
-                      <Radio
+                      <Form.Radio
                         label={intl.formatMessage({id: 'common.no.text'})}
                         name='radioGroup'
-                        value='that'
+                        value='no'
+                        checked={isCollect === 'no'}
+                        error={newFormState.errors.radioGroup ? true : false}
+                        onChange={async (e: SyntheticEvent, detail: RadioProps) => {
+                          handleRadioChange(e, detail);
+                          newSetValue(detail.name || 'radioGroup', detail.value);
+                          await newTrigger('radioGroup');
+                        }}
                       />
                     </Form.Field>
                   </div>
+                  {newFormState.errors.radioGroup && (
+                    <div className="error-text">
+                      <FormattedMessage id="common.dropdown.placeholder" />
+                    </div>
+                  )}
                 </div>
                 <div className={styles.comment}>
                   <div className={styles['comment-title']}>

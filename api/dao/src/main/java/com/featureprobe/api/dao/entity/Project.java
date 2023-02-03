@@ -11,6 +11,7 @@ import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Where;
 
@@ -60,6 +61,7 @@ public class Project extends AbstractAuditEntity implements TenantSupport, Seria
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST)
     @Where(clause = "archived = 0")
+    @OrderBy(clause = "created_time asc")
     private List<Environment> environments;
 
 }

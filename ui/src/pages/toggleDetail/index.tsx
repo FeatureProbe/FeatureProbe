@@ -306,6 +306,11 @@ const ToggleDetail = () => {
     saveRememberVersion(false);
   }, [initTargeting]);
 
+  // Reset history if user change environment in left sidebar
+  useEffect(() => {
+    resetHistory();
+  }, [environmentKey, resetHistory]);
+
   const initHistory = useCallback(() => {
     saveVersions([]);
     saveHistoryPageIndex(0);

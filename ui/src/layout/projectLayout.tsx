@@ -254,7 +254,7 @@ const ProjectLayout = (props: IProps) => {
         <ProjectSiderbar
           isLoading={isLoading}
           projectInfo={projectInfo}
-          backgroundColor={EnvironmentColors[envIndex]}
+          backgroundColor={EnvironmentColors[envIndex % 5]}
         />
       </SideBar>
       <div className={styles['project-content']}>
@@ -364,7 +364,7 @@ const ProjectLayout = (props: IProps) => {
             match.path === SETTING_PATH
           ) 
             ? null 
-            : <div style={{background: EnvironmentColors[envIndex]}} className={styles['environment-line']}></div>
+            : <div style={{background: EnvironmentColors[envIndex % 5]}} className={styles['environment-line']}></div>
         }
         { props.children }
       </div>

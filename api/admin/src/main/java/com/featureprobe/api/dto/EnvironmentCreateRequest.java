@@ -15,4 +15,7 @@ public class EnvironmentCreateRequest {
     @Schema(description = "A project-unique key for the new environment.")
     @NotBlank
     private String key;
+
+    @Schema(description = "environment to copy from.")
+    private String copyFrom;
 }

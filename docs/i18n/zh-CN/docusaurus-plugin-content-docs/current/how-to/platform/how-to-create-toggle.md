@@ -3,7 +3,7 @@ sidebar_position: 2
 ---
 
 
-# 创建开关
+# 开关管理
 
 FeatureProbe平台提供了强大的功能开关管理模块，功能开关通过选择目标流量，进行功能投放，通过持续观测数据逐步放量直到全量部署。
 ## 开关仪表盘 
@@ -14,8 +14,8 @@ FeatureProbe平台提供了强大的功能开关管理模块，功能开关通�
 2. 左侧导航栏提供了快速切换环境的入口（点击环境右侧的下拉icon）
 3. 通过筛选条件，我们可以根据"evaluated","enabled/disabled","tags","name/key/description"对开关进行快速的筛选
 
-## 添加开关模板
-开关的“模板信息”（开关创建成功后，将同步成为已有环境的初始化信息）
+## 创建开关
+开关创建成功后，将同步到项目下的所有环境
 
 ![create toggle screenshot](/create_toggle_zh.png)
 
@@ -26,17 +26,20 @@ FeatureProbe平台提供了强大的功能开关管理模块，功能开关通�
 5. 选择sdk类型
 6. 选择开关的return type（支持4种：Boolean、String、Number、JSON），一旦创建不可编辑
 7. 填写Variations
-    - 默认两个variations，value为空（最少2个，可自行增减）【value可更改，name可更改，description可更改】
+    - 默认两个variations（最少2个，可自行增减）
 
-8. 填写disabled return value（开关禁用时的返回值），默认同步variation1的数据，可更改
-9. 点击创建按钮，完成开关的创建
+8. 填写当开关未生效（开关未生效时的返回值），默认同步variation1的数据，可更改
+9. 选择“是否是永久性开关？”（非永久性开关的默认周期是30天，超过30天我们会提醒您清理）
+10. 点击创建按钮，完成开关的创建
 
-## 编辑开关模板
-开关的“模板信息”（编辑成功后，不会影响已有环境中的开关配置信息，仅同步到未来新环境的初始化信息）
+## 编辑开关
+编辑成功后，将在整个项目下的所有环境内生效。
+
+![edit toggle screenshot](/edit_toggle.png)
 
 ## 下线及恢复开关
 
-![edit environment screenshot](/archived_toggle.png)
+![archived toggle screenshot](/archived_toggle.png)
 
 开关的下线：
 1. 点击“下线”可随时下线开关，下线后，不可编辑及发布，且该开关将展示在【下线开关列表】中

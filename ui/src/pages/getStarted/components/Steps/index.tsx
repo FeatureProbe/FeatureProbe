@@ -1,14 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
-import message from 'components/MessageBox';
 import Loading from 'components/Loading';
 import StepFirst from '../StepFirst';
 import StepSecond, { SdkLanguage } from '../StepSecond';
 import StepThird from '../StepThird';
 import { saveDictionary, getFromDictionary } from 'services/dictionary';
 import { getSdkVersion } from 'services/misc';
-import { getToggleAccess, getToggleInfo, editToggle, getToggleAttributes } from 'services/toggle';
+import { getToggleAccess, getToggleInfo, getToggleAttributes } from 'services/toggle';
 import { getProjectInfo } from 'services/project';
 import { getEnvironment } from 'services/project';
 import { IDictionary, IToggleInfo } from 'interfaces/targeting';
@@ -68,7 +67,6 @@ const Steps = () => {
   const [ clientAvailability, saveClientAvailability ] = useState<boolean>(false);
   const [ attributes, saveAttributes ] = useState<string[]>([]);
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
-  const intl = useIntl();
 
   const init = useCallback(async() => {
     const key = PREFIX + projectKey + '_' + environmentKey + '_' + toggleKey;
@@ -189,18 +187,6 @@ const Steps = () => {
     }
   }, []);
 
-  const enableClientSideSDK = useCallback(async() => {
-    const res = await editToggle(projectKey, toggleKey, {
-      clientAvailability: true,
-    });
-
-    if (res.success) {
-      message.success(intl.formatMessage({id: 'connect.first.client.sdk.enable.success'}));
-      saveClientAvailability(true);
-    }
-
-  }, [intl, projectKey, toggleKey]);
-
   return (
     <div className={styles.page}>
       <div className={styles.intro}>
@@ -259,7 +245,6 @@ const Steps = () => {
                 saveStep={saveFirstStep}
                 saveCurrentSDK={saveCurrentSDK}
                 goBackToStep={goBackToStep}
-                enableClientSideSDK={enableClientSideSDK}
               />
               <StepSecond 
                 attributes={attributes}
