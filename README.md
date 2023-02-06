@@ -53,7 +53,7 @@ sales performance.
 6. **And more!** 
 Discover all the amazing things FeatureProbe can accomplish. 
 
-## UI Snapshot
+## 🔎 UI Snapshot
 
 * Toggle Management List
 ![FeatureProbe screenshot](./pictures/toggles.png) 
