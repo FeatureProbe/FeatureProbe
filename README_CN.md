@@ -34,7 +34,16 @@ FeatureProbe 是一个开源的 **『特性』管理** 服务。它包含灰度�
 6. **更多的使用场景!** 
 期待大家与我们一起去发现与尝试。
 
+## 🔎 FeatureProbe功能预览
+
+* 开关管理
 ![FeatureProbe screenshot](./pictures/toggles.png) 
+
+* 目标流量设置
+![targeting](./pictures/targeting_cn.png)
+
+* 流量监测
+![traffic](./docs/pictures/evaluations_cn.png)
 
 
 # 🧩 FeatureProbe的技术架构
@@ -99,6 +108,8 @@ if (fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)) {
 # 🙌 Contributing
 
 我们仍在不断迭代，为FeatureProbe补充更多的功能，以便适应更多的使用场景和用户需求。开发活动会基于github的代码库持续发布。欢迎开源社区的朋友加入我们，提需求、报bug、参与社区讨论、提交PR都可以。
+
+可以在[project](https://github.com/orgs/FeatureProbe/projects/2)看到我们的迭代计划。
 
 Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, and the process for 
 taking part in improving FeatureProbe.
