@@ -9,6 +9,7 @@ import com.featureprobe.api.base.model.ToggleRule;
 import com.featureprobe.api.base.model.Variation;
 import com.featureprobe.api.base.tenant.TenantContext;
 import com.featureprobe.api.dao.entity.Segment;
+import com.featureprobe.api.dao.entity.Toggle;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
 import com.featureprobe.api.dao.utils.PageRequestUtil;
 import com.featureprobe.api.dto.AfterTargetingVersionResponse;
@@ -49,7 +50,6 @@ import com.featureprobe.api.dao.repository.VariationHistoryRepository;
 import com.featureprobe.api.base.util.JsonMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -426,8 +426,78 @@ public class TargetingService {
         return targetingVersion;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void createDefaultTargetingEntities(String projectKey, Toggle toggle) {
+        List<Environment> environments = environmentRepository.findAllByProjectKey(projectKey);
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(environments)) {
+            log.info("{} environment is empty, ignore create targeting", projectKey);
+            return;
+        }
+        List<Targeting> targetingList = environments.stream()
+                .map(environment -> createDefaultTargeting(toggle, environment)).collect(Collectors.toList());
+        this.createTargetingEntities(targetingList);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void createTargetingEntities(List<Targeting> targetingList) {
+        List<Targeting> savedTargetingList = targetingRepository.saveAll(targetingList);
+        for (Targeting targeting : savedTargetingList) {
+            saveTargetingVersion(buildTargetingVersion(targeting, ""));
+            saveVariationHistory(targeting);
+        }
+    }
+
     private void saveTargetingVersion(TargetingVersion targetingVersion) {
         targetingVersionRepository.save(targetingVersion);
+    }
+
+    private void saveVariationHistory(Targeting targeting) {
+        List<Variation> variations = JsonMapper.toObject(targeting.getContent(), TargetingContent.class)
+                .getVariations();
+
+        List<VariationHistory> variationHistories = IntStream.range(0, variations.size())
+                .mapToObj(index -> convertVariationToEntity(targeting, index,
+                        variations.get(index)))
+                .collect(Collectors.toList());
+        variationHistoryRepository.saveAll(variationHistories);
+    }
+
+    private VariationHistory convertVariationToEntity(Targeting targeting, int index, Variation variation) {
+        VariationHistory variationHistory = new VariationHistory();
+        variationHistory.setEnvironmentKey(targeting.getEnvironmentKey());
+        variationHistory.setProjectKey(targeting.getProjectKey());
+        variationHistory.setToggleKey(targeting.getToggleKey());
+        variationHistory.setValue(variation.getValue());
+        variationHistory.setName(variation.getName());
+        variationHistory.setToggleVersion(targeting.getVersion());
+        variationHistory.setValueIndex(index);
+        return variationHistory;
+    }
+
+    private TargetingVersion buildTargetingVersion(Targeting targeting, String comment) {
+        TargetingVersion targetingVersion = new TargetingVersion();
+        targetingVersion.setProjectKey(targeting.getProjectKey());
+        targetingVersion.setEnvironmentKey(targeting.getEnvironmentKey());
+        targetingVersion.setToggleKey(targeting.getToggleKey());
+        targetingVersion.setContent(targeting.getContent());
+        targetingVersion.setDisabled(targeting.isDisabled());
+        targetingVersion.setVersion(targeting.getVersion());
+        targetingVersion.setComment(comment);
+        return targetingVersion;
+    }
+
+    private Targeting createDefaultTargeting(Toggle toggle, Environment environment) {
+        Targeting targeting = new Targeting();
+        targeting.setDeleted(false);
+        targeting.setVersion(1L);
+        targeting.setProjectKey(toggle.getProjectKey());
+        targeting.setDisabled(true);
+        targeting.setContent(TargetingContent.newDefault(toggle.getVariations(),
+                toggle.getDisabledServe()).toJson());
+        targeting.setToggleKey(toggle.getKey());
+        targeting.setEnvironmentKey(environment.getKey());
+        targeting.setPublishTime(new Date());
+        return targeting;
     }
 
     private void saveTargetingSegmentRefs(String projectKey, Targeting targeting, TargetingContent targetingContent) {
@@ -459,18 +529,6 @@ public class TargetingService {
                         variations.get(index)))
                 .collect(Collectors.toList());
         variationHistoryRepository.saveAll(variationHistories);
-    }
-
-    private VariationHistory convertVariationToEntity(Targeting targeting, int index, Variation variation) {
-        VariationHistory variationHistory = new VariationHistory();
-        variationHistory.setEnvironmentKey(targeting.getEnvironmentKey());
-        variationHistory.setProjectKey(targeting.getProjectKey());
-        variationHistory.setToggleKey(targeting.getToggleKey());
-        variationHistory.setValue(variation.getValue());
-        variationHistory.setName(variation.getName());
-        variationHistory.setToggleVersion(targeting.getVersion());
-        variationHistory.setValueIndex(index);
-        return variationHistory;
     }
 
     private Optional<ApprovalRecord> queryNewestApprovalRecord(String projectKey, String environmentKey,

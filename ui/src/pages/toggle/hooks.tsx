@@ -61,7 +61,7 @@ export const useToggleInfo = () => {
     key: '',
     desc: '',
     tags: [],
-    clientAvailability: false,
+    clientAvailability: undefined,
     returnType: 'boolean',
     disabledServe: 0,
     permanent: false,
@@ -72,7 +72,7 @@ export const useToggleInfo = () => {
     key: '',
     desc: '',
     tags: [],
-    clientAvailability: false,
+    clientAvailability: undefined,
     returnType: 'boolean',
     disabledServe: 0,
     permanent: false,
@@ -82,7 +82,7 @@ export const useToggleInfo = () => {
     const value = detail.value;
 
     if (type === 'clientAvailability') {
-      toggleInfo[type] = detail.name === 'yes';
+      toggleInfo[type] = detail.value === 'yes';
     } else if ( type === 'permanent' ) {
       toggleInfo[type] = detail.name === 'permanent-yes';
     } else {

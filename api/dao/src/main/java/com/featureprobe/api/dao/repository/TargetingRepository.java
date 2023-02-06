@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,4 +29,6 @@ public interface TargetingRepository extends JpaRepository<Targeting, Long>, Jpa
 
     List<Targeting> findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(String projectKey, String environmentKey,
                                                                     List<String> toggleKeys);
+
+    List<Targeting> findAllByProjectKeyAndEnvironmentKey(String projectKey, String environmentKey);
 }

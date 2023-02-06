@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form, Dropdown } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
@@ -15,8 +15,9 @@ import swift from 'images/swift.svg';
 import apple from 'images/apple.svg';
 import miniprogram from 'images/wechat-miniprogram.png';
 import reactLogo from 'images/react.svg';
-import styles from '../Steps/index.module.scss';
 import { SdkLanguage } from '../StepSecond';
+
+import styles from '../Steps/index.module.scss';
 
 const SDK_LOGOS: {[key in SdkLanguage]: string} = {
   // 'null': null,
@@ -95,13 +96,12 @@ interface IProps {
   saveStep(sdk: string): void;
   goBackToStep(step: number): void;
   saveCurrentSDK(sdk: SdkLanguage): void;
-  enableClientSideSDK(): void;
 }
 
 const CURRENT = 1;
 
 const StepFirst = (props: IProps) => {
-  const { currentStep, currentSDK, clientAvailability, saveStep, goBackToStep, saveCurrentSDK, enableClientSideSDK } = props;
+  const { currentStep, currentSDK, clientAvailability, saveStep, goBackToStep, saveCurrentSDK } = props;
   const [ selectedSDKLogo, saveSelectedSDKLogo ] = useState<string>('');
   const intl = useIntl();
 
@@ -228,12 +228,6 @@ const StepFirst = (props: IProps) => {
                             <div className={styles['client-sdk-usage']}>
                               <Icon type='warning-circle' customclass={styles['warning-circle']}></Icon>
                               <FormattedMessage id='connect.first.client.sdk.tip' />
-                              <span className={styles['client-sdk-usage-link']} onClick={(e: SyntheticEvent) => {
-                                e.stopPropagation();
-                                enableClientSideSDK(); 
-                              }}>
-                                <FormattedMessage id='connect.first.client.sdk.enable' />
-                              </span>
                             </div>
                           )
                         }

@@ -1,5 +1,6 @@
 package com.featureprobe.api.service
 
+
 import com.featureprobe.api.base.enums.ToggleReleaseStatusEnum
 import com.featureprobe.api.component.SpringBeanManager
 import com.featureprobe.api.config.AppConfig
@@ -7,6 +8,7 @@ import com.featureprobe.api.base.enums.SketchStatusEnum
 import com.featureprobe.api.base.enums.ValidateTypeEnum
 import com.featureprobe.api.base.enums.VisitFilter
 import com.featureprobe.api.dao.exception.ResourceConflictException
+import com.featureprobe.api.dao.repository.*
 import com.featureprobe.api.dto.ToggleCreateRequest
 import com.featureprobe.api.dto.ToggleSearchRequest
 import com.featureprobe.api.dto.ToggleUpdateRequest
@@ -19,19 +21,6 @@ import com.featureprobe.api.dao.entity.Targeting
 import com.featureprobe.api.dao.entity.TargetingSketch
 import com.featureprobe.api.dao.entity.Toggle
 import com.featureprobe.api.dao.entity.ToggleTagRelation
-import com.featureprobe.api.dao.repository.PublishMessageRepository
-import com.featureprobe.api.dao.repository.DictionaryRepository
-import com.featureprobe.api.dao.repository.EnvironmentRepository
-import com.featureprobe.api.dao.repository.TrafficRepository
-import com.featureprobe.api.dao.repository.TrafficCacheRepository
-import com.featureprobe.api.dao.repository.ProjectRepository
-import com.featureprobe.api.dao.repository.TagRepository
-import com.featureprobe.api.dao.repository.TargetingRepository
-import com.featureprobe.api.dao.repository.TargetingSketchRepository
-import com.featureprobe.api.dao.repository.TargetingVersionRepository
-import com.featureprobe.api.dao.repository.ToggleRepository
-import com.featureprobe.api.dao.repository.ToggleTagRepository
-import com.featureprobe.api.dao.repository.VariationHistoryRepository
 import com.featureprobe.sdk.server.FeatureProbe
 import org.hibernate.internal.SessionImpl
 import org.springframework.context.ApplicationContext
@@ -63,11 +52,9 @@ class ToggleServiceSpec extends Specification {
 
     EnvironmentRepository environmentRepository
 
-    TrafficRepository eventRepository
+    TrafficRepository trafficRepository
 
-    TargetingVersionRepository targetingVersionRepository
-
-    VariationHistoryRepository variationHistoryRepository
+    TargetingService targetingService
 
     TargetingSketchRepository targetingSketchRepository
 
@@ -104,11 +91,10 @@ class ToggleServiceSpec extends Specification {
         toggleTagRepository = Mock(ToggleTagRepository)
         targetingRepository = Mock(TargetingRepository)
         environmentRepository = Mock(EnvironmentRepository)
-        eventRepository = Mock(TrafficRepository)
-        targetingVersionRepository = Mock(TargetingVersionRepository)
-        variationHistoryRepository = Mock(VariationHistoryRepository)
+        trafficRepository = Mock(TrafficRepository)
         targetingSketchRepository = Mock(TargetingSketchRepository)
         trafficCacheRepository = Mock(TrafficCacheRepository)
+        targetingService = Mock(TargetingService)
         toggleTagRepository = Mock(ToggleTagRepository)
         projectRepository = Mock(ProjectRepository)
         publishMessageRepository = Mock(PublishMessageRepository)
@@ -116,9 +102,8 @@ class ToggleServiceSpec extends Specification {
         changeLogService = new ChangeLogService(publishMessageRepository, environmentRepository, dictionaryRepository)
         entityManager = Mock(SessionImpl)
         toggleService = new ToggleService(appConfig, toggleRepository, tagRepository, targetingRepository,
-                environmentRepository, eventRepository, targetingVersionRepository,
-                variationHistoryRepository, targetingSketchRepository, trafficCacheRepository,
-                toggleTagRepository, changeLogService, projectRepository, entityManager)
+                environmentRepository, trafficRepository, targetingSketchRepository, trafficCacheRepository,
+                toggleTagRepository, changeLogService, projectRepository, targetingService, entityManager)
         includeArchivedToggleService = new IncludeArchivedToggleService(toggleRepository, entityManager)
         projectKey = "feature_probe"
         environmentKey = "test"
@@ -191,7 +176,7 @@ class ToggleServiceSpec extends Specification {
                 false) >> [new Targeting(toggleKey: toggleKey)]
         1 * tagRepository.findByNameIn(["test"]) >> [new Tag(name: "test")]
         1 * toggleTagRepository.findByTagIdIn(_) >> [new ToggleTagRelation(toggleKey: toggleKey)]
-        1 * eventRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
+        1 * trafficRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
                 Pageable.ofSize(1), 1)
         1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, [toggleKey]) >>
@@ -225,8 +210,8 @@ class ToggleServiceSpec extends Specification {
                 false) >> [new Targeting(toggleKey: toggleKey)]
         1 * tagRepository.findByNameIn(["test"]) >> [new Tag(name: "test")]
         1 * toggleTagRepository.findByTagIdIn(_) >> [new ToggleTagRelation(toggleKey: toggleKey)]
-        1 * eventRepository.findAllAccessedToggleKey(_, _) >> toggleKeys
-        1 * eventRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
+        1 * trafficRepository.findAllAccessedToggleKey(_, _) >> toggleKeys
+        1 * trafficRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
                 Pageable.ofSize(1), 1)
         1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, [toggleKey]) >>
@@ -260,7 +245,7 @@ class ToggleServiceSpec extends Specification {
                 false) >> [new Targeting(toggleKey: toggleKey)]
         1 * tagRepository.findByNameIn(["test"]) >> [new Tag(name: "test")]
         1 * toggleTagRepository.findByTagIdIn(_) >> [new ToggleTagRelation(toggleKey: toggleKey)]
-        1 * eventRepository.findAllAccessedToggleKey(_, _) >> toggleKeys
+        1 * trafficRepository.findAllAccessedToggleKey(_, _) >> toggleKeys
         1 * toggleRepository.findAll(_) >> [new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())]
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
                 Pageable.ofSize(1), 1)
@@ -295,7 +280,7 @@ class ToggleServiceSpec extends Specification {
                 false) >> [new Targeting(toggleKey: toggleKey)]
         1 * tagRepository.findByNameIn(["test"]) >> [new Tag(name: "test")]
         1 * toggleTagRepository.findByTagIdIn(_) >> [new ToggleTagRelation(toggleKey: toggleKey)]
-        1 * eventRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
+        1 * trafficRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
         1 * targetingRepository.findAllByProjectKeyAndEnvironmentKeyAndStatusIn(projectKey,
                 environmentKey, [ToggleReleaseStatusEnum.RELEASE]) >> [new Targeting(toggleKey: toggleKey, environmentKey: environmentKey, projectKey: projectKey, disabled: true)]
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
@@ -328,8 +313,6 @@ class ToggleServiceSpec extends Specification {
     }
 
     def "create toggle success"() {
-        given:
-        List<Targeting> savedTargetingList
         when:
         def response = toggleService.create(projectKey,
                 new ToggleCreateRequest(name: "toggle1", key: toggleKey, tags: ["tg1", "tg2"]))
@@ -337,16 +320,16 @@ class ToggleServiceSpec extends Specification {
         then:
         response
         1 * applicationContext.getBean(_) >> new FeatureProbe("_")
-        1 * environmentRepository.findAllByProjectKey(projectKey) >> [new Environment(key: "test"), new Environment(key: "online")]
         1 * toggleRepository.save(_ as Toggle) >> new Toggle(projectKey: projectKey,
                 key: toggleKey, name: "toggle1", desc: "init", createdTime: new Date(), tags: [new Tag(name: "tg1"), new Tag(name: "tg2")])
-        1 * targetingRepository.saveAll(_ as List<Targeting>) >> { it -> savedTargetingList = it[0] }
         1 * tagRepository.findByProjectKeyAndNameIn(projectKey, ["tg1", "tg2"]) >> [new Tag(name: "tg1"), new Tag(name: "tg2")]
+        1 * targetingService.createDefaultTargetingEntities(projectKey, _)
+        1 * toggleRepository.countByProjectKey('feature_probe')
+
         with(response) {
             toggleKey == key
             2 == tags.size()
         }
-        2 == savedTargetingList.size()
     }
 
     def "update toggle success"() {

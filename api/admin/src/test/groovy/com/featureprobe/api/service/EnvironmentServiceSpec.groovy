@@ -2,10 +2,10 @@ package com.featureprobe.api.service
 
 import com.featureprobe.api.base.enums.ValidateTypeEnum
 import com.featureprobe.api.component.SpringBeanManager
+import com.featureprobe.api.dao.entity.Targeting
 import com.featureprobe.api.dao.exception.ResourceConflictException
 import com.featureprobe.api.dto.EnvironmentCreateRequest
 import com.featureprobe.api.dto.EnvironmentQueryRequest
-import com.featureprobe.api.dto.EnvironmentResponse
 import com.featureprobe.api.dto.EnvironmentUpdateRequest
 import com.featureprobe.api.dao.entity.Dictionary
 import com.featureprobe.api.dao.entity.Environment
@@ -39,6 +39,8 @@ class EnvironmentServiceSpec extends Specification {
     TargetingRepository targetingRepository
 
     EnvironmentService environmentService
+
+    TargetingService targetingService
 
     PublishMessageRepository publishMessageRepository
 
@@ -80,13 +82,15 @@ class EnvironmentServiceSpec extends Specification {
         environmentRepository = Mock(EnvironmentRepository)
         toggleRepository = Mock(ToggleRepository)
         targetingRepository = Mock(TargetingRepository)
+        targetingService = Mock(TargetingService)
         entityManager = Mock(SessionImpl)
         publishMessageRepository = Mock(PublishMessageRepository)
         dictionaryRepository = Mock(DictionaryRepository)
+
         includeArchivedToggleService = new IncludeArchivedToggleService(toggleRepository, entityManager)
         changeLogService = new ChangeLogService(publishMessageRepository, environmentRepository, dictionaryRepository)
         environmentService = new EnvironmentService(environmentRepository, projectRepository,
-                toggleRepository, targetingRepository, changeLogService, includeArchivedToggleService, entityManager)
+                targetingRepository, changeLogService, includeArchivedToggleService, targetingService, entityManager)
         includeArchivedEnvironmentService = new IncludeArchivedEnvironmentService(environmentRepository, entityManager)
         createRequest = new EnvironmentCreateRequest(name: environmentName, key: environmentKey)
         updateRequest = new EnvironmentUpdateRequest(name: "env_test_update", resetServerSdk: true, resetClientSdk: true)
@@ -95,7 +99,7 @@ class EnvironmentServiceSpec extends Specification {
         SpringBeanManager.applicationContext = applicationContext
     }
 
-    def "Create environment"() {
+    def "create environment"() {
         when:
         def ret = environmentService.create(projectKey, createRequest)
         then:
@@ -106,7 +110,8 @@ class EnvironmentServiceSpec extends Specification {
                 serverSdkKey: serverSdkKey, clientSdkKey: clientSdkKey, version: 1)
         1 * toggleRepository.findAllByProjectKey(projectKey) >> [new Toggle(name: toggleName,
                 key: toggleKey, projectKey: toggleKey)]
-        1 * targetingRepository.saveAll(_)
+        1 * targetingService.createTargetingEntities(_)
+        1 * environmentRepository.countByProjectKey('test_project')
         1 * dictionaryRepository.findByKey(_) >> Optional.of(new Dictionary(value: "1"))
         1 * dictionaryRepository.save(_)
         1 * publishMessageRepository.save(_)
@@ -118,8 +123,33 @@ class EnvironmentServiceSpec extends Specification {
         }
     }
 
+    def "create environment copy from exists environment"() {
+        when:
+        def ret = environmentService.create(projectKey,
+                new EnvironmentCreateRequest(name: "copy-env", key: "copy-env", copyFrom: "exists-env"))
 
-    def "Update environment"() {
+        then:
+        1 * applicationContext.getBean(_) >> new FeatureProbe("_")
+        1 * projectRepository.findByKey(projectKey) >>
+                new Optional<>(new Project(name: projectName, key: projectKey))
+        1 * environmentRepository.save(_) >> new Environment(name: environmentName, key: environmentKey,
+                serverSdkKey: serverSdkKey, clientSdkKey: clientSdkKey, version: 1)
+        1 * targetingRepository.findAllByProjectKeyAndEnvironmentKey(projectKey, _) >> [new Targeting()]
+        1 * targetingService.createTargetingEntities(_)
+        1 * environmentRepository.countByProjectKey('test_project')
+        1 * dictionaryRepository.findByKey(_) >> Optional.of(new Dictionary(value: "1"))
+        1 * dictionaryRepository.save(_)
+        1 * publishMessageRepository.save(_)
+        with(ret) {
+            environmentName == it.name
+            environmentKey == it.key
+            serverSdkKey == it.serverSdkKey
+            clientSdkKey == it.clientSdkKey
+        }
+
+    }
+
+    def "update environment"() {
         when:
         def ret = environmentService.update(projectKey, environmentKey, updateRequest)
         then:
@@ -205,7 +235,7 @@ class EnvironmentServiceSpec extends Specification {
         when:
         def list = environmentService.list(projectKey, new EnvironmentQueryRequest(archived: true))
         then:
-        1 * environmentRepository.findAllByProjectKeyAndArchived(projectKey, true) >> [new Environment()]
+        1 * environmentRepository.findAllByProjectKeyAndArchivedOrderByCreatedTimeAsc(projectKey, true) >> [new Environment()]
         1 == list.size()
     }
 

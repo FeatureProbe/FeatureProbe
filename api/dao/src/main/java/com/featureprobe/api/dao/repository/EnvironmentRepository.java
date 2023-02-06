@@ -18,7 +18,7 @@ public interface EnvironmentRepository extends JpaRepository<Environment, Long> 
 
     List<Environment> findByKeyIn(Set<String> key);
 
-    List<Environment> findAllByProjectKeyAndArchived(String projectKey, Boolean archived);
+    List<Environment> findAllByProjectKeyAndArchivedOrderByCreatedTimeAsc(String projectKey, Boolean archived);
 
     long countByProjectKey(String projectKey);
 
