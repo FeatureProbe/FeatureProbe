@@ -53,7 +53,16 @@ sales performance.
 6. **And more!** 
 Discover all the amazing things FeatureProbe can accomplish. 
 
+## UI Snapshot
+
+* Toggle Management List
 ![FeatureProbe screenshot](./pictures/toggles.png) 
+
+* Target Setting
+![targeting](./pictures/targeting_en.png)
+
+* Traffic Monitor
+![traffic](./docs/pictures/evaluations_en.png)
 
 
 # 🧩 Architecture of FeatureProbe
