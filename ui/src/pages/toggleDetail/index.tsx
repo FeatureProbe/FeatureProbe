@@ -51,6 +51,7 @@ const ToggleDetail = () => {
   const [ historyHasMore, saveHistoryHasMore ] = useState<boolean>(false);
   const [ targetingDisabled, saveTargetingDisabled ] = useState<boolean>(false);
   const [ selectedVersion, saveSelectedVersion ] = useState<number>(0);
+  const [ isCollecting, saveIsCollecting ] = useState<boolean>(true);
   const [ latestVersion, saveLatestVersion ] = useState<number>(0);
   const [ open, setPageLeaveOpen ] = useState<boolean>(false);
   const [ rememberVersion, saveRememberVersion ] = useState<boolean>(false);
@@ -453,7 +454,13 @@ const ToggleDetail = () => {
                           }
                           <Targeting
                             ref={formRef}
-                            disabled={targetingDisabled || toggleArchived || (approvalInfo?.enableApproval && approvalInfo.status !== 'RELEASE')}
+                            isCollecting={isCollecting}
+                            disabled={
+                              targetingDisabled || 
+                              toggleArchived || 
+                              (approvalInfo?.enableApproval && approvalInfo.status !== 'RELEASE') || 
+                              isCollecting
+                            }
                             targeting={targeting}
                             toggleInfo={toggleInfo}
                             segmentList={segmentList}

@@ -27,6 +27,7 @@ import { useForm } from 'react-hook-form';
 import { FormattedMessage, useIntl } from 'react-intl';
 import cloneDeep from 'lodash/cloneDeep';
 import { v4 as uuidv4 } from 'uuid';
+import { diff } from 'deep-diff';
 import Joyride, { CallBackProps, EVENTS, ACTIONS, Step } from 'react-joyride';
 import Rules from './components/Rules';
 import DefaultRule from './components/DefaultRule';
@@ -74,6 +75,7 @@ import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
 import { getFromDictionary, saveDictionary } from 'services/dictionary';
 import { USER_GUIDE_LAYOUT, USER_GUIDE_TARGETING } from 'constants/dictionary_keys';
 import { useFormErrorScrollIntoView } from 'hooks';
+
 import styles from './index.module.scss';
 
 interface IProps {
@@ -82,6 +84,7 @@ interface IProps {
   toggleInfo?: IToggleInfo;
   approvalInfo?: IApprovalInfo;
   toggleDisabled: boolean;
+  isCollecting: boolean;
   initialTargeting?: ITargeting;
   segmentList?: ISegmentList;
   initTargeting(): void;
@@ -159,6 +162,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   const [run, saveRun] = useState<boolean>(false);
   const [stepIndex, saveStepIndex] = useState<number>(0);
   const [isCollect, saveIsCollect] = useState<string>('');
+  const [isDiffChange, saveIsDiffChange] = useState<boolean>(false);
   const history = useHistory();
   const intl = useIntl();
   const formRef = useRef();
@@ -558,12 +562,39 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     [preDiffServe, initialTargeting?.content.variations, publishTargeting?.content.variations, intl]
   );
 
-  const handleRadioChange = useCallback(async (e: SyntheticEvent, detail: RadioProps) => {
-    console.log(detail.value);
+  const handleRadioChange = useCallback((e: SyntheticEvent, detail: RadioProps) => {
     saveIsCollect(detail.value as string);
-    // setValue('radioGroup', detail.value);
-    // await newTrigger('radioGroup');
   }, []);
+
+  useEffect(() => {
+    if (initialTargeting && publishTargeting && open) {
+      let isDiffChange = false;
+
+      const diffVariation = diff(initialTargeting.content.variations, publishTargeting.content.variations);
+      if (diffVariation) {
+        diffVariation.forEach(item => {
+          if (item.kind !== 'E') {
+            isDiffChange = true;
+          } else if (item.kind === 'E' && (item.path?.[1] !== 'name' && item.path?.[1] !== 'description')) {
+            isDiffChange = true;
+          }
+        });
+      }
+
+      const diffRules = diff(initialTargeting.content.rules, publishTargeting.content.rules);
+      if (diffRules) {
+        diffRules.forEach(item => {
+          if (item.kind !== 'E') {
+            isDiffChange = true;
+          } else if (item.kind === 'E' && item.path?.[1] !== 'name') {
+            isDiffChange = true;
+          }
+        });
+      }
+
+      saveIsDiffChange(isDiffChange);
+    }
+  }, [open, beforeRuleDiff, initialTargeting, publishTargeting]);
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} autoComplete="off" ref={formRef}>
@@ -656,10 +687,14 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
             <Icon customclass={styles['modal-close-icon']} type="close" onClick={handlePublishCancel} />
           </div>
           <div className={styles['modal-content']}>
-            <div className={styles['publish-tips']}>
-              <Icon type='error-circle' customclass={styles['error-circle']} />
-              <FormattedMessage id='targeting.publish.tips' />
-            </div>
+            {
+              isDiffChange && (
+                <div className={styles['publish-tips']}>
+                  <Icon type='error-circle' customclass={styles['error-circle']} />
+                  <FormattedMessage id='targeting.publish.tips' />
+                </div>
+              )
+            }
             <Diff
               sections={[
                 {
@@ -720,7 +755,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
             <div className={styles['diff-after']}>
               <Form>
                 {approvalInfo?.enableApproval && (
-                  <div className={styles['approval']}>
+                  <div className={styles.approval}>
                     <div className={styles['approval-title']}>
                       <FormattedMessage id="toggles.settings.approval.reviewers" />:
                       <Popup
@@ -748,47 +783,53 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                     </div>
                   </div>
                 )}
-                <div className={styles.collect}>
-                  <div className={styles['collect-title']}>
-                    <span className="label-required">*</span>
-                    <FormattedMessage id='targeting.publish.start.collect' />
-                  </div>
-                  <div className={styles['collect-content']}>
-                    <Form.Field className={styles['collect-radio']}>
-                      <Form.Radio
-                        label={intl.formatMessage({id: 'common.yes.text'})}
-                        name='radioGroup'
-                        value='yes'
-                        checked={isCollect === 'yes'}
-                        error={newFormState.errors.radioGroup ? true : false}
-                        onChange={async (e: SyntheticEvent, detail: RadioProps) => {
-                          handleRadioChange(e, detail);
-                          newSetValue(detail.name || 'radioGroup', detail.value);
-                          await newTrigger('radioGroup');
-                        }}
-                      />
-                    </Form.Field>
-                    <Form.Field>
-                      <Form.Radio
-                        label={intl.formatMessage({id: 'common.no.text'})}
-                        name='radioGroup'
-                        value='no'
-                        checked={isCollect === 'no'}
-                        error={newFormState.errors.radioGroup ? true : false}
-                        onChange={async (e: SyntheticEvent, detail: RadioProps) => {
-                          handleRadioChange(e, detail);
-                          newSetValue(detail.name || 'radioGroup', detail.value);
-                          await newTrigger('radioGroup');
-                        }}
-                      />
-                    </Form.Field>
-                  </div>
-                  {newFormState.errors.radioGroup && (
-                    <div className="error-text">
-                      <FormattedMessage id="common.dropdown.placeholder" />
+                
+                {
+                  !approvalInfo?.enableApproval && (
+                    <div className={styles.collect}>
+                      <div className={styles['collect-title']}>
+                        <span className="label-required">*</span>
+                        <FormattedMessage id='targeting.publish.start.collect' />
+                      </div>
+                      <div className={styles['collect-content']}>
+                        <Form.Field className={styles['collect-radio']}>
+                          <Form.Radio
+                            label={intl.formatMessage({id: 'common.yes.text'})}
+                            name='radioGroup'
+                            value='yes'
+                            checked={isCollect === 'yes'}
+                            error={newFormState.errors.radioGroup ? true : false}
+                            onChange={async (e: SyntheticEvent, detail: RadioProps) => {
+                              handleRadioChange(e, detail);
+                              newSetValue(detail.name || 'radioGroup', detail.value);
+                              await newTrigger('radioGroup');
+                            }}
+                          />
+                        </Form.Field>
+                        <Form.Field>
+                          <Form.Radio
+                            label={intl.formatMessage({id: 'common.no.text'})}
+                            name='radioGroup'
+                            value='no'
+                            checked={isCollect === 'no'}
+                            error={newFormState.errors.radioGroup ? true : false}
+                            onChange={async (e: SyntheticEvent, detail: RadioProps) => {
+                              handleRadioChange(e, detail);
+                              newSetValue(detail.name || 'radioGroup', detail.value);
+                              await newTrigger('radioGroup');
+                            }}
+                          />
+                        </Form.Field>
+                      </div>
+                      {newFormState.errors.radioGroup && (
+                        <div className="error-text">
+                          <FormattedMessage id="common.dropdown.placeholder" />
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+                  )
+                }
+
                 <div className={styles.comment}>
                   <div className={styles['comment-title']}>
                     {approvalInfo?.enableApproval && <span className="label-required">*</span>}

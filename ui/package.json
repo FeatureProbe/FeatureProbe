@@ -34,6 +34,7 @@
     "classnames": "^2.3.1",
     "codemirror": "^5.65.3",
     "dayjs": "^1.11.0",
+    "deep-diff": "^1.0.2",
     "diff": "^5.1.0",
     "jsonlint-mod": "^1.7.6",
     "less-loader": "^7.3.0",
@@ -98,6 +99,7 @@
     "@semantic-ui-react/css-patch": "^1.0.0",
     "@testing-library/react": "12.1.5",
     "@types/codemirror": "^5.60.5",
+    "@types/deep-diff": "^1.0.2",
     "@types/diff": "^5.0.2",
     "@types/diff2html": "^3.0.0",
     "@types/dom-inputevent": "^1.0.7",
@@ -127,5 +129,5 @@
   "resolutions": {
     "@types/react": "17.0.43"
   },
-  "proxy": "https://featureprobe.io/"
+  "proxy": "https://featureprobe.io"
 }

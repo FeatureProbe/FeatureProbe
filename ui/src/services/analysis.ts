@@ -5,7 +5,7 @@ import { IEvent } from 'interfaces/analysis';
 
 export const getEventDetail = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
   const url = `${
-    API.analysisEvent
+    API.analysisMetric
       .replace(':projectKey', projectKey)
       .replace(':environmentKey', environmentKey)
       .replace(':toggleKey', toggleKey)
@@ -21,7 +21,7 @@ export const getEventDetail = async<T> (projectKey: string, environmentKey: stri
 
 export const createEvent = async (projectKey: string, environmentKey: string, toggleKey: string, data: IEvent) => {
   const url = `${
-    API.analysisEvent
+    API.analysisMetric
       .replace(':projectKey', projectKey)
       .replace(':environmentKey', environmentKey)
       .replace(':toggleKey', toggleKey)

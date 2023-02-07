@@ -1,4 +1,3 @@
-
 import { useCallback, useMemo, useState, SyntheticEvent, useEffect, useRef } from 'react';
 import { Dropdown, DropdownProps, Form, Grid, InputOnChangeData, Popup, RadioProps } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -33,7 +32,6 @@ const Metrics = (props: IProps) => {
   const [ metricMatcher, saveMetricMatcher ] = useState<string>('');
   const [ metricUrl, saveMetricUrl ] = useState<string>('');
   const [ metricSelector, saveMetricSelector ] = useState<string>('');
-
   const [ customMetricType, saveCustomMetricType ] = useState<string>('');
 
   const selector_url = useRef('');
@@ -93,6 +91,18 @@ const Metrics = (props: IProps) => {
         value: metricType === CUSTOM,
         message: intl.formatMessage({id: 'analysis.event.name.placeholder'})
       },
+      minLength: {
+        value: 2,
+        message: intl.formatMessage({id: 'common.minimum.two'})
+      },
+      maxLength: {
+        value: 30,
+        message: intl.formatMessage({id: 'common.maximum.thirty'})
+      },
+      pattern: {
+        value: /^[A-Z0-9._-]+$/i,
+        message: intl.formatMessage({id: 'common.name.invalid'})
+      }
     });
 
     register('matcher', { 
@@ -202,7 +212,7 @@ const Metrics = (props: IProps) => {
       if (res.success) {
         message.success(intl.formatMessage({id: 'analysis.event.save.success'}));
       } else {
-        message.success(intl.formatMessage({id: 'analysis.event.save.error'}));
+        message.error(intl.formatMessage({id: 'analysis.event.save.error'}));
       }
     });
   }, [environmentKey, intl, projectKey, toggleKey]);
@@ -280,6 +290,9 @@ const Metrics = (props: IProps) => {
                         }}
                       />
                     </Form.Field>
+                    <div className={styles['tip-text']}>
+                      <FormattedMessage id="analysis.event.name.tip" />
+                    </div>
                     { errors.name && <div className={styles['error-text']}>{ errors.name.message }</div> }
                   </Grid.Column>
                 )
@@ -359,17 +372,26 @@ const Metrics = (props: IProps) => {
                         </span>
                         { errors.conversion && <div className={styles['error-text-event']}>{ errors.conversion.message }</div> }
                       </div>
-                      <div className={styles['custom-metric-radio']}>
-                        <Form.Radio 
-                          name='numeric'
-                          disabled
-                          label={intl.formatMessage({id: 'analysis.event.numeric'})}
-                          className={styles['custom-metric']}
-                        />
-                        <span className={styles['custom-metric-desc-disabled']}>
-                          <FormattedMessage id='analysis.event.numeric.desc' />
-                        </span>
-                      </div>
+                      
+                      <Popup
+                        inverted
+                        className='popup-override'
+                        position='top center'
+                        trigger={
+                          <div className={`${styles['custom-metric-radio']} ${styles['custom-metric-radio-disabled']}`}>
+                            <Form.Radio 
+                              name='numeric'
+                              disabled
+                              label={intl.formatMessage({id: 'analysis.event.numeric'})}
+                              className={styles['custom-metric']}
+                            />
+                            <span className={styles['custom-metric-desc-disabled']}>
+                              <FormattedMessage id='analysis.event.numeric.desc' />
+                            </span>
+                          </div>
+                        }
+                        content={<FormattedMessage id='analysis.event.coming.soon' />}
+                      />
                     </div>
                   </Grid.Column>
                 </Grid.Row>
@@ -393,7 +415,7 @@ const Metrics = (props: IProps) => {
                             <span>
                               <FormattedMessage id='analysis.event.click.target.tips' />
                               <a href={selector_url.current} target='_blank'>
-                                <FormattedMessage id='targeting.view.more' />
+                                <FormattedMessage id='targeting.semver.more' />
                               </a>
                             </span>
                           }
@@ -415,8 +437,8 @@ const Metrics = (props: IProps) => {
                         }}
                       />
                     </Form.Field>
+                    { errors.selector && <div className={styles['error-text']}>{ errors.selector.message }</div> }
                   </Grid.Column>
-                  { errors.selector && <div className={styles['error-text']}>{ errors.selector.message }</div> }
                 </Grid.Row>
               )
             }
