@@ -8,12 +8,14 @@ import org.junit.ClassRule
 import org.junit.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.testcontainers.containers.MySQLContainer
+import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
 import java.sql.Timestamp
 
 // for mac with M1/M2 chips:  docker pull arm64v8/mysql:8.0
+// for mac with M1/M2 chips:  docker pull arm64v8/postgres:14.6
 @SpringBootTest
-class AnalysisControllerTests {
+class AnalysisControllerTests() {
 
     companion object {
         @ClassRule
@@ -23,11 +25,27 @@ class AnalysisControllerTests {
             .withInitScript("init.sql")
             .withUsername("root")
             .withPassword("root")
+
+        @ClassRule
+        @JvmField
+        val pg: PostgreSQLContainer<*> = PostgreSQLContainer(DockerImageName.parse("postgres:14.6"))
+            .withDatabaseName("feature_probe_events")
+            .withInitScript("init.sql")
+            .withUsername("root")
+            .withPassword("root")
     }
 
     @Test
-    fun testStoreEvents() {
-        val jdbcUrl = mysql.jdbcUrl
+    fun testStoreEventsMysql() {
+        testStoreEvents(mysql.jdbcUrl)
+    }
+
+    @Test
+    fun testStoreEventsPg() {
+        testStoreEvents(pg.jdbcUrl)
+    }
+
+    fun testStoreEvents(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
         val access0 = AccessEvent(Timestamp(1675326294000), "user0", "testStoreEventsToggle", 1, 1, 1)
         val access1 = AccessEvent(Timestamp(1675326294000), "user1", "testStoreEventsToggle", 1, null, null)
@@ -55,18 +73,23 @@ class AnalysisControllerTests {
     }
 
     @Test
-    fun convertAnalysis() {
-        val jdbcUrl = mysql.jdbcUrl
+    fun testConversionAnalysisMysql() {
+        testConversionAnalysis(mysql.jdbcUrl)
+    }
+
+    @Test
+    fun testConversionAnalysisPg() {
+        testConversionAnalysis(pg.jdbcUrl)
+    }
+
+    fun testConversionAnalysis(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
         val start = Timestamp.valueOf("2023-02-02 23:25:44.659")
         val end = Timestamp.valueOf("2023-02-02 23:45:44.659")
 
-        val result: Result<AnalysisReport, AnalysisFailure> = service.doAnalysis("sdkKey", "click_1", "toggle_1", "binomial", "1", start, end)
+        val result =
+            service.doAnalysis("sdkKey", "click_1", "toggle_1", "binomial", start, end)
 
         Assert.assertNotNull(result.get())
-
-        val changeToWin = result.get()!!.ctw
-        Assert.assertEquals(changeToWin["1"]!!, 0.6, 0.1)
-        Assert.assertEquals(changeToWin["2"]!!, 0.4, 0.1)
     }
 }

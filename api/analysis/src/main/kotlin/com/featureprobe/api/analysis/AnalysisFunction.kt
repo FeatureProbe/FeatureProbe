@@ -1,10 +1,18 @@
 package com.featureprobe.api.analysis
 
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.databind.JsonSerializer
+import com.fasterxml.jackson.databind.SerializerProvider
 import org.apache.commons.math3.distribution.BetaDistribution
+import java.io.IOException
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.sql.PreparedStatement
 import java.sql.Timestamp
+import java.text.DecimalFormat
 
-fun chanceToWin(distributions: Map<String, BetaDistribution>, iteration: Int): Map<String, Double> {
+
+fun winningPercentage(distributions: Map<String, BetaDistribution>, iteration: Int): Map<String, Double> {
     val variationWins = distributions.keys.associateWith { 0.0 }.toMutableMap()
 
     for (i in 0 until iteration) {
@@ -24,6 +32,29 @@ fun chanceToWin(distributions: Map<String, BetaDistribution>, iteration: Int): M
     }
 
     return variationWins.map { it.key to it.value / iteration }.toMap()
+}
+
+fun variationStats(
+    distributions: Map<String, BetaDistribution>,
+    winningPercentage: Map<String, Double>
+): Map<String, VariationProperty> {
+    return distributions.map {
+        val distributionChart = (0..9).map { i ->
+            val x = 0.05 + i * 0.1
+            val y = it.value.inverseCumulativeProbability(x)
+            DistributionDot(x, y)
+        }.toList()
+
+        it.key to VariationProperty(
+            it.value.numericalMean,
+            CredibleInterval(
+                it.value.inverseCumulativeProbability(0.05),
+                it.value.inverseCumulativeProbability(0.95),
+            ),
+            distributionChart,
+            winningPercentage[it.key]
+        )
+    }.toMap()
 }
 
 
@@ -99,4 +130,17 @@ fun batchAddCustomEvent(
     ps.setString(5, sdkKey)
 
     ps.addBatch()
+}
+
+class CustomDoubleSerialize : JsonSerializer<Double>() {
+    private val df = DecimalFormat("0.00")
+
+    @Throws(IOException::class)
+    override fun serialize(arg0: Double, arg1: JsonGenerator, arg2: SerializerProvider?) {
+        val bigDecimal = BigDecimal(arg0.toString())
+        df.roundingMode = RoundingMode.HALF_UP
+        val format = df.format(bigDecimal)
+        val aDouble = format.toDouble()
+        arg1.writeNumber(aDouble)
+    }
 }

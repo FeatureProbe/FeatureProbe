@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.*
-import java.sql.PreparedStatement
 import java.sql.Timestamp
 import javax.sql.DataSource
 
@@ -34,11 +33,10 @@ class AnalysisController(val service: AnalysisService) {
         @RequestParam metric: String,
         @RequestParam toggle: String,
         @RequestParam type: String,
-        @RequestParam version: String,
         @RequestParam start: Timestamp,
         @RequestParam end: Timestamp,
     ): AnalysisResponse {
-        return when (service.doAnalysis(sdkKey, metric, toggle, type, version, start, end)) {
+        return when (service.doAnalysis(sdkKey, metric, toggle, type, start, end)) {
             Err(NotSupportAnalysisType) -> AnalysisResponse(500)
             else -> AnalysisResponse(200)
         }
@@ -75,17 +73,16 @@ class AnalysisService(
                 is AccessEvent -> batchAddAccessEvent(accessPrepStmt, it, sdkKey)
                 is CustomEvent -> batchAddCustomEvent(customPrepStmt, it, sdkKey)
             }
-
-            accessPrepStmt.executeLargeBatch()
-            customPrepStmt.executeLargeBatch()
         }
 
+        accessPrepStmt.executeLargeBatch()
+        customPrepStmt.executeLargeBatch()
     }
 
     fun doAnalysis(
-        sdkKey: String, metric: String, toggle: String, type: String,
-        version: String, start: Timestamp, end: Timestamp
-    ): Result<AnalysisReport, AnalysisFailure> {
+        sdkKey: String, metric: String, toggle: String,
+        type: String, start: Timestamp, end: Timestamp
+    ): Result<Map<String, VariationProperty>, AnalysisFailure> {
         if (type != "binomial") {
             return Err(NotSupportAnalysisType)
         }
@@ -96,9 +93,9 @@ class AnalysisService(
             it.variation to BetaDistribution(1.0 + it.convert, 1.0 + it.all - it.convert)
         }
 
-        val ctw = chanceToWin(distributions, iterationCount)
+        val stats = variationStats(distributions, winningPercentage(distributions, iterationCount))
 
-        return Ok(AnalysisReport(ctw))
+        return Ok(stats)
     }
 
     fun variationCount(metric: String, toggle: String, start: Timestamp, end: Timestamp): List<VariationCount> {

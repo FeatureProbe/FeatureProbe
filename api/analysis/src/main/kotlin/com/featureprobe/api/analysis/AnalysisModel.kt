@@ -2,6 +2,7 @@ package com.featureprobe.api.analysis
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import java.sql.Timestamp
 
 const val RAW_VARIATION_TABLE: String = "__rawVariation"
@@ -60,12 +61,38 @@ data class AnalysisResponse(
     val status: Int
 )
 
-data class AnalysisReport(
-    val ctw: Map<String, Double>
-)
+//data class AnalysisReport(
+//    val winningPercentage: Map<String, Double>
+//    Map<String, VariationProperty>
+//
+//)
 
 sealed class AnalysisFailure
 
 object NotSupportAnalysisType : AnalysisFailure()
 
 data class VariationCount(val variation: String, val convert: Int, val all: Int)
+
+data class CredibleInterval(
+    @JsonSerialize(using = CustomDoubleSerialize::class)
+    val lower: Double,
+    @JsonSerialize(using = CustomDoubleSerialize::class)
+    val upper: Double
+)
+
+data class DistributionDot(
+    @JsonSerialize(using = CustomDoubleSerialize::class)
+    val x: Double,
+    @JsonSerialize(using = CustomDoubleSerialize::class)
+    val y: Double
+)
+
+data class VariationProperty(
+    @JsonSerialize(using = CustomDoubleSerialize::class)
+    val mean: Double,
+    val credibleInterval: CredibleInterval,
+    val distributionChart: List<DistributionDot>,
+    @JsonSerialize(using = CustomDoubleSerialize::class)
+    val winningPercentage: Double?,
+)
+
