@@ -112,13 +112,13 @@ impl HttpHandler for FpHttpHandler {
             Err(e) => match e {
                 NotReady(_) => Ok((
                     StatusCode::SERVICE_UNAVAILABLE,
-                    [(header::CONTENT_TYPE, "application/json")],
+                    cors_headers(),
                     "{}",
                 )
                     .into_response()),
                 NotFound(_) => Ok((
                     StatusCode::OK,
-                    [(header::CONTENT_TYPE, "application/json")],
+                    cors_headers(),
                     "{}",
                 )
                     .into_response()),
