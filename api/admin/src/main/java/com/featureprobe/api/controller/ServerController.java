@@ -1,12 +1,12 @@
 package com.featureprobe.api.controller;
 
 import com.featureprobe.api.base.db.ExcludeTenant;
-import com.featureprobe.api.dto.EventCreateRequest;
+import com.featureprobe.api.dto.TrafficCreateRequest;
 import com.featureprobe.api.dto.SdkKeyResponse;
 import com.featureprobe.api.dto.ServerResponse;
 import com.featureprobe.api.server.ServerDataSource;
 import com.featureprobe.api.service.EnvironmentService;
-import com.featureprobe.api.service.EventService;
+import com.featureprobe.api.service.TrafficService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
@@ -30,7 +30,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Hidden
 public class ServerController {
-    private EventService eventService;
+    private TrafficService trafficService;
 
     private ServerDataSource dataSource;
 
@@ -67,7 +67,7 @@ public class ServerController {
     @PostMapping("/events")
     @ExcludeTenant
     public void createEvent(
-            @RequestBody @Validated List<EventCreateRequest> batchRequest,
+            @RequestBody @Validated List<TrafficCreateRequest> batchRequest,
             @Parameter(description = "sdk key")
             @RequestHeader(value = "Authorization") String sdkKey,
             @RequestHeader(value = "user-agent", required = false) String userAgent,
@@ -75,7 +75,7 @@ public class ServerController {
         if (StringUtils.isNotBlank(javascriptUserAgent)) {
             userAgent = javascriptUserAgent;
         }
-        eventService.create(environmentService.getSdkServerKey(sdkKey), userAgent, batchRequest);
+        trafficService.create(environmentService.getSdkServerKey(sdkKey), userAgent, batchRequest);
     }
 
 }

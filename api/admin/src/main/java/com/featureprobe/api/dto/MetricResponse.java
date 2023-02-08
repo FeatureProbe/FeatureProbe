@@ -1,20 +1,20 @@
 package com.featureprobe.api.dto;
 
+import com.featureprobe.api.base.enums.MetricTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
-@AllArgsConstructor
 public class MetricResponse {
 
-    @Schema(description = "Whether the toggle is access successfully.")
-    private Boolean isAccess;
+    @Schema(description = "The ID of the event.")
+    private Long id;
 
-    private List<AccessEventPoint> metrics;
+    @Schema(description = "The type of the event.")
+    private MetricTypeEnum type;
 
-    private List<VariationAccessCounter> summary;
+    private Set<EventResponse> events;
 
 }
