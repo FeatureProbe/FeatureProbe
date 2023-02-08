@@ -16,7 +16,7 @@ import org.hibernate.internal.SessionImpl
 import spock.lang.Specification
 import javax.persistence.EntityManager
 
-class MetricServiceSpec extends Specification{
+class MetricServiceSpec extends Specification {
 
     EventRepository eventRepository
 
@@ -52,7 +52,7 @@ class MetricServiceSpec extends Specification{
         toggleKey = "Test_Toggle"
     }
 
-    def "create a new CONVERSION metric"(){
+    def "create a new CONVERSION metric"() {
         given:
         MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CONVERSION, name: "access_feature")
         when:
@@ -61,7 +61,7 @@ class MetricServiceSpec extends Specification{
         1 * metricRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.empty()
         1 * eventRepository.findByName("access_feature") >> Optional.empty()
         1 * eventRepository.save(_) >> new Event(name: "access_feature")
-        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>  Optional.of(new Environment(version: 1))
+        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(version: 1))
         1 * environmentRepository.save(_)
         1 * publishMessageRepository.save(_)
         1 * metricRepository.save(_) >> new Metric(type: MetricTypeEnum.CONVERSION, events: [new Event(name: "access_feature")])
@@ -69,7 +69,7 @@ class MetricServiceSpec extends Specification{
         1 == created.events.size()
     }
 
-    def "create a new CLICK metric"(){
+    def "create a new CLICK metric"() {
         given:
         MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CLICK, url: "http://127.0.0.1/test", matcher: MatcherTypeEnum.SIMPLE, selector: "#123")
         when:
@@ -79,7 +79,7 @@ class MetricServiceSpec extends Specification{
         2 * eventRepository.findByName(_) >> Optional.empty()
         1 * eventRepository.save(_) >> new Event(name: "123")
         1 * eventRepository.save(_) >> new Event(name: "321")
-        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>  Optional.of(new Environment(version: 1))
+        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(version: 1))
         1 * environmentRepository.save(_)
         1 * publishMessageRepository.save(_)
         1 * metricRepository.save(_) >> new Metric(type: MetricTypeEnum.CLICK, events: new TreeSet<Event>([new Event(name: "123"), new Event(name: "321")]))
@@ -87,7 +87,7 @@ class MetricServiceSpec extends Specification{
         2 == created.events.size()
     }
 
-    def "update a exists event "(){
+    def "update a exists event "() {
         given:
         MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CONVERSION, name: "access_feature2")
         when:
@@ -96,7 +96,7 @@ class MetricServiceSpec extends Specification{
         1 * metricRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.of(new Metric(type: MetricTypeEnum.NUMERIC, events: [new Event(name: "access_feature2")]))
         1 * eventRepository.findByName("access_feature2") >> Optional.of(new Event(id: 1, name: "access_feature2"))
         1 * eventRepository.save(_) >> new Event(name: "access_feature2")
-        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>  Optional.of(new Environment(version: 1))
+        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(version: 1))
         1 * environmentRepository.save(_)
         1 * publishMessageRepository.save(_)
         1 * metricRepository.save(_) >> new Metric(type: MetricTypeEnum.NUMERIC, events: [new Event(name: "access_feature2")])
@@ -105,7 +105,7 @@ class MetricServiceSpec extends Specification{
     }
 
 
-    def "create a CONVERSION event: name is required"(){
+    def "create a CONVERSION event: name is required"() {
         given:
         MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CONVERSION)
         when:
@@ -114,7 +114,7 @@ class MetricServiceSpec extends Specification{
         thrown(IllegalArgumentException)
     }
 
-    def "create a PAGE_VIEW event: url is required"(){
+    def "create a PAGE_VIEW event: url is required"() {
         given:
         MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.PAGE_VIEW)
         when:
@@ -123,7 +123,7 @@ class MetricServiceSpec extends Specification{
         thrown(IllegalArgumentException)
     }
 
-    def "create a CLICK event: selector is required"(){
+    def "create a CLICK event: selector is required"() {
         given:
         MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CLICK, matcher: MatcherTypeEnum.SIMPLE, url: "https://127.0.0.1/test")
         when:
@@ -133,7 +133,7 @@ class MetricServiceSpec extends Specification{
     }
 
 
-    def "query a event by toggle"(){
+    def "query a event by toggle"() {
         when:
         def metric = eventService.query(projectKey, environmentKey, toggleKey)
         then:
@@ -143,7 +143,7 @@ class MetricServiceSpec extends Specification{
         "access_feature" == metric.name
     }
 
-    def "query a not exists event by toggle"(){
+    def "query a not exists event by toggle"() {
         when:
         eventService.query(projectKey, environmentKey, toggleKey)
         then:

@@ -94,24 +94,18 @@ public class MetricService {
 
     private void validate(MetricCreateRequest request) {
 
-        if (!(MetricTypeEnum.PAGE_VIEW.equals(request.getType()) || MetricTypeEnum.CLICK.equals(request.getType()))) {
-            if (StringUtils.isBlank(request.getName())) {
+        if (!(MetricTypeEnum.PAGE_VIEW.equals(request.getType()) || MetricTypeEnum.CLICK.equals(request.getType()))
+                && StringUtils.isBlank(request.getName())) {
                 throw new IllegalArgumentException("validate.event_name_required");
-            }
         }
 
-        if (MetricTypeEnum.PAGE_VIEW.equals(request.getType()) ||
-                MetricTypeEnum.CLICK.equals(request.getType())) {
-            if (request.getMatcher() == null || StringUtils.isBlank(request.getUrl())) {
+        if ((MetricTypeEnum.PAGE_VIEW.equals(request.getType()) || MetricTypeEnum.CLICK.equals(request.getType()))
+                && (request.getMatcher() == null || StringUtils.isBlank(request.getUrl()))) {
                 throw new IllegalArgumentException("validate.event_url_required");
-            }
         }
 
-        if (MetricTypeEnum.CLICK.equals(request.getType())) {
-            if (request.getMatcher() == null || StringUtils.isBlank(request.getUrl()) ||
-                    StringUtils.isBlank(request.getSelector())) {
+        if (MetricTypeEnum.CLICK.equals(request.getType()) && StringUtils.isBlank(request.getSelector())) {
                 throw new IllegalArgumentException("validate.event_selector_required");
-            }
         }
 
     }
