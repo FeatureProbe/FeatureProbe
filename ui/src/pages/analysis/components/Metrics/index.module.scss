@@ -42,12 +42,17 @@
 }
 
 .field-middle {
-  width: 80px !important;
   margin-right: 12px !important;
 }
 
 .field-right {
   flex: 1;
+
+  :global {
+    .field {
+      margin-bottom: 0 !important;
+    }
+  }
 }
 
 .row {
@@ -129,9 +134,7 @@
 .error-text-url {
   color: #f46a6a;
   font-size: 12px;
-  position: relative;
-  margin-left: 330px;
-  margin-top: -20px;
+  margin-left: 12px;
 }
 
 .error-text-event {

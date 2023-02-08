@@ -33,6 +33,7 @@ const Metrics = (props: IProps) => {
   const [ metricUrl, saveMetricUrl ] = useState<string>('');
   const [ metricSelector, saveMetricSelector ] = useState<string>('');
   const [ customMetricType, saveCustomMetricType ] = useState<string>('');
+  const [ canSave, saveCanSave ] = useState<boolean>(false);
 
   const selector_url = useRef('');
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
@@ -43,12 +44,14 @@ const Metrics = (props: IProps) => {
     handleSubmit,
     setValue,
     trigger,
+    getValues,
   } = useForm();
 
   useEffect(() => {
     if (eventInfo?.type === PAGE_VIEW || eventInfo?.type === CLICK) {
       setValue('matcher', eventInfo.matcher);
       setValue('url', eventInfo.url);
+      setValue('kind', eventInfo.type);
       saveMetricType(eventInfo.type);
       eventInfo.url && saveMetricUrl(eventInfo.url);
       eventInfo.matcher && saveMetricMatcher(eventInfo.matcher);
@@ -69,6 +72,44 @@ const Metrics = (props: IProps) => {
       eventInfo.name && saveMetricName(eventInfo.name);
     }
   }, [eventInfo, setValue]);
+
+  useEffect(() => {
+    const formValues = getValues();
+    console.log('eventInfo---', eventInfo);
+    console.log('formValues---', formValues);
+
+    if (eventInfo && eventInfo.type === PAGE_VIEW) {
+      if (
+        eventInfo.type === formValues.kind 
+        && eventInfo.matcher === formValues.matcher 
+        && eventInfo.url === formValues.url
+      ) {
+        saveCanSave(false);
+        return;
+      }
+    }
+
+    if (eventInfo && eventInfo.type === CLICK) {
+      if (
+        eventInfo.type === formValues.kind 
+        && eventInfo.matcher === formValues.matcher 
+        && eventInfo.url === formValues.url 
+        && eventInfo.selector === formValues.selector
+      ) {
+        saveCanSave(false);
+        return;
+      }
+    }
+
+    if (eventInfo && eventInfo.type === CONVERSION) {
+      if (eventInfo.name === formValues.name) {
+        saveCanSave(false);
+        return;
+      }
+    }
+
+    saveCanSave(true);
+  }, [eventInfo, getValues, metricMatcher, metricName, metricSelector, metricUrl, metricType]);
 
   useEffect(() => {
     if (intl.locale === 'zh-CN') {
@@ -211,6 +252,7 @@ const Metrics = (props: IProps) => {
     createEvent(projectKey, environmentKey, toggleKey, param).then(res => {
       if (res.success) {
         message.success(intl.formatMessage({id: 'analysis.event.save.success'}));
+        saveCanSave(false);
       } else {
         message.error(intl.formatMessage({id: 'analysis.event.save.error'}));
       }
@@ -307,41 +349,43 @@ const Metrics = (props: IProps) => {
                         <span className={styles['label-required']}>*</span>
                         <FormattedMessage id='analysis.event.target.url' />
                       </label>
-                      <Dropdown
-                        selection
-                        floating
-                        name='matcher'
-                        value={metricMatcher}
-                        className={styles['field-middle']}
-                        error={ errors.matcher ? true : false }
-                        placeholder={
-                          intl.formatMessage({id: 'analysis.event.target.url.matching'})
-                        } 
-                        options={urlMatchOption} 
-                        icon={<Icon customclass={styles['angle-down']} type='angle-down' />}
-                        onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
-                          setValue(detail.name, detail.value);
-                          await trigger('matcher');
-                          saveMetricMatcher(detail.value as string);
-                        }}
-                      />
-                      <Form.Input
-                        className={styles['field-right']}
-                        name='url'
-                        error={ errors.url ? true : false }
-                        value={metricUrl}
-                        placeholder={
-                          intl.formatMessage({id: 'analysis.event.target.url.placeholder'})
-                        }
-                        onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
-                          setValue(detail.name, detail.value);
-                          await trigger('url');
-                          saveMetricUrl(detail.value);
-                        }}
-                      />
+                      <div className={styles['field-middle']}>
+                        <Dropdown
+                          selection
+                          floating
+                          name='matcher'
+                          value={metricMatcher}
+                          error={ errors.matcher ? true : false }
+                          placeholder={
+                            intl.formatMessage({id: 'analysis.event.target.url.matching'})
+                          } 
+                          options={urlMatchOption} 
+                          icon={<Icon customclass={styles['angle-down']} type='angle-down' />}
+                          onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
+                            setValue(detail.name, detail.value);
+                            await trigger('matcher');
+                            saveMetricMatcher(detail.value as string);
+                          }}
+                        />
+                        { errors.matcher && <div className={styles['error-text-url']}>{ errors.matcher.message }</div> }
+                      </div>
+                      <div className={styles['field-right']}>
+                        <Form.Input
+                          name='url'
+                          error={ errors.url ? true : false }
+                          value={metricUrl}
+                          placeholder={
+                            intl.formatMessage({id: 'analysis.event.target.url.placeholder'})
+                          }
+                          onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
+                            setValue(detail.name, detail.value);
+                            await trigger('url');
+                            saveMetricUrl(detail.value);
+                          }}
+                        />
+                        { errors.url && <div className={styles['error-text-url']}>{ errors.url.message }</div> }
+                      </div>
                     </Form.Field>
-                    { errors.matcher && <div className={styles['error-text']}>{ errors.matcher.message }</div> }
-                    { errors.url && <div className={styles['error-text-url']}>{ errors.url.message }</div> }
                   </Grid.Column>
                 )
               }
@@ -443,7 +487,7 @@ const Metrics = (props: IProps) => {
             }
           </Grid>
           <div className={styles['metrics-save']}>
-            <Button className={styles['btn']} secondary type='submit' >
+            <Button className={styles['btn']} secondary type='submit' disabled={!canSave}>
               <FormattedMessage id='common.save.text' />
             </Button>
           </div>
