@@ -578,6 +578,13 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   useEffect(() => {
     if (initialTargeting && publishTargeting && open) {
       let isDiffChange = false;
+      if (
+        diff(initialTargeting.disabled, publishTargeting.disabled) ||
+        diff(initialTargeting.content.defaultServe, publishTargeting.content.defaultServe) ||
+        diff(initialTargeting.content.disabledServe, publishTargeting.content.disabledServe)
+      ) {
+        isDiffChange = true;
+      }
 
       const diffVariation = diff(initialTargeting.content.variations, publishTargeting.content.variations);
       if (diffVariation) {
@@ -697,7 +704,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           </div>
           <div className={styles['modal-content']}>
             {
-              isDiffChange && !approvalInfo?.enableApproval && (
+              isDiffChange && (
                 <div className={styles['publish-tips']}>
                   <Icon type='error-circle' customclass={styles['error-circle']} />
                   <FormattedMessage id='targeting.publish.tips' />
