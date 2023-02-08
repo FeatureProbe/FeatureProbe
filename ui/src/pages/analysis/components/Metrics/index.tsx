@@ -75,8 +75,6 @@ const Metrics = (props: IProps) => {
 
   useEffect(() => {
     const formValues = getValues();
-    console.log('eventInfo---', eventInfo);
-    console.log('formValues---', formValues);
 
     if (eventInfo && eventInfo.type === PAGE_VIEW) {
       if (
@@ -282,27 +280,75 @@ const Metrics = (props: IProps) => {
                     <span className={styles['label-required']}>*</span>
                     <FormattedMessage id='analysis.event.kind' />
                   </label>
-                  <Dropdown
-                    fluid 
-                    selection
-                    floating
-                    clearable
-                    selectOnBlur={false}
-                    name='kind'
-                    className={styles['field-right']}
-                    value={metricType}
-                    placeholder={
-                      intl.formatMessage({id: 'analysis.event.kind.placeholder'})
-                    } 
-                    options={metricOptions} 
-                    icon={<Icon customclass={styles['angle-down']} type='angle-down' />}
-                    error={ errors.kind ? true : false }
-                    onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
-                      setValue(detail.name, detail.value);
-                      await trigger('kind');
-                      handleMetricTypeChange(e, detail);
-                    }}
-                  />
+                  <div className={styles['field-right']}>
+                    <Dropdown
+                      fluid 
+                      selection
+                      floating
+                      clearable
+                      selectOnBlur={false}
+                      name='kind'
+                      value={metricType}
+                      placeholder={
+                        intl.formatMessage({id: 'analysis.event.kind.placeholder'})
+                      } 
+                      options={metricOptions} 
+                      icon={<Icon customclass={styles['angle-down']} type='angle-down' />}
+                      error={ errors.kind ? true : false }
+                      onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
+                        setValue(detail.name, detail.value);
+                        await trigger('kind');
+                        handleMetricTypeChange(e, detail);
+                      }}
+                    />
+
+                    {/* event kind conversion or numeric */}
+                    {
+                      metricType === CUSTOM && (
+                        <div className={styles['custom-metric-row']}>
+                          <div className={styles['custom-metric-radio']}>
+                            <Form.Radio
+                              name='conversion'
+                              checked={customMetricType === 'CONVERSION'}
+                              label={intl.formatMessage({id: 'analysis.event.conversion'})}
+                              className={styles['custom-metric']}
+                              error={ errors.conversion ? true : false }
+                              onChange={async (e: SyntheticEvent, detail: RadioProps) => {
+                                setValue(detail.name || 'conversion', detail.checked);
+                                await trigger('conversion');
+                                saveCustomMetricType('CONVERSION');
+                              }}
+                            />
+                            <span className={styles['custom-metric-desc']}>
+                              <FormattedMessage id='analysis.event.conversion.desc' />
+                            </span>
+                            { errors.conversion && <div className={styles['error-text-event']}>{ errors.conversion.message }</div> }
+                          </div>
+                          
+                          <Popup
+                            inverted
+                            className='popup-override'
+                            position='top center'
+                            trigger={
+                              <div className={`${styles['custom-metric-radio']} ${styles['custom-metric-radio-disabled']}`}>
+                                <Form.Radio 
+                                  name='numeric'
+                                  disabled
+                                  label={intl.formatMessage({id: 'analysis.event.numeric'})}
+                                  className={styles['custom-metric']}
+                                />
+                                <span className={styles['custom-metric-desc-disabled']}>
+                                  <FormattedMessage id='analysis.event.numeric.desc' />
+                                </span>
+                              </div>
+                            }
+                            content={<FormattedMessage id='analysis.event.coming.soon' />}
+                          />
+                        </div>
+                      )
+                    }
+                  </div>
+                  
                 </Form.Field>
                 { errors.kind && <div className={styles['error-text']}>{ errors.kind.message }</div> }
               </Grid.Column>
@@ -390,56 +436,6 @@ const Metrics = (props: IProps) => {
                 )
               }
             </Grid.Row>
-
-            {/* event kind conversion or numeric */}
-            {
-              metricType === CUSTOM && (
-                <Grid.Row className={styles.row}>
-                  <Grid.Column width={8} className={styles.column}>
-                    <div className={styles['custom-metric-row']}>
-                      <div className={styles['custom-metric-radio']}>
-                        <Form.Radio
-                          name='conversion'
-                          checked={customMetricType === 'CONVERSION'}
-                          label={intl.formatMessage({id: 'analysis.event.conversion'})}
-                          className={styles['custom-metric']}
-                          error={ errors.conversion ? true : false }
-                          onChange={async (e: SyntheticEvent, detail: RadioProps) => {
-                            setValue(detail.name || 'conversion', detail.checked);
-                            await trigger('conversion');
-                            saveCustomMetricType('CONVERSION');
-                          }}
-                        />
-                        <span className={styles['custom-metric-desc']}>
-                          <FormattedMessage id='analysis.event.conversion.desc' />
-                        </span>
-                        { errors.conversion && <div className={styles['error-text-event']}>{ errors.conversion.message }</div> }
-                      </div>
-                      
-                      <Popup
-                        inverted
-                        className='popup-override'
-                        position='top center'
-                        trigger={
-                          <div className={`${styles['custom-metric-radio']} ${styles['custom-metric-radio-disabled']}`}>
-                            <Form.Radio 
-                              name='numeric'
-                              disabled
-                              label={intl.formatMessage({id: 'analysis.event.numeric'})}
-                              className={styles['custom-metric']}
-                            />
-                            <span className={styles['custom-metric-desc-disabled']}>
-                              <FormattedMessage id='analysis.event.numeric.desc' />
-                            </span>
-                          </div>
-                        }
-                        content={<FormattedMessage id='analysis.event.coming.soon' />}
-                      />
-                    </div>
-                  </Grid.Column>
-                </Grid.Row>
-              )
-            }
 
             {/* event target selector */}
             {

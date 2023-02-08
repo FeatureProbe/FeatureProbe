@@ -22,7 +22,7 @@
 
 .label {
   width: 98px !important;
-  margin: 0 12px 0 0 !important;
+  margin: 6px 12px 0 0 !important;
   text-align: right;
 }
 
@@ -37,7 +37,6 @@
 
 .field {
   display: flex;
-  align-items: center;
   margin-bottom: 0 !important;
 }
 
@@ -65,7 +64,7 @@
 
 .custom-metric-row {
   display: flex;
-  margin-left: 114px;
+  margin-top: 24px;
 }
 
 .custom-metric-radio {
