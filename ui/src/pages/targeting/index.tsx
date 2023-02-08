@@ -61,6 +61,7 @@ import {
   IServe,
   ITarget,
   ITargeting,
+  ITargetingParams,
   IToggleInfo,
   IVariation,
 } from 'interfaces/targeting';
@@ -84,7 +85,8 @@ interface IProps {
   toggleInfo?: IToggleInfo;
   approvalInfo?: IApprovalInfo;
   toggleDisabled: boolean;
-  isCollecting: boolean;
+  trackEvents: boolean;
+  allowEnableTrackEvents: boolean;
   initialTargeting?: ITargeting;
   segmentList?: ISegmentList;
   initTargeting(): void;
@@ -145,6 +147,8 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     toggleDisabled,
     initialTargeting,
     segmentList,
+    trackEvents,
+    allowEnableTrackEvents,
     initTargeting,
     saveToggleDisable,
   } = props;
@@ -379,9 +383,9 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       required: approvalInfo?.enableApproval,
     });
     newRegister('radioGroup', {
-      required: true,
+      required: allowEnableTrackEvents && !approvalInfo?.enableApproval,
     });
-  }, [newRegister, approvalInfo]);
+  }, [newRegister, approvalInfo, allowEnableTrackEvents]);
 
   const validateForm = useCallback(() => {
     let isError = false;
@@ -442,7 +446,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       return;
     }
 
-    if (isCollect === '') {
+    if (isCollect === '' && !approvalInfo?.enableApproval) {
       await newTrigger('radioGroup');
       return;
     }
@@ -457,10 +461,15 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           reviewers: approvalInfo.reviewers,
         });
       } else {
-        res = await saveToggle(projectKey, environmentKey, toggleKey, {
-          comment,
+        const params: ITargetingParams = {
           ...publishTargeting,
-        });
+          comment,
+        };
+
+        if (isCollect === 'yes') {
+          params.trackAccessEvents = true;
+        }
+        res = await saveToggle(projectKey, environmentKey, toggleKey, params);
       }
       if (res.success) {
         if (approvalInfo && approvalInfo?.enableApproval) {
@@ -688,7 +697,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           </div>
           <div className={styles['modal-content']}>
             {
-              isDiffChange && (
+              isDiffChange && !approvalInfo?.enableApproval && (
                 <div className={styles['publish-tips']}>
                   <Icon type='error-circle' customclass={styles['error-circle']} />
                   <FormattedMessage id='targeting.publish.tips' />
@@ -785,7 +794,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                 )}
                 
                 {
-                  !approvalInfo?.enableApproval && (
+                  !approvalInfo?.enableApproval && allowEnableTrackEvents && !trackEvents && (
                     <div className={styles.collect}>
                       <div className={styles['collect-title']}>
                         <span className="label-required">*</span>
@@ -823,7 +832,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                       </div>
                       {newFormState.errors.radioGroup && (
                         <div className="error-text">
-                          <FormattedMessage id="common.dropdown.placeholder" />
+                          <FormattedMessage id="analysis.select.placeholder" />
                         </div>
                       )}
                     </div>

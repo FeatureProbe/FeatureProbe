@@ -293,7 +293,7 @@
   "targeting.publish.modal.comment": "Changes description",
   "targeting.publish.error.text": "Cannot publish, please check!",
   "targeting.publish.success.text": "Published successfully",
-  "targeting.publish.tips": "In order to ensure the accuracy results, after publishing this change, the collection of data will be restarted.",
+  "targeting.publish.tips": "In order to ensure the accuracy results, it is recommended to stop collecting analysis data first, and then re-collect the data after the toggle is published.",
   "targeting.publish.start.collect": "The collection of analysis data is currently not started. Do you want to start data collection at the same time?",
   "targeting.status.text": "Status",
   "targeting.status.disabled.text": "disabled, serving ",
@@ -605,5 +605,6 @@
   "analysis.result.collect.time": "Start collection time: ",
   "analysis.result.collect.start": "Start collecting", 
   "analysis.result.collect.stop": "Stop collecting",
-  "analysis.ongoing": "Analysis data is collecting"
+  "analysis.ongoing": "Analysis data is collecting",
+  "analysis.select.placeholder": "Please select"
 }

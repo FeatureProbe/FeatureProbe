@@ -35,3 +35,24 @@ export const createEvent = async (projectKey: string, environmentKey: string, to
     body: JSON.stringify(data),
   });
 };
+
+interface ITrackEvents {
+  trackAccessEvents: boolean;
+}
+
+export const operateCollection = async (projectKey: string, environmentKey: string, toggleKey: string, data: ITrackEvents) => {
+  const url = `${
+    API.targetingURI
+      .replace(':projectKey', projectKey)
+      .replace(':environmentKey', environmentKey)
+      .replace(':toggleKey', toggleKey)
+  }`;
+
+  return request(url, {
+    method: 'PATCH',
+    headers: {
+      ...ApplicationJson()
+    },
+    body: JSON.stringify(data),
+  });
+};

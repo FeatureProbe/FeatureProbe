@@ -1,14 +1,21 @@
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import { IEvent } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
-import { getEventDetail } from 'services/analysis';
+import { getEventDetail, operateCollection } from 'services/analysis';
 import Metrics from './components/Metrics';
 import Results from './components/Results';
 
-const Analysis = () => {
+interface IProps {
+  trackEvents: boolean;
+  allowEnableTrackEvents: boolean;
+  initTargeting(): void;
+}
+
+const Analysis = (props: IProps) => {
+  const { trackEvents, allowEnableTrackEvents, initTargeting } = props;
   const [ eventInfo, saveEventInfo ] = useState<IEvent>();
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
@@ -21,6 +28,14 @@ const Analysis = () => {
     });
   }, [environmentKey, intl, projectKey, toggleKey]);
 
+  const operateTrackCollection = useCallback((trackEvents: boolean) => {
+    operateCollection(projectKey, environmentKey, toggleKey, {trackAccessEvents: trackEvents}).then(res => {
+      if (res.success) {
+        initTargeting();
+      }
+    });
+  }, [environmentKey, projectKey, toggleKey, initTargeting]);
+
   return (
     <div>
       <Metrics 
@@ -28,6 +43,9 @@ const Analysis = () => {
       />
       <Results 
         eventInfo={eventInfo}
+        trackEvents={trackEvents}
+        allowEnableTrackEvents={allowEnableTrackEvents}
+        operateTrackCollection={operateTrackCollection}
       />
     </div>
   );

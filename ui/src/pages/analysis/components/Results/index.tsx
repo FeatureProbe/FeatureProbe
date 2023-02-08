@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import SectionTitle from 'components/SectionTitle';
 import NoData from 'components/NoData';
@@ -11,14 +11,21 @@ import styles from './index.module.scss';
 
 interface IProps {
   eventInfo?: IEvent;
+  trackEvents: boolean;
+  allowEnableTrackEvents: boolean;
+  operateTrackCollection(trackEvent: boolean): void;
 }
 
 const Results = (props: IProps) => {
-  const { eventInfo } = props;
-  const [ isCollecting, saveIsCollecting ] = useState<boolean>(false);
+  const { trackEvents, allowEnableTrackEvents, operateTrackCollection } = props;
+  const [ data, saveData ] = useState([]);
 
   const intl = useIntl();
   const time = '2022-02-09 22:22:22';
+
+  useEffect(() => {
+    saveData([]);
+  }, []);
 
   return (
     <div className={styles.result}>
@@ -28,39 +35,59 @@ const Results = (props: IProps) => {
       />
       <div className={styles.start}>
         {
-          isCollecting && (
+          trackEvents && (
             <span className={styles['start-time']}>
               <FormattedMessage id='analysis.result.collect.time' />{time}
             </span>
           )
         }
         {
-          !isCollecting ? (
-            <Button primary className={styles['start-btn']} disabled={!eventInfo}>
+          !trackEvents ? (
+            <Button 
+              primary 
+              className={styles['start-btn']} 
+              disabled={!allowEnableTrackEvents} 
+              onClick={() => {
+                operateTrackCollection(true);
+              }}
+            >
               <FormattedMessage id='analysis.result.collect.start' />
             </Button>
           ) : (
-            <Button secondary className={styles['start-btn']}>
+            <Button 
+              secondary 
+              className={styles['start-btn']}
+              onClick={() => {
+                operateTrackCollection(false);
+              }}
+            >
               <FormattedMessage id='analysis.result.collect.stop' />
             </Button>
           )
         }
       </div>
+
       {
-        eventInfo ? (
+        allowEnableTrackEvents && data.length > 0 && (
           <div className={styles['result-content']}>
             <ResultTable />
           </div>
-        ) : (
-          <div className={styles['no-data']}>
+        )
+      }
+
+      <div className={styles['no-data']}>
+        {
+          (!allowEnableTrackEvents || (allowEnableTrackEvents && !trackEvents)) && (
             <div className={styles.tips}>
               <Icon customclass={styles['warning-circle']} type='warning-circle' />
               <FormattedMessage id='analysis.result.tip' />
-            </div> 
-            <NoData />
-          </div>
-        )
-      }
+            </div>
+          )
+        }
+        {
+          data.length === 0 && <NoData />
+        }
+      </div>
     </div>
   );
 };

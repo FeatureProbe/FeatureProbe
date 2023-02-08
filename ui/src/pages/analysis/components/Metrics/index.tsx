@@ -361,7 +361,6 @@ const Metrics = (props: IProps) => {
                           className={styles['custom-metric']}
                           error={ errors.conversion ? true : false }
                           onChange={async (e: SyntheticEvent, detail: RadioProps) => {
-                            console.log(detail);
                             setValue(detail.name || 'conversion', detail.checked);
                             await trigger('conversion');
                             saveCustomMetricType('CONVERSION');

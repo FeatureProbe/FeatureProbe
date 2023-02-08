@@ -1,5 +1,5 @@
 import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
-import { Grid, Form, TextAreaProps, Popup, Loader } from 'semantic-ui-react';
+import { Grid, Form, TextAreaProps, Popup, Loader, RadioProps } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -17,15 +17,16 @@ import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
 import { I18NRules, RulesDiffContent } from 'components/Diff/RulesDiffContent';
 import { DiffStatusContent } from 'components/Diff/DiffStatus';
 import { DiffServe } from 'components/Diff/DiffServe';
+import PopupConfirm from 'components/PopupConfirm';
 import { variationContainer } from 'pages/targeting/provider';
 import { HeaderContainer } from 'layout/hooks';
-import { updateApprovalStatus, publishTargetingDraft, cancelTargetingDraft } from 'services/approval';
+import { updateApprovalStatus, publishTargetingDraft, cancelTargetingDraft, IApprovalStatus } from 'services/approval';
 import { getTargeting, getTargetingDiff } from 'services/toggle';
 import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, IContent, ITarget, IServe, IRule } from 'interfaces/targeting';
 import { IRouterParams } from 'interfaces/project';
 import { OWNER } from 'constants/auth';
+
 import styles from './index.module.scss';
-import PopupConfirm from 'components/PopupConfirm';
 
 interface IProps {
   toggleInfo?: IToggleInfo;
@@ -33,14 +34,30 @@ interface IProps {
   approvalInfo?: IApprovalInfo;
   isInfoLoading: boolean;
   targetingDisabled: boolean;
+  trackEvents: boolean;
+  allowEnableTrackEvents: boolean;
   gotoGetStarted(): void;
   initTargeting(): void;
   saveApprovalInfo(approvalInfo: IApprovalInfo): void;
   saveInitTargeting(targeting: ITargeting): void;
+  refreshTrackvents(): void;
 }
 
 const Info: React.FC<IProps> = (props) => {
-  const { toggleInfo, modifyInfo, approvalInfo, isInfoLoading, targetingDisabled, gotoGetStarted, initTargeting, saveApprovalInfo, saveInitTargeting } = props;
+  const { 
+    toggleInfo,
+    modifyInfo,
+    approvalInfo,
+    isInfoLoading,
+    targetingDisabled,
+    trackEvents,
+    allowEnableTrackEvents,
+    gotoGetStarted,
+    initTargeting,
+    saveApprovalInfo,
+    saveInitTargeting,
+    refreshTrackvents,
+  } = props;
   const [ enableApproval, saveEnableApproval ] = useState<boolean>(false);
   const [ open, saveOpen ] = useState<boolean>(false);
   const [ diffOpen, saveDiffOpen ] = useState<boolean>(false);
@@ -49,6 +66,7 @@ const Info: React.FC<IProps> = (props) => {
   const [ comment, saveComment ] = useState<string>('');
   const [ popupOpen, savePopupOpen ] = useState<boolean>(false);
   const [ toggleStatus, saveToggleStatus ] = useState<string>(approvalInfo?.status || '');
+  const [ isCollect, saveIsCollect ] = useState<string>('');
   const [before, saveBefore] = useState<{
       disable: boolean;
       content: ITarget;
@@ -95,9 +113,12 @@ const Info: React.FC<IProps> = (props) => {
 
   useEffect(() => {
     register('reason', { 
-      required: status !== 'PASS' && status !== 'CANCEL', 
+      required: status !== 'PASS' && status !== 'CANCEL' && status !== 'PUBLISH', 
     });
-  }, [status, register]);
+    register('radioGroup', {
+      required: (status === 'JUMP' || status === 'PUBLISH') && allowEnableTrackEvents,
+    });
+  }, [status, allowEnableTrackEvents, register]);
 
   // Refresh initial targeting to make new diff
   const refreshInitialTargeting = useCallback(async () => {
@@ -123,10 +144,11 @@ const Info: React.FC<IProps> = (props) => {
 
   const onSubmit = useCallback(async () => {
     setValue('reason', '');
+    setValue('radioGroup', '');
     saveOpen(false);
 
-    // Cancel publish
-    if (status === 'CANCEL') {
+    
+    if (status === 'CANCEL') {  // Cancel publish
       const res = await cancelTargetingDraft(projectKey, environmentKey, toggleKey, {
         comment
       });
@@ -141,8 +163,7 @@ const Info: React.FC<IProps> = (props) => {
       } else {
         message.error(intl.formatMessage({id: 'targeting.approval.cancel.error'}));
       }
-    // Revoke approval
-    } else if (status === 'REVOKE') {
+    } else if (status === 'REVOKE') { // Revoke approval
       const res = await updateApprovalStatus(projectKey, environmentKey, toggleKey, {
         status,
         comment,
@@ -158,12 +179,28 @@ const Info: React.FC<IProps> = (props) => {
       } else {
         message.error(intl.formatMessage({id: 'targeting.approval.operate.error'}));
       }
-    // Other operation
-    } else {
-      const res = await updateApprovalStatus(projectKey, environmentKey, toggleKey, {
+    } else if (status === 'PUBLISH') {  // Publish
+      publishTargetingDraft(projectKey, environmentKey, toggleKey, {
+        trackAccessEvents: isCollect === 'yes',
+      }).then(res => {
+        if (res.success) {
+          message.success(intl.formatMessage({id: 'targeting.publish.success.text'}));
+          initTargeting();
+        } else {
+          message.error(intl.formatMessage({id: 'targeting.publish.error.text'}));
+        }
+      });
+    } else {  // Other operation
+      const params: IApprovalStatus = {
         status,
         comment,
-      });
+      };
+
+      if (status === 'JUMP' && isCollect === 'yes') {
+        params.trackAccessEvents = true;
+      }
+
+      const res = await updateApprovalStatus(projectKey, environmentKey, toggleKey, params);
 
       if (res.success) {
         message.success(intl.formatMessage({id: 'targeting.approval.operate.success'}));
@@ -172,7 +209,19 @@ const Info: React.FC<IProps> = (props) => {
         message.error(intl.formatMessage({id: 'targeting.approval.operate.error'}));
       }
     }
-  }, [setValue, status, projectKey, environmentKey, toggleKey, comment, intl, isReEdit, refreshInitialTargeting, initTargeting]);
+  }, [
+    status,
+    projectKey,
+    environmentKey,
+    toggleKey,
+    comment, 
+    intl,
+    isReEdit,
+    isCollect,
+    setValue,
+    initTargeting,
+    refreshInitialTargeting
+  ]);
 
   // Abandon this approval
   const handleAbandon = useCallback(async () => {
@@ -200,17 +249,24 @@ const Info: React.FC<IProps> = (props) => {
 
   // Publish this approval
   const handlePublish = useCallback(() => {
-    setApprovePublishLoading(true);
-    publishTargetingDraft(projectKey, environmentKey, toggleKey).then(res => {
-      setApprovePublishLoading(false);
-      if (res.success) {
-        message.success(intl.formatMessage({id: 'targeting.publish.success.text'}));
-        initTargeting();
-      } else {
-        message.error(intl.formatMessage({id: 'targeting.publish.error.text'}));
-      }
-    });
-  }, [intl, projectKey, environmentKey, toggleKey, initTargeting]);
+    if (allowEnableTrackEvents) {
+      saveOpen(true);
+      saveStatus('PUBLISH');
+    } else {
+      setApprovePublishLoading(true);
+      publishTargetingDraft(projectKey, environmentKey, toggleKey).then(res => {
+        setApprovePublishLoading(false);
+        if (res.success) {
+          message.success(intl.formatMessage({id: 'targeting.publish.success.text'}));
+          initTargeting();
+        } else {
+          message.error(intl.formatMessage({id: 'targeting.publish.error.text'}));
+        }
+      });
+    }
+
+    
+  }, [allowEnableTrackEvents, projectKey, environmentKey, toggleKey, intl, initTargeting]);
 
   // Show diffs
   const handleShowDiff = useCallback(async () => {
@@ -295,6 +351,10 @@ const Info: React.FC<IProps> = (props) => {
     },
     [preDiffServe, intl]
   );
+
+  const handleRadioChange = useCallback((e: SyntheticEvent, detail: RadioProps) => {
+    saveIsCollect(detail.value as string);
+  }, []);
 
 	return (
     <div className={styles.info}>
@@ -498,7 +558,13 @@ const Info: React.FC<IProps> = (props) => {
                       (toggleStatus === 'PASS' || toggleStatus === 'JUMP') && 
                       (approvalInfo?.submitBy === userInfo.account)
                     ) && (
-                      <Button loading={approvePublishLoading} disabled={approvePublishLoading} primary className={styles.btn} onClick={handlePublish}>
+                      <Button 
+                        primary 
+                        loading={approvePublishLoading} 
+                        disabled={approvePublishLoading} 
+                        className={styles.btn} 
+                        onClick={handlePublish}
+                      >
                         <FormattedMessage id='targeting.approval.operation.publish' />
                       </Button>
                     )
@@ -524,31 +590,35 @@ const Info: React.FC<IProps> = (props) => {
                   }
 
                   {/* Button Edit */}
-                  <PopupConfirm
-                    open={popupOpen}
-                    handleConfirm={(e: SyntheticEvent) => {
-                      e.stopPropagation();
-                      // handleDelete(e, index, rule.id);
-                      // setOpen(false);
-                    }}
-                    handleCancel={(e: SyntheticEvent) => {
-                      e.stopPropagation();
-                      savePopupOpen(false);
-                    }}
-                    text={intl.formatMessage({id: 'targeting.edit.tips'})}
-                    icon={<Icon type='warning-circle' customclass={styles['warinig-circle']} />}
-                  >
-                    <Button 
-                      primary
-                      className={styles.btn}
-                      onClick={(e: SyntheticEvent) => {
-                        savePopupOpen(true);
-                        e.stopPropagation();
-                      }}
-                    >
-                      <FormattedMessage id='common.edit.text' />
-                    </Button>
-                  </PopupConfirm>
+                  {
+                    trackEvents && ((enableApproval && toggleStatus === 'RELEASE') || !enableApproval) && (
+                      <PopupConfirm
+                        open={popupOpen}
+                        handleConfirm={(e: SyntheticEvent) => {
+                          e.stopPropagation();
+                          refreshTrackvents();
+                          savePopupOpen(false);
+                        }}
+                        handleCancel={(e: SyntheticEvent) => {
+                          e.stopPropagation();
+                          savePopupOpen(false);
+                        }}
+                        text={intl.formatMessage({id: 'targeting.edit.tips'})}
+                        icon={<Icon type='warning-circle' customclass={styles['warinig-circle']} />}
+                      >
+                        <Button 
+                          primary
+                          className={styles.btn}
+                          onClick={(e: SyntheticEvent) => {
+                            savePopupOpen(true);
+                            e.stopPropagation();
+                          }}
+                        >
+                          <FormattedMessage id='common.edit.text' />
+                        </Button>
+                      </PopupConfirm>
+                    )
+                  }
                 </div>
               </div>
             </div>
@@ -620,9 +690,11 @@ const Info: React.FC<IProps> = (props) => {
               { status === 'REJECT' && <FormattedMessage id='targeting.approval.modal.reject' /> }
               { status === 'JUMP' && <FormattedMessage id='targeting.approval.operation.skip.approval' /> }
               { status === 'CANCEL' && <FormattedMessage id='targeting.approval.operation.abandon' /> }
+              { status === 'PUBLISH' && <FormattedMessage id='targeting.approval.operation.publish' />}
             </span>
             <Icon customclass={styles['modal-header-icon']} type='close' onClick={() => { 
               setValue('reason', '');
+              setValue('radioGroup', '');
               saveOpen(false); }} 
             />
           </div>
@@ -651,35 +723,87 @@ const Info: React.FC<IProps> = (props) => {
                   </div>
                 )
               }
-              <Form.Field>
-                <label>
-                  { (status !== 'PASS' && status !== 'CANCEL') && <span className={styles['label-required']}>*</span> }
-                  <FormattedMessage id='targeting.approval.modal.reason' />:
-                </label>
-                
-                <Form.TextArea
-                  name='reason'
-                  error={errors.reason ? true : false}
-                  value={comment} 
-                  placeholder={intl.formatMessage({id: 'targeting.approval.modal.reason.placeholder'})}
-                  className={styles.input}
-                  onChange={async (e: SyntheticEvent, detail: TextAreaProps) => {
-                    handleChangeComment(e, detail);
-                    setValue(detail.name, detail.value);
-                    await trigger('reason');
-                  }}
-                />
-              </Form.Field>
-              { 
-                errors.reason && (
-                  <div className={styles['error-text']}>
-                    <FormattedMessage id='targeting.approval.modal.reason.placeholder' />
-                  </div> 
+              {
+                (status === 'JUMP' || status === 'PUBLISH') && allowEnableTrackEvents && (
+                  <div className={styles.collect}>
+                    <div className={styles['collect-title']}>
+                      <span className="label-required">*</span>
+                      <FormattedMessage id='targeting.publish.start.collect' />
+                    </div>
+                    <div className={styles['collect-content']}>
+                      <Form.Field className={styles['collect-radio']}>
+                        <Form.Radio
+                          label={intl.formatMessage({id: 'common.yes.text'})}
+                          name='radioGroup'
+                          value='yes'
+                          checked={isCollect === 'yes'}
+                          error={errors.radioGroup ? true : false}
+                          onChange={async (e: SyntheticEvent, detail: RadioProps) => {
+                            handleRadioChange(e, detail);
+                            setValue(detail.name || 'radioGroup', detail.value);
+                            await trigger('radioGroup');
+                          }}
+                        />
+                      </Form.Field>
+                      <Form.Field>
+                        <Form.Radio
+                          label={intl.formatMessage({id: 'common.no.text'})}
+                          name='radioGroup'
+                          value='no'
+                          checked={isCollect === 'no'}
+                          error={errors.radioGroup ? true : false}
+                          onChange={async (e: SyntheticEvent, detail: RadioProps) => {
+                            handleRadioChange(e, detail);
+                            setValue(detail.name || 'radioGroup', detail.value);
+                            await trigger('radioGroup');
+                          }}
+                        />
+                      </Form.Field>
+                    </div>
+                    {errors.radioGroup && (
+                      <div className="error-text">
+                        <FormattedMessage id="common.dropdown.placeholder" />
+                      </div>
+                    )}
+                  </div>
+                )
+              }
+              {
+                status !== 'PUBLISH' && (
+                  <>
+                    <Form.Field>
+                      <label>
+                        { (status !== 'PASS' && status !== 'CANCEL') && <span className={styles['label-required']}>*</span> }
+                        <FormattedMessage id='targeting.approval.modal.reason' />:
+                      </label>
+                      
+                      <Form.TextArea
+                        name='reason'
+                        error={errors.reason ? true : false}
+                        value={comment} 
+                        placeholder={intl.formatMessage({id: 'targeting.approval.modal.reason.placeholder'})}
+                        className={styles.input}
+                        onChange={async (e: SyntheticEvent, detail: TextAreaProps) => {
+                          handleChangeComment(e, detail);
+                          setValue(detail.name, detail.value);
+                          await trigger('reason');
+                        }}
+                      />
+                    </Form.Field>
+                    { 
+                      errors.reason && (
+                        <div className={styles['error-text']}>
+                          <FormattedMessage id='targeting.approval.modal.reason.placeholder' />
+                        </div> 
+                      )
+                    }
+                  </>
                 )
               }
               <div className={styles['footer']} onClick={(e: SyntheticEvent) => { e.stopPropagation(); }}>
                 <Button size='mini' basic type='reset' onClick={() => { 
                   setValue('reason', '');
+                  setValue('radioGroup', '');
                   saveOpen(false); 
                 }}>
                   <FormattedMessage id='common.cancel.text' />
