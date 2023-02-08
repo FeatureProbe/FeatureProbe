@@ -3,7 +3,6 @@ package com.featureprobe.api.service;
 import com.featureprobe.api.auth.TokenHelper;
 import com.featureprobe.api.base.db.Archived;
 import com.featureprobe.api.base.enums.ChangeLogType;
-import com.featureprobe.api.base.enums.MetricsCacheTypeEnum;
 import com.featureprobe.api.base.enums.ResourceType;
 import com.featureprobe.api.base.enums.SketchStatusEnum;
 import com.featureprobe.api.base.enums.ToggleReleaseStatusEnum;
@@ -11,7 +10,7 @@ import com.featureprobe.api.base.enums.VisitFilter;
 import com.featureprobe.api.component.SpringBeanManager;
 import com.featureprobe.api.config.AppConfig;
 import com.featureprobe.api.dao.entity.Environment;
-import com.featureprobe.api.dao.entity.MetricsCache;
+import com.featureprobe.api.dao.entity.TrafficCache;
 import com.featureprobe.api.dao.entity.Project;
 import com.featureprobe.api.dao.entity.Tag;
 import com.featureprobe.api.dao.entity.Targeting;
@@ -21,9 +20,11 @@ import com.featureprobe.api.dao.entity.ToggleTagRelation;
 import com.featureprobe.api.dao.exception.ResourceConflictException;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
 import com.featureprobe.api.dao.exception.ResourceOverflowException;
+import com.featureprobe.api.base.enums.TrafficCacheTypeEnum;
+import com.featureprobe.api.mapper.ToggleMapper;
 import com.featureprobe.api.dao.repository.EnvironmentRepository;
-import com.featureprobe.api.dao.repository.EventRepository;
-import com.featureprobe.api.dao.repository.MetricsCacheRepository;
+import com.featureprobe.api.dao.repository.TrafficRepository;
+import com.featureprobe.api.dao.repository.TrafficCacheRepository;
 import com.featureprobe.api.dao.repository.ProjectRepository;
 import com.featureprobe.api.dao.repository.TagRepository;
 import com.featureprobe.api.dao.repository.TargetingRepository;
@@ -36,7 +37,6 @@ import com.featureprobe.api.dto.ToggleItemResponse;
 import com.featureprobe.api.dto.ToggleResponse;
 import com.featureprobe.api.dto.ToggleSearchRequest;
 import com.featureprobe.api.dto.ToggleUpdateRequest;
-import com.featureprobe.api.mapper.ToggleMapper;
 import com.featureprobe.sdk.server.FPUser;
 import com.featureprobe.sdk.server.FeatureProbe;
 import lombok.AllArgsConstructor;
@@ -84,11 +84,11 @@ public class ToggleService {
 
     private EnvironmentRepository environmentRepository;
 
-    private EventRepository eventRepository;
+    private TrafficRepository trafficRepository;
 
     private TargetingSketchRepository targetingSketchRepository;
 
-    private MetricsCacheRepository metricsCacheRepository;
+    private TrafficCacheRepository trafficCacheRepository;
 
     private ToggleTagRepository toggleTagRepository;
 
@@ -200,7 +200,7 @@ public class ToggleService {
                     keys);
             Map<String, TargetingSketch> targetingSketchMap = queryNewestTargetingSketchMap(projectKey,
                     searchRequest.getEnvironmentKey(), keys);
-            Map<String, MetricsCache> metricsCacheMap = queryMetricsCacheMap(projectKey,
+            Map<String, TrafficCache> metricsCacheMap = queryTrafficCacheMap(projectKey,
                     searchRequest.getEnvironmentKey(), keys);
             Map<String, Set<String>> tagMap = queryTagMap(keys);
             return togglePage.map(item ->
@@ -346,12 +346,12 @@ public class ToggleService {
     }
 
     private Set<String> allVisitedToggleKeys(Environment environment) {
-        return eventRepository.findAllAccessedToggleKey(environment.getServerSdkKey(), environment.getClientSdkKey());
+        return trafficRepository.findAllAccessedToggleKey(environment.getServerSdkKey(), environment.getClientSdkKey());
     }
 
     private Set<String> weekVisitedToggleKeys(Environment environment) {
         Date lastWeek = Date.from(LocalDateTime.now().minusDays(7).atZone(ZoneId.systemDefault()).toInstant());
-        return eventRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(
+        return trafficRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(
                 environment.getServerSdkKey(), environment.getClientSdkKey(), lastWeek);
     }
 
@@ -376,7 +376,7 @@ public class ToggleService {
     private ToggleItemResponse entityToItemResponse(Toggle toggle, String projectKey, String environmentKey,
                                                     Map<String, Targeting> targetingMap,
                                                     Map<String, TargetingSketch> targetingSketchMap,
-                                                    Map<String, MetricsCache> metricsCacheMap,
+                                                    Map<String, TrafficCache> metricsCacheMap,
                                                     Map<String, Set<String>> tagMap) {
         ToggleItemResponse toggleItem = ToggleMapper.INSTANCE.entityToItemResponse(toggle,
                 appConfig.getToggleDeadline());
@@ -404,18 +404,18 @@ public class ToggleService {
         return targetingSketch.getStatus() == SketchStatusEnum.PENDING;
     }
 
-    private Map<String, MetricsCache> queryMetricsCacheMap(String projectKey, String environmentKey,
+    private Map<String, TrafficCache> queryTrafficCacheMap(String projectKey, String environmentKey,
                                                            List<String> toggleKeys) {
         Environment environment = environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey).get();
-        Specification<MetricsCache> spec = (root, query, cb) -> {
+        Specification<TrafficCache> spec = (root, query, cb) -> {
             Predicate p0 = root.get("toggleKey").in(toggleKeys);
             Predicate p1 = cb.equal(root.get("sdkKey"), environment.getServerSdkKey());
             Predicate p2 = cb.equal(root.get("sdkKey"), environment.getClientSdkKey());
-            Predicate p3 = cb.equal(root.get("type"), MetricsCacheTypeEnum.EVALUATION);
+            Predicate p3 = cb.equal(root.get("type"), TrafficCacheTypeEnum.EVALUATION);
             return query.where(cb.and(p0, p3), cb.or(p1, p2)).getRestriction();
         };
-        List<MetricsCache> metricsCaches = metricsCacheRepository.findAll(spec);
-        return metricsCaches.stream().collect(Collectors.toMap(MetricsCache::getToggleKey, Function.identity()));
+        List<TrafficCache> trafficCaches = trafficCacheRepository.findAll(spec);
+        return trafficCaches.stream().collect(Collectors.toMap(TrafficCache::getToggleKey, Function.identity()));
     }
 
     @Archived

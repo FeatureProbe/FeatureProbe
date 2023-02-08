@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class AccessEventPoint {
+public class TrafficPoint {
 
     @Schema(description = "The abscissa point name of the metrics.")
     String name;
