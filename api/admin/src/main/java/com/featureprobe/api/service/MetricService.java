@@ -21,6 +21,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.nio.charset.StandardCharsets;
@@ -96,16 +97,16 @@ public class MetricService {
 
         if (!(MetricTypeEnum.PAGE_VIEW.equals(request.getType()) || MetricTypeEnum.CLICK.equals(request.getType()))
                 && StringUtils.isBlank(request.getName())) {
-                throw new IllegalArgumentException("validate.event_name_required");
+            throw new IllegalArgumentException("validate.event_name_required");
         }
 
         if ((MetricTypeEnum.PAGE_VIEW.equals(request.getType()) || MetricTypeEnum.CLICK.equals(request.getType()))
                 && (request.getMatcher() == null || StringUtils.isBlank(request.getUrl()))) {
-                throw new IllegalArgumentException("validate.event_url_required");
+            throw new IllegalArgumentException("validate.event_url_required");
         }
 
         if (MetricTypeEnum.CLICK.equals(request.getType()) && StringUtils.isBlank(request.getSelector())) {
-                throw new IllegalArgumentException("validate.event_selector_required");
+            throw new IllegalArgumentException("validate.event_selector_required");
         }
 
     }
