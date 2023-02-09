@@ -382,7 +382,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       required: approvalInfo?.enableApproval,
     });
     newRegister('radioGroup', {
-      required: allowEnableTrackEvents && !approvalInfo?.enableApproval,
+      required: !approvalInfo?.enableApproval && allowEnableTrackEvents,
     });
   }, [newRegister, approvalInfo, allowEnableTrackEvents]);
 
@@ -441,12 +441,12 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   }, [newSetValue, clearErrors]);
 
   const handlePublishConfirm = useCallback(async () => {
-    if (approvalInfo && approvalInfo?.enableApproval && comment === '') {
+    if (approvalInfo?.enableApproval && comment === '') {
       await newTrigger('reason');
       return;
     }
 
-    if (isCollect === '' && !approvalInfo?.enableApproval) {
+    if (!approvalInfo?.enableApproval && isCollect === '' && allowEnableTrackEvents) {
       await newTrigger('radioGroup');
       return;
     }
@@ -485,7 +485,20 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       newSetValue('radioGroup', '');
       setLoading(false);
     }
-  }, [approvalInfo, comment, isCollect, publishTargeting, newTrigger, newSetValue, projectKey, environmentKey, toggleKey, initTargeting, intl]);
+  }, [
+    approvalInfo, 
+    comment, 
+    isCollect, 
+    allowEnableTrackEvents, 
+    publishTargeting, 
+    newTrigger, 
+    newSetValue, 
+    projectKey, 
+    environmentKey, 
+    toggleKey, 
+    initTargeting, 
+    intl
+  ]);
 
   const disabledText = useMemo(() => {
     if (variations[disabledServe.select]) {
