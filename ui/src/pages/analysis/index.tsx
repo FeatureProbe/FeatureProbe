@@ -17,6 +17,7 @@ interface IProps {
 const Analysis = (props: IProps) => {
   const { trackEvents, allowEnableTrackEvents, initTargeting } = props;
   const [ eventInfo, saveEventInfo ] = useState<IEvent>();
+  const [ submitLoading, saveSubmitLoading ] = useState<boolean>(false);
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
 
@@ -28,11 +29,13 @@ const Analysis = (props: IProps) => {
     });
   }, [environmentKey, intl, projectKey, toggleKey]);
 
-  const operateTrackCollection = useCallback((trackEvents: boolean) => {
+  const operateTrackCollection = useCallback(trackEvents => {
+    saveSubmitLoading(true);
     operateCollection(projectKey, environmentKey, toggleKey, {trackAccessEvents: trackEvents}).then(res => {
       if (res.success) {
         initTargeting();
       }
+      saveSubmitLoading(false);
     });
   }, [environmentKey, projectKey, toggleKey, initTargeting]);
 
@@ -44,6 +47,7 @@ const Analysis = (props: IProps) => {
       <Results 
         eventInfo={eventInfo}
         trackEvents={trackEvents}
+        submitLoading={submitLoading}
         allowEnableTrackEvents={allowEnableTrackEvents}
         operateTrackCollection={operateTrackCollection}
       />

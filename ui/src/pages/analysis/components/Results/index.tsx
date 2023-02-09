@@ -13,13 +13,13 @@ interface IProps {
   eventInfo?: IEvent;
   trackEvents: boolean;
   allowEnableTrackEvents: boolean;
+  submitLoading: boolean;
   operateTrackCollection(trackEvent: boolean): void;
 }
 
 const Results = (props: IProps) => {
-  const { trackEvents, allowEnableTrackEvents, operateTrackCollection } = props;
+  const { trackEvents, allowEnableTrackEvents, submitLoading, operateTrackCollection } = props;
   const [ data, saveData ] = useState([]);
-
   const intl = useIntl();
   const time = '2022-02-09 22:22:22';
 
@@ -44,22 +44,28 @@ const Results = (props: IProps) => {
         {
           !trackEvents ? (
             <Button 
-              primary 
+              primary
+              loading={submitLoading}
               className={styles['start-btn']} 
               disabled={!allowEnableTrackEvents} 
-              onClick={() => {
-                operateTrackCollection(true);
-              }}
+              onClick={
+                () => {
+                  operateTrackCollection(true);
+                }
+              }
             >
               <FormattedMessage id='analysis.result.collect.start' />
             </Button>
           ) : (
             <Button 
-              secondary 
+              secondary
+              loading={submitLoading}
               className={styles['start-btn']}
-              onClick={() => {
-                operateTrackCollection(false);
-              }}
+              onClick={
+                () => {
+                  operateTrackCollection(false);
+                }
+              }
             >
               <FormattedMessage id='analysis.result.collect.stop' />
             </Button>

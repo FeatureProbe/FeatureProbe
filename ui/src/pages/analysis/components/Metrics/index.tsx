@@ -34,8 +34,7 @@ const Metrics = (props: IProps) => {
   const [ metricSelector, saveMetricSelector ] = useState<string>('');
   const [ customMetricType, saveCustomMetricType ] = useState<string>('');
   const [ canSave, saveCanSave ] = useState<boolean>(false);
-
-  const selector_url = useRef('');
+  const selectorUrl = useRef('');
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
 
   const {
@@ -111,9 +110,9 @@ const Metrics = (props: IProps) => {
 
   useEffect(() => {
     if (intl.locale === 'zh-CN') {
-      selector_url.current = 'https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building_blocks/Selectors';
+      selectorUrl.current = 'https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building_blocks/Selectors';
     } else if(intl.locale === 'en-US') {
-      selector_url.current = 'https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors';
+      selectorUrl.current = 'https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors';
     }
   }, [intl]);
 
@@ -453,7 +452,7 @@ const Metrics = (props: IProps) => {
                           content={
                             <span>
                               <FormattedMessage id='analysis.event.click.target.tips' />
-                              <a href={selector_url.current} target='_blank'>
+                              <a href={selectorUrl.current} target='_blank'>
                                 <FormattedMessage id='targeting.semver.more' />
                               </a>
                             </span>
