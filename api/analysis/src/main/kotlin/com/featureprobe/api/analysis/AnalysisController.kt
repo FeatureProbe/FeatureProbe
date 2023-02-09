@@ -3,6 +3,7 @@ package com.featureprobe.api.analysis
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
+import com.github.michaelbull.result.get
 import kotliquery.HikariCP
 import kotliquery.queryOf
 import kotliquery.sessionOf
@@ -36,12 +37,11 @@ class AnalysisController(val service: AnalysisService) {
         @RequestParam start: Timestamp,
         @RequestParam end: Timestamp,
     ): AnalysisResponse {
-        return when (service.doAnalysis(sdkKey, metric, toggle, type, start, end)) {
-            Err(NotSupportAnalysisType) -> AnalysisResponse(500)
-            else -> AnalysisResponse(200)
+        return when (val result = service.doAnalysis(sdkKey, metric, toggle, type, start, end)) {
+            Err(NotSupportAnalysisType) -> AnalysisResponse(500, mapOf())
+            else -> AnalysisResponse(200, result.get())
         }
     }
-
 }
 
 @Service

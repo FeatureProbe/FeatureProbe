@@ -60,7 +60,8 @@ data class EventResponse(
 )
 
 data class AnalysisResponse(
-    val status: Int
+    val status: Int,
+    val data: Map<String, VariationProperty>?
 )
 
 //data class AnalysisReport(
