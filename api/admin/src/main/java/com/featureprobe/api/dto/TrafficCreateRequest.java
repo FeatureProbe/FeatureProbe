@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class TrafficCreateRequest {
 
-    AccessSummary access;
+    AccessSummaryRequest access;
 
 }

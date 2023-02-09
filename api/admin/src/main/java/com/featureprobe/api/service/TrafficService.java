@@ -11,7 +11,7 @@ import com.featureprobe.api.dao.repository.EnvironmentRepository;
 import com.featureprobe.api.dao.repository.TrafficRepository;
 import com.featureprobe.api.dao.repository.TrafficCacheRepository;
 import com.featureprobe.api.dto.TrafficCreateRequest;
-import com.featureprobe.api.dto.VariationAccessCounter;
+import com.featureprobe.api.dto.VariationAccessCounterRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -82,7 +82,8 @@ public class TrafficService {
         return trafficCache;
     }
 
-    private List<Traffic> createEventEntities(Map.Entry<String, List<VariationAccessCounter>> toggleToAccessCounter) {
+    private List<Traffic> createEventEntities(Map.Entry<String, 
+            List<VariationAccessCounterRequest>> toggleToAccessCounter) {
         String toggleKey = toggleToAccessCounter.getKey();
 
         return Optional.of(toggleToAccessCounter.getValue())
@@ -92,7 +93,7 @@ public class TrafficService {
                 .collect(Collectors.toList());
     }
 
-    private Traffic createEventEntity(String toggleKey, VariationAccessCounter accessCounter) {
+    private Traffic createEventEntity(String toggleKey, VariationAccessCounterRequest accessCounter) {
         Traffic event = new Traffic();
         event.setToggleKey(toggleKey);
         event.setCount(accessCounter.getCount());
