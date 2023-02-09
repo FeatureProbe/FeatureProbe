@@ -1,0 +1,10 @@
+app:
+  analysis:
+    iterations: 10000
+  datasource:
+    jdbcUrl: jdbc:mysql://localhost:3306/feature_probe_events
+    username: root
+    password: root
+
+server:
+  port: 4006

@@ -46,10 +46,10 @@ class AnalysisController(val service: AnalysisService) {
 
 @Service
 class AnalysisService(
-    @Value("\${app.datasource.jdbc-url}") val url: String,
+    @Value("\${app.datasource.jdbcUrl}") val url: String,
     @Value("\${app.datasource.username}") val user: String,
     @Value("\${app.datasource.password}") val password: String,
-    @Value("\${app.iterations") val iterationCount: Int = 10000,
+    @Value("\${app.analysis.iterations}") val iterationCount: Int = 1000,
 ) {
 
     val log: Logger = LoggerFactory.getLogger("AnalyzeService")
@@ -93,9 +93,7 @@ class AnalysisService(
             it.variation to BetaDistribution(1.0 + it.convert, 1.0 + it.all - it.convert)
         }
 
-        val stats = variationStats(distributions, winningPercentage(distributions, iterationCount))
-
-        return Ok(stats)
+        return Ok(variationStats(distributions, winningPercentage(distributions, iterationCount)))
     }
 
     fun variationCount(metric: String, toggle: String, start: Timestamp, end: Timestamp): List<VariationCount> {

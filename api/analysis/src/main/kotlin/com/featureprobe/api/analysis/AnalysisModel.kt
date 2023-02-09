@@ -27,7 +27,9 @@ VALUES (?, ?, ?, ?, ?);"""
 )
 @JsonSubTypes(
     JsonSubTypes.Type(AccessEvent::class, name = "access"),
-    JsonSubTypes.Type(CustomEvent::class, name = "*")
+    JsonSubTypes.Type(CustomEvent::class, name = "custom"),
+    JsonSubTypes.Type(CustomEvent::class, name = "pageview"),
+    JsonSubTypes.Type(CustomEvent::class, name = "click"),
 )
 @Suppress("unused")
 sealed class Event(val kind: String)
