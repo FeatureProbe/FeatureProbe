@@ -45,6 +45,7 @@ const Analysis = (props: IProps) => {
     <div>
       <Metrics 
         eventInfo={eventInfo}
+        initTargeting={initTargeting}
       />
       <Results 
         eventInfo={eventInfo}

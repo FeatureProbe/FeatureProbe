@@ -21,10 +21,11 @@ const NUMERIC = 'NUMERIC';
 
 interface IProps {
   eventInfo?: IEvent;
+  initTargeting(): void;
 }
 
 const Metrics = (props: IProps) => {
-  const { eventInfo } = props;
+  const { eventInfo, initTargeting } = props;
 
   const intl = useIntl();
   const [ metricType, saveMetricType ] = useState<string>('');
@@ -253,12 +254,13 @@ const Metrics = (props: IProps) => {
       if (res.success) {
         message.success(intl.formatMessage({id: 'analysis.event.save.success'}));
         saveCanSave(false);
+        initTargeting();
       } else {
         message.error(intl.formatMessage({id: 'analysis.event.save.error'}));
       }
       setSaveLoading(false);
     });
-  }, [environmentKey, intl, projectKey, toggleKey]);
+  }, [environmentKey, intl, projectKey, toggleKey, initTargeting]);
 
   const handleMetricTypeChange = useCallback((e: SyntheticEvent, data: DropdownProps) => {
     saveMetricType(data.value as string);

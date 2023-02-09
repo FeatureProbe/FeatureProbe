@@ -584,7 +584,7 @@
   "analysis.event.target.url.matching.exact": "精确匹配",
   "analysis.event.target.url.matching.substring": "子串匹配",
   "analysis.event.target.url.matching.regex": "正则表达式匹配",
-  "analysis.event.conversion": "转化",
+  "analysis.event.conversion": "转化率",
   "analysis.event.conversion.desc": "跟踪用户何时采取行动",
   "analysis.event.numeric": "数值",
   "analysis.event.numeric.desc": "跟踪值相对于基线的变化",
