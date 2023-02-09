@@ -36,6 +36,7 @@ interface IProps {
   targetingDisabled: boolean;
   trackEvents: boolean;
   allowEnableTrackEvents: boolean;
+  activeItem: string;
   gotoGetStarted(): void;
   initTargeting(): void;
   saveApprovalInfo(approvalInfo: IApprovalInfo): void;
@@ -44,7 +45,8 @@ interface IProps {
 }
 
 const Info: React.FC<IProps> = (props) => {
-  const { 
+  const {
+    activeItem,
     toggleInfo,
     modifyInfo,
     approvalInfo,
@@ -56,7 +58,7 @@ const Info: React.FC<IProps> = (props) => {
     initTargeting,
     saveApprovalInfo,
     saveInitTargeting,
-    refreshTrackvents,
+    refreshTrackvents
   } = props;
   const [ enableApproval, saveEnableApproval ] = useState<boolean>(false);
   const [ open, saveOpen ] = useState<boolean>(false);
@@ -68,12 +70,12 @@ const Info: React.FC<IProps> = (props) => {
   const [ toggleStatus, saveToggleStatus ] = useState<string>(approvalInfo?.status || '');
   const [ isCollect, saveIsCollect ] = useState<string>('');
   const [before, saveBefore] = useState<{
-      disable: boolean;
-      content: ITarget;
+    disable: boolean;
+    content: ITarget;
   }>();
   const [after, saveAfter] = useState<{
-      disable: boolean;
-      content: ITarget;
+    disable: boolean;
+    content: ITarget;
   }>();
   const [ isDiffLoading, saveIsDiffLoading ] = useState<boolean>(false);
   const [ approvePublishLoading, setApprovePublishLoading ] = useState<boolean>(false);
@@ -146,7 +148,6 @@ const Info: React.FC<IProps> = (props) => {
     setValue('reason', '');
     setValue('radioGroup', '');
     saveOpen(false);
-
     
     if (status === 'CANCEL') {  // Cancel publish
       const res = await cancelTargetingDraft(projectKey, environmentKey, toggleKey, {
@@ -591,7 +592,10 @@ const Info: React.FC<IProps> = (props) => {
 
                   {/* Button Edit */}
                   {
-                    trackEvents && ((enableApproval && toggleStatus === 'RELEASE') || !enableApproval) && (
+                    activeItem === 'targeting' &&
+                    trackEvents && 
+                    ((enableApproval && toggleStatus === 'RELEASE') || !enableApproval) && 
+                    (
                       <PopupConfirm
                         open={popupOpen}
                         handleConfirm={(e: SyntheticEvent) => {

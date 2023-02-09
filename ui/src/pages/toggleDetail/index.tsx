@@ -363,6 +363,7 @@ const ToggleDetail = () => {
             )
           }
           <Info
+            activeItem={activeItem}
             toggleInfo={toggleInfo}
             modifyInfo={modifyInfo}
             approvalInfo={approvalInfo}

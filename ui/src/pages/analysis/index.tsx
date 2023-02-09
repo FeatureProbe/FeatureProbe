@@ -2,11 +2,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
+import Metrics from './components/Metrics';
+import Results from './components/Results';
 import { IEvent } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
 import { getEventDetail, operateCollection } from 'services/analysis';
-import Metrics from './components/Metrics';
-import Results from './components/Results';
 
 interface IProps {
   trackEvents: boolean;
@@ -31,7 +31,9 @@ const Analysis = (props: IProps) => {
 
   const operateTrackCollection = useCallback(trackEvents => {
     saveSubmitLoading(true);
-    operateCollection(projectKey, environmentKey, toggleKey, {trackAccessEvents: trackEvents}).then(res => {
+    operateCollection(projectKey, environmentKey, toggleKey, {
+      trackAccessEvents: trackEvents
+    }).then(res => {
       if (res.success) {
         initTargeting();
       }

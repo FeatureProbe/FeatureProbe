@@ -34,6 +34,7 @@ const Metrics = (props: IProps) => {
   const [ metricSelector, saveMetricSelector ] = useState<string>('');
   const [ customMetricType, saveCustomMetricType ] = useState<string>('');
   const [ canSave, saveCanSave ] = useState<boolean>(false);
+  const [ saveLoading, setSaveLoading ] = useState<boolean>(false);
   const selectorUrl = useRef('');
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
 
@@ -246,6 +247,8 @@ const Metrics = (props: IProps) => {
       param.selector = data.selector;
     }
 
+    setSaveLoading(true);
+
     createEvent(projectKey, environmentKey, toggleKey, param).then(res => {
       if (res.success) {
         message.success(intl.formatMessage({id: 'analysis.event.save.success'}));
@@ -253,6 +256,7 @@ const Metrics = (props: IProps) => {
       } else {
         message.error(intl.formatMessage({id: 'analysis.event.save.error'}));
       }
+      setSaveLoading(false);
     });
   }, [environmentKey, intl, projectKey, toggleKey]);
 
@@ -267,6 +271,7 @@ const Metrics = (props: IProps) => {
         title={intl.formatMessage({id: 'common.metrics.text'})}
         showTooltip={false}
       />
+
       <div className={styles['metrics-content']}>
         <Form autoComplete='off'onSubmit={handleSubmit(onSubmit)}>
           <Grid>
@@ -482,7 +487,7 @@ const Metrics = (props: IProps) => {
             }
           </Grid>
           <div className={styles['metrics-save']}>
-            <Button className={styles['btn']} secondary type='submit' disabled={!canSave}>
+            <Button className={styles['btn']} secondary type='submit' disabled={!canSave} loading={saveLoading}>
               <FormattedMessage id='common.save.text' />
             </Button>
           </div>
