@@ -12,12 +12,12 @@ const val CONVERT_USER_TABLE: String = "__convertUser"
 const val CONVERT_COUNT_TABLE: String = "__convertCount"
 const val VARIATION_COUNT_TABLE: String = "__variationCount"
 
-const val INSERT_ACCESS_SQL =
-    """INSERT INTO access_events (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key) 
+const val INSERT_VARIATION_SQL =
+    """INSERT INTO access (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key) 
 VALUES (?, ?, ?, ?, ?, ?, ?);"""
 
-const val INSERT_CUSTOM_SQL =
-    """INSERT INTO custom_events (time, user_key, name, value, sdk_key)
+const val INSERT_EVENT_SQL =
+    """INSERT INTO events (time, user_key, name, value, sdk_key)
 VALUES (?, ?, ?, ?, ?);"""
 
 @JsonTypeInfo(
@@ -27,7 +27,7 @@ VALUES (?, ?, ?, ?, ?);"""
 )
 @JsonSubTypes(
     JsonSubTypes.Type(AccessEvent::class, name = "access"),
-    JsonSubTypes.Type(CustomEvent::class, name = "custom")
+    JsonSubTypes.Type(CustomEvent::class, name = "*")
 )
 @Suppress("unused")
 sealed class Event(val kind: String)

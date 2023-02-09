@@ -13,6 +13,10 @@ import java.text.DecimalFormat
 
 
 fun winningPercentage(distributions: Map<String, BetaDistribution>, iteration: Int): Map<String, Double> {
+    if (distributions.isEmpty()) {
+        return mapOf()
+    }
+
     val variationWins = distributions.keys.associateWith { 0.0 }.toMutableMap()
 
     for (i in 0 until iteration) {
@@ -74,7 +78,7 @@ fun userProvideVariationSql(): String {
     return """
 SELECT 
     user_key, time, toggle_key, variation_index as variation 
-FROM access_events"""
+FROM access"""
 }
 
 fun uniqVariationSql(toggle: String, start: Timestamp, end: Timestamp): String {
@@ -87,7 +91,7 @@ WHERE
 }
 
 fun userProvideMetricSql(metric: String): String {
-    return "SELECT user_key, time FROM custom_events WHERE name = '$metric'"
+    return "SELECT user_key, time FROM events WHERE name = '$metric'"
 }
 
 fun convertUserSql(): String {
@@ -102,7 +106,7 @@ fun variationCountSql(): String {
     return "SELECT COUNT(*) as total, variation FROM $UNIQ_VARIATION_TABLE GROUP BY variation"
 }
 
-fun batchAddAccessEvent(
+fun batchAddVariation(
     ps: PreparedStatement,
     it: AccessEvent,
     sdkKey: String
@@ -118,7 +122,7 @@ fun batchAddAccessEvent(
     ps.addBatch()
 }
 
-fun batchAddCustomEvent(
+fun batchAddEvent(
     ps: PreparedStatement,
     it: CustomEvent,
     sdkKey: String

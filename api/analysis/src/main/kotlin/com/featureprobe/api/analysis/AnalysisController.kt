@@ -64,19 +64,19 @@ class AnalysisService(
         val session = sessionOf(dataSource)
 
         // execute prepared statement is more efficient than execute insert query every time
-        val accessPrepStmt = session.createPreparedStatement(queryOf(INSERT_ACCESS_SQL))
-        val customPrepStmt = session.createPreparedStatement(queryOf(INSERT_CUSTOM_SQL))
+        val variationPrepStmt = session.createPreparedStatement(queryOf(INSERT_VARIATION_SQL))
+        val eventPrepStmt = session.createPreparedStatement(queryOf(INSERT_EVENT_SQL))
 
-        // access_events should add unique index for (user_key, toggle_key, version)
+        // access_events should add unique index for (user_key, toggle_key)
         request.events.forEach {
             when (it) {
-                is AccessEvent -> batchAddAccessEvent(accessPrepStmt, it, sdkKey)
-                is CustomEvent -> batchAddCustomEvent(customPrepStmt, it, sdkKey)
+                is AccessEvent -> batchAddVariation(variationPrepStmt, it, sdkKey)
+                is CustomEvent -> batchAddEvent(eventPrepStmt, it, sdkKey)
             }
         }
 
-        accessPrepStmt.executeLargeBatch()
-        customPrepStmt.executeLargeBatch()
+        variationPrepStmt.executeLargeBatch()
+        eventPrepStmt.executeLargeBatch()
     }
 
     fun doAnalysis(

@@ -58,11 +58,11 @@ class AnalysisControllerTests() {
 
         service.storeEvents(req, "sdk_key")
         val accessEventCount: List<Int> = session.run(
-            queryOf("SELECT count(*) as c FROM access_events WHERE toggle_key = 'testStoreEventsToggle'")
+            queryOf("SELECT count(*) as c FROM access WHERE toggle_key = 'testStoreEventsToggle'")
                 .map { row -> row.int("c") }.asList
         )
         val customEventCount: List<Int> = session.run(
-            queryOf("SELECT count(*) as c FROM custom_events WHERE name = 'testStoreClick'")
+            queryOf("SELECT count(*) as c FROM events WHERE name = 'testStoreClick'")
                 .map { row -> row.int("c") }.asList
         )
 
@@ -82,6 +82,26 @@ class AnalysisControllerTests() {
         testConversionAnalysis(pg.jdbcUrl)
     }
 
+    @Test
+    fun testVariationEmptyConversionAnalysisMysql() {
+        testVariationEmptyConversionAnalysis(mysql.jdbcUrl)
+    }
+
+    @Test
+    fun testVariationEmptyConversionAnalysisPg() {
+        testVariationEmptyConversionAnalysis(pg.jdbcUrl)
+    }
+
+    @Test
+    fun testEventEmptyConversionAnalysisMysql() {
+        testEventEmptyConversionAnalysis(mysql.jdbcUrl)
+    }
+
+    @Test
+    fun testEventEmptyConversionAnalysisPg() {
+        testEventEmptyConversionAnalysis(pg.jdbcUrl)
+    }
+
     fun testConversionAnalysis(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
         val start = Timestamp.valueOf("2023-02-02 23:25:44.659")
@@ -91,5 +111,33 @@ class AnalysisControllerTests() {
             service.doAnalysis("sdkKey", "click_1", "toggle_1", "binomial", start, end)
 
         Assert.assertNotNull(result.get())
+        Assert.assertNotNull(result.get()!!["1"])
+        Assert.assertNotNull(result.get()!!["2"])
+
     }
+
+    fun testVariationEmptyConversionAnalysis(jdbcUrl: String) {
+        val service = AnalysisService(jdbcUrl, "root", "root")
+        val start = Timestamp.valueOf("2023-02-02 23:25:44.659")
+        val end = Timestamp.valueOf("2023-02-02 23:45:44.659")
+
+        val result =
+            service.doAnalysis("sdkKey", "click_not_collect", "toggle_not_collect", "binomial", start, end)
+
+        Assert.assertNotNull(result.get())
+        Assert.assertTrue(result.get()!!.isEmpty())
+    }
+
+    fun testEventEmptyConversionAnalysis(jdbcUrl: String) {
+        val service = AnalysisService(jdbcUrl, "root", "root")
+        val start = Timestamp.valueOf("2023-02-02 23:25:44.659")
+        val end = Timestamp.valueOf("2023-02-02 23:45:44.659")
+
+        val result =
+            service.doAnalysis("sdkKey", "click_not_collect", "toggle_1", "binomial", start, end)
+
+        Assert.assertNotNull(result.get())
+        Assert.assertTrue(result.get()!!.isEmpty())
+    }
+
 }
