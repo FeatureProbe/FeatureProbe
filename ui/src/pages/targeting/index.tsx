@@ -147,7 +147,6 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     toggleDisabled,
     initialTargeting,
     segmentList,
-    trackEvents,
     allowEnableTrackEvents,
     initTargeting,
     saveToggleDisable,
@@ -160,7 +159,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   const [open, setOpen] = useState<boolean>(false);
   const [publishDisabled, setPublishDisabled] = useState<boolean>(true);
   const [publishTargeting, setPublishTargeting] = useState<ITargeting>();
-  const [comment, setComment] = useState<string>('');
+  const [comment, saveComment] = useState<string>('');
   const [isLoading, setLoading] = useState<boolean>(false);
   const [options, saveOptions] = useState<IOption[]>();
   const [run, saveRun] = useState<boolean>(false);
@@ -434,7 +433,8 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
 
   const handlePublishCancel = useCallback(() => {
     setOpen(false);
-    setComment('');
+    saveComment('');
+    saveIsCollect('');
     newSetValue('reason', '');
     newSetValue('radioGroup', '');
     clearErrors();
@@ -478,7 +478,8 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           message.success(intl.formatMessage({ id: 'targeting.publish.success.text' }));
         }
         initTargeting();
-        setComment('');
+        saveComment('');
+        saveIsCollect('');
       }
       newSetValue('reason', '');
       newSetValue('radioGroup', '');
@@ -493,7 +494,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   }, [disabledServe.select, variations]);
 
   const handleInputComment = useCallback((e: SyntheticEvent, data: TextAreaProps | InputOnChangeData) => {
-    setComment(data.value as string);
+    saveComment(data.value as string);
   }, []);
 
   const renderLabel = useCallback((label: DropdownItemProps) => {
@@ -801,7 +802,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                 )}
                 
                 {
-                  !approvalInfo?.enableApproval && allowEnableTrackEvents && !trackEvents && (
+                  !approvalInfo?.enableApproval && allowEnableTrackEvents && (
                     <div className={styles.collect}>
                       <div className={styles['collect-title']}>
                         <span className="label-required">*</span>

@@ -74,7 +74,7 @@ const Results = (props: IProps) => {
       </div>
 
       {
-        allowEnableTrackEvents && data.length > 0 && (
+        data.length > 0 && (
           <div className={styles['result-content']}>
             <ResultTable />
           </div>
@@ -83,7 +83,7 @@ const Results = (props: IProps) => {
 
       <div className={styles['no-data']}>
         {
-          (!allowEnableTrackEvents || (allowEnableTrackEvents && !trackEvents)) && (
+          allowEnableTrackEvents && (
             <div className={styles.tips}>
               <Icon customclass={styles['warning-circle']} type='warning-circle' />
               <FormattedMessage id='analysis.result.tip' />
