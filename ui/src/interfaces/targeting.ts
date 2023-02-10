@@ -94,19 +94,19 @@ export interface IValues {
   deleted: boolean;
 }
 
-export interface IMetric {
+export interface ITraffic {
   name: string;
   values: IValues[];
   lastChangeVersion?: number;
 }
 
-export interface IMetricContent {
+export interface ITrafficContent {
   isAccess: boolean;
-  metrics: IMetric[],
+  traffic: ITraffic[],
   summary: IValues[]
 }
 
-export interface IMetricParams {
+export interface ITrafficParams {
   lastHours: string;
   metricType: string;
 }
