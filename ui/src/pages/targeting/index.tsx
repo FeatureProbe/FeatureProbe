@@ -147,6 +147,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     toggleDisabled,
     initialTargeting,
     segmentList,
+    trackEvents,
     allowEnableTrackEvents,
     initTargeting,
     saveToggleDisable,
@@ -718,7 +719,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           </div>
           <div className={styles['modal-content']}>
             {
-              isDiffChange && (
+              isDiffChange && trackEvents && (
                 <div className={styles['publish-tips']}>
                   <Icon type='error-circle' customclass={styles['error-circle']} />
                   <FormattedMessage id='targeting.publish.tips' />
