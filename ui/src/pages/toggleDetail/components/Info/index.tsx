@@ -104,6 +104,7 @@ const Info: React.FC<IProps> = (props) => {
     if (!open) {
       clearErrors();
       saveComment('');
+      saveIsCollect('');
     }
   }, [open, clearErrors]);
 
@@ -257,6 +258,7 @@ const Info: React.FC<IProps> = (props) => {
       setApprovePublishLoading(true);
       publishTargetingDraft(projectKey, environmentKey, toggleKey).then(res => {
         setApprovePublishLoading(false);
+        console.log(res);
         if (res.success) {
           message.success(intl.formatMessage({id: 'targeting.publish.success.text'}));
           initTargeting();
@@ -766,7 +768,7 @@ const Info: React.FC<IProps> = (props) => {
                     </div>
                     {errors.radioGroup && (
                       <div className="error-text">
-                        <FormattedMessage id="common.dropdown.placeholder" />
+                        <FormattedMessage id="analysis.select.placeholder" />
                       </div>
                     )}
                   </div>
