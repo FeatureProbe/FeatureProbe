@@ -52,33 +52,47 @@ class AnalysisService(
     @Value("\${app.datasource.username}") val user: String,
     @Value("\${app.datasource.password}") val password: String,
     @Value("\${app.analysis.iterations}") val iterationCount: Int = 1000,
+    @Value("\${app.hikari.minimum-idle}") val hikariMinIdle: Int = 10,
+    @Value("\${app.hikari.maximum-pool-size}") val hikariMaxPool: Int = 100,
+    @Value("\${app.hikari.idle-timeout}") val hikariIdleTimeout: Long = 60000,
+    @Value("\${app.hikari.max-lifetime}") val hikariMaxLifetime: Long = 30000,
+    @Value("\${app.hikari.connection-timeout}") val hikariConnectTimeOut: Long = 30000,
+    @Value("\${app.hikari.connection-test-query}") val hikariTtestQuery: String = "SELECT 1",
 ) {
 
     val log: Logger = LoggerFactory.getLogger("AnalyzeService")
 
     val dataSource: DataSource by lazy {
-        HikariCP.default(url, user, password)
+        HikariCP.init("default", url, user, password) {
+            this.maximumPoolSize = hikariMaxPool
+            this.connectionTimeout = hikariConnectTimeOut
+            this.idleTimeout = hikariIdleTimeout
+            this.minimumIdle = hikariMinIdle
+            this.maxLifetime = hikariMaxLifetime
+            this.connectionTestQuery = hikariTtestQuery
+        }
         HikariCP.dataSource()
     }
 
     fun storeEvents(request: EventRequest, sdkKey: String) {
         log.debug("storeEvents $sdkKey $request")
         val session = sessionOf(dataSource)
+        session.use {
+            // execute prepared statement is more efficient than execute insert query every time
+            val variationPrepStmt = session.createPreparedStatement(queryOf(INSERT_VARIATION_SQL))
+            val eventPrepStmt = session.createPreparedStatement(queryOf(INSERT_EVENT_SQL))
 
-        // execute prepared statement is more efficient than execute insert query every time
-        val variationPrepStmt = session.createPreparedStatement(queryOf(INSERT_VARIATION_SQL))
-        val eventPrepStmt = session.createPreparedStatement(queryOf(INSERT_EVENT_SQL))
-
-        // access_events should add unique index for (user_key, toggle_key)
-        request.events.forEach {
-            when (it) {
-                is AccessEvent -> batchAddVariation(variationPrepStmt, it, sdkKey)
-                is CustomEvent -> batchAddEvent(eventPrepStmt, it, sdkKey)
+            // access_events should add unique index for (user_key, toggle_key)
+            request.events.forEach {
+                when (it) {
+                    is AccessEvent -> batchAddVariation(variationPrepStmt, it, sdkKey)
+                    is CustomEvent -> batchAddEvent(eventPrepStmt, it, sdkKey)
+                }
             }
-        }
 
-        variationPrepStmt.executeLargeBatch()
-        eventPrepStmt.executeLargeBatch()
+            variationPrepStmt.executeLargeBatch()
+            eventPrepStmt.executeLargeBatch()
+        }
     }
 
     fun doAnalysis(
@@ -99,14 +113,17 @@ class AnalysisService(
     }
 
     fun variationCount(metric: String, toggle: String, start: Timestamp, end: Timestamp): List<VariationCount> {
+        val sql = statsSql(metric, toggle, start, end)
+        log.info(sql)
         val session = sessionOf(dataSource)
-
-        return session.run(
-            queryOf(statsSql(metric, toggle, start, end))
-                .map { row ->
-                    VariationCount(row.string("variation"), row.int("cvt"), row.int("total"))
-                }.asList
-        )
+        session.use {
+            return session.run(
+                queryOf(sql)
+                    .map { row ->
+                        VariationCount(row.string("variation"), row.int("cvt"), row.int("total"))
+                    }.asList
+            )
+        }
     }
 
 }
