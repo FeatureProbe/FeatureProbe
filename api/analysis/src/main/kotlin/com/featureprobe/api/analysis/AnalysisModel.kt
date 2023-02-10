@@ -64,12 +64,6 @@ data class AnalysisResponse(
     val data: Map<String, VariationProperty>?
 )
 
-//data class AnalysisReport(
-//    val winningPercentage: Map<String, Double>
-//    Map<String, VariationProperty>
-//
-//)
-
 sealed class AnalysisFailure
 
 object NotSupportAnalysisType : AnalysisFailure()

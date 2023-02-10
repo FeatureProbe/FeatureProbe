@@ -22,9 +22,11 @@ class AnalysisController(val service: AnalysisService) {
     @PostMapping("/events")
     fun storeEvents(
         @RequestHeader(value = "Authorization") sdkKey: String,
-        @RequestBody request: EventRequest
+        @RequestBody body: List<EventRequest>
     ): EventResponse {
-        service.storeEvents(request, sdkKey)
+        body.forEach {
+            service.storeEvents(it, sdkKey)
+        }
         return EventResponse(200)
     }
 
