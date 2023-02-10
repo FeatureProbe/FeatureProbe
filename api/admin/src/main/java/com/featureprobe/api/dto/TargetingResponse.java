@@ -52,4 +52,11 @@ public class TargetingResponse {
     @Schema(description = "The publish time of the targeting.")
     private Date publishTime;
 
+    @Schema(description = "Whether or not access events are tracked.")
+    private Boolean trackAccessEvents;
+
+    @Schema(description = "Whether to enable event tracking.")
+    private Boolean allowEnableTrackAccessEvents;
+
+
 }

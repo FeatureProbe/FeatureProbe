@@ -19,6 +19,7 @@ import com.featureprobe.api.dto.TargetingPublishRequest;
 import com.featureprobe.api.dto.TargetingResponse;
 import com.featureprobe.api.dto.TargetingVersionRequest;
 import com.featureprobe.api.dto.TargetingVersionResponse;
+import com.featureprobe.api.dto.ToggleControlConfRequest;
 import com.featureprobe.api.dto.UpdateApprovalStatusRequest;
 import com.featureprobe.api.service.TargetingService;
 import com.featureprobe.api.validate.ResourceExistsValidate;
@@ -84,8 +85,9 @@ public class TargetingController {
     @Hook(resource = Resource.TOGGLE, action = Action.PUBLISH)
     public TargetingResponse publishSketch(@PathVariable("projectKey") String projectKey,
                                            @PathVariable("environmentKey") String environmentKey,
-                                           @PathVariable("toggleKey") String toggleKey) {
-        return targetingService.publishSketch(projectKey, environmentKey, toggleKey);
+                                           @PathVariable("toggleKey") String toggleKey,
+                                           @RequestBody @Validated ToggleControlConfRequest controlConfRequest) {
+        return targetingService.publishSketch(projectKey, environmentKey, toggleKey, controlConfRequest);
     }
 
     @PatchMapping("/sketch/cancel")

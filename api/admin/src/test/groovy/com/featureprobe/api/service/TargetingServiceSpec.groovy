@@ -10,6 +10,7 @@ import com.featureprobe.api.base.tenant.TenantContext
 import com.featureprobe.api.base.util.JsonMapper
 import com.featureprobe.api.dao.entity.Member
 import com.featureprobe.api.dao.entity.Segment
+import com.featureprobe.api.dao.entity.ToggleControlConf
 import com.featureprobe.api.dao.exception.ResourceNotFoundException
 import com.featureprobe.api.dto.CancelSketchRequest
 import com.featureprobe.api.dto.TargetingApprovalRequest
@@ -61,6 +62,8 @@ class TargetingServiceSpec extends Specification {
     ChangeLogService changeLogService
     PublishMessageRepository changeLogRepository
     DictionaryRepository dictionaryRepository
+    ToggleControlConfService toggleControlConfService
+    MetricService metricService
     EntityManager entityManager
 
     def projectKey
@@ -84,13 +87,16 @@ class TargetingServiceSpec extends Specification {
         environmentRepository = Mock(EnvironmentRepository)
         approvalRecordRepository = Mock(ApprovalRecordRepository)
         targetingSketchRepository = Mock(TargetingSketchRepository)
+        toggleControlConfService = Mock(ToggleControlConfService)
         entityManager = Mock(SessionImpl)
         changeLogRepository = Mock(PublishMessageRepository)
         dictionaryRepository = Mock(DictionaryRepository)
+        metricService = Mock(MetricService)
         changeLogService = new ChangeLogService(changeLogRepository, environmentRepository, dictionaryRepository)
         targetingService = new TargetingService(targetingRepository, segmentRepository,
                 targetingSegmentRepository, targetingVersionRepository, variationHistoryRepository,
-                environmentRepository, approvalRecordRepository, targetingSketchRepository, changeLogService, entityManager)
+                environmentRepository, approvalRecordRepository, targetingSketchRepository, changeLogService,
+                toggleControlConfService, metricService, entityManager)
 
         projectKey = "feature_probe"
         environmentKey = "test"
@@ -176,6 +182,7 @@ class TargetingServiceSpec extends Specification {
 
         1 * targetingVersionRepository.save(_)
         1 * variationHistoryRepository.saveAll(_)
+        1 * toggleControlConfService.updateTrackAccessEvents(_, _) >> new ToggleControlConf()
 
         with(ret) {
             content == it.content
@@ -272,6 +279,7 @@ class TargetingServiceSpec extends Specification {
                         content: content, disabled: false))
         1 * approvalRecordRepository.findAll(_, _) >> new PageImpl([new ApprovalRecord(status: ApprovalStatusEnum.PASS, reviewers: "[\"Admin\"]")], Pageable.ofSize(1), 1)
         1 * targetingSketchRepository.findAll(_, _) >> new PageImpl([new TargetingSketch(content: content, disabled: false, oldVersion: 1)], Pageable.ofSize(1), 1)
+        1 * toggleControlConfService.queryToggleControlConf(_) >> new ToggleControlConf()
         with(ret) {
             content == it.content
             false == it.disabled
@@ -288,6 +296,7 @@ class TargetingServiceSpec extends Specification {
                         content: content, disabled: false))
         1 * approvalRecordRepository.findAll(_, _) >> new PageImpl([approvalRecord], Pageable.ofSize(1), 1)
         1 * targetingSketchRepository.findAll(_, _) >> new PageImpl([targetingSketch], Pageable.ofSize(1), 1)
+        1 * toggleControlConfService.queryToggleControlConf(_) >> new ToggleControlConf()
         with(ret) {
             content == it.content
             true == it.disabled
@@ -391,6 +400,7 @@ class TargetingServiceSpec extends Specification {
         1 * targetingVersionRepository.save(_)
         1 * variationHistoryRepository.saveAll(_)
         1 * approvalRecordRepository.saveAndFlush(_)
+        1 * toggleControlConfService.updateTrackAccessEvents(_, _) >> new ToggleControlConf()
         1 * targetingRepository.save(_) >> new Targeting(id: 1, toggleKey: toggleKey, environmentKey: environmentKey,
                 content: "", disabled: false, version: 2)
     }

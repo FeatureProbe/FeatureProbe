@@ -10,7 +10,9 @@ import com.featureprobe.api.base.model.Variation;
 import com.featureprobe.api.base.tenant.TenantContext;
 import com.featureprobe.api.dao.entity.Segment;
 import com.featureprobe.api.dao.entity.Toggle;
+import com.featureprobe.api.dao.entity.ToggleControlConf;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
+import com.featureprobe.api.dao.repository.MetricRepository;
 import com.featureprobe.api.dao.utils.PageRequestUtil;
 import com.featureprobe.api.dto.AfterTargetingVersionResponse;
 import com.featureprobe.api.dto.ApprovalResponse;
@@ -21,6 +23,7 @@ import com.featureprobe.api.dto.TargetingPublishRequest;
 import com.featureprobe.api.dto.TargetingResponse;
 import com.featureprobe.api.dto.TargetingVersionRequest;
 import com.featureprobe.api.dto.TargetingVersionResponse;
+import com.featureprobe.api.dto.ToggleControlConfRequest;
 import com.featureprobe.api.dto.UpdateApprovalStatusRequest;
 import com.featureprobe.api.dao.entity.ApprovalRecord;
 import com.featureprobe.api.dao.entity.Environment;
@@ -50,6 +53,7 @@ import com.featureprobe.api.dao.repository.VariationHistoryRepository;
 import com.featureprobe.api.base.util.JsonMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -104,12 +108,16 @@ public class TargetingService {
 
     private ChangeLogService changeLogService;
 
+    private ToggleControlConfService toggleControlConfService;
+
+    private MetricService metricService;
+
     @PersistenceContext
     public EntityManager entityManager;
 
     @Transactional(rollbackFor = Exception.class)
     public TargetingResponse publish(String projectKey, String environmentKey, String toggleKey,
-                                    TargetingPublishRequest targetingPublishRequest) {
+                                     TargetingPublishRequest targetingPublishRequest) {
         Environment environment = selectEnvironment(projectKey, environmentKey);
         changeLogService.create(environment, ChangeLogType.CHANGE);
         return publishTargeting(projectKey, environmentKey, toggleKey, targetingPublishRequest, null);
@@ -117,7 +125,7 @@ public class TargetingService {
 
     @Transactional(rollbackFor = Exception.class)
     public ApprovalResponse approval(String projectKey, String environmentKey, String toggleKey,
-                                      TargetingApprovalRequest approvalRequest) {
+                                     TargetingApprovalRequest approvalRequest) {
         validateTargetingContent(projectKey, approvalRequest.getContent());
         Environment environment = selectEnvironment(projectKey, environmentKey);
         if (environment.isEnableApproval()) {
@@ -151,7 +159,8 @@ public class TargetingService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public TargetingResponse publishSketch(String projectKey, String environmentKey, String toggleKey) {
+    public TargetingResponse publishSketch(String projectKey, String environmentKey, String toggleKey,
+                                           ToggleControlConfRequest controlConfRequest) {
         Optional<ApprovalRecord> approvalRecordOptional = queryNewestApprovalRecord(projectKey,
                 environmentKey, toggleKey);
         Optional<TargetingSketch> targetingSketchOptional = queryNewestTargetingSketch(projectKey, environmentKey,
@@ -164,7 +173,7 @@ public class TargetingService {
             targetingSketchRepository.save(sketch);
             TargetingPublishRequest targetingPublishRequest = new TargetingPublishRequest(
                     JsonMapper.toObject(sketch.getContent(), TargetingContent.class),
-                    sketch.getComment(), sketch.getDisabled());
+                    sketch.getComment(), sketch.getDisabled(), controlConfRequest.getTrackAccessEvents());
             changeLogService.create(environment, ChangeLogType.CHANGE);
             return publishTargeting(projectKey, environmentKey, toggleKey, targetingPublishRequest,
                     approvalRecordOptional.get().getId());
@@ -174,7 +183,7 @@ public class TargetingService {
 
     @Transactional(rollbackFor = Exception.class)
     public TargetingResponse cancelSketch(String projectKey, String environmentKey, String toggleKey,
-                             CancelSketchRequest cancelSketchRequest) {
+                                          CancelSketchRequest cancelSketchRequest) {
         Optional<ApprovalRecord> approvalRecordOptional = queryNewestApprovalRecord(projectKey,
                 environmentKey, toggleKey);
         Optional<TargetingSketch> targetingSketchOptional = queryNewestTargetingSketch(projectKey, environmentKey,
@@ -194,7 +203,7 @@ public class TargetingService {
 
     @Transactional(rollbackFor = Exception.class)
     public ApprovalResponse updateApprovalStatus(String projectKey, String environmentKey, String toggleKey,
-                                     UpdateApprovalStatusRequest updateRequest) {
+                                                 UpdateApprovalStatusRequest updateRequest) {
         Optional<ApprovalRecord> approvalRecordOptional = queryNewestApprovalRecord(projectKey,
                 environmentKey, toggleKey);
         Optional<TargetingSketch> targetingSketchOptional = queryNewestTargetingSketch(projectKey, environmentKey,
@@ -214,7 +223,7 @@ public class TargetingService {
             approvalRecord.setApprovedBy(TokenHelper.getAccount());
             approvalRecordRepository.saveAndFlush(approvalRecord);
             if (updateRequest.getStatus() == ApprovalStatusEnum.JUMP) {
-                publishSketch(projectKey, environmentKey, toggleKey);
+                publishSketch(projectKey, environmentKey, toggleKey, updateRequest);
             }
             if (updateRequest.getStatus() == ApprovalStatusEnum.PASS) {
                 targeting.setStatus(ToggleReleaseStatusEnum.PENDING_RELEASE);
@@ -334,6 +343,15 @@ public class TargetingService {
         }
         targetingResponse.setEnableApproval(environment.isEnableApproval());
         targetingResponse.setPublishTime(targeting.getPublishTime());
+
+        Boolean trackAccessEvents = toggleControlConfService.queryToggleControlConf(targeting)
+                .getTrackAccessEvents();
+        targetingResponse.setTrackAccessEvents(trackAccessEvents);
+        targetingResponse.setAllowEnableTrackAccessEvents(BooleanUtils.isFalse(trackAccessEvents)
+                && metricService.existsMetric(targeting.getProjectKey(),
+                targeting.getEnvironmentKey(),
+                targeting.getToggleKey()));
+
         return targetingResponse;
     }
 
@@ -347,7 +365,7 @@ public class TargetingService {
     }
 
     private ApprovalRecord submitApproval(String projectKey, String environmentKey, String toggleKey,
-                                             TargetingApprovalRequest approvalRequest) {
+                                          TargetingApprovalRequest approvalRequest) {
         Targeting targeting = selectTargeting(projectKey, environmentKey, toggleKey);
         ApprovalRecord approvalRecord = approvalRecordRepository.save(buildApprovalRecord(projectKey, environmentKey,
                 toggleKey, approvalRequest));
@@ -358,17 +376,26 @@ public class TargetingService {
 
     private TargetingResponse publishTargeting(String projectKey, String environmentKey, String toggleKey,
                                                TargetingPublishRequest targetingPublishRequest, Long approvalId) {
-        Targeting existedTargeting = selectTargeting(projectKey, environmentKey, toggleKey);
-        long oldVersion = existedTargeting.getVersion();
-        Targeting updatedTargeting = updateTargeting(projectKey, existedTargeting, targetingPublishRequest);
-        if (updatedTargeting.getVersion() > oldVersion) {
-            saveTargetingSegmentRefs(projectKey, updatedTargeting, targetingPublishRequest.getContent());
-            saveTargetingVersion(buildTargetingVersion(updatedTargeting,
-                    targetingPublishRequest.getComment(), approvalId));
-            saveVariationHistory(updatedTargeting, targetingPublishRequest.getContent());
+
+        Targeting latestTargeting = selectTargeting(projectKey, environmentKey, toggleKey);
+        if (targetingPublishRequest.isUpdateTargetingRules()) {
+            long oldVersion = latestTargeting.getVersion();
+
+            latestTargeting = updateTargeting(projectKey, latestTargeting, targetingPublishRequest);
+            if (latestTargeting.getVersion() > oldVersion) {
+                saveTargetingSegmentRefs(projectKey, latestTargeting, targetingPublishRequest.getContent());
+                saveTargetingVersion(buildTargetingVersion(latestTargeting,
+                        targetingPublishRequest.getComment(), approvalId));
+                saveVariationHistory(latestTargeting, targetingPublishRequest.getContent());
+            }
+            latestTargeting.setStatus(ToggleReleaseStatusEnum.RELEASE);
         }
-        updatedTargeting.setStatus(ToggleReleaseStatusEnum.RELEASE);
-        return TargetingMapper.INSTANCE.entityToResponse(updatedTargeting);
+        ToggleControlConf toggleControlConf = toggleControlConfService.updateTrackAccessEvents(latestTargeting,
+                targetingPublishRequest.getTrackAccessEvents());
+        TargetingResponse targetingResponse = TargetingMapper.INSTANCE.entityToResponse(latestTargeting);
+        targetingResponse.setTrackAccessEvents(toggleControlConf.getTrackAccessEvents());
+
+        return targetingResponse;
     }
 
     private ApprovalRecord buildApprovalRecord(String projectKey, String environmentKey, String toggleKey,

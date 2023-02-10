@@ -110,4 +110,9 @@ public class MetricService {
         }
 
     }
+
+    public boolean existsMetric(String projectKey, String environmentKey, String toggleKey) {
+        return metricRepository
+                .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey).isPresent();
+    }
 }
