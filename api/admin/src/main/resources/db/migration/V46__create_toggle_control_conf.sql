@@ -6,7 +6,7 @@ create table toggle_control_conf
     `project_key`         varchar(256) default ''                not null,
     `environment_key`     varchar(256) default ''                not null,
 
-    `track_access_events` tinyint      default 0                 not null,
+    `track_access_events` tinyint(1)      default 0                 not null,
     `track_start_time`    datetime,
     `track_end_time`      datetime,
 
