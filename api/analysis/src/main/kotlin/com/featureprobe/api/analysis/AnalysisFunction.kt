@@ -113,7 +113,7 @@ fun batchAddVariation(
 ) {
     ps.setTimestamp(1, it.time)
     ps.setString(2, it.user)
-    ps.setString(3, it.toggle)
+    ps.setString(3, it.key)
     ps.setInt(4, it.variationIndex)
     ps.setObject(5, it.ruleIndex)
     ps.setObject(6, it.version)

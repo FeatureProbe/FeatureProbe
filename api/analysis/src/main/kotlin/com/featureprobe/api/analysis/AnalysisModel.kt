@@ -37,7 +37,7 @@ sealed class Event(val kind: String)
 data class AccessEvent(
     val time: Timestamp,
     val user: String,
-    val toggle: String,
+    val key: String,
     val variationIndex: Int,
     val ruleIndex: Int?,
     val version: Int?,
