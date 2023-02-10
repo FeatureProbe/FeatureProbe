@@ -12,7 +12,7 @@ const ToggleURI = {
   offlineToggleURI: `${origin}/projects/:projectKey/toggles/:toggleKey/offline`,
   restoreToggleURI: `${origin}/projects/:projectKey/toggles/:toggleKey/restore`,
   tagsURI: `${origin}/projects/:projectKey/tags`,
-  merticsURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/metrics`,
+  trafficURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/traffic`,
   toggleAccessURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/access`,
   toggleExistURI: `${origin}/projects/:projectKey/toggles/exists`,
   environmentExistURI: `${origin}/projects/:projectKey/environments/exists`,

@@ -381,7 +381,7 @@ const Targeting = () => {
                 active={activeItem === 'metrics'}
                 onClick={handleItemClick}
               >
-                <FormattedMessage id='common.metrics.text' />
+                <FormattedMessage id='common.traffic.text' />
               </Menu.Item>
             </Menu>
             {

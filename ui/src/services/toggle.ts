@@ -3,7 +3,7 @@ import request from '../utils/request';
 import API from '../constants/api';
 import { IEditToggleParams, IToggle } from 'interfaces/toggle';
 import { ITag, IToggleParams, IExistParams, IVersionParams } from 'interfaces/project';
-import { ITargetingParams, IMetricParams } from 'interfaces/targeting';
+import { ITargetingParams, ITrafficParams } from 'interfaces/targeting';
 import { ApplicationJson } from 'constants/api/contentType';
 
 export const getToggleList = async<T> (projectKey: string, params: IToggleParams) => {
@@ -176,9 +176,9 @@ export const addTag = async (projectKey: string, data: ITag) => {
   });
 };
 
-export const getMetrics = async<T> (projectKey: string, environmentKey: string, toggleKey: string, params: IMetricParams) => {
+export const getTraffic = async<T> (projectKey: string, environmentKey: string, toggleKey: string, params: ITrafficParams) => {
   const url = `${
-    API.merticsURI
+    API.trafficURI
       .replace(':projectKey', projectKey)
       .replace(':environmentKey', environmentKey)
       .replace(':toggleKey', toggleKey)

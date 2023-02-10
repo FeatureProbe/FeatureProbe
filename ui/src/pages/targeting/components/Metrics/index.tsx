@@ -24,13 +24,13 @@ import { createChartOptions } from './chartOption';
 import { createChartData } from './chartData';
 import { getOption } from './constants';
 import { IRouterParams } from 'interfaces/project';
-import { IMetric, IValues, IMetricContent } from 'interfaces/targeting';
-import { getMetrics } from 'services/toggle';
+import { ITraffic, IValues, ITrafficContent } from 'interfaces/targeting';
+import { getTraffic } from 'services/toggle';
 
 import styles from './index.module.scss';
 
 const Metrics = () => {
-  const [ metrics, setMetric ] = useState<IMetric[]>([]);
+  const [ traffic, setTraffic ] = useState<ITraffic[]>([]);
   const [ summary, setSummary ] = useState<IValues[]>([]);
   const [ filterValue, setFilterValue ] = useState<string>('24');
   const [ fitlerType, setFilterType ] = useState<string>('name');
@@ -43,14 +43,14 @@ const Metrics = () => {
   const timer: { current: NodeJS.Timeout | null } = useRef(null);
 
   const initMetrics = useCallback(() => {
-    getMetrics<IMetricContent>(projectKey, environmentKey, toggleKey, {
+    getTraffic<ITrafficContent>(projectKey, environmentKey, toggleKey, {
       lastHours: filterValue,
       metricType: fitlerType.toUpperCase(),
     }).then(res => {
       saveIsLoading(false);
       const { data, success } = res;
       if (success && data) {
-        setMetric(data.metrics || []);
+        setTraffic(data.traffic || []);
         setSummary(data.summary || []);
         saveIsAccess(data.isAccess);
 
@@ -60,7 +60,7 @@ const Metrics = () => {
         });
         setTotal(count);
       } else {
-        message.error(res.message || intl.formatMessage({id: 'targeting.metrics.error.text'}));
+        message.error(res.message || intl.formatMessage({id: 'targeting.traffic.error.text'}));
       }
     });
   }, [intl, projectKey, environmentKey, toggleKey, filterValue, fitlerType]);
@@ -78,12 +78,12 @@ const Metrics = () => {
   }, [initMetrics, filterValue]);
 
   const chartOptions = useMemo(() => {
-    return createChartOptions(metrics, projectKey, environmentKey, toggleKey, intl);
-  }, [metrics, projectKey, environmentKey, toggleKey, intl]);
+    return createChartOptions(traffic, projectKey, environmentKey, toggleKey, intl);
+  }, [traffic, projectKey, environmentKey, toggleKey, intl]);
 
   const chartData = useMemo(() => {
-    return createChartData(metrics, summary);
-  }, [metrics, summary]);
+    return createChartData(traffic, summary);
+  }, [traffic, summary]);
 
   const handleSelectChange = useCallback((e: SyntheticEvent, detail: DropdownProps) => {
     setFilterValue(detail.value as string || '24');
@@ -102,7 +102,7 @@ const Metrics = () => {
   });
 
 	return (
-		<div className={styles.metrics}>
+		<div className={styles.traffic}>
       {
         isLoading ? <Loading /> : (
           <>
@@ -111,7 +111,7 @@ const Metrics = () => {
             </div>
             <div className={styles.title}>
               <div className={styles['desc-text']}>
-                <FormattedMessage id='targeting.metrics.desc' />
+                <FormattedMessage id='targeting.traffic.desc' />
               </div>
               <div className={styles.operations}>
                 <div className={styles.menus}>
@@ -188,11 +188,11 @@ const Metrics = () => {
                     <img className={styles['no-data-image']} src={require('images/no-data.png')} alt='no-data' />
                   </div>
                   <div className={styles['no-data-text']}>
-                    <FormattedMessage id='targeting.metrics.no.data.text' />
+                    <FormattedMessage id='targeting.traffic.no.data.text' />
                   </div>
                   <div className={styles['no-data-text']}>
                     <span className={styles['no-data-link']} onClick={handleGotoSDK}>
-                      <FormattedMessage id='targeting.metrics.link.sdk.text' />
+                      <FormattedMessage id='targeting.traffic.link.sdk.text' />
                     </span>
                   </div>
                 </div>
