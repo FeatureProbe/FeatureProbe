@@ -269,7 +269,7 @@ const ToggleItem = (props: IProps) => {
       <Table.Cell>
         {
           toggle.visitedTime ? (
-            dayjs(toggle.visitedTime).diff(Date.now(), 'week') < 1 ? (
+            dayjs(toggle.visitedTime).diff(Date.now(), 'week') > -1 ? (
               <div className={styles['toggle-evaluated']}>
                 <div>
                   <FormattedMessage id='toggles.filter.evaluated.last.seven.days' />
