@@ -41,8 +41,10 @@ public class Event extends AbstractAuditEntity implements TenantSupport, Compara
     @Enumerated(EnumType.STRING)
     private MatcherTypeEnum matcher;
 
+    @Column(columnDefinition = "TEXT")
     private String url;
 
+    @Column(columnDefinition = "TEXT")
     private String selector;
 
     public Event(String name, MatcherTypeEnum matcher, String url) {

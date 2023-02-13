@@ -1,15 +1,22 @@
 package com.featureprobe.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.featureprobe.api.base.model.TargetingContent;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class TargetingPublishRequest {
+public class TargetingPublishRequest extends ToggleControlConfRequest {
+
+    public TargetingPublishRequest(TargetingContent content, String comment, Boolean disabled,
+                                   Boolean trackAccessEvents) {
+        this.content = content;
+        this.comment = comment;
+        this.disabled = disabled;
+        this.setTrackAccessEvents(trackAccessEvents);
+    }
 
     private TargetingContent content;
 
@@ -18,5 +25,10 @@ public class TargetingPublishRequest {
 
     @Schema(description = "Disables the toggle.")
     private Boolean disabled;
+
+    @JsonIgnore
+    public Boolean isUpdateTargetingRules() {
+        return disabled != null || content != null;
+    }
 
 }

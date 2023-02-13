@@ -3,14 +3,14 @@ import { VariationColors } from 'constants/colors';
 import { ITraffic, IValues } from 'interfaces/targeting';
 
 export const createChartData = (
-  metrics: ITraffic[],
+  traffic: ITraffic[],
   summary: IValues[],
 ): ChartData<'line', DefaultDataPoint<'line'>, string> => {
   const labels: string[] = [];
   const dataArr: IValues[][] = [];
   let datasets: ChartDataset<'line', DefaultDataPoint<'line'>>[] = [];
 
-  metrics.forEach((metric: ITraffic) => {
+  traffic.forEach((metric: ITraffic) => {
     labels.push(metric.name);
     dataArr.push(metric.values);
   });

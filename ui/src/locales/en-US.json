@@ -300,7 +300,7 @@
   "targeting.variations.evaluations.text": "variation {type} Evaluations",
   "targeting.traffic.no.data.text": "No data available",
   "targeting.traffic.link.sdk.text": "Please connect SDK ",
-  "targeting.traffic.error.text": "Error getting toggle metrics",
+  "targeting.traffic.error.text": "Error getting toggle traffic",
   "targeting.traffic.option.seven.days": "Last 7 days",
   "targeting.traffic.option.one.day": "Last 24 hours",
   "targeting.traffic.desc": "After the SDK is successfully connected, you can observe the changes of the access data at any time, and perceive the impact of the version change on the access data.",

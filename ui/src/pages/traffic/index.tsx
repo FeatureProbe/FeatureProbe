@@ -102,7 +102,7 @@ const Traffic = () => {
   });
 
 	return (
-		<div className={styles.metrics}>
+		<div className={styles.traffic}>
       {
         isLoading ? <Loading /> : (
           <>

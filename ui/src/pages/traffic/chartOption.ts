@@ -4,7 +4,7 @@ import { ITraffic } from 'interfaces/targeting';
 const lang = localStorage.getItem('i18n')?.replaceAll('"', '') || 'en-US';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createChartOptions = (metric: ITraffic[], projectKey: string, environmentKey: string, toggleKey: string, intl: IntlShape): any => {
+export const createChartOptions = (traffic: ITraffic[], projectKey: string, environmentKey: string, toggleKey: string, intl: IntlShape): any => {
   const config = {
     responsive: true,
     interaction: {
@@ -42,7 +42,7 @@ export const createChartOptions = (metric: ITraffic[], projectKey: string, envir
     },
   };
 
-  metric.forEach((item: ITraffic, index: number) => {
+  traffic.forEach((item: ITraffic, index: number) => {
     if (item.lastChangeVersion !== undefined) {
       const key = 'line' + index;
       // @ts-ignore null compatibility
