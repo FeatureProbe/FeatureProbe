@@ -8,7 +8,6 @@ import java.io.IOException
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.sql.PreparedStatement
-import java.sql.Timestamp
 import java.text.DecimalFormat
 
 
@@ -62,11 +61,12 @@ fun variationStats(
 }
 
 
-fun statsSql(metric: String, toggle: String, start: Timestamp, end: Timestamp): String {
+fun statsSql(metric: String, toggle: String, start: Long, end: Long): String {
     return """
 WITH $RAW_VARIATION_TABLE as (${userProvideVariationSql()}),
     $UNIQ_VARIATION_TABLE as (${uniqVariationSql(toggle, start, end)}),
-    $METRIC_TABLE as (${userProvideMetricSql(metric)}),
+    $RAW_METRIC_TABLE as (${userProvideMetricSql(metric)}),
+    $METRIC_TABLE as (${metricSql(start, end)}),
     $CONVERT_USER_TABLE as (${convertUserSql()}),
     $CONVERT_COUNT_TABLE as (${convertCountSql()}),
     $VARIATION_COUNT_TABLE as (${variationCountSql()})
@@ -81,7 +81,7 @@ SELECT
 FROM access"""
 }
 
-fun uniqVariationSql(toggle: String, start: Timestamp, end: Timestamp): String {
+fun uniqVariationSql(toggle: String, start: Long, end: Long): String {
     return """
 SELECT 
     v.user_key, v.variation, v.time 
@@ -90,12 +90,21 @@ WHERE
     v.toggle_key = '$toggle' and v.time > '$start' and v.time < '$end'"""
 }
 
+fun metricSql(start: Long, end: Long): String {
+    return """
+SELECT 
+    *
+FROM $RAW_METRIC_TABLE v 
+WHERE 
+    v.time > '$start' and v.time < '$end'"""
+}
+
 fun userProvideMetricSql(metric: String): String {
     return "SELECT user_key, time FROM events WHERE name = '$metric'"
 }
 
 fun convertUserSql(): String {
-    return "SELECT m.user_key, variation FROM $UNIQ_VARIATION_TABLE u JOIN $METRIC_TABLE m ON (u.user_key = m.user_key)"
+    return "SELECT m.user_key, variation FROM $UNIQ_VARIATION_TABLE u JOIN $RAW_METRIC_TABLE m ON (u.user_key = m.user_key)"
 }
 
 fun convertCountSql(): String {
@@ -111,7 +120,7 @@ fun batchAddVariation(
     it: AccessEvent,
     sdkKey: String
 ) {
-    ps.setTimestamp(1, it.time)
+    ps.setLong(1, it.time)
     ps.setString(2, it.user)
     ps.setString(3, it.key)
     ps.setInt(4, it.variationIndex)
@@ -127,7 +136,7 @@ fun batchAddEvent(
     it: CustomEvent,
     sdkKey: String
 ) {
-    ps.setTimestamp(1, it.time)
+    ps.setLong(1, it.time)
     ps.setString(2, it.user)
     ps.setString(3, it.name)
     ps.setDouble(4, it.value)

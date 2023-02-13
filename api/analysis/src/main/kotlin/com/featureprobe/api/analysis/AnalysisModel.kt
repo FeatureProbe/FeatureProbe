@@ -7,6 +7,7 @@ import java.sql.Timestamp
 
 const val RAW_VARIATION_TABLE: String = "__rawVariation"
 const val UNIQ_VARIATION_TABLE: String = "__uniqVariation"
+const val RAW_METRIC_TABLE: String = "__rawMetric"
 const val METRIC_TABLE: String = "__metric"
 const val CONVERT_USER_TABLE: String = "__convertUser"
 const val CONVERT_COUNT_TABLE: String = "__convertCount"
@@ -35,7 +36,7 @@ VALUES (?, ?, ?, ?, ?);"""
 sealed class Event(val kind: String)
 
 data class AccessEvent(
-    val time: Timestamp,
+    val time: Long,
     val user: String,
     val key: String,
     val variationIndex: Int,
@@ -45,7 +46,7 @@ data class AccessEvent(
 
 
 data class CustomEvent(
-    val time: Timestamp,
+    val time: Long,
     val user: String,
     val name: String,
     val value: Double,

@@ -10,12 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.testcontainers.containers.MySQLContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
-import java.sql.Timestamp
 
 // for mac with M1/M2 chips:  docker pull arm64v8/mysql:8.0
 // for mac with M1/M2 chips:  docker pull arm64v8/postgres:14.6
 @SpringBootTest
-class AnalysisControllerTests() {
+class AnalysisControllerTests {
 
     companion object {
         @ClassRule
@@ -47,10 +46,10 @@ class AnalysisControllerTests() {
 
     fun testStoreEvents(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
-        val access0 = AccessEvent(Timestamp(1675326294000), "user0", "testStoreEventsToggle", 1, 1, 1)
-        val access1 = AccessEvent(Timestamp(1675326294000), "user1", "testStoreEventsToggle", 1, null, null)
-        val event0 = CustomEvent(Timestamp(1675326294000), "user0", "testStoreClick", 1.0)
-        val event1 = CustomEvent(Timestamp(1675326294000), "user1", "testStoreClick", 1.0)
+        val access0 = AccessEvent(1676273668, "user0", "testStoreEventsToggle", 1, 1, 1)
+        val access1 = AccessEvent(1676273668, "user1", "testStoreEventsToggle", 1, null, null)
+        val event0 = CustomEvent(1676273668, "user0", "testStoreClick", 1.0)
+        val event1 = CustomEvent(1676273668, "user1", "testStoreClick", 1.0)
         val req = EventRequest(arrayListOf(access0, access1, event0, event1))
         val session = sessionOf(service.dataSource)
 
@@ -104,8 +103,8 @@ class AnalysisControllerTests() {
 
     fun testConversionAnalysis(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
-        val start = Timestamp.valueOf("2023-02-02 23:25:44.659")
-        val end = Timestamp.valueOf("2023-02-02 23:45:44.659")
+        val start = 1676273660L
+        val end = 1676273678L
 
         val result =
             service.doAnalysis("sdkKey", "click_1", "toggle_1", "binomial", start, end)
@@ -118,8 +117,8 @@ class AnalysisControllerTests() {
 
     fun testVariationEmptyConversionAnalysis(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
-        val start = Timestamp.valueOf("2023-02-02 23:25:44.659")
-        val end = Timestamp.valueOf("2023-02-02 23:45:44.659")
+        val start = 1676273660L
+        val end = 1676273669L
 
         val result =
             service.doAnalysis("sdkKey", "click_not_collect", "toggle_not_collect", "binomial", start, end)
@@ -130,8 +129,8 @@ class AnalysisControllerTests() {
 
     fun testEventEmptyConversionAnalysis(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
-        val start = Timestamp.valueOf("2023-02-02 23:25:44.659")
-        val end = Timestamp.valueOf("2023-02-02 23:45:44.659")
+        val start = 1676273660L
+        val end = 1676273669L
 
         val result =
             service.doAnalysis("sdkKey", "click_not_collect", "toggle_1", "binomial", start, end)

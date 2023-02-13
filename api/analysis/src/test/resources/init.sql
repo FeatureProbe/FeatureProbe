@@ -1,6 +1,6 @@
 create table access
 (
-    time            timestamp    not null,
+    time            bigint    not null,
     user_key        varchar(256) not null,
     toggle_key      varchar(256) not null,
     variation_index integer      not null,
@@ -11,7 +11,7 @@ create table access
 
 create table events
 (
-    time     timestamp        not null,
+    time     bigint        not null,
     user_key varchar(256)     not null,
     name     varchar(256)     not null,
     value    double precision not null,
@@ -20,32 +20,32 @@ create table events
 
 insert into access
 (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key)
-values ('2023-02-02 23:35:44.659', 'user1', 'toggle_1', 1, 1, 1, 'sdk_key');
+values (1676273668, 'user1', 'toggle_1', 1, 1, 1, 'sdk_key');
 
 insert into access
 (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key)
-values ('2023-02-02 23:35:44.659', 'user2', 'toggle_1', 2, 1, 1, 'sdk_key');
+values (1676273668, 'user2', 'toggle_1', 2, 1, 1, 'sdk_key');
 
 insert into access
 (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key)
-values ('2023-02-02 23:35:44.659', 'user3', 'toggle_1', 1, 1, 1, 'sdk_key');
+values (1676273668, 'user3', 'toggle_1', 1, 1, 1, 'sdk_key');
 
 insert into access
 (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key)
-values ('2023-02-02 23:35:44.659', 'user4', 'toggle_1', 2, 1, 1, 'sdk_key');
+values (1676273668, 'user4', 'toggle_1', 2, 1, 1, 'sdk_key');
 
 insert into access
 (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key)
-values ('2023-02-02 23:35:44.659', 'user5', 'toggle_1', 1, 1, 1, 'sdk_key');
+values (1676273668, 'user5', 'toggle_1', 1, 1, 1, 'sdk_key');
 
 insert into events
     (time, user_key, name, value, sdk_key)
-values ('2023-02-02 23:35:44.659', 'user1', 'click_1', 1, 'sdk_key');
+values (1676273668, 'user1', 'click_1', 1, 'sdk_key');
 
 insert into events
     (time, user_key, name, value, sdk_key)
-values ('2023-02-02 23:35:44.659', 'user2', 'click_1', 1, 'sdk_key');
+values (1676273668, 'user2', 'click_1', 1, 'sdk_key');
 
 insert into events
     (time, user_key, name, value, sdk_key)
-values ('2023-02-02 23:35:44.659', 'user5', 'click_1', 1, 'sdk_key');
+values (1676273668, 'user5', 'click_1', 1, 'sdk_key');

@@ -36,8 +36,8 @@ class AnalysisController(val service: AnalysisService) {
         @RequestParam metric: String,
         @RequestParam toggle: String,
         @RequestParam type: String,
-        @RequestParam start: Timestamp,
-        @RequestParam end: Timestamp,
+        @RequestParam start: Long,
+        @RequestParam end: Long,
     ): AnalysisResponse {
         return when (val result = service.doAnalysis(sdkKey, metric, toggle, type, start, end)) {
             Err(NotSupportAnalysisType) -> AnalysisResponse(500, mapOf())
@@ -97,7 +97,7 @@ class AnalysisService(
 
     fun doAnalysis(
         sdkKey: String, metric: String, toggle: String,
-        type: String, start: Timestamp, end: Timestamp
+        type: String, start: Long, end: Long
     ): Result<Map<String, VariationProperty>, AnalysisFailure> {
         if (type != "binomial") {
             return Err(NotSupportAnalysisType)
@@ -112,7 +112,7 @@ class AnalysisService(
         return Ok(variationStats(distributions, winningPercentage(distributions, iterationCount)))
     }
 
-    fun variationCount(metric: String, toggle: String, start: Timestamp, end: Timestamp): List<VariationCount> {
+    fun variationCount(metric: String, toggle: String, start: Long, end: Long): List<VariationCount> {
         val sql = statsSql(metric, toggle, start, end)
         log.info(sql)
         val session = sessionOf(dataSource)
