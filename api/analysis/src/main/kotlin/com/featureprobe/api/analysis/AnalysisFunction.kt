@@ -10,7 +10,6 @@ import java.math.RoundingMode
 import java.sql.PreparedStatement
 import java.text.DecimalFormat
 
-
 fun winningPercentage(distributions: Map<String, BetaDistribution>, iteration: Int): Map<String, Double> {
     if (distributions.isEmpty()) {
         return mapOf()
@@ -146,7 +145,7 @@ fun batchAddEvent(
 }
 
 class CustomDoubleSerialize : JsonSerializer<Double>() {
-    private val df = DecimalFormat("0.00")
+    private val df = DecimalFormat("0.000")
 
     @Throws(IOException::class)
     override fun serialize(arg0: Double, arg1: JsonGenerator, arg2: SerializerProvider?) {
