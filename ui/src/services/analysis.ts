@@ -5,7 +5,23 @@ import { IEvent } from 'interfaces/analysis';
 
 export const getEventDetail = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
   const url = `${
-    API.analysisMetric
+    API.metric
+      .replace(':projectKey', projectKey)
+      .replace(':environmentKey', environmentKey)
+      .replace(':toggleKey', toggleKey)
+  }`;
+  
+  return request<T>(url, {
+    method: 'GET',
+    headers: {
+      ...ApplicationJson()
+    },
+  });
+};
+
+export const getEventAnalysis = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
+  const url = `${
+    API.analysis
       .replace(':projectKey', projectKey)
       .replace(':environmentKey', environmentKey)
       .replace(':toggleKey', toggleKey)
@@ -21,7 +37,7 @@ export const getEventDetail = async<T> (projectKey: string, environmentKey: stri
 
 export const createEvent = async (projectKey: string, environmentKey: string, toggleKey: string, data: IEvent) => {
   const url = `${
-    API.analysisMetric
+    API.metric
       .replace(':projectKey', projectKey)
       .replace(':environmentKey', environmentKey)
       .replace(':toggleKey', toggleKey)
