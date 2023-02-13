@@ -42,8 +42,9 @@ fun variationStats(
 ): Map<String, VariationProperty> {
     return distributions.map {
         val distributionChart = (0..9).map { i ->
-            val x = 0.05 + i * 0.1
-            val y = it.value.inverseCumulativeProbability(x)
+            val p = 0.05 + i * 0.1
+            val x = it.value.inverseCumulativeProbability(p)
+            val y = it.value.density(x)
             DistributionDot(x, y)
         }.toList()
 
@@ -145,7 +146,7 @@ fun batchAddEvent(
 }
 
 class CustomDoubleSerialize : JsonSerializer<Double>() {
-    private val df = DecimalFormat("0.000")
+    private val df = DecimalFormat("0.00000")
 
     @Throws(IOException::class)
     override fun serialize(arg0: Double, arg1: JsonGenerator, arg2: SerializerProvider?) {
