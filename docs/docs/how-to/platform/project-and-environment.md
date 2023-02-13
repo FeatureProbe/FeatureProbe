@@ -24,7 +24,8 @@ The system will have an initial project (My First Project) with 2 environments (
 1. Click Add Environment
 2. Fill in the environment name
 3. fill in the key (the unique identifier of the environment, unique under the same project, once created, cannot be edited)
-4. click the Create button to complete the creation of the environment (once the environment is created, it cannot be deleted)
+4. Select an environment to copy (optional range: all existing environments under this project), and all toggles information of this environment will be copied to the new environment. (Toggle latest configuration content,toggle status, etc.)
+5. click the Create button to complete the creation of the environment (once the environment is created, it cannot be deleted)
 
 - Note: After the new environment is created, it will share the list of toggles under the project (the template information of the toggles), and the configuration information of the toggles will need to be configured independently by entering the environment.
 
@@ -39,7 +40,7 @@ The system will have an initial project (My First Project) with 2 environments (
 ### Edit environment
 
 1. Click Edit Environment
-2. Edit the environment information
+2. Only supports editing the environment name
 3. Click the Save button to finish editing the environment
 
 ### Offline and recovery environment

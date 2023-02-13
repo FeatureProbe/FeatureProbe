@@ -1,220 +1,154 @@
 package com.featureprobe.api.service
 
-import com.featureprobe.api.base.enums.MetricType
-import com.featureprobe.api.base.enums.MetricsCacheTypeEnum
-import com.featureprobe.api.base.enums.OrganizationRoleEnum
-import com.featureprobe.api.base.model.OrganizationMemberModel
-import com.featureprobe.api.base.model.TargetingContent
-import com.featureprobe.api.base.model.Variation
-import com.featureprobe.api.base.tenant.TenantContext
-import com.featureprobe.api.dto.AccessEventPoint
-import com.featureprobe.api.dto.MetricResponse
+import com.featureprobe.api.base.enums.MetricTypeEnum
+import com.featureprobe.api.base.enums.MatcherTypeEnum
 import com.featureprobe.api.dao.entity.Environment
 import com.featureprobe.api.dao.entity.Event
-import com.featureprobe.api.dao.entity.Targeting
-import com.featureprobe.api.dao.entity.VariationHistory
-
-
+import com.featureprobe.api.dao.entity.Metric
+import com.featureprobe.api.dao.exception.ResourceNotFoundException
+import com.featureprobe.api.dao.repository.DictionaryRepository
 import com.featureprobe.api.dao.repository.EnvironmentRepository
 import com.featureprobe.api.dao.repository.EventRepository
-import com.featureprobe.api.dao.repository.MetricsCacheRepository
-import com.featureprobe.api.dao.repository.TargetingRepository
-import com.featureprobe.api.dao.repository.TargetingVersionRepository
-import com.featureprobe.api.dao.repository.VariationHistoryRepository
-import com.featureprobe.api.dto.VariationAccessCounter
+import com.featureprobe.api.dao.repository.MetricRepository
+import com.featureprobe.api.dao.repository.PublishMessageRepository
+import com.featureprobe.api.dto.MetricCreateRequest
 import org.hibernate.internal.SessionImpl
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.context.SecurityContextImpl
-import org.springframework.security.oauth2.jwt.Jwt
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import spock.lang.Specification
-
 import javax.persistence.EntityManager
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class MetricServiceSpec extends Specification {
 
-    MetricService metricService
-    EnvironmentRepository environmentRepository
     EventRepository eventRepository
-    VariationHistoryRepository variationHistoryRepository
-    TargetingVersionRepository targetingVersionRepository
-    TargetingRepository targetingRepository
-    MetricsCacheRepository metricsCacheRepository
+
+    MetricRepository metricRepository
+
     EntityManager entityManager
 
+    MetricService eventService
+
+    PublishMessageRepository publishMessageRepository
+
+    EnvironmentRepository environmentRepository
+
+    DictionaryRepository dictionaryRepository
+
+    ChangeLogService changeLogService
+
+    def projectKey
+    def environmentKey
+    def toggleKey
+
     def setup() {
-        environmentRepository = Mock(EnvironmentRepository)
         eventRepository = Mock(EventRepository)
-        variationHistoryRepository = Mock(VariationHistoryRepository)
-        targetingVersionRepository = Mock(TargetingVersionRepository)
-        targetingRepository = Mock(TargetingRepository)
-        metricsCacheRepository = Mock(MetricsCacheRepository)
+        metricRepository = Mock(MetricRepository)
         entityManager = Mock(SessionImpl)
-        metricService = new MetricService(environmentRepository, eventRepository, variationHistoryRepository,
-                targetingVersionRepository, targetingRepository, metricsCacheRepository, entityManager)
-        TenantContext.setCurrentTenant("1")
-        TenantContext.setCurrentOrganization(new OrganizationMemberModel(1,
-                "organization", OrganizationRoleEnum.OWNER))
+        publishMessageRepository = Mock(PublishMessageRepository)
+        environmentRepository = Mock(EnvironmentRepository)
+        dictionaryRepository = Mock(DictionaryRepository)
+        changeLogService = new ChangeLogService(publishMessageRepository, environmentRepository, dictionaryRepository)
+        eventService = new MetricService(eventRepository, metricRepository, environmentRepository, changeLogService, entityManager)
+        projectKey = "Test_Project"
+        environmentKey = "online"
+        toggleKey = "Test_Toggle"
     }
 
-    def "test find the last 3 hours of data by metric type"() {
+    def "create a new CONVERSION metric"() {
         given:
-        def toggleKey = "myToggle"
-        def envKey = "test"
-        def projectKey = "prj-key"
-        def serverSdkKey = "sdkKey-001"
-
+        MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CONVERSION, name: "access_feature")
         when:
-        MetricResponse response = metricService.query("prj-key",
-                "test", "myToggle", MetricType.NAME, 3)
-
+        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
         then:
-        1 * environmentRepository.findByProjectKeyAndKey(projectKey, envKey) >> Optional.of(new Environment(serverSdkKey: serverSdkKey))
-        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, envKey, toggleKey) >> Optional.of(new Targeting(id: 1, content: "{}"))
-        1 * eventRepository.findBySdkKeyAndToggleKeyAndStartDateGreaterThanEqualAndEndDateLessThanEqual(serverSdkKey, toggleKey,
-                _, _) >> []
-        1 * variationHistoryRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, envKey, toggleKey) >> []
-        1 * eventRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey) >> true
-        0 == response.summary.size()
-        response.isAccess
+        1 * metricRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.empty()
+        1 * eventRepository.findByName("access_feature") >> Optional.empty()
+        1 * eventRepository.save(_) >> new Event(name: "access_feature")
+        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(version: 1))
+        1 * environmentRepository.save(_)
+        1 * publishMessageRepository.save(_)
+        1 * metricRepository.save(_) >> new Metric(type: MetricTypeEnum.CONVERSION, events: [new Event(name: "access_feature")])
+        MetricTypeEnum.CONVERSION.name() == created.type.name()
+        1 == created.events.size()
     }
 
-    def "test append latest variations"() {
+    def "create a new CLICK metric"() {
         given:
-        List<VariationAccessCounter> accessCounters = [
-                new VariationAccessCounter("red", 10),
-                new VariationAccessCounter("blue", 10)
-        ]
-        Targeting latestTargeting = new Targeting(content: new TargetingContent(variations: [new Variation(name: "red"),
-                                                                                             new Variation(name: "green")]).toJson())
-
+        MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CLICK, url: "http://127.0.0.1/test", matcher: MatcherTypeEnum.SIMPLE, selector: "#123")
         when:
-        metricService.appendLatestVariations(accessCounters, latestTargeting, MetricType.NAME)
-
+        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
         then:
-        3 == accessCounters.size()
+        1 * metricRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.empty()
+        2 * eventRepository.findByName(_) >> Optional.empty()
+        1 * eventRepository.save(_) >> new Event(name: "123")
+        1 * eventRepository.save(_) >> new Event(name: "321")
+        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(version: 1))
+        1 * environmentRepository.save(_)
+        1 * publishMessageRepository.save(_)
+        1 * metricRepository.save(_) >> new Metric(type: MetricTypeEnum.CLICK, events: new TreeSet<Event>([new Event(name: "123"), new Event(name: "321")]))
+        MetricTypeEnum.CLICK.name() == created.type.name()
+        2 == created.events.size()
     }
 
-    def "test event entities convert to access counter"() {
+    def "update a exists event "() {
+        given:
+        MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CONVERSION, name: "access_feature2")
         when:
-        def accessCounters = metricService.toAccessEvent([
-                new Event(valueIndex: 0, toggleVersion: 10, count: 10),
-                new Event(valueIndex: 1, toggleVersion: 11, count: 20),
-                new Event(valueIndex: 0, toggleVersion: 10, count: 30)
-        ])
-
+        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
         then:
-        2 == accessCounters.size()
-        with(accessCounters.find { it.value == '10_0' }) {
-            40 == count
-        }
+        1 * metricRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.of(new Metric(type: MetricTypeEnum.NUMERIC, events: [new Event(name: "access_feature2")]))
+        1 * eventRepository.findByName("access_feature2") >> Optional.of(new Event(id: 1, name: "access_feature2"))
+        1 * eventRepository.save(_) >> new Event(name: "access_feature2")
+        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(version: 1))
+        1 * environmentRepository.save(_)
+        1 * publishMessageRepository.save(_)
+        1 * metricRepository.save(_) >> new Metric(type: MetricTypeEnum.NUMERIC, events: [new Event(name: "access_feature2")])
+        MetricTypeEnum.NUMERIC.name() == created.type.name()
+        1 == created.events.size()
     }
 
-    def "test aggregate point by metric type "() {
+
+    def "create a CONVERSION event: name is required"() {
+        given:
+        MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CONVERSION)
         when:
-        List<AccessEventPoint> accessEventPoints = metricService.aggregatePointByMetricType([
-                "1_10": new VariationHistory(id: 3, name: "blue"),
-                "1_11": new VariationHistory(id: 3, name: "blue")],
-                [new AccessEventPoint("10", [new VariationAccessCounter(value: "1_10", count: 15),
-                                             new VariationAccessCounter(value: "1_11", count: 5)], 1, 1)], MetricType.NAME)
-
+        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
         then:
-        1 == accessEventPoints.size()
-        "blue" == accessEventPoints[0].values[0].value
-        20 == accessEventPoints[0].values[0].count
+        thrown(IllegalArgumentException)
     }
 
-    def "test sort access counters"() {
+    def "create a PAGE_VIEW event: url is required"() {
+        given:
+        MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.PAGE_VIEW)
         when:
-        def counters = metricService.sortAccessCounters([new VariationAccessCounter(count: 15),
-                                                         new VariationAccessCounter(count: 100),
-                                                         new VariationAccessCounter(count: 19, deleted: true),
-                                                         new VariationAccessCounter(count: 99, deleted: true),
-                                                         new VariationAccessCounter(count: 129)])
-
+        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
         then:
-        129 == counters.get(0).count
-        19 == counters.get(counters.size() - 1).count
-        99 == counters.get(counters.size() - 2).count
+        thrown(IllegalArgumentException)
     }
 
-    def "test `isGroupByDay`"() {
-        expect:
-        groupByDay == metricService.isGroupByDay(lastHours)
-
-        where:
-        groupByDay | lastHours
-        false      | 10
-        false      | 24
-        true       | 48
-        true       | 49
-    }
-
-    def "test `getPointIntervalCount`"() {
-        expect:
-        intervalCount == metricService.getPointIntervalCount(lastHours)
-
-        where:
-        intervalCount | lastHours
-        1             | 9
-        2             | 24
-        24            | 48
-    }
-
-    def "test `getPointNameFormat`"() {
-        expect:
-        formatName == metricService.getPointNameFormat(lastHours)
-
-        where:
-        formatName | lastHours
-        "HH"       | 9
-        "HH"       | 24
-        "MM/dd"    | 49
-    }
-
-    def "test `getQueryStartDateTime`"() {
-        expect:
-        dateTime == metricService.getQueryStartDateTime(now, lastHours)
-                .format(DateTimeFormatter.ofPattern("MM/dd HH"))
-
-        where:
-        dateTime   | now                                      | lastHours
-        "03/01 07" | LocalDateTime.of(2022, 3, 1, 10, 10, 10) | 4
-        "03/01 11" | LocalDateTime.of(2022, 3, 2, 10, 10, 10) | 24
-    }
-
-    def "test `summaryAccessEvents`"() {
+    def "create a CLICK event: selector is required"() {
+        given:
+        MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CLICK, matcher: MatcherTypeEnum.SIMPLE, url: "https://127.0.0.1/test")
         when:
-        def events = metricService.summaryAccessEvents([new AccessEventPoint("10", [new VariationAccessCounter(value: "true", count: 1)], null, 1),
-                                                        new AccessEventPoint("11", [new VariationAccessCounter(value: "false", count: 4),
-                                                                                    new VariationAccessCounter(value: "true", count: 9)], null, 2),
-                                                        new AccessEventPoint("12", [new VariationAccessCounter(value: "true", count: 2)], null, 3),
-        ])
-
+        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
         then:
-        2 == events.size()
-        with(events.find { it.value == 'true' }) {
-            12 == it.count
-        }
-        with(events.find { it.value == 'false' }) {
-            4 == it.count
-        }
+        thrown(IllegalArgumentException)
     }
 
-    def "query access status"() {
+
+    def "query a event by toggle"() {
         when:
-        def isAccess = metricService.isAccess("projectKey", "dev", "toggleKey")
+        def metric = eventService.query(projectKey, environmentKey, toggleKey)
         then:
-        1 * environmentRepository.findByProjectKeyAndKey("projectKey", "dev") >> Optional.of(new Environment(serverSdkKey: "123"))
-        1 * eventRepository.existsBySdkKeyAndToggleKey("123", "toggleKey") >> true
-        true == isAccess.getIsAccess()
+        1 * metricRepository
+                .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.of(new Metric(type: MetricTypeEnum.CONVERSION, events: [new Event(name: "access_feature")]))
+        MetricTypeEnum.CONVERSION.name() == metric.type.name()
+        "access_feature" == metric.name
     }
 
-    private setAuthContext(String account, String role) {
-        SecurityContextHolder.setContext(new SecurityContextImpl(
-                new JwtAuthenticationToken(new Jwt.Builder("21212").header("a", "a")
-                        .claim("role", role).claim("account", account).build())))
+    def "query a not exists event by toggle"() {
+        when:
+        eventService.query(projectKey, environmentKey, toggleKey)
+        then:
+        1 * metricRepository
+                .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.empty()
+        thrown(ResourceNotFoundException)
     }
 }

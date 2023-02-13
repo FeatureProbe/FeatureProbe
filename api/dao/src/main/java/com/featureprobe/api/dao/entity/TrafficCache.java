@@ -1,6 +1,6 @@
 package com.featureprobe.api.dao.entity;
 
-import com.featureprobe.api.base.enums.MetricsCacheTypeEnum;
+import com.featureprobe.api.base.enums.TrafficCacheTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,10 +21,10 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "metrics_cache")
+@Table(name = "traffic_cache")
 @DynamicInsert
 @ToString(callSuper = true)
-public class MetricsCache {
+public class TrafficCache {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,5 +46,5 @@ public class MetricsCache {
     private Date endDate;
 
     @Enumerated(EnumType.STRING)
-    private MetricsCacheTypeEnum type;
+    private TrafficCacheTypeEnum type;
 }

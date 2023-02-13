@@ -120,7 +120,7 @@ class CacheServerDataSourceSpec extends Specification {
         def serverResponse = cacheServerDataSource.queryServerTogglesByServerSdkKey(serverSdkKey)
         then:
         1 * cache.get(serverSdkKey) >> JsonMapper.toJSONString(new ServerResponse([new Toggle( key: "toggle")],
-                [new Segment(uniqueId: "1", version: 1, rules: [])], 1)).getBytes()
+                [new Segment(uniqueId: "1", version: 1, rules: [])], [], 1)).getBytes()
         1 == serverResponse.version
         1 == serverResponse.toggles.size()
         1 == serverResponse.segments.size()
@@ -138,6 +138,7 @@ class CacheServerDataSourceSpec extends Specification {
         1 * cache.put(CacheServerDataSource.SDK_KEYS_CACHE_KEY, _)
         1 * environmentRepository.findAllServerToggle() >> serverToggleList
         1 * environmentRepository.findAllServerSegment() >> serverSegmentList
+        1 * environmentRepository.findAllServerEvent() >> []
         1 * cache.putAll(_)
         serverToggle.getProjectKey() >> "projectKey"
         serverToggle.getToggleKey() >> "toggleKey"
@@ -170,6 +171,7 @@ class CacheServerDataSourceSpec extends Specification {
         1 * dictionaryRepository.findByKey(_) >> Optional.of(new Dictionary(value: "1"))
         2 * environmentRepository.findByServerSdkKeyOrClientSdkKey(_, _) >>
                 Optional.of(new Environment(project: new Project(key: projectKey, organizationId: 1), key: environmentKey, serverSdkKey: sdkKey, version: 1))
+        2 * environmentRepository.findAllServerEventBySdkKey(_) >> []
         4 * environmentRepository.findByServerSdkKey(_) >>
                 Optional.of(new Environment(project: new Project(key: projectKey, organizationId: 1), key: environmentKey, organizationId: 1, version: 1))
         4 * segmentRepository.findAllByProjectKeyAndOrganizationIdAndDeleted(projectKey, 1, false) >>

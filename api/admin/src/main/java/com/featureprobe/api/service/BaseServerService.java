@@ -1,13 +1,16 @@
 package com.featureprobe.api.service;
 
 import com.featureprobe.api.base.db.ExcludeTenant;
+import com.featureprobe.api.base.enums.MetricTypeEnum;
 import com.featureprobe.api.base.enums.ResourceType;
+import com.featureprobe.api.base.model.JSEvent;
 import com.featureprobe.api.base.util.JsonMapper;
 import com.featureprobe.api.builder.ServerSegmentBuilder;
 import com.featureprobe.api.builder.ServerToggleBuilder;
 import com.featureprobe.api.dao.entity.Dictionary;
 import com.featureprobe.api.dao.entity.Environment;
 import com.featureprobe.api.dao.entity.Segment;
+import com.featureprobe.api.dao.entity.ServerEventEntity;
 import com.featureprobe.api.dao.entity.ServerSegmentEntity;
 import com.featureprobe.api.dao.entity.ServerToggleEntity;
 import com.featureprobe.api.dao.entity.Targeting;
@@ -23,6 +26,7 @@ import com.featureprobe.api.dto.ServerResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -53,7 +57,6 @@ public class BaseServerService {
 
     private DictionaryRepository dictionaryRepository;
 
-
     @PersistenceContext
     public EntityManager entityManager;
 
@@ -75,17 +78,20 @@ public class BaseServerService {
         Environment environment = environmentRepository.findByServerSdkKeyOrClientSdkKey(serverSdkKey, serverSdkKey)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceType.ENVIRONMENT, serverSdkKey));
         return new ServerResponse(queryTogglesBySdkKey(environment.getServerSdkKey()),
-                querySegmentsBySdkKey(environment.getServerSdkKey()), environment.getVersion());
+                querySegmentsBySdkKey(environment.getServerSdkKey()), queryEventsBySdkKey(serverSdkKey),
+                environment.getVersion());
     }
 
     public Map<String, byte[]> queryAllServerToggle() {
         List<ServerToggleEntity> allServerToggle = environmentRepository.findAllServerToggle();
         List<ServerSegmentEntity> allServerSegment = environmentRepository.findAllServerSegment();
-        return buildAllServerToggle(allServerToggle, allServerSegment);
+        List<ServerEventEntity> allServerEvent = environmentRepository.findAllServerEvent();
+        return buildAllServerToggle(allServerToggle, allServerSegment, allServerEvent);
     }
 
     private Map<String, byte[]>  buildAllServerToggle(List<ServerToggleEntity> allServerToggle,
-                                                 List<ServerSegmentEntity> allServerSegment) {
+                                                      List<ServerSegmentEntity> allServerSegment,
+                                                      List<ServerEventEntity> allServerEvent) {
         Map<String, List<Segment>> segmentsMap = new HashMap<>();
         allServerSegment.stream().forEach(serverSegment -> {
             if (segmentsMap.containsKey(getServerSegmentUniqueKey(serverSegment))) {
@@ -96,6 +102,19 @@ public class BaseServerService {
                 segmentsMap.put(getServerSegmentUniqueKey(serverSegment), segments);
             }
         });
+        Map<String, List<JSEvent>> eventMap = new HashMap<>();
+        allServerEvent.stream()
+                .filter(e -> (MetricTypeEnum.PAGE_VIEW.equals(e.getType()) ||
+                        (MetricTypeEnum.CLICK.equals(e.getType()) && StringUtils.isNotBlank(e.getSelector()))))
+                .forEach(serverEvent -> {
+                    if (eventMap.containsKey(serverEvent.getServerSdkKey())) {
+                        eventMap.get(serverEvent.getServerSdkKey()).add(toEvent(serverEvent));
+                    } else {
+                        List<JSEvent> events = new ArrayList<>();
+                        events.add(toEvent(serverEvent));
+                        eventMap.put(serverEvent.getServerSdkKey(), events);
+                    }
+                });
         Map<String, List<Toggle>> toggleMap = new HashMap<>();
         Map<String, List<Targeting>> targetingMap = new HashMap<>();
         Map<String, ServerEnv> serverEnvMap = new HashMap<>();
@@ -111,7 +130,8 @@ public class BaseServerService {
             List<Targeting> targetingList = targetingMap.getOrDefault(serverSdkKey, Collections.emptyList()).stream()
                     .filter(distinctByKey(Targeting::uniqueKey)).collect(Collectors.toList());
             ServerResponse serverResponse = new ServerResponse(buildServerToggles(segments, toggles, targetingList),
-                    buildServerSegments(segments), serverEnvMap.get(serverSdkKey).getEnvVersion());
+                    buildServerSegments(segments), eventMap.getOrDefault(serverSdkKey,  Collections.emptyList()),
+                    serverEnvMap.get(serverSdkKey).getEnvVersion());
             allServerResponse.put(serverSdkKey, JsonMapper.toJSONString(serverResponse).getBytes());
         }
         return allServerResponse;
@@ -199,6 +219,19 @@ public class BaseServerService {
         return serverEnv;
     }
 
+    private JSEvent toEvent(ServerEventEntity serverEvent){
+        JSEvent event = new JSEvent();
+        event.setType(serverEvent.getType());
+        event.setName(serverEvent.getName());
+        if (MetricTypeEnum.CLICK.equals(serverEvent.getType())) {
+            event.setPvName(MetricService.generatePVUniqueName(serverEvent.getMatcher(), serverEvent.getUrl()));
+        }
+        event.setMatcher(serverEvent.getMatcher());
+        event.setUrl(serverEvent.getUrl());
+        event.setSelector(serverEvent.getSelector());
+        return event;
+    }
+
     private List<com.featureprobe.sdk.server.model.Toggle> queryTogglesBySdkKey(String serverSdkKey) {
         Environment environment = environmentRepository.findByServerSdkKey(serverSdkKey).get();
         if (Objects.isNull(environment)) {
@@ -222,6 +255,16 @@ public class BaseServerService {
         List<Segment> segments = segmentRepository.findAllByProjectKeyAndOrganizationIdAndDeleted(
                 environment.getProject().getKey(), environment.getOrganizationId(), false);
         return buildServerSegments(segments);
+    }
+
+    private List<JSEvent> queryEventsBySdkKey(String serverSdkKey) {
+        List<ServerEventEntity> serverEventEntities = environmentRepository.findAllServerEventBySdkKey(serverSdkKey);
+        return serverEventEntities.stream()
+                .filter(serverEvent -> (MetricTypeEnum.PAGE_VIEW.equals(serverEvent.getType())
+                        || (MetricTypeEnum.CLICK.equals(serverEvent.getType()) &&
+                        StringUtils.isNotBlank(serverEvent.getSelector()))))
+                .map(serverEvent -> toEvent(serverEvent))
+                .collect(Collectors.toList());
     }
 
     private List<com.featureprobe.sdk.server.model.Segment> buildServerSegments(List<Segment> segments) {

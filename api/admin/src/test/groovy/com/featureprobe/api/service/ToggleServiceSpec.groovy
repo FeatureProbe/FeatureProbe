@@ -1,17 +1,26 @@
 package com.featureprobe.api.service
 
-import com.featureprobe.api.base.enums.SketchStatusEnum
+
 import com.featureprobe.api.base.enums.ToggleReleaseStatusEnum
-import com.featureprobe.api.base.enums.ValidateTypeEnum
-import com.featureprobe.api.base.enums.VisitFilter
 import com.featureprobe.api.component.SpringBeanManager
 import com.featureprobe.api.config.AppConfig
-import com.featureprobe.api.dao.entity.*
+import com.featureprobe.api.base.enums.SketchStatusEnum
+import com.featureprobe.api.base.enums.ValidateTypeEnum
+import com.featureprobe.api.base.enums.VisitFilter
 import com.featureprobe.api.dao.exception.ResourceConflictException
 import com.featureprobe.api.dao.repository.*
 import com.featureprobe.api.dto.ToggleCreateRequest
 import com.featureprobe.api.dto.ToggleSearchRequest
 import com.featureprobe.api.dto.ToggleUpdateRequest
+import com.featureprobe.api.dao.entity.Environment
+import com.featureprobe.api.dao.entity.Member
+import com.featureprobe.api.dao.entity.TrafficCache
+import com.featureprobe.api.dao.entity.Project
+import com.featureprobe.api.dao.entity.Tag
+import com.featureprobe.api.dao.entity.Targeting
+import com.featureprobe.api.dao.entity.TargetingSketch
+import com.featureprobe.api.dao.entity.Toggle
+import com.featureprobe.api.dao.entity.ToggleTagRelation
 import com.featureprobe.sdk.server.FeatureProbe
 import org.hibernate.internal.SessionImpl
 import org.springframework.context.ApplicationContext
@@ -43,13 +52,13 @@ class ToggleServiceSpec extends Specification {
 
     EnvironmentRepository environmentRepository
 
-    EventRepository eventRepository
+    TrafficRepository trafficRepository
 
     TargetingService targetingService
 
     TargetingSketchRepository targetingSketchRepository
 
-    MetricsCacheRepository metricsCacheRepository
+    TrafficCacheRepository trafficCacheRepository
 
     ChangeLogService changeLogService
 
@@ -82,9 +91,9 @@ class ToggleServiceSpec extends Specification {
         toggleTagRepository = Mock(ToggleTagRepository)
         targetingRepository = Mock(TargetingRepository)
         environmentRepository = Mock(EnvironmentRepository)
-        eventRepository = Mock(EventRepository)
+        trafficRepository = Mock(TrafficRepository)
         targetingSketchRepository = Mock(TargetingSketchRepository)
-        metricsCacheRepository = Mock(MetricsCacheRepository)
+        trafficCacheRepository = Mock(TrafficCacheRepository)
         targetingService = Mock(TargetingService)
         toggleTagRepository = Mock(ToggleTagRepository)
         projectRepository = Mock(ProjectRepository)
@@ -93,7 +102,7 @@ class ToggleServiceSpec extends Specification {
         changeLogService = new ChangeLogService(publishMessageRepository, environmentRepository, dictionaryRepository)
         entityManager = Mock(SessionImpl)
         toggleService = new ToggleService(appConfig, toggleRepository, tagRepository, targetingRepository,
-                environmentRepository, eventRepository, targetingSketchRepository, metricsCacheRepository,
+                environmentRepository, trafficRepository, targetingSketchRepository, trafficCacheRepository,
                 toggleTagRepository, changeLogService, projectRepository, targetingService, entityManager)
         includeArchivedToggleService = new IncludeArchivedToggleService(toggleRepository, entityManager)
         projectKey = "feature_probe"
@@ -167,7 +176,7 @@ class ToggleServiceSpec extends Specification {
                 false) >> [new Targeting(toggleKey: toggleKey)]
         1 * tagRepository.findByNameIn(["test"]) >> [new Tag(name: "test")]
         1 * toggleTagRepository.findByTagIdIn(_) >> [new ToggleTagRelation(toggleKey: toggleKey)]
-        1 * eventRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
+        1 * trafficRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
                 Pageable.ofSize(1), 1)
         1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, [toggleKey]) >>
@@ -177,7 +186,7 @@ class ToggleServiceSpec extends Specification {
                 content: rules, disabled: false, oldVersion: 1, status: SketchStatusEnum.PENDING, createdBy: new Member(account: "Admin"))]
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>
                 Optional.of(new Environment(key: environmentKey, serverSdkKey: "123", clientSdkKey: "123"))
-        1 * metricsCacheRepository.findAll(_) >> [new MetricsCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
+        1 * trafficCacheRepository.findAll(_) >> [new TrafficCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
         1 * toggleTagRepository.findByToggleKeyIn(_) >> [new ToggleTagRelation(tagId: 1, toggleKey: toggleKey)]
         1 * tagRepository.findAllById(_) >> [new Tag(name: "tagName", id: 1)]
         with(page) {
@@ -201,8 +210,8 @@ class ToggleServiceSpec extends Specification {
                 false) >> [new Targeting(toggleKey: toggleKey)]
         1 * tagRepository.findByNameIn(["test"]) >> [new Tag(name: "test")]
         1 * toggleTagRepository.findByTagIdIn(_) >> [new ToggleTagRelation(toggleKey: toggleKey)]
-        1 * eventRepository.findAllAccessedToggleKey(_, _) >> toggleKeys
-        1 * eventRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
+        1 * trafficRepository.findAllAccessedToggleKey(_, _) >> toggleKeys
+        1 * trafficRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
                 Pageable.ofSize(1), 1)
         1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, [toggleKey]) >>
@@ -212,7 +221,7 @@ class ToggleServiceSpec extends Specification {
                 content: rules, disabled: false, oldVersion: 1, status: SketchStatusEnum.PENDING, createdBy: new Member(account: "Admin"))]
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>
                 Optional.of(new Environment(key: environmentKey, serverSdkKey: "123", clientSdkKey: "123"))
-        1 * metricsCacheRepository.findAll(_) >> [new MetricsCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
+        1 * trafficCacheRepository.findAll(_) >> [new TrafficCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
         1 * toggleTagRepository.findByToggleKeyIn(_) >> [new ToggleTagRelation(tagId: 1, toggleKey: toggleKey)]
         1 * tagRepository.findAllById(_) >> [new Tag(name: "tagName", id: 1)]
         with(page) {
@@ -236,7 +245,7 @@ class ToggleServiceSpec extends Specification {
                 false) >> [new Targeting(toggleKey: toggleKey)]
         1 * tagRepository.findByNameIn(["test"]) >> [new Tag(name: "test")]
         1 * toggleTagRepository.findByTagIdIn(_) >> [new ToggleTagRelation(toggleKey: toggleKey)]
-        1 * eventRepository.findAllAccessedToggleKey(_, _) >> toggleKeys
+        1 * trafficRepository.findAllAccessedToggleKey(_, _) >> toggleKeys
         1 * toggleRepository.findAll(_) >> [new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())]
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
                 Pageable.ofSize(1), 1)
@@ -247,7 +256,7 @@ class ToggleServiceSpec extends Specification {
                 content: rules, disabled: false, oldVersion: 1, status: SketchStatusEnum.PENDING, createdBy: new Member(account: "Admin"))]
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>
                 Optional.of(new Environment(key: environmentKey, serverSdkKey: "123", clientSdkKey: "123"))
-        1 * metricsCacheRepository.findAll(_) >> [new MetricsCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
+        1 * trafficCacheRepository.findAll(_) >> [new TrafficCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
         1 * toggleTagRepository.findByToggleKeyIn(_) >> [new ToggleTagRelation(tagId: 1, toggleKey: toggleKey)]
         1 * tagRepository.findAllById(_) >> [new Tag(name: "tagName", id: 1)]
         with(page) {
@@ -271,7 +280,7 @@ class ToggleServiceSpec extends Specification {
                 false) >> [new Targeting(toggleKey: toggleKey)]
         1 * tagRepository.findByNameIn(["test"]) >> [new Tag(name: "test")]
         1 * toggleTagRepository.findByTagIdIn(_) >> [new ToggleTagRelation(toggleKey: toggleKey)]
-        1 * eventRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
+        1 * trafficRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
         1 * targetingRepository.findAllByProjectKeyAndEnvironmentKeyAndStatusIn(projectKey,
                 environmentKey, [ToggleReleaseStatusEnum.RELEASE]) >> [new Targeting(toggleKey: toggleKey, environmentKey: environmentKey, projectKey: projectKey, disabled: true)]
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
@@ -283,7 +292,7 @@ class ToggleServiceSpec extends Specification {
                 content: rules, disabled: false, oldVersion: 1, status: SketchStatusEnum.PENDING, createdBy: new Member(account: "Admin"))]
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>
                 Optional.of(new Environment(key: environmentKey, serverSdkKey: "123", clientSdkKey: "123"))
-        1 * metricsCacheRepository.findAll(_) >> [new MetricsCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
+        1 * trafficCacheRepository.findAll(_) >> [new TrafficCache(toggleKey: toggleKey, sdkKey: "123", startDate: new Date())]
         1 * toggleTagRepository.findByToggleKeyIn(_) >> [new ToggleTagRelation(tagId: 1, toggleKey: toggleKey)]
         1 * tagRepository.findAllById(_) >> [new Tag(name: "tagName", id: 1)]
         with(page) {
