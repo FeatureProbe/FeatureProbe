@@ -51,6 +51,9 @@ const ToggleDetail = () => {
   const [ historyHasMore, saveHistoryHasMore ] = useState<boolean>(false);
   const [ targetingDisabled, saveTargetingDisabled ] = useState<boolean>(false);
   const [ selectedVersion, saveSelectedVersion ] = useState<number>(0);
+  const [ trackEvents, saveTrackEvents ] = useState<boolean>(false);
+  const [ originTrackEvents, saveOriginTrackEvents ] = useState<boolean>(false);
+  const [ allowEnableTrackEvents, saveAllowEnableTrackEvents ] = useState<boolean>(false);
   const [ latestVersion, saveLatestVersion ] = useState<number>(0);
   const [ open, setPageLeaveOpen ] = useState<boolean>(false);
   const [ rememberVersion, saveRememberVersion ] = useState<boolean>(false);
@@ -135,6 +138,8 @@ const ToggleDetail = () => {
           locked,
           lockedTime,
           publishTime,
+          trackAccessEvents,
+          allowEnableTrackAccessEvents
         } = data;
         saveTargeting(cloneDeep(content));
         saveToggleDisable(disabled || false);
@@ -159,6 +164,9 @@ const ToggleDetail = () => {
         });
         saveLatestVersion(version || 0);
         saveSelectedVersion(version || 0);
+        saveTrackEvents(trackAccessEvents);
+        saveOriginTrackEvents(trackAccessEvents);
+        saveAllowEnableTrackEvents(allowEnableTrackAccessEvents);
       } else {
         message.error(res.message || intl.formatMessage({id: 'toggles.targeting.error.text'}));
       }
@@ -355,9 +363,12 @@ const ToggleDetail = () => {
             )
           }
           <Info
+            activeItem={activeItem}
             toggleInfo={toggleInfo}
             modifyInfo={modifyInfo}
             approvalInfo={approvalInfo}
+            trackEvents={trackEvents}
+            allowEnableTrackEvents={allowEnableTrackEvents}
             isInfoLoading={isInfoLoading}
             targetingDisabled={targetingDisabled}
             gotoGetStarted={gotoGetStarted}
@@ -367,6 +378,9 @@ const ToggleDetail = () => {
             }}
             saveApprovalInfo={saveApprovalInfo}
             saveInitTargeting={saveInitTargeting}
+            refreshTrackvents={() => {
+              saveTrackEvents(false);
+            }}
           />
           <div className={styles.menus}>
             <Menu pointing secondary className={styles.menu}>
@@ -391,15 +405,19 @@ const ToggleDetail = () => {
               >
                 <span>
                   <FormattedMessage id='common.analysis.text' />
-                  <Popup
-                    inverted
-                    className='popup-override'
-                    trigger={
-                      <Icon type='analysis' customclass={styles.analysis} />
-                    }
-                    content={intl.formatMessage({id: 'analysis.ongoing'})}
-                    position='top center'
-                  />
+                  {
+                    originTrackEvents && (
+                      <Popup
+                        inverted
+                        className='popup-override'
+                        trigger={
+                          <img src={require('images/collect.gif')} className={styles.analysis} alt='collect' />
+                        }
+                        content={intl.formatMessage({id: 'analysis.ongoing'})}
+                        position='top center'
+                      />
+                    )
+                  }
                 </span>
               </Menu.Item>
             </Menu>
@@ -453,7 +471,14 @@ const ToggleDetail = () => {
                           }
                           <Targeting
                             ref={formRef}
-                            disabled={targetingDisabled || toggleArchived || (approvalInfo?.enableApproval && approvalInfo.status !== 'RELEASE')}
+                            trackEvents={originTrackEvents}
+                            allowEnableTrackEvents={allowEnableTrackEvents}
+                            disabled={
+                              targetingDisabled || 
+                              toggleArchived || 
+                              (approvalInfo?.enableApproval && approvalInfo.status !== 'RELEASE') || 
+                              trackEvents
+                            }
                             targeting={targeting}
                             toggleInfo={toggleInfo}
                             segmentList={segmentList}
@@ -476,7 +501,13 @@ const ToggleDetail = () => {
                     }
                     {
                       activeItem === 'analysis' && (
-                        <Analysis />
+                        <Analysis 
+                          trackEvents={originTrackEvents}
+                          allowEnableTrackEvents={allowEnableTrackEvents}
+                          initTargeting={() => {
+                            initTargeting();
+                          }}
+                        />
                       )
                     }
                   </div>

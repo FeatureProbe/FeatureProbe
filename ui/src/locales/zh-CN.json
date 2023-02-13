@@ -10,6 +10,7 @@
   "common.key.required": "请输入标识",
   "common.key.invalid": "无效标识",
   "common.key.tips": "标识只能含有字母、数字、'.'、'_' 或 '-'",
+  "common.name.invalid": "无效名称",
   "common.description.text": "描述",
   "common.description.lowercase.text": "描述",
   "common.description.required": "请输入描述",
@@ -285,7 +286,6 @@
   "targeting.default.rule.tips": "指定以上所有规则都不命中时的返回分组",
   "targeting.disabled.return.value.tips": "指定开关未生效时的返回分组",
   "targeting.disabled.return.value.required": "选择未生效时返回的分组",
-
   "targeting.rules.tips": "跟进用户的传入属性值，返回给用户特定的分组",
   "targeting.rule.add.text": "增加规则",
   "targeting.page.leave.text": "未保存的修改将会丢弃，确认要离开?",
@@ -293,7 +293,7 @@
   "targeting.publish.modal.comment": "变更说明",
   "targeting.publish.error.text": "发布失败!",
   "targeting.publish.success.text": "发布成功!",
-  "targeting.publish.tips": "为确保指标分析结果的准确性，本次变更发布后，将重新开始累计分析数据。",
+  "targeting.publish.tips": "为确保指标分析结果的准确性，建议先停止收集指标分析数据，开关发布后，再重新收集数据。",
   "targeting.publish.start.collect": "当前未开始收集分析数据，是否同时开启数据收集？",
   "targeting.status.text": "状态",
   "targeting.status.disabled.text": "未生效, 返回 ",
@@ -576,6 +576,7 @@
   "analysis.event.kind.placeholder": "请选择事件类型",
   "analysis.event.name": "事件名称",
   "analysis.event.name.placeholder": "请输入事件名称",
+  "analysis.event.name.tip": "在代码中埋点时使用该事件名称。只支持包含：字母、数字、'.'、'_' 或 '-'。",
   "analysis.event.target.url": "目标页面URL",
   "analysis.event.target.url.placeholder": "请输入目标页面URL",
   "analysis.event.target.url.matching": "请选择URL匹配模式",
@@ -583,7 +584,7 @@
   "analysis.event.target.url.matching.exact": "精确匹配",
   "analysis.event.target.url.matching.substring": "子串匹配",
   "analysis.event.target.url.matching.regex": "正则表达式匹配",
-  "analysis.event.conversion": "转化",
+  "analysis.event.conversion": "转化率",
   "analysis.event.conversion.desc": "跟踪用户何时采取行动",
   "analysis.event.numeric": "数值",
   "analysis.event.numeric.desc": "跟踪值相对于基线的变化",
@@ -597,10 +598,12 @@
   "analysis.event.save.success": "保存指标成功",
   "analysis.event.save.error": "保存指标失败",
   "analysis.event.get.error": "获取指标失败",
+  "analysis.event.coming.soon": "敬请期待",
 
   "analysis.result.tip": "请先保存“指标信息”，并点击【收集数据】",
   "analysis.result.collect.time": "开始收集时间：",
   "analysis.result.collect.start": "收集数据", 
   "analysis.result.collect.stop": "停止收集",
-  "analysis.ongoing": "分析数据收集中"
+  "analysis.ongoing": "分析数据收集中",
+  "analysis.select.placeholder": "请选择"
 }

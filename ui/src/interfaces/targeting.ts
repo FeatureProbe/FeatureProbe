@@ -81,6 +81,8 @@ export interface IContent {
   locked?: boolean;
   lockedTime?: string;
   publishTime?: string;
+  trackAccessEvents: boolean;
+  allowEnableTrackAccessEvents: boolean;
 }
 
 export interface IModifyInfo {
@@ -185,6 +187,7 @@ export interface ITargetingParams {
   comment?: string;
   content: ITarget;
   reviewers?: string[];
+  trackAccessEvents?: boolean;
 }
 
 export interface ITargetingDiff {

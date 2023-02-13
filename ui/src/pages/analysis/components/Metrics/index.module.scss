@@ -22,7 +22,7 @@
 
 .label {
   width: 98px !important;
-  margin: 0 12px 0 0 !important;
+  margin: 6px 12px 0 0 !important;
   text-align: right;
 }
 
@@ -37,16 +37,21 @@
 
 .field {
   display: flex;
-  align-items: center;
+  margin-bottom: 0 !important;
 }
 
 .field-middle {
-  width: 80px !important;
   margin-right: 12px !important;
 }
 
 .field-right {
   flex: 1;
+
+  :global {
+    .field {
+      margin-bottom: 0 !important;
+    }
+  }
 }
 
 .row {
@@ -59,11 +64,15 @@
 
 .custom-metric-row {
   display: flex;
-  margin-left: 114px;
+  margin-top: 24px;
 }
 
 .custom-metric-radio {
   flex: 1;
+}
+
+.custom-metric-radio-disabled {
+  cursor: not-allowed;
 }
 
 .custom-metric-desc {
@@ -107,28 +116,30 @@
   color: #74788d;
 }
 
+.tip-text {
+  font-size: 10px;
+  color: #74788d;
+  font-size: 12px;
+  margin-left: 122px;
+}
+
 .error-text {
   color: #f46a6a;
   font-size: 12px;
-  position: absolute;
-  top: 32px;
-  left: 136px;
+  position: relative;
+  margin-left: 122px;
 }
 
 .error-text-url {
   color: #f46a6a;
   font-size: 12px;
-  position: absolute;
-  top: 32px;
-  left: 346px;
+  margin-left: 12px;
 }
 
 .error-text-event {
   color: #f46a6a;
   font-size: 12px;
-  position: absolute;
-  top: 42px;
-  left: 136px;
+  margin-left: 26px;
 }
 
 .column {

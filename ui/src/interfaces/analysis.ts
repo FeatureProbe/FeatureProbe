@@ -5,3 +5,7 @@ export interface IEvent {
   url?: string;
   selector?: string;
 }
+
+export interface IEventAnalysis {
+  [x: string]: unknown;
+}

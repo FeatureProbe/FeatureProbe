@@ -27,6 +27,7 @@ import { useForm } from 'react-hook-form';
 import { FormattedMessage, useIntl } from 'react-intl';
 import cloneDeep from 'lodash/cloneDeep';
 import { v4 as uuidv4 } from 'uuid';
+import { diff } from 'deep-diff';
 import Joyride, { CallBackProps, EVENTS, ACTIONS, Step } from 'react-joyride';
 import Rules from './components/Rules';
 import DefaultRule from './components/DefaultRule';
@@ -60,6 +61,7 @@ import {
   IServe,
   ITarget,
   ITargeting,
+  ITargetingParams,
   IToggleInfo,
   IVariation,
 } from 'interfaces/targeting';
@@ -74,6 +76,7 @@ import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
 import { getFromDictionary, saveDictionary } from 'services/dictionary';
 import { USER_GUIDE_LAYOUT, USER_GUIDE_TARGETING } from 'constants/dictionary_keys';
 import { useFormErrorScrollIntoView } from 'hooks';
+
 import styles from './index.module.scss';
 
 interface IProps {
@@ -82,6 +85,8 @@ interface IProps {
   toggleInfo?: IToggleInfo;
   approvalInfo?: IApprovalInfo;
   toggleDisabled: boolean;
+  trackEvents: boolean;
+  allowEnableTrackEvents: boolean;
   initialTargeting?: ITargeting;
   segmentList?: ISegmentList;
   initTargeting(): void;
@@ -142,6 +147,8 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     toggleDisabled,
     initialTargeting,
     segmentList,
+    trackEvents,
+    allowEnableTrackEvents,
     initTargeting,
     saveToggleDisable,
   } = props;
@@ -153,12 +160,13 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   const [open, setOpen] = useState<boolean>(false);
   const [publishDisabled, setPublishDisabled] = useState<boolean>(true);
   const [publishTargeting, setPublishTargeting] = useState<ITargeting>();
-  const [comment, setComment] = useState<string>('');
+  const [comment, saveComment] = useState<string>('');
   const [isLoading, setLoading] = useState<boolean>(false);
   const [options, saveOptions] = useState<IOption[]>();
   const [run, saveRun] = useState<boolean>(false);
   const [stepIndex, saveStepIndex] = useState<number>(0);
   const [isCollect, saveIsCollect] = useState<string>('');
+  const [isDiffChange, saveIsDiffChange] = useState<boolean>(false);
   const history = useHistory();
   const intl = useIntl();
   const formRef = useRef();
@@ -375,9 +383,9 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       required: approvalInfo?.enableApproval,
     });
     newRegister('radioGroup', {
-      required: true,
+      required: !approvalInfo?.enableApproval && allowEnableTrackEvents,
     });
-  }, [newRegister, approvalInfo]);
+  }, [newRegister, approvalInfo, allowEnableTrackEvents]);
 
   const validateForm = useCallback(() => {
     let isError = false;
@@ -426,19 +434,20 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
 
   const handlePublishCancel = useCallback(() => {
     setOpen(false);
-    setComment('');
+    saveComment('');
+    saveIsCollect('');
     newSetValue('reason', '');
     newSetValue('radioGroup', '');
     clearErrors();
   }, [newSetValue, clearErrors]);
 
   const handlePublishConfirm = useCallback(async () => {
-    if (approvalInfo && approvalInfo?.enableApproval && comment === '') {
+    if (approvalInfo?.enableApproval && comment === '') {
       await newTrigger('reason');
       return;
     }
 
-    if (isCollect === '') {
+    if (!approvalInfo?.enableApproval && isCollect === '' && allowEnableTrackEvents) {
       await newTrigger('radioGroup');
       return;
     }
@@ -453,10 +462,15 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           reviewers: approvalInfo.reviewers,
         });
       } else {
-        res = await saveToggle(projectKey, environmentKey, toggleKey, {
-          comment,
+        const params: ITargetingParams = {
           ...publishTargeting,
-        });
+          comment,
+        };
+
+        if (isCollect === 'yes') {
+          params.trackAccessEvents = true;
+        }
+        res = await saveToggle(projectKey, environmentKey, toggleKey, params);
       }
       if (res.success) {
         if (approvalInfo && approvalInfo?.enableApproval) {
@@ -465,13 +479,27 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           message.success(intl.formatMessage({ id: 'targeting.publish.success.text' }));
         }
         initTargeting();
-        setComment('');
+        saveComment('');
+        saveIsCollect('');
       }
       newSetValue('reason', '');
       newSetValue('radioGroup', '');
       setLoading(false);
     }
-  }, [approvalInfo, comment, isCollect, publishTargeting, newTrigger, newSetValue, projectKey, environmentKey, toggleKey, initTargeting, intl]);
+  }, [
+    approvalInfo, 
+    comment, 
+    isCollect, 
+    allowEnableTrackEvents, 
+    publishTargeting, 
+    newTrigger, 
+    newSetValue, 
+    projectKey, 
+    environmentKey, 
+    toggleKey, 
+    initTargeting, 
+    intl
+  ]);
 
   const disabledText = useMemo(() => {
     if (variations[disabledServe.select]) {
@@ -480,7 +508,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   }, [disabledServe.select, variations]);
 
   const handleInputComment = useCallback((e: SyntheticEvent, data: TextAreaProps | InputOnChangeData) => {
-    setComment(data.value as string);
+    saveComment(data.value as string);
   }, []);
 
   const renderLabel = useCallback((label: DropdownItemProps) => {
@@ -558,12 +586,46 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     [preDiffServe, initialTargeting?.content.variations, publishTargeting?.content.variations, intl]
   );
 
-  const handleRadioChange = useCallback(async (e: SyntheticEvent, detail: RadioProps) => {
-    console.log(detail.value);
+  const handleRadioChange = useCallback((e: SyntheticEvent, detail: RadioProps) => {
     saveIsCollect(detail.value as string);
-    // setValue('radioGroup', detail.value);
-    // await newTrigger('radioGroup');
   }, []);
+
+  useEffect(() => {
+    if (initialTargeting && publishTargeting && open) {
+      let isDiffChange = false;
+      if (
+        diff(initialTargeting.disabled, publishTargeting.disabled) ||
+        diff(initialTargeting.content.defaultServe, publishTargeting.content.defaultServe) ||
+        diff(initialTargeting.content.disabledServe, publishTargeting.content.disabledServe)
+      ) {
+        isDiffChange = true;
+      }
+
+      const diffVariation = diff(initialTargeting.content.variations, publishTargeting.content.variations);
+      if (diffVariation) {
+        diffVariation.forEach(item => {
+          if (item.kind !== 'E') {
+            isDiffChange = true;
+          } else if (item.kind === 'E' && (item.path?.[1] !== 'name' && item.path?.[1] !== 'description')) {
+            isDiffChange = true;
+          }
+        });
+      }
+
+      const diffRules = diff(initialTargeting.content.rules, publishTargeting.content.rules);
+      if (diffRules) {
+        diffRules.forEach(item => {
+          if (item.kind !== 'E') {
+            isDiffChange = true;
+          } else if (item.kind === 'E' && item.path?.[1] !== 'name') {
+            isDiffChange = true;
+          }
+        });
+      }
+
+      saveIsDiffChange(isDiffChange);
+    }
+  }, [open, beforeRuleDiff, initialTargeting, publishTargeting]);
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} autoComplete="off" ref={formRef}>
@@ -656,10 +718,14 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
             <Icon customclass={styles['modal-close-icon']} type="close" onClick={handlePublishCancel} />
           </div>
           <div className={styles['modal-content']}>
-            <div className={styles['publish-tips']}>
-              <Icon type='error-circle' customclass={styles['error-circle']} />
-              <FormattedMessage id='targeting.publish.tips' />
-            </div>
+            {
+              isDiffChange && trackEvents && (
+                <div className={styles['publish-tips']}>
+                  <Icon type='error-circle' customclass={styles['error-circle']} />
+                  <FormattedMessage id='targeting.publish.tips' />
+                </div>
+              )
+            }
             <Diff
               sections={[
                 {
@@ -720,7 +786,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
             <div className={styles['diff-after']}>
               <Form>
                 {approvalInfo?.enableApproval && (
-                  <div className={styles['approval']}>
+                  <div className={styles.approval}>
                     <div className={styles['approval-title']}>
                       <FormattedMessage id="toggles.settings.approval.reviewers" />:
                       <Popup
@@ -748,47 +814,53 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                     </div>
                   </div>
                 )}
-                <div className={styles.collect}>
-                  <div className={styles['collect-title']}>
-                    <span className="label-required">*</span>
-                    <FormattedMessage id='targeting.publish.start.collect' />
-                  </div>
-                  <div className={styles['collect-content']}>
-                    <Form.Field className={styles['collect-radio']}>
-                      <Form.Radio
-                        label={intl.formatMessage({id: 'common.yes.text'})}
-                        name='radioGroup'
-                        value='yes'
-                        checked={isCollect === 'yes'}
-                        error={newFormState.errors.radioGroup ? true : false}
-                        onChange={async (e: SyntheticEvent, detail: RadioProps) => {
-                          handleRadioChange(e, detail);
-                          newSetValue(detail.name || 'radioGroup', detail.value);
-                          await newTrigger('radioGroup');
-                        }}
-                      />
-                    </Form.Field>
-                    <Form.Field>
-                      <Form.Radio
-                        label={intl.formatMessage({id: 'common.no.text'})}
-                        name='radioGroup'
-                        value='no'
-                        checked={isCollect === 'no'}
-                        error={newFormState.errors.radioGroup ? true : false}
-                        onChange={async (e: SyntheticEvent, detail: RadioProps) => {
-                          handleRadioChange(e, detail);
-                          newSetValue(detail.name || 'radioGroup', detail.value);
-                          await newTrigger('radioGroup');
-                        }}
-                      />
-                    </Form.Field>
-                  </div>
-                  {newFormState.errors.radioGroup && (
-                    <div className="error-text">
-                      <FormattedMessage id="common.dropdown.placeholder" />
+                
+                {
+                  !approvalInfo?.enableApproval && allowEnableTrackEvents && (
+                    <div className={styles.collect}>
+                      <div className={styles['collect-title']}>
+                        <span className="label-required">*</span>
+                        <FormattedMessage id='targeting.publish.start.collect' />
+                      </div>
+                      <div className={styles['collect-content']}>
+                        <Form.Field className={styles['collect-radio']}>
+                          <Form.Radio
+                            label={intl.formatMessage({id: 'common.yes.text'})}
+                            name='radioGroup'
+                            value='yes'
+                            checked={isCollect === 'yes'}
+                            error={newFormState.errors.radioGroup ? true : false}
+                            onChange={async (e: SyntheticEvent, detail: RadioProps) => {
+                              handleRadioChange(e, detail);
+                              newSetValue(detail.name || 'radioGroup', detail.value);
+                              await newTrigger('radioGroup');
+                            }}
+                          />
+                        </Form.Field>
+                        <Form.Field>
+                          <Form.Radio
+                            label={intl.formatMessage({id: 'common.no.text'})}
+                            name='radioGroup'
+                            value='no'
+                            checked={isCollect === 'no'}
+                            error={newFormState.errors.radioGroup ? true : false}
+                            onChange={async (e: SyntheticEvent, detail: RadioProps) => {
+                              handleRadioChange(e, detail);
+                              newSetValue(detail.name || 'radioGroup', detail.value);
+                              await newTrigger('radioGroup');
+                            }}
+                          />
+                        </Form.Field>
+                      </div>
+                      {newFormState.errors.radioGroup && (
+                        <div className="error-text">
+                          <FormattedMessage id="analysis.select.placeholder" />
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+                  )
+                }
+
                 <div className={styles.comment}>
                   <div className={styles['comment-title']}>
                     {approvalInfo?.enableApproval && <span className="label-required">*</span>}

@@ -320,3 +320,33 @@
   color: #ff5f57;
   margin-right: 8px;
 }
+
+.collect {
+  padding: 0px;
+  align-items: center;
+  font-size: 13px;
+  color: #495057;
+}
+
+.collect-title {
+  margin-bottom: 8px;
+}
+
+.collect-content {
+  display: flex;
+  margin-left: 12px;
+
+  :global {
+    .ui.checkbox {
+      font-size: 13px !important;
+    }
+
+    .ui.checkbox label {
+      color: #495057;
+    }
+  }
+}
+
+.collect-radio {
+  margin-right: 50px !important;
+}

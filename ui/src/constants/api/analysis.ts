@@ -1,7 +1,8 @@
 const origin = '/api';
 
 const AnalysisURL = {
-  analysisEvent: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/events`,
+  metric: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/metric`,
+  analysis: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/metric/analysis`
 };
 
 export default AnalysisURL;
