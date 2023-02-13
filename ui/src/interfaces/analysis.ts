@@ -7,5 +7,41 @@ export interface IEvent {
 }
 
 export interface IEventAnalysis {
-  [x: string]: unknown;
+  start: string;
+  end: string;
+  data: IAnalysisItem;
+}
+
+export interface IAnalysisItem {
+  [x: string]: IAnalysisData;
+}
+
+export interface IDistribution {
+  x: number;
+  y: number;
+}
+
+interface IAnalysisData {
+  mean: number;
+  winningPercentage: number;
+  credibleInterval: {
+    lower: number;
+    upper: number;
+  };
+  distributionChart: IDistribution[];
+}
+
+export interface IChartData {
+  label: string;
+  data: unknown[];
+}
+
+export interface ITableData {
+  name?: string;
+  winningPercentage?: number;
+  credibleInterval?: {
+    lower: number;
+    upper: number;
+  };
+  mean?: number;
 }

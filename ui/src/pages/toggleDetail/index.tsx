@@ -504,6 +504,7 @@ const ToggleDetail = () => {
                         <Analysis 
                           trackEvents={originTrackEvents}
                           allowEnableTrackEvents={allowEnableTrackEvents}
+                          targeting={targeting}
                           initTargeting={() => {
                             initTargeting();
                           }}

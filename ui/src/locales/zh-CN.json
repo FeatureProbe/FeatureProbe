@@ -293,7 +293,7 @@
   "targeting.publish.modal.comment": "变更说明",
   "targeting.publish.error.text": "发布失败!",
   "targeting.publish.success.text": "发布成功!",
-  "targeting.publish.tips": "为确保指标分析结果的准确性，建议先停止收集指标分析数据，开关发布后，再重新收集数据。",
+  "targeting.publish.tips": "指标分析数据正在收集中，开关变更有可能会影响指标分析结果的准确性。",
   "targeting.publish.start.collect": "当前未开始收集分析数据，是否同时开启数据收集？",
   "targeting.status.text": "状态",
   "targeting.status.disabled.text": "未生效, 返回 ",
@@ -341,7 +341,7 @@
   "targeting.semver.explain": "什么是语义版本？",
   "targeting.semver.more": "查看详情",
   "targeting.rule.not.empty": "请添加至少一个规则条件",
-  "targeting.edit.tips": "除名称、描述之外的变更，会清空指标分析的数据，并重新开始累积数据。",
+  "targeting.edit.tips": "指标分析数据正在收集中，除名称、描述之外的变更，有可能会影响指标分析结果的准确性。",
 
   "targeting.approval.tips": "支持为该项目统一设置审批人",
   "targeting.approval.operation.skip.approval": "跳过审批并发布",
@@ -602,8 +602,14 @@
 
   "analysis.result.tip": "请先保存“指标信息”，并点击【收集数据】",
   "analysis.result.collect.time": "开始收集时间：",
+  "analysis.result.collect.end": "当前",
   "analysis.result.collect.start": "收集数据", 
   "analysis.result.collect.stop": "停止收集",
   "analysis.ongoing": "分析数据收集中",
-  "analysis.select.placeholder": "请选择"
+  "analysis.select.placeholder": "请选择",
+
+  "analysis.result.table.name": "分组名称",
+  "analysis.result.table.percentage": "胜出概率",
+  "analysis.result.table.credibleInterval": "90%可信区间",
+  "analysis.result.table.mean": "后验均值"
 }

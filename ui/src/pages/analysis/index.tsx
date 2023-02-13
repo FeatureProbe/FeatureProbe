@@ -7,15 +7,17 @@ import Results from './components/Results';
 import { IEvent } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
 import { getEventDetail, operateCollection } from 'services/analysis';
+import { ITarget } from 'interfaces/targeting';
 
 interface IProps {
   trackEvents: boolean;
   allowEnableTrackEvents: boolean;
+  targeting?: ITarget;
   initTargeting(): void;
 }
 
 const Analysis = (props: IProps) => {
-  const { trackEvents, allowEnableTrackEvents, initTargeting } = props;
+  const { trackEvents, targeting, allowEnableTrackEvents, initTargeting } = props;
   const [ eventInfo, saveEventInfo ] = useState<IEvent>();
   const [ submitLoading, saveSubmitLoading ] = useState<boolean>(false);
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
@@ -49,6 +51,7 @@ const Analysis = (props: IProps) => {
       />
       <Results 
         eventInfo={eventInfo}
+        targeting={targeting}
         trackEvents={trackEvents}
         submitLoading={submitLoading}
         allowEnableTrackEvents={allowEnableTrackEvents}

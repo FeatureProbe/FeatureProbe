@@ -258,7 +258,6 @@ const Info: React.FC<IProps> = (props) => {
       setApprovePublishLoading(true);
       publishTargetingDraft(projectKey, environmentKey, toggleKey).then(res => {
         setApprovePublishLoading(false);
-        console.log(res);
         if (res.success) {
           message.success(intl.formatMessage({id: 'targeting.publish.success.text'}));
           initTargeting();

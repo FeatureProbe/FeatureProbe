@@ -293,7 +293,7 @@
   "targeting.publish.modal.comment": "Changes description",
   "targeting.publish.error.text": "Cannot publish, please check!",
   "targeting.publish.success.text": "Published successfully",
-  "targeting.publish.tips": "In order to ensure the accuracy results, it is recommended to stop collecting analysis data first, and then re-collect the data after the toggle is published.",
+  "targeting.publish.tips": "The metric data is being collected, and the toggle change may affect the accuracy of the results.",
   "targeting.publish.start.collect": "The collection of analysis data is currently not started. Do you want to start data collection at the same time?",
   "targeting.status.text": "Status",
   "targeting.status.disabled.text": "disabled, serving ",
@@ -341,7 +341,7 @@
   "targeting.semver.explain": "What is semver?",
   "targeting.semver.more": "Learn more",
   "targeting.rule.not.empty": "Please add a rule condition",
-  "targeting.edit.tips": "Changes other than the name and description will clear the analysis data and start collecting data again.",
+  "targeting.edit.tips": "The metric data is being collected, and changes other than the name and description may affect the accuracy of the analysis results.",
 
   "targeting.approval.tips": "Owner can set approval reviewers for this environment.",
   "targeting.approval.operation.skip.approval": "Skip Approval and Publish",
@@ -498,7 +498,6 @@
   "guide.global.step2.title": "Switch environment",
   "guide.global.step2.env": "Click to switch the environment and view the toggles information in different environments",
   "guide.global.step3.title": "Segment",
-  "guide.global.step3.env": "Commonly used members can be set up as segment, which can be repeatedly selected in the 'rules' of the switch configuration",
   
   "guide.creat.toggle.step1.title": "Client SDK",
   "guide.creat.toggle.step1.sdk1": "If client SDK will be used in this toggle later, please select [Yes]",
@@ -603,8 +602,14 @@
 
   "analysis.result.tip": "Please save a metric first, then click [Start collecting]",
   "analysis.result.collect.time": "Start collection time: ",
+  "analysis.result.collect.end": "Now",
   "analysis.result.collect.start": "Start collecting", 
   "analysis.result.collect.stop": "Stop collecting",
   "analysis.ongoing": "Analysis data is collecting",
-  "analysis.select.placeholder": "Please select"
+  "analysis.select.placeholder": "Please select",
+
+  "analysis.result.table.name": "Variation",
+  "analysis.result.table.percentage": "Probability to be the best",
+  "analysis.result.table.credibleInterval": "Credible inteval: 90%",
+  "analysis.result.table.mean": "Posterior mean"
 }

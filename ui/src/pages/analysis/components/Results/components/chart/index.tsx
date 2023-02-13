@@ -1,5 +1,5 @@
-import { VariationColors } from 'constants/colors';
 import { Line } from 'react-chartjs-2';
+import { VariationColors } from 'constants/colors';
 
 interface IChartProps {
   labels: unknown[];
@@ -23,15 +23,18 @@ export const IChart: React.FC<IChartProps> = (props) => {
               boxWidth: 10,
               boxHeight: 10,
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              generateLabels: function (chart: any) {
+              generateLabels: function () {
                 return datasets.map((item: { label: string }, index: number) => {
                   return {
                     text: item.label,
-                    fillStyle: chart._metasets[index].visible ? VariationColors[index] : VariationColors[index] + '33',
-                    strokeStyle: chart._metasets[index].visible
-                      ? VariationColors[index]
-                      : VariationColors[index] + '33',
-                    fontColor: chart._metasets[index].visible ? '#000' : '#00000033',
+                    // fillStyle: chart._metasets[index].visible ? VariationColors[index] : VariationColors[index] + '33',
+                    // strokeStyle: chart._metasets[index].visible
+                    //   ? VariationColors[index]
+                    //   : VariationColors[index] + '33',
+                    // fontColor: chart._metasets[index].visible ? '#000' : '#00000033',
+                    fillStyle: VariationColors[index],
+                    strokeStyle: VariationColors[index],
+                    fontColor: '#000',
                     datasetIndex: index,
                     borderRadius: 2,
                   };
@@ -85,6 +88,7 @@ export const IChart: React.FC<IChartProps> = (props) => {
         datasets: datasets.map((item, index) => {
           return {
             ...item,
+            borderWidth: 1.5,
             backgroundColor: VariationColors[index],
             borderColor: VariationColors[index],
             cubicInterpolationMode: 'monotone',
