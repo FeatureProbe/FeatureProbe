@@ -32,8 +32,8 @@ class AnalysisController(val service: AnalysisService) {
     @GetMapping("/analysis")
     fun getAnalysis(
         @RequestHeader(value = "Authorization") sdkKey: String,
-        @RequestParam metric: String,
         @RequestParam toggle: String,
+        @RequestParam metric: String,
         @RequestParam type: String,
         @RequestParam start: Long,
         @RequestParam end: Long,

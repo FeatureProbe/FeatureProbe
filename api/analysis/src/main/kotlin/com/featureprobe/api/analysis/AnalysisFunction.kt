@@ -40,24 +40,37 @@ fun variationStats(
     distributions: Map<String, BetaDistribution>,
     winningPercentage: Map<String, Double>
 ): Map<String, VariationProperty> {
-    return distributions.map {
-        val distributionChart = (0..9).map { i ->
-            val p = 0.05 + i * 0.1
-            val x = it.value.inverseCumulativeProbability(p)
-            val y = it.value.density(x)
-            DistributionDot(x, y)
-        }.toList()
+    val xSet = mutableSetOf(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0)
+    distributions.map { distributionChartX(xSet, it.value) }
+    val xList = xSet.sorted()
 
+    return distributions.map {
         it.key to VariationProperty(
             it.value.numericalMean,
             CredibleInterval(
                 it.value.inverseCumulativeProbability(0.05),
                 it.value.inverseCumulativeProbability(0.95),
             ),
-            distributionChart,
+            distributionChart(xList, it.value),
             winningPercentage[it.key]
         )
     }.toMap()
+}
+
+fun distributionChartX(xSet: MutableSet<Double>, d: BetaDistribution): MutableSet<Double> {
+    (0..9).map { i ->
+        val p = 0.05 + i * 0.1
+        val x = d.inverseCumulativeProbability(p)
+        xSet.add(x)
+    }
+    return xSet
+}
+
+fun distributionChart(x: List<Double>, d: BetaDistribution): List<DistributionDot> {
+    return x.map { x ->
+        val y = d.density(x)
+        DistributionDot(x, y)
+    }.toList()
 }
 
 
