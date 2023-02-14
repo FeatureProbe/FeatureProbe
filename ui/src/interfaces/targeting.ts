@@ -120,7 +120,10 @@ export interface IVersion {
   createdTime: string;
   createdBy: string;
   disabled: boolean;
-  [key: string]: unknown; 
+  approvalComment?: string;
+  approvalBy?: string;
+  approvalStatus?: string;
+  approvalTime?: string;
 }
 
 export interface ITargetingVersion extends IVersion {

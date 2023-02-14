@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
@@ -55,6 +54,8 @@ const Analysis = (props: IProps) => {
         trackEvents={trackEvents}
         submitLoading={submitLoading}
         allowEnableTrackEvents={allowEnableTrackEvents}
+        initTargeting={initTargeting}
+        saveSubmitLoading={saveSubmitLoading}
         operateTrackCollection={operateTrackCollection}
       />
     </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
@@ -8,7 +8,7 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import ResultTable from './components/table';
 import { IChart } from './components/chart';
-import { getEventAnalysis } from 'services/analysis';
+import { getEventAnalysis, operateCollection } from 'services/analysis';
 import { IChartData, IEvent, IEventAnalysis, IDistribution, ITableData, IAnalysisItem } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
 import { ITarget } from 'interfaces/targeting';
@@ -21,11 +21,13 @@ interface IProps {
   trackEvents: boolean;
   allowEnableTrackEvents: boolean;
   submitLoading: boolean;
+  initTargeting(): void;
+  saveSubmitLoading: React.Dispatch<React.SetStateAction<boolean>>;
   operateTrackCollection(trackEvent: boolean): void;
 }
 
 const Results = (props: IProps) => {
-  const { trackEvents, allowEnableTrackEvents, submitLoading, targeting, operateTrackCollection } = props;
+  const { trackEvents, allowEnableTrackEvents, submitLoading, targeting, initTargeting, saveSubmitLoading } = props;
   const [ isHaveData, saveHaveData ] = useState<boolean>(false);
   const [ startTime, saveStartTime ] = useState<string>('');
   const [ endTime, saveEndTime ] = useState<string>('');
@@ -75,10 +77,9 @@ const Results = (props: IProps) => {
       saveTableData(tableData);
       saveChartLabels(labels);
     }
-    
   }, [result, targeting?.variations]);
 
-  useEffect(() => {
+  const getEventResult = useCallback(() => {
     getEventAnalysis<IEventAnalysis>(projectKey, environmentKey, toggleKey).then(res => {
       const { success, data } = res;
       if (success && data) {
@@ -89,14 +90,31 @@ const Results = (props: IProps) => {
     });
   }, [environmentKey, projectKey, toggleKey]);
 
+  useEffect(() => {
+    getEventResult();
+  }, [getEventResult]);
+
+  const operateTrackCollection = useCallback(trackEvents => {
+    saveSubmitLoading(true);
+    operateCollection(projectKey, environmentKey, toggleKey, {
+      trackAccessEvents: trackEvents
+    }).then(res => {
+      if (res.success) {
+        initTargeting();
+        getEventResult();
+      }
+      saveSubmitLoading(false);
+    });
+  }, [saveSubmitLoading, projectKey, environmentKey, toggleKey, initTargeting, getEventResult]);
+
   return (
     <div className={styles.result}>
       <SectionTitle title={intl.formatMessage({ id: 'common.data.text' })} showTooltip={false} />
       <div className={styles.start}>
         <span className={styles['start-time']}>
           <FormattedMessage id="analysis.result.collect.time" />
-          {dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')}
-           - 
+          {startTime && dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')}
+          <span className={styles.divider}>-</span> 
           {
             trackEvents 
               ? <FormattedMessage id='analysis.result.collect.end' /> 
@@ -141,9 +159,13 @@ const Results = (props: IProps) => {
       }
 
       {
-        isHaveData && (
+        isHaveData ? (
           <div className={styles['result-content']}>
             <ResultTable data={tableData} />
+          </div>
+        ) : (
+          <div className={styles['no-data']}>
+            <NoData />
           </div>
         )
       }
@@ -152,14 +174,6 @@ const Results = (props: IProps) => {
         isHaveData && chartData && (
           <div className={styles['analysis-chart']}>
             <IChart labels={chartLabels} datasets={chartData} />
-          </div>
-        )
-      }
-
-      {
-        !isHaveData && (
-          <div className={styles['no-data']}>
-            <NoData />
           </div>
         )
       }
