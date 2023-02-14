@@ -67,12 +67,12 @@ fun chartProperties(ds: Map<String, DistributionInfo>): ChartProperty {
         val xP95 = it.value.distribution.inverseCumulativeProbability(0.95)
 
         //       <-- range --> <----range --> <---range----->
-        //       |------------|--------------|--------------|
+        //       |------|------|--------------|------|-------|
         // p05 - range       p05            p95           p95 + range
 
         val range = xP95 - xP05
-        var min = xP05 - range
-        var max = xP95 + range
+        var min = xP05 - range / 2
+        var max = xP95 + range / 2
 
         if (min < 0.0) {
             min = 0.0
@@ -89,7 +89,7 @@ fun chartProperties(ds: Map<String, DistributionInfo>): ChartProperty {
             maxX = max
         }
 
-        val s = range / 5
+        val s = range / 10
         if (step > s) {
             step = s
         }
