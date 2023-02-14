@@ -69,7 +69,6 @@ export const IChart: React.FC<IChartProps> = (props) => {
               color: 'rgba(0, 0, 0, 0)',
               stepSize: 0.2,
             },
-
             grid: {
               tickColor: 'rgba(0, 0, 0, 0)',
               borderDash: [3, 3],

@@ -1,7 +1,7 @@
-import { VariationColors } from 'constants/colors';
-import { ITableData } from 'interfaces/analysis';
 import { FormattedMessage } from 'react-intl';
 import { Table } from 'semantic-ui-react';
+import { VariationColors } from 'constants/colors';
+import { ITableData } from 'interfaces/analysis';
 import styles from './index.module.scss';
 
 interface IProps {
@@ -32,7 +32,7 @@ const ResultTable = (props: IProps) => {
         </Table.Header>
         <Table.Body className={styles['table-body']}>
           {
-            data && data.map((item, index) => {
+            data?.map((item, index) => {
               return (
                 <Table.Row key={index} className={styles['list-item']}>
                   <Table.Cell className={styles['column-variation']}>
@@ -42,10 +42,13 @@ const ResultTable = (props: IProps) => {
                     </div>
                   </Table.Cell>
                   <Table.Cell className={styles.probability}>
-                    {Number(item.winningPercentage) * 100 + '%'}
+                    {(Number(item.winningPercentage) * 100).toFixed(2) + '%'}
                   </Table.Cell>
                   <Table.Cell>
-                    [{Number(item.credibleInterval?.lower) * 100 + '%'}, {Number(item.credibleInterval?.upper) * 100 + '%'}]
+                    [
+                      {(Number(item.credibleInterval?.lower) * 100).toFixed(2) + '%'}, 
+                      {(Number(item.credibleInterval?.upper) * 100).toFixed(2) + '%'}
+                    ]
                   </Table.Cell>
                   <Table.Cell>
                     {item.mean}
