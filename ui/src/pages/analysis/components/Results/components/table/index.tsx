@@ -19,7 +19,7 @@ const ResultTable = (props: IProps) => {
             <Table.HeaderCell className={styles['column-variation']}>
               <FormattedMessage id='analysis.result.table.name' />
             </Table.HeaderCell>
-            <Table.HeaderCell>
+            <Table.HeaderCell className={styles['column-probability']}>
               <FormattedMessage id='analysis.result.table.percentage' />
             </Table.HeaderCell>
             <Table.HeaderCell>
@@ -42,7 +42,9 @@ const ResultTable = (props: IProps) => {
                     </div>
                   </Table.Cell>
                   <Table.Cell className={styles.probability}>
-                    {(Number(item.winningPercentage) * 100).toFixed(2) + '%'}
+                    <div className={styles['probability-text']}>
+                      {(Number(item.winningPercentage) * 100).toFixed(2) + '%'}
+                    </div>
                   </Table.Cell>
                   <Table.Cell>
                     [

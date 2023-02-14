@@ -45,7 +45,7 @@ const Traffic = () => {
   const initMetrics = useCallback(() => {
     getTraffic<ITrafficContent>(projectKey, environmentKey, toggleKey, {
       lastHours: filterValue,
-      metricType: fitlerType.toUpperCase(),
+      trafficType: fitlerType.toUpperCase(),
     }).then(res => {
       saveIsLoading(false);
       const { data, success } = res;
@@ -144,8 +144,8 @@ const Traffic = () => {
                             {id: 'targeting.variations.evaluations.text'}, 
                             {
                               type: fitlerType === 'name' 
-                                ? intl.formatMessage({id: 'common.name.text'}) 
-                                : intl.formatMessage({id: 'common.value.uppercase.text'}) 
+                                ? intl.formatMessage({id: 'common.name.lowercase.text'}) 
+                                : intl.formatMessage({id: 'common.value.text'}) 
                             }
                           )
                         }

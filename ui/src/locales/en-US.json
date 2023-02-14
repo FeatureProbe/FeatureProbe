@@ -297,7 +297,7 @@
   "targeting.publish.start.collect": "The collection of analysis data is currently not started. Do you want to start data collection at the same time?",
   "targeting.status.text": "Status",
   "targeting.status.disabled.text": "disabled, serving ",
-  "targeting.variations.evaluations.text": "variation {type} Evaluations",
+  "targeting.variations.evaluations.text": "Variation {type} evaluations",
   "targeting.traffic.no.data.text": "No data available",
   "targeting.traffic.link.sdk.text": "Please connect SDK ",
   "targeting.traffic.error.text": "Error getting toggle traffic",

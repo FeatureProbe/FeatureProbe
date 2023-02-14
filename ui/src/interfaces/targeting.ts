@@ -110,7 +110,7 @@ export interface ITrafficContent {
 
 export interface ITrafficParams {
   lastHours: string;
-  metricType: string;
+  trafficType: string;
 }
 
 export interface IVersion {

@@ -79,9 +79,9 @@ const Metrics = (props: IProps) => {
 
     if (eventInfo && eventInfo.type === PAGE_VIEW) {
       if (
-        eventInfo.type === formValues.kind 
-        && eventInfo.matcher === formValues.matcher 
-        && eventInfo.url === formValues.url
+        eventInfo.type === formValues.kind  &&
+        eventInfo.matcher === formValues.matcher &&
+        eventInfo.url === formValues.url
       ) {
         saveCanSave(false);
         return;
@@ -90,10 +90,10 @@ const Metrics = (props: IProps) => {
 
     if (eventInfo && eventInfo.type === CLICK) {
       if (
-        eventInfo.type === formValues.kind 
-        && eventInfo.matcher === formValues.matcher 
-        && eventInfo.url === formValues.url 
-        && eventInfo.selector === formValues.selector
+        eventInfo.type === formValues.kind && 
+        eventInfo.matcher === formValues.matcher &&
+        eventInfo.url === formValues.url &&
+        eventInfo.selector === formValues.selector
       ) {
         saveCanSave(false);
         return;
