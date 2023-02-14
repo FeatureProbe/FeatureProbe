@@ -48,7 +48,7 @@ export const IChart: React.FC<IChartProps> = (props) => {
         },
         elements: {
           point: {
-            pointStyle: 'dash',
+            radius: 0
           },
         },
         transitions: {
@@ -91,6 +91,7 @@ export const IChart: React.FC<IChartProps> = (props) => {
             backgroundColor: VariationColors[index],
             borderColor: VariationColors[index],
             cubicInterpolationMode: 'monotone',
+            pointHitRadius: 0
           };
         }),
       }}
