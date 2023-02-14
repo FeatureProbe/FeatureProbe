@@ -40,9 +40,7 @@ fun variationStats(
     distributions: Map<String, BetaDistribution>,
     winningPercentage: Map<String, Double>
 ): Map<String, VariationProperty> {
-    val xSet = mutableSetOf(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0)
-    distributions.map { distributionChartX(xSet, it.value) }
-    val xList = xSet.sorted()
+    val chartProperty = distributionChartX(distributions)
 
     return distributions.map {
         it.key to VariationProperty(
@@ -51,28 +49,51 @@ fun variationStats(
                 it.value.inverseCumulativeProbability(0.05),
                 it.value.inverseCumulativeProbability(0.95),
             ),
-            distributionChart(xList, it.value),
+            distributionChart(chartProperty, it.value),
             winningPercentage[it.key]
         )
     }.toMap()
 }
 
-fun distributionChartX(xSet: MutableSet<Double>, d: BetaDistribution): MutableSet<Double> {
-    (0..9).map { i ->
-        val p = 0.05 + i * 0.1
-        val x = d.inverseCumulativeProbability(p)
-        xSet.add(x)
+fun distributionChartX(ds: Map<String, BetaDistribution>): ChartProperty {
+    var minX = 1.0
+    var maxX = 0.0
+    var step = 1.0
+    ds.map {
+        val xP01 = it.value.inverseCumulativeProbability(0.1)
+        if (minX > xP01) {
+            minX = xP01
+        }
+
+        val xP99 = it.value.inverseCumulativeProbability(0.99)
+        if (maxX < xP99) {
+            maxX = xP99
+        }
+
+        val s = (xP99 - xP01) / 5
+        if (step > s) {
+            step = s
+        }
     }
-    return xSet
+
+    return ChartProperty(minX, maxX, step)
 }
 
-fun distributionChart(x: List<Double>, d: BetaDistribution): List<DistributionDot> {
-    return x.map { x ->
+fun distributionChart(p: ChartProperty, d: BetaDistribution): List<DistributionDot> {
+    val dots = mutableListOf<DistributionDot>()
+    var i = 0
+    while (true) {
+        val x = p.min + i * p.step
+        if (x > p.max) {
+            break
+        }
+
         val y = d.density(x)
-        DistributionDot(x, y)
-    }.toList()
+        dots.add(DistributionDot(x, y))
+        i++
+    }
+    return dots
 }
-
 
 fun statsSql(metric: String, toggle: String, start: Long, end: Long): String {
     return """

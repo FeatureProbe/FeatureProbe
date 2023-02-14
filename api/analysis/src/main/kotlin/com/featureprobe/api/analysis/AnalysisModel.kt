@@ -94,3 +94,4 @@ data class VariationProperty(
     val winningPercentage: Double?,
 )
 
+data class ChartProperty(val min: Double, val max: Double, val step: Double)

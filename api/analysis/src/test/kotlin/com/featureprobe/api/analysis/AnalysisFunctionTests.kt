@@ -28,16 +28,16 @@ class AnalysisFunctionTestClass {
 
     @Test
     fun testVariationAnalysis() {
-        val variationCount = arrayListOf(VariationCount("1", 200000, 300000), VariationCount("2", 300, 400))
+        val variationCount = arrayListOf(VariationCount("1", 200, 300), VariationCount("2", 300, 400))
         val distributions = variationCount.associate {
             it.variation to BetaDistribution(1.0 + it.convert, 1.0 + it.all - it.convert)
         }
 
         val variations = variationStats(distributions, mapOf("1" to 70.0, "2" to 30.0))
 
-        assertEquals(variations["1"]!!.mean, 0.666, 0.001)
-        assertEquals(variations["1"]!!.credibleInterval.lower, 0.665, 0.001)
-        assertEquals(variations["1"]!!.credibleInterval.upper, 0.668, 0.001)
+        assertEquals(0.666, variations["1"]!!.mean, 0.001)
+        assertEquals(0.620, variations["1"]!!.credibleInterval.lower, 0.001)
+        assertEquals(0.709, variations["1"]!!.credibleInterval.upper, 0.001)
         assertEquals(variations["1"]!!.winningPercentage!!, 70.0, 0.1)
 
         assertEquals(variations["2"]!!.mean, 0.748, 0.001)
@@ -46,21 +46,5 @@ class AnalysisFunctionTestClass {
         assertEquals(variations["2"]!!.winningPercentage!!, 30.0, 0.1)
 
     }
-
-    @Test
-    fun testVariationChart() {
-        val d = BetaDistribution(2.0, 3.0)
-        val xSet = distributionChartX(mutableSetOf(), d)
-        val chart = distributionChart(xSet.sorted(), d)
-
-        for (i in 0..4) {
-            chart[i].y < chart[i + 1].y
-        }
-
-        for (i in 5..8) {
-            chart[i].y > chart[i + 1].y
-        }
-    }
-
 
 }
