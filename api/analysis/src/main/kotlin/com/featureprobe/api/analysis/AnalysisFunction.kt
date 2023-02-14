@@ -40,7 +40,7 @@ fun variationStats(
     distributions: Map<String, BetaDistribution>,
     winningPercentage: Map<String, Double>
 ): Map<String, VariationProperty> {
-    val chartProperty = distributionChartX(distributions)
+    val chartProperty = chartProperties(distributions)
 
     return distributions.map {
         it.key to VariationProperty(
@@ -55,22 +55,22 @@ fun variationStats(
     }.toMap()
 }
 
-fun distributionChartX(ds: Map<String, BetaDistribution>): ChartProperty {
+fun chartProperties(ds: Map<String, BetaDistribution>): ChartProperty {
     var minX = 1.0
     var maxX = 0.0
     var step = 1.0
     ds.map {
-        val xP01 = it.value.inverseCumulativeProbability(0.1)
-        if (minX > xP01) {
-            minX = xP01
+        val xP001 = it.value.inverseCumulativeProbability(0.001)
+        if (minX > xP001) {
+            minX = xP001
         }
 
-        val xP99 = it.value.inverseCumulativeProbability(0.99)
-        if (maxX < xP99) {
-            maxX = xP99
+        val xP999 = it.value.inverseCumulativeProbability(0.999)
+        if (maxX < xP999) {
+            maxX = xP999
         }
 
-        val s = (xP99 - xP01) / 5
+        val s = (xP999 - xP001) / 5
         if (step > s) {
             step = s
         }
@@ -81,16 +81,21 @@ fun distributionChartX(ds: Map<String, BetaDistribution>): ChartProperty {
 
 fun distributionChart(p: ChartProperty, d: BetaDistribution): List<DistributionDot> {
     val dots = mutableListOf<DistributionDot>()
-    var i = 0
+    val extendMoreDots = 3
+    var dotIndex = 0
     while (true) {
-        val x = p.min + i * p.step
-        if (x > p.max) {
+        val x = p.min + (dotIndex - extendMoreDots) * p.step
+        dotIndex++
+
+        if (x < 0) {
+            continue
+        }
+        if (x > p.max + extendMoreDots * p.step || x > 1) {
             break
         }
 
         val y = d.density(x)
         dots.add(DistributionDot(x, y))
-        i++
     }
     return dots
 }
