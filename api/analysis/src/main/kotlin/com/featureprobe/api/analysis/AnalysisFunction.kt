@@ -10,7 +10,7 @@ import java.math.RoundingMode
 import java.sql.PreparedStatement
 import java.text.DecimalFormat
 
-fun winningPercentage(distributions: Map<String, BetaDistribution>, iteration: Int): Map<String, Double> {
+fun winningPercentage(distributions: Map<String, DistributionInfo>, iteration: Int): Map<String, Double> {
     if (distributions.isEmpty()) {
         return mapOf()
     }
@@ -22,7 +22,7 @@ fun winningPercentage(distributions: Map<String, BetaDistribution>, iteration: I
         var maxVariation: String? = null
         for (entry in distributions) {
 
-            val sample = entry.value.sample()
+            val sample = entry.value.distribution.sample()
             if (maxSample == null || maxSample < sample) {
                 maxSample = sample
                 maxVariation = entry.key
@@ -37,40 +37,59 @@ fun winningPercentage(distributions: Map<String, BetaDistribution>, iteration: I
 }
 
 fun variationStats(
-    distributions: Map<String, BetaDistribution>,
-    winningPercentage: Map<String, Double>
+    distributions: Map<String, DistributionInfo>,
+    iterationCount: Int
 ): Map<String, VariationProperty> {
     val chartProperty = chartProperties(distributions)
+    val winningPercentage = winningPercentage(distributions, iterationCount)
 
     return distributions.map {
         it.key to VariationProperty(
-            it.value.numericalMean,
+            it.value.convert,
+            it.value.all,
+            it.value.distribution.numericalMean,
             CredibleInterval(
-                it.value.inverseCumulativeProbability(0.05),
-                it.value.inverseCumulativeProbability(0.95),
+                it.value.distribution.inverseCumulativeProbability(0.05),
+                it.value.distribution.inverseCumulativeProbability(0.95),
             ),
-            distributionChart(chartProperty, it.value),
+            distributionChart(chartProperty, it.value.distribution),
             winningPercentage[it.key]
         )
     }.toMap()
 }
 
-fun chartProperties(ds: Map<String, BetaDistribution>): ChartProperty {
+fun chartProperties(ds: Map<String, DistributionInfo>): ChartProperty {
     var minX = 1.0
     var maxX = 0.0
     var step = 1.0
     ds.map {
-        val xP001 = it.value.inverseCumulativeProbability(0.001)
-        if (minX > xP001) {
-            minX = xP001
+        val xP05 = it.value.distribution.inverseCumulativeProbability(0.05)
+        val xP95 = it.value.distribution.inverseCumulativeProbability(0.95)
+
+        //       <-- range --> <----range --> <---range----->
+        //       |------------|--------------|--------------|
+        // p05 - range       p05            p95           p95 + range
+
+        val range = xP95 - xP05
+        var min = xP05 - range
+        var max = xP95 + range
+
+        if (min < 0.0) {
+            min = 0.0
+        }
+        if (max > 1.0) {
+            max = 1.0
         }
 
-        val xP999 = it.value.inverseCumulativeProbability(0.999)
-        if (maxX < xP999) {
-            maxX = xP999
+        if (minX > min) {
+            minX = min
         }
 
-        val s = (xP999 - xP001) / 5
+        if (maxX < max) {
+            maxX = max
+        }
+
+        val s = range / 5
         if (step > s) {
             step = s
         }

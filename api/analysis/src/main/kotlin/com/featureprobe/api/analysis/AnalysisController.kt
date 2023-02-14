@@ -105,10 +105,14 @@ class AnalysisService(
         val variationCount = variationCount(metric, toggle, start, end)
 
         val distributions = variationCount.associate {
-            it.variation to BetaDistribution(1.0 + it.convert, 1.0 + it.all - it.convert)
+            it.variation to DistributionInfo(
+                BetaDistribution(1.0 + it.convert, 1.0 + it.all - it.convert),
+                it.convert,
+                it.all
+            )
         }
 
-        return Ok(variationStats(distributions, winningPercentage(distributions, iterationCount)))
+        return Ok(variationStats(distributions, iterationCount))
     }
 
     fun variationCount(metric: String, toggle: String, start: Long, end: Long): List<VariationCount> {

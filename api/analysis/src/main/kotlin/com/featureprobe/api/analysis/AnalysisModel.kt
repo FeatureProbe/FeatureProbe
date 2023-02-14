@@ -3,6 +3,7 @@ package com.featureprobe.api.analysis
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import org.apache.commons.math3.distribution.BetaDistribution
 import java.sql.Timestamp
 
 const val RAW_VARIATION_TABLE: String = "__rawVariation"
@@ -85,13 +86,17 @@ data class DistributionDot(
     val y: Double
 )
 
+data class DistributionInfo(val distribution: BetaDistribution, val convert: Int, val all: Int)
+
 data class VariationProperty(
+    val convert: Int,
+    val all: Int,
     @JsonSerialize(using = CustomDoubleSerialize::class)
     val mean: Double,
     val credibleInterval: CredibleInterval,
     val distributionChart: List<DistributionDot>,
     @JsonSerialize(using = CustomDoubleSerialize::class)
-    val winningPercentage: Double?,
+    val winningPercentage: Double?
 )
 
 data class ChartProperty(val min: Double, val max: Double, val step: Double)
