@@ -600,11 +600,12 @@
   "analysis.event.get.error": "Error getting event",
   "analysis.event.coming.soon": "Coming soon",
 
-  "analysis.result.tip": "Please save a metric first, then click [Start collecting]",
-  "analysis.result.collect.time": "Start collection time: ",
+  "analysis.result.tip": "Please save a metric first, then click [Start collecting].",
+  "analysis.result.collect.time": "Data statistics cycle: ",
   "analysis.result.collect.end": "Now",
   "analysis.result.collect.start": "Start collecting", 
   "analysis.result.collect.stop": "Stop collecting",
+  "analysis.result.collect.tip": "This operation will clear the analysis data and restart the calculation.",
   "analysis.ongoing": "Analysis data is collecting",
   "analysis.select.placeholder": "Please select",
 

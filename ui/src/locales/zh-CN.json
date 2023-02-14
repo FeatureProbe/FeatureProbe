@@ -600,11 +600,12 @@
   "analysis.event.get.error": "获取指标失败",
   "analysis.event.coming.soon": "敬请期待",
 
-  "analysis.result.tip": "请先保存“指标信息”，并点击【收集数据】",
-  "analysis.result.collect.time": "开始收集时间：",
+  "analysis.result.tip": "请先保存“指标信息”，并点击【收集数据】。",
+  "analysis.result.collect.time": "数据统计周期：",
   "analysis.result.collect.end": "当前",
   "analysis.result.collect.start": "收集数据", 
   "analysis.result.collect.stop": "停止收集",
+  "analysis.result.collect.tip": "重新收集数据，会清空指标分析的数据，并重新开始计算。",
   "analysis.ongoing": "分析数据收集中",
   "analysis.select.placeholder": "请选择",
 

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import Metrics from './components/Metrics';
 import Results from './components/Results';
@@ -20,15 +19,18 @@ const Analysis = (props: IProps) => {
   const [ eventInfo, saveEventInfo ] = useState<IEvent>();
   const [ submitLoading, saveSubmitLoading ] = useState<boolean>(false);
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
-  const intl = useIntl();
 
-  useEffect(() => {
+  const getEvent = useCallback(() => {
     getEventDetail<IEvent>(projectKey, environmentKey, toggleKey).then(res => {
       if (res.success && res.data) {
         saveEventInfo(res.data);
       }
     });
-  }, [environmentKey, intl, projectKey, toggleKey]);
+  }, [environmentKey, projectKey, toggleKey]);
+
+  useEffect(() => {
+    getEvent();
+  }, [getEvent]);
 
   const operateTrackCollection = useCallback(trackEvents => {
     saveSubmitLoading(true);
@@ -46,6 +48,7 @@ const Analysis = (props: IProps) => {
     <div>
       <Metrics 
         eventInfo={eventInfo}
+        getEvent={getEvent}
         initTargeting={initTargeting}
       />
       <Results 

@@ -13,6 +13,7 @@
   position: absolute;
   right: 24px;
   top: 24px;
+  height: 28px;
 }
 
 .start-time {
@@ -55,4 +56,21 @@
 
 .no-data {
   padding-bottom: 100px;
+}
+
+.modal-header {
+  display: flex;
+}
+
+.modal-warning-circle {
+  font-size: 20px !important;
+  color: #f5483b;
+  padding: 0 10px;
+}
+
+.modal-header-text {
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.87);
+  margin-top: 4px;
 }

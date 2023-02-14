@@ -6,6 +6,7 @@ import SectionTitle from 'components/SectionTitle';
 import NoData from 'components/NoData';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
+import Modal from 'components/Modal';
 import ResultTable from './components/table';
 import { IChart } from './components/chart';
 import { getEventAnalysis, operateCollection } from 'services/analysis';
@@ -27,7 +28,8 @@ interface IProps {
 }
 
 const Results = (props: IProps) => {
-  const { trackEvents, allowEnableTrackEvents, submitLoading, targeting, initTargeting, saveSubmitLoading } = props;
+  const { trackEvents, allowEnableTrackEvents, submitLoading, targeting, eventInfo, initTargeting, saveSubmitLoading } = props;
+  const [ open, saveOpen ] = useState<boolean>(false);
   const [ isHaveData, saveHaveData ] = useState<boolean>(false);
   const [ startTime, saveStartTime ] = useState<string>('');
   const [ endTime, saveEndTime ] = useState<string>('');
@@ -112,24 +114,41 @@ const Results = (props: IProps) => {
       <SectionTitle title={intl.formatMessage({ id: 'common.data.text' })} showTooltip={false} />
       <div className={styles.start}>
         <span className={styles['start-time']}>
-          <FormattedMessage id="analysis.result.collect.time" />
-          {startTime && dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')}
-          <span className={styles.divider}>-</span> 
           {
-            trackEvents 
-              ? <FormattedMessage id='analysis.result.collect.end' /> 
-              : <span>{dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')}</span>
+            startTime && (
+              <>
+                <FormattedMessage id="analysis.result.collect.time" />
+                {dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')}
+              </>
+            )
+          }
+          {
+            endTime && (
+              <>
+                <span className={styles.divider}>-</span> 
+                {
+                  trackEvents 
+                    ? <FormattedMessage id='analysis.result.collect.end' /> 
+                    : <span>{dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')}</span>
+                }
+              </>
+            )
           }
         </span>
         {
           !trackEvents ? (
             <Button
               primary
+              size='mini'
               loading={submitLoading}
               className={styles['start-btn']}
               disabled={!allowEnableTrackEvents}
               onClick={() => {
-                operateTrackCollection(true);
+                if (isHaveData) {
+                  saveOpen(true);
+                } else {
+                  operateTrackCollection(true);
+                }
               }}
             >
               <FormattedMessage id="analysis.result.collect.start" />
@@ -137,6 +156,7 @@ const Results = (props: IProps) => {
           ) : (
             <Button
               secondary
+              size='mini'
               loading={submitLoading}
               className={styles['start-btn']}
               onClick={() => {
@@ -150,7 +170,7 @@ const Results = (props: IProps) => {
       </div>
 
       {
-        allowEnableTrackEvents && (
+        !eventInfo && (
           <div className={styles.tips}>
             <Icon customclass={styles['warning-circle']} type="warning-circle" />
             <FormattedMessage id="analysis.result.tip" />
@@ -177,6 +197,27 @@ const Results = (props: IProps) => {
           </div>
         )
       }
+
+      <Modal
+        open={open}
+        width={308}
+        handleCancel={() => {
+          saveOpen(false);
+        }}
+        handleConfirm={() => {
+          operateTrackCollection(true);
+          saveOpen(false);
+        }}
+      >
+        <div>
+          <div className={styles['modal-header']}>
+            <Icon customclass={styles['modal-warning-circle']} type='warning-circle' />
+            <span className={styles['modal-header-text']}>
+              <FormattedMessage id='analysis.result.collect.tip' />
+            </span>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
