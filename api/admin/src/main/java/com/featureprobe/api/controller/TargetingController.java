@@ -86,7 +86,8 @@ public class TargetingController {
     public TargetingResponse publishSketch(@PathVariable("projectKey") String projectKey,
                                            @PathVariable("environmentKey") String environmentKey,
                                            @PathVariable("toggleKey") String toggleKey,
-                                           @RequestBody @Validated ToggleControlConfRequest controlConfRequest) {
+                                           @RequestBody(required = false) @Validated
+                                                       ToggleControlConfRequest controlConfRequest) {
         return targetingService.publishSketch(projectKey, environmentKey, toggleKey, controlConfRequest);
     }
 

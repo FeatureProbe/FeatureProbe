@@ -8,11 +8,11 @@ import com.featureprobe.api.base.model.TargetingContent;
 import com.featureprobe.api.base.model.ToggleRule;
 import com.featureprobe.api.base.model.Variation;
 import com.featureprobe.api.base.tenant.TenantContext;
+import com.featureprobe.api.base.util.ToggleContentLimitChecker;
 import com.featureprobe.api.dao.entity.Segment;
 import com.featureprobe.api.dao.entity.Toggle;
 import com.featureprobe.api.dao.entity.ToggleControlConf;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
-import com.featureprobe.api.dao.repository.MetricRepository;
 import com.featureprobe.api.dao.utils.PageRequestUtil;
 import com.featureprobe.api.dto.AfterTargetingVersionResponse;
 import com.featureprobe.api.dto.ApprovalResponse;
@@ -173,7 +173,7 @@ public class TargetingService {
             targetingSketchRepository.save(sketch);
             TargetingPublishRequest targetingPublishRequest = new TargetingPublishRequest(
                     JsonMapper.toObject(sketch.getContent(), TargetingContent.class),
-                    sketch.getComment(), sketch.getDisabled(), controlConfRequest.getTrackAccessEvents());
+                    sketch.getComment(), sketch.getDisabled(), controlConfRequest);
             changeLogService.create(environment, ChangeLogType.CHANGE);
             return publishTargeting(projectKey, environmentKey, toggleKey, targetingPublishRequest,
                     approvalRecordOptional.get().getId());
@@ -592,10 +592,12 @@ public class TargetingService {
         return Optional.of(targetingSketches.getContent().get(0));
     }
 
-    private void validateTargetingContent(String projectKey, TargetingContent content) {
+    protected void validateTargetingContent(String projectKey, TargetingContent content) {
         if (Objects.isNull(content) && CollectionUtils.isEmpty(content.getRules())) {
             return;
         }
+        ToggleContentLimitChecker.validateSize(content.toJson());
+
         content.getRules()
                 .stream()
                 .filter(BaseRule::isNotEmptyConditions)
@@ -666,7 +668,9 @@ public class TargetingService {
         if (CollectionUtils.isEmpty(rules)) return res;
         for (ToggleRule rule : rules) {
             List<ConditionValue> conditions = rule.getConditions();
-            if (CollectionUtils.isEmpty(conditions)) break;
+            if (CollectionUtils.isEmpty(conditions)) {
+                break;
+            }
             for (ConditionValue condition : conditions) {
                 if ("segment".equals(condition.getType())) {
                     res.addAll(getSegmentAttributes(projectKey, condition.getObjects()));
