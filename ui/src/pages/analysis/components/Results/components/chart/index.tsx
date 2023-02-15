@@ -1,8 +1,9 @@
 import { Line } from 'react-chartjs-2';
-import { Chart, Filler } from 'chart.js';
+import { Chart, Filler, Tooltip } from 'chart.js';
 import { VariationColors, VariationOpacityColors } from 'constants/colors';
 
 Chart.register(Filler);
+Chart.register(Tooltip);
 
 interface IChartProps {
   labels: unknown[];
@@ -19,6 +20,10 @@ export const IChart: React.FC<IChartProps> = (props) => {
     <Line
       height="64"
       options={{
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
         plugins: {
           legend: {
             position: 'bottom',
@@ -43,8 +48,20 @@ export const IChart: React.FC<IChartProps> = (props) => {
             },
           },
           tooltip: {
-            enabled: false,
-          },
+            padding: 15,
+            bodySpacing: 0,
+            callbacks: {
+              beforeBody: tooltipItems => {
+                return tooltipItems[0].label;
+              },
+              title: function() {
+                return '';
+              },
+              label: function() {
+                return '';
+              }
+            }
+          }
         },
         elements: {
           point: {
@@ -90,7 +107,6 @@ export const IChart: React.FC<IChartProps> = (props) => {
             borderWidth: 1.5,
             backgroundColor: VariationColors[index],
             borderColor: VariationColors[index],
-            pointHitRadius: 0,
             tension: 0.4,
             fill: {
               target: 'origin',

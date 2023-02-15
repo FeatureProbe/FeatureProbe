@@ -78,31 +78,27 @@ const Metrics = (props: IProps) => {
   useEffect(() => {
     const formValues = getValues();
 
-    if (eventInfo && eventInfo.type === PAGE_VIEW) {
+    if (metricType === PAGE_VIEW) {
       if (
-        eventInfo.type === formValues.kind  &&
-        eventInfo.matcher === formValues.matcher &&
-        eventInfo.url === formValues.url
+        eventInfo?.type === formValues.kind  &&
+        eventInfo?.matcher === formValues.matcher &&
+        eventInfo?.url === formValues.url
       ) {
         saveCanSave(false);
         return;
       }
-    }
-
-    if (eventInfo && eventInfo.type === CLICK) {
+    } else if (metricType === CLICK) {
       if (
-        eventInfo.type === formValues.kind && 
-        eventInfo.matcher === formValues.matcher &&
-        eventInfo.url === formValues.url &&
-        eventInfo.selector === formValues.selector
+        eventInfo?.type === formValues.kind && 
+        eventInfo?.matcher === formValues.matcher &&
+        eventInfo?.url === formValues.url &&
+        eventInfo?.selector === formValues.selector
       ) {
         saveCanSave(false);
         return;
       }
-    }
-
-    if (eventInfo && eventInfo.type === CONVERSION) {
-      if (eventInfo.name === formValues.name) {
+    } else if (metricType === CUSTOM) {
+      if (eventInfo?.name === formValues.name) {
         saveCanSave(false);
         return;
       }
@@ -266,8 +262,8 @@ const Metrics = (props: IProps) => {
 
   const handleMetricTypeChange = useCallback((e: SyntheticEvent, data: DropdownProps) => {
     saveMetricType(data.value as string);
-    setValue('name', '');
-  }, [setValue]);
+    setValue('name', metricName);
+  }, [metricName, setValue]);
 
   return (
     <div className={styles.metrics}>
