@@ -1,5 +1,8 @@
 import { Line } from 'react-chartjs-2';
-import { VariationColors } from 'constants/colors';
+import { Chart, Filler } from 'chart.js';
+import { VariationColors, VariationOpacityColors } from 'constants/colors';
+
+Chart.register(Filler);
 
 interface IChartProps {
   labels: unknown[];
@@ -87,9 +90,12 @@ export const IChart: React.FC<IChartProps> = (props) => {
             borderWidth: 1.5,
             backgroundColor: VariationColors[index],
             borderColor: VariationColors[index],
-            // cubicInterpolationMode: 'monotone',
             pointHitRadius: 0,
             tension: 0.4,
+            fill: {
+              target: 'origin',
+              above: VariationOpacityColors[index],
+            }
           };
         }),
       }}
