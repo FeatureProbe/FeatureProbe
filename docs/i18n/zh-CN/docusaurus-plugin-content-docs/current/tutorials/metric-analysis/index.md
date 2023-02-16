@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 7
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -335,10 +335,10 @@ cd client-sdk-js
 
 ~~~js title="example/index.html"
       const fpClient = new featureProbe.FeatureProbe({
-        // highlight-start
+  //      highlight-start
         remoteUrl: "https://featureprobe.io/server",
         clientSdkKey: // Paste client sdk key here,
-        // highlight-end
+  //      highlight-end
         user,
         refreshInterval: 5000,
       });
@@ -348,7 +348,7 @@ cd client-sdk-js
 
 ~~~js title="example/index.html"
   <script>
-    // highlight-next-line
+  //      highlight-next-line
     const user = new featureProbe.FPUser();
     const fpClient = new featureProbe.FeatureProbe({
       remoteUrl: "https://featureprobe.io/server",
@@ -359,10 +359,10 @@ cd client-sdk-js
   
     fpClient.start();
     fpClient.on("ready", function() {
-      // highlight-start
+  //      highlight-start
       const boolValue = fpClient.boolValue("tutorial_rollout", false);
       document.getElementById("boolean-result").innerText = boolValue;
-      // highlight-end
+  //      highlight-end
     });
   </script>
 ~~~
