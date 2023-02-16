@@ -1,4 +1,5 @@
 use feature_probe_server_sdk::Url;
+use log::warn;
 use serde::Deserialize;
 use std::{fmt::Display, time::Duration};
 use thiserror::Error;
@@ -30,6 +31,7 @@ pub struct ServerConfig {
     pub toggles_url: Url,
     pub events_url: Url,
     pub keys_url: Option<Url>,
+    pub analysis_url: Option<Url>,
     pub refresh_interval: Duration,
     pub server_sdk_key: Option<String>,
     pub client_sdk_key: Option<String>,
@@ -103,6 +105,22 @@ impl ServerConfig {
             }
         };
 
+        let analysis_url = match config.get_string("analysis_url") {
+            Ok(url) => match Url::parse(&url) {
+                Err(e) => {
+                    return Err(FPServerError::ConfigError(format!(
+                        "INVALID FP_ANALYSIS_URL: {}",
+                        e,
+                    )))
+                }
+                Ok(u) => Some(u),
+            },
+            Err(_) => {
+                warn!("NOT SET FP_ANALYSIS_URL");
+                None
+            }
+        };
+
         let refresh_interval = match config.get_int("refresh_seconds") {
             Err(_) => {
                 return Err(FPServerError::ConfigError(
@@ -131,6 +149,7 @@ impl ServerConfig {
         Ok(ServerConfig {
             toggles_url,
             events_url,
+            analysis_url,
             keys_url,
             refresh_interval,
             client_sdk_key,
@@ -150,10 +169,15 @@ impl Display for ServerConfig {
             None => "None".to_owned(),
             Some(s) => s.to_string(),
         };
-        write!(f, "server_port {}, toggles_url {}, events_url {}, keys_url {}, refresh_interval {:?}, client_sdk_key {:?}, server_sdk_key {:?}",
+        let analysis_url = match &self.analysis_url {
+            None => "None".to_owned(),
+            Some(s) => s.to_string(),
+        };
+        write!(f, "server_port {}, toggles_url {}, events_url {}, analysis_url {}, keys_url {}, refresh_interval {:?}, client_sdk_key {:?}, server_sdk_key {:?}",
             self.server_port,
             self.toggles_url,
             self.events_url,
+            analysis_url,
             keys_url,
             self.refresh_interval,
             self.client_sdk_key,

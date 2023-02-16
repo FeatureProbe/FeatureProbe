@@ -334,5 +334,20 @@
         }
       ]
     }
+  },
+  "events": {
+    "c52d1e0fd380f432a21f4743d59b26a0": {
+      "name": "c52d1e0fd380f432a21f4743d59b26a0",
+      "type": "PAGE_VIEW",
+      "matcher": "SIMPLE",
+      "url": "https://127.0.0.1/test"
+    },
+    "b62d1e0fd380f432a21f47sss29b26a0": {
+      "name": "b62d1e0fd380f432a21f47sss29b26a0",
+      "type": "CLICK",
+      "matcher": "SIMPLE",
+      "url": "https://127.0.0.1/test",
+      "selector": "#DEMO"
+    }
   }
 }
