@@ -18,8 +18,8 @@ public class FeatureProbeConfig {
 
     private ServerProperties serverProperties;
     private static final String LOCAL_HOST = "http://127.0.0.1";
-    private static final String FEATURE_PROBE_API_EVENT_PATH = "/api/server/events";
-    private static final String FEATURE_PROBE_API_SYNCHRONIZER_PATH = "/api/server/toggles";
+    private static final String FEATURE_PROBE_API_EVENT_PATH = "/internal/server/events";
+    private static final String FEATURE_PROBE_API_SYNCHRONIZER_PATH = "/internal/server/toggles";
     private static final String MANAGER_PROJECT_SDK_KEY = "server-t6h78815ef044428826787e9a238b9c6a479f998";
 
     @Bean
