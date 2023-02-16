@@ -69,10 +69,12 @@ import { DiffServe } from 'components/Diff/DiffServe';
 import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
 import { I18NRules, RulesDiffContent } from 'components/Diff/RulesDiffContent';
 import { DiffStatusContent } from 'components/Diff/DiffStatus';
+import SizeTips from 'components/SizeTips';
 import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
 import { getFromDictionary, saveDictionary } from 'services/dictionary';
 import { USER_GUIDE_LAYOUT, USER_GUIDE_TARGETING } from 'constants/dictionary_keys';
 import { useFormErrorScrollIntoView } from 'hooks';
+import { getBytes, MAX_SIZE } from 'utils/bytes';
 import styles from './index.module.scss';
 
 interface IProps {
@@ -155,6 +157,8 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   const [comment, setComment] = useState<string>('');
   const [isLoading, setLoading] = useState<boolean>(false);
   const [options, saveOptions] = useState<IOption[]>();
+  const [size, saveSize] = useState<number>(0);
+  const [sizeConfirm, setSizeConfirm] = useState<boolean>(false);
   const [run, saveRun] = useState<boolean>(false);
   const [stepIndex, saveStepIndex] = useState<number>(0);
   const history = useHistory();
@@ -349,6 +353,24 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     });
   }, [toggleDisabled, rules, variations, defaultServe, disabledServe]);
 
+  //Check if the size of the data is too large
+  useEffect(() => {
+    if(publishTargeting) {
+      const bytes = getBytes(JSON.stringify(publishTargeting.content));
+      saveSize(bytes);
+    }
+  }, [publishTargeting]);
+
+  const sizeState = useMemo(() => {
+    let state = 'normal';
+    if(size >= MAX_SIZE) {
+      state = 'large';
+    } else if(size > MAX_SIZE * 0.8) {
+      state = 'near';
+    }
+    return state;
+  }, [size]);
+
   useEffect(() => {
     if (initialTargeting) {
       const isSame = isEqual(publishTargeting, initialTargeting);
@@ -411,8 +433,12 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     if (validateForm()) {
       return;
     }
+    if(sizeState === 'large') {
+      message.error(intl.formatMessage({id: 'targeting.size.tips'}, { size: Math.floor(size / 1024) }));
+      return;
+    }
     setOpen(true);
-  }, [validateForm]);
+  }, [validateForm, sizeState, intl, size]);
 
   const onError = useCallback(() => {
     validateForm();
@@ -479,7 +505,9 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   }, [disabledServe.select, variations]);
 
   const handleInputComment = useCallback((e: SyntheticEvent, data: TextAreaProps | InputOnChangeData) => {
-    setComment(data.value as string);
+    if((data.value as string).length < 150) {
+      setComment(data.value as string);
+    }
   }, []);
 
   const renderLabel = useCallback((label: DropdownItemProps) => {
@@ -559,235 +587,242 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   );
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)} autoComplete="off" ref={formRef}>
-      <div className={`${styles.status}`}>
-        <div className={`${styles['joyride-status']} joyride-toggle-status`}>
-          <SectionTitle title={intl.formatMessage({ id: 'targeting.status.text' })} />
-          <div className={styles['toggle-status']}>
-            <Radio
-              size="mini"
-              toggle
-              checked={!toggleDisabled}
-              onChange={(e: SyntheticEvent, data: CheckboxProps) => saveToggleDisable(!data.checked || false)}
-              className={styles['info-toggle-status']}
-              disabled={disabled}
-            />
+    <>
+      <Form onSubmit={handleSubmit(onSubmit, onError)} autoComplete="off" ref={formRef}>
+        <div className={`${styles.status}`}>
+          <div className={`${styles['joyride-status']} joyride-toggle-status`}>
+            <SectionTitle title={intl.formatMessage({ id: 'targeting.status.text' })} />
+            <div className={styles['toggle-status']}>
+              <Radio
+                size="mini"
+                toggle
+                checked={!toggleDisabled}
+                onChange={(e: SyntheticEvent, data: CheckboxProps) => saveToggleDisable(!data.checked || false)}
+                className={styles['info-toggle-status']}
+                disabled={disabled}
+              />
+            </div>
+            {toggleDisabled ? (
+              <div className={styles['status-text']}>
+                <span>
+                  <FormattedMessage id="targeting.status.disabled.text" />
+                </span>
+                <span
+                  className={styles['name-color']}
+                  style={{ background: VariationColors[Number(disabledServe.select) % 20] }}
+                ></span>
+                <span className={styles['name-text']}>{disabledText}</span>
+              </div>
+            ) : (
+              <div className={styles['status-text']}>
+                <FormattedMessage id="common.enabled.text" />
+              </div>
+            )}
           </div>
-          {toggleDisabled ? (
-            <div className={styles['status-text']}>
-              <span>
-                <FormattedMessage id="targeting.status.disabled.text" />
-              </span>
-              <span
-                className={styles['name-color']}
-                style={{ background: VariationColors[Number(disabledServe.select) % 20] }}
-              ></span>
-              <span className={styles['name-text']}>{disabledText}</span>
-            </div>
-          ) : (
-            <div className={styles['status-text']}>
-              <FormattedMessage id="common.enabled.text" />
-            </div>
-          )}
         </div>
-      </div>
 
-      <div className={styles.variations}>
-        <SectionTitle
-          title={intl.formatMessage({ id: 'common.variations.text' })}
-          showTooltip={true}
-          tooltipText={intl.formatMessage({ id: 'toggles.variations.tips' })}
-        />
-        <Variations
-          disabled={disabled}
-          returnType={toggleInfo?.returnType || ''}
-          hooksFormContainer={hooksFormContainer}
-          variationContainer={variationContainer}
-          ruleContainer={ruleContainer}
-          defaultServeContainer={defaultServeContainer}
-        />
-      </div>
-      <div className={styles.rules}>
-        <Rules
-          disabled={disabled}
-          useSegment={true}
-          ruleContainer={ruleContainer}
-          variationContainer={variationContainer}
-          hooksFormContainer={hooksFormContainer}
-          segmentContainer={segmentContainer}
-        />
-        <DefaultRule disabled={disabled} />
-      </div>
-      <div className={styles['disabled-return']}>
-        <DisabledServe disabled={disabled} />
-      </div>
-      <div id="footer" className={styles.footer}>
-        <EventTracker category="targeting" action="publish-toggle">
-          <Button
-            className={styles['publish-btn']}
-            disabled={publishDisabled || disabled || isLoading}
-            primary
-            type="submit"
-          >
-            {isLoading && <Loader inverted active inline size="tiny" className={styles['publish-btn-loader']} />}
-            <span className={styles['publish-btn-text']}>
-              {approvalInfo?.enableApproval ? (
-                <FormattedMessage id="common.request.approval.text" />
-              ) : (
-                <FormattedMessage id="common.publish.text" />
-              )}
-            </span>
-          </Button>
-        </EventTracker>
-      </div>
-      <Modal open={open} width={800} handleCancel={handlePublishCancel} handleConfirm={handlePublishConfirm}>
-        <div>
-          <div className={styles['modal-header']}>
-            <span className={styles['modal-header-text']}>
-              <FormattedMessage id="targeting.publish.modal.title" />
-            </span>
-            <Icon customclass={styles['modal-close-icon']} type="close" onClick={handlePublishCancel} />
-          </div>
-          <div className={styles['modal-content']}>
-            <Diff
-              sections={[
-                {
-                  before: {
-                    disabled: initialTargeting?.disabled,
-                  },
-                  after: {
-                    disabled: publishTargeting?.disabled,
-                  },
-                  title: intl.formatMessage({ id: 'targeting.status.text' }),
-                  renderContent: (content) => {
-                    return <DiffStatusContent content={content} />;
-                  },
-                  diffKey: 'status',
-                },
-                {
-                  before: initialTargeting?.content.variations,
-                  after: publishTargeting?.content.variations,
-                  title: intl.formatMessage({ id: 'common.variations.text' }),
-                  renderContent: (content) => {
-                    return <VariationsDiffContent content={content} />;
-                  },
-                  diffKey: 'variations',
-                },
-                {
-                  before: initialTargeting?.content.rules,
-                  after: publishTargeting?.content.rules,
-                  title: intl.formatMessage({ id: 'common.rules.text' }),
-                  renderContent: (content) => {
-                    return <RulesDiffContent content={content} />;
-                  },
-                  beforeDiff: beforeRuleDiff,
-                  diffKey: 'rules',
-                },
-                {
-                  before: initialTargeting?.content.defaultServe,
-                  after: publishTargeting?.content.defaultServe,
-                  title: intl.formatMessage({ id: 'targeting.default.rule' }),
-                  renderContent: (content) => {
-                    return <DiffServe content={content} />;
-                  },
-                  beforeDiff: beforeServeDiff,
-                  diffKey: 'default',
-                },
-                {
-                  title: intl.formatMessage({ id: 'common.disabled.return.type.text' }),
-                  before: initialTargeting?.content.disabledServe,
-                  after: publishTargeting?.content.disabledServe,
-                  renderContent: (content) => {
-                    return <DiffServe content={content} />;
-                  },
-                  beforeDiff: beforeServeDiff,
-                  diffKey: 'disabled',
-                },
-              ]}
-              maxHeight={341}
-            />
-            <div className={styles['diff-after']}>
-              <Form>
-                {approvalInfo?.enableApproval && (
-                  <div className={styles['approval']}>
-                    <div className={styles['approval-title']}>
-                      <FormattedMessage id="toggles.settings.approval.reviewers" />:
-                      <Popup
-                        inverted
-                        trigger={<Icon type="info" customclass={styles['icon-info']} />}
-                        content={intl.formatMessage({ id: 'targeting.approval.tips' })}
-                        position="top center"
-                        className="popup-override"
-                      />
-                    </div>
-                    <div className={styles['approval-content']}>
-                      <Dropdown
-                        fluid
-                        multiple
-                        value={approvalInfo?.reviewers}
-                        options={options}
-                        renderLabel={renderLabel}
-                        icon={null}
-                        disabled={true}
-                        className={styles['approval-dropdown']}
-                      />
-                      <div className={styles['approval-btn']} onClick={handleGotoSetting}>
-                        <FormattedMessage id="common.toggle.approval.settings.text" />
-                      </div>
-                    </div>
-                  </div>
+        <div className={styles.variations}>
+          <SectionTitle
+            title={intl.formatMessage({ id: 'common.variations.text' })}
+            showTooltip={true}
+            tooltipText={intl.formatMessage({ id: 'toggles.variations.tips' })}
+          />
+          <Variations
+            disabled={disabled}
+            returnType={toggleInfo?.returnType || ''}
+            hooksFormContainer={hooksFormContainer}
+            variationContainer={variationContainer}
+            ruleContainer={ruleContainer}
+            defaultServeContainer={defaultServeContainer}
+          />
+        </div>
+        <div className={styles.rules}>
+          <Rules
+            disabled={disabled}
+            useSegment={true}
+            ruleContainer={ruleContainer}
+            variationContainer={variationContainer}
+            hooksFormContainer={hooksFormContainer}
+            segmentContainer={segmentContainer}
+          />
+          <DefaultRule disabled={disabled} />
+        </div>
+        <div className={styles['disabled-return']}>
+          <DisabledServe disabled={disabled} />
+        </div>
+        <div id="footer" className={styles.footer}>
+          <EventTracker category="targeting" action="publish-toggle">
+            <Button
+              className={styles['publish-btn']}
+              disabled={publishDisabled || disabled || isLoading}
+              primary
+              type="submit"
+            >
+              {isLoading && <Loader inverted active inline size="tiny" className={styles['publish-btn-loader']} />}
+              <span className={styles['publish-btn-text']}>
+                {approvalInfo?.enableApproval ? (
+                  <FormattedMessage id="common.request.approval.text" />
+                ) : (
+                  <FormattedMessage id="common.publish.text" />
                 )}
-                <div className={styles['comment']}>
-                  <div className={styles['comment-title']}>
-                    {approvalInfo?.enableApproval && <span className="label-required">*</span>}
-                    <FormattedMessage id="targeting.publish.modal.comment" />:
-                  </div>
-                  <div className={styles['comment-content']}>
-                    <Form.TextArea
-                      name="reason"
-                      error={newFormState.errors.reason ? true : false}
-                      className={styles['comment-input']}
-                      placeholder={intl.formatMessage({ id: 'common.input.placeholder' })}
-                      onChange={async (e: SyntheticEvent, detail: TextAreaProps) => {
-                        handleInputComment(e, detail);
-                        newSetValue(detail.name, detail.value);
-                        await newTrigger('reason');
-                      }}
-                    />
-                    {newFormState.errors.reason && (
-                      <div className="error-text">
-                        <FormattedMessage id="common.input.placeholder" />
+              </span>
+            </Button>
+          </EventTracker>
+        </div>
+        <Modal open={open} width={800} handleCancel={handlePublishCancel} handleConfirm={handlePublishConfirm}>
+          <div>
+            <div className={styles['modal-header']}>
+              <span className={styles['modal-header-text']}>
+                <FormattedMessage id="targeting.publish.modal.title" />
+              </span>
+              <Icon customclass={styles['modal-close-icon']} type="close" onClick={handlePublishCancel} />
+            </div>
+            <div className={styles['modal-content']}>
+              <Diff
+                sections={[
+                  {
+                    before: {
+                      disabled: initialTargeting?.disabled,
+                    },
+                    after: {
+                      disabled: publishTargeting?.disabled,
+                    },
+                    title: intl.formatMessage({ id: 'targeting.status.text' }),
+                    renderContent: (content) => {
+                      return <DiffStatusContent content={content} />;
+                    },
+                    diffKey: 'status',
+                  },
+                  {
+                    before: initialTargeting?.content.variations,
+                    after: publishTargeting?.content.variations,
+                    title: intl.formatMessage({ id: 'common.variations.text' }),
+                    renderContent: (content) => {
+                      return <VariationsDiffContent content={content} />;
+                    },
+                    diffKey: 'variations',
+                  },
+                  {
+                    before: initialTargeting?.content.rules,
+                    after: publishTargeting?.content.rules,
+                    title: intl.formatMessage({ id: 'common.rules.text' }),
+                    renderContent: (content) => {
+                      return <RulesDiffContent content={content} />;
+                    },
+                    beforeDiff: beforeRuleDiff,
+                    diffKey: 'rules',
+                  },
+                  {
+                    before: initialTargeting?.content.defaultServe,
+                    after: publishTargeting?.content.defaultServe,
+                    title: intl.formatMessage({ id: 'targeting.default.rule' }),
+                    renderContent: (content) => {
+                      return <DiffServe content={content} />;
+                    },
+                    beforeDiff: beforeServeDiff,
+                    diffKey: 'default',
+                  },
+                  {
+                    title: intl.formatMessage({ id: 'common.disabled.return.type.text' }),
+                    before: initialTargeting?.content.disabledServe,
+                    after: publishTargeting?.content.disabledServe,
+                    renderContent: (content) => {
+                      return <DiffServe content={content} />;
+                    },
+                    beforeDiff: beforeServeDiff,
+                    diffKey: 'disabled',
+                  },
+                ]}
+                maxHeight={341}
+              />
+              <div className={styles['diff-after']}>
+                <Form>
+                  {approvalInfo?.enableApproval && (
+                    <div className={styles['approval']}>
+                      <div className={styles['approval-title']}>
+                        <FormattedMessage id="toggles.settings.approval.reviewers" />:
+                        <Popup
+                          inverted
+                          trigger={<Icon type="info" customclass={styles['icon-info']} />}
+                          content={intl.formatMessage({ id: 'targeting.approval.tips' })}
+                          position="top center"
+                          className="popup-override"
+                        />
                       </div>
-                    )}
+                      <div className={styles['approval-content']}>
+                        <Dropdown
+                          fluid
+                          multiple
+                          value={approvalInfo?.reviewers}
+                          options={options}
+                          renderLabel={renderLabel}
+                          icon={null}
+                          disabled={true}
+                          className={styles['approval-dropdown']}
+                        />
+                        <div className={styles['approval-btn']} onClick={handleGotoSetting}>
+                          <FormattedMessage id="common.toggle.approval.settings.text" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div className={styles['comment']}>
+                    <div className={styles['comment-title']}>
+                      {approvalInfo?.enableApproval && <span className="label-required">*</span>}
+                      <FormattedMessage id="targeting.publish.modal.comment" />:
+                    </div>
+                    <div className={styles['comment-content']}>
+                      <Form.TextArea
+                        name="reason"
+                        value={comment}
+                        error={newFormState.errors.reason ? true : false}
+                        className={styles['comment-input']}
+                        placeholder={intl.formatMessage({ id: 'common.input.placeholder' })}
+                        onChange={async (e: SyntheticEvent, detail: TextAreaProps) => {
+                          handleInputComment(e, detail);
+                          newSetValue(detail.name, detail.value);
+                          await newTrigger('reason');
+                        }}
+                        
+                      />
+                      {newFormState.errors.reason && (
+                        <div className="error-text">
+                          <FormattedMessage id="common.input.placeholder" />
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </Form>
+                </Form>
+              </div>
             </div>
           </div>
-        </div>
-      </Modal>
-      <Prompt when={!publishDisabled} message={intl.formatMessage({ id: 'targeting.page.leave.text' })} />
-      <Joyride
-        run={run}
-        callback={handleJoyrideCallback}
-        stepIndex={stepIndex}
-        continuous
-        hideCloseButton
-        scrollToFirstStep
-        showProgress={false}
-        showSkipButton
-        scrollOffset={100}
-        disableCloseOnEsc={true}
-        steps={STEPS}
-        locale={{
-          back: intl.formatMessage({ id: 'guide.last' }),
-          next: intl.formatMessage({ id: 'guide.next' }),
-          last: intl.formatMessage({ id: 'guide.done' }),
-        }}
-        floaterProps={{ ...floaterStyle }}
-        styles={{ ...tourStyle }}
-      />
-    </Form>
+        </Modal>
+        <Prompt when={!publishDisabled} message={intl.formatMessage({ id: 'targeting.page.leave.text' })} />
+        <Joyride
+          run={run}
+          callback={handleJoyrideCallback}
+          stepIndex={stepIndex}
+          continuous
+          hideCloseButton
+          scrollToFirstStep
+          showProgress={false}
+          showSkipButton
+          scrollOffset={100}
+          disableCloseOnEsc={true}
+          steps={STEPS}
+          locale={{
+            back: intl.formatMessage({ id: 'guide.last' }),
+            next: intl.formatMessage({ id: 'guide.next' }),
+            last: intl.formatMessage({ id: 'guide.done' }),
+          }}
+          floaterProps={{ ...floaterStyle }}
+          styles={{ ...tourStyle }}
+        />
+      </Form>
+      <SizeTips hide={sizeConfirm || sizeState === 'normal'} size={size} onConfirm={() => {
+        setSizeConfirm(true);
+      }} />
+    </>
   );
 });
 

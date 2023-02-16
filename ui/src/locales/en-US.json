@@ -111,6 +111,7 @@
   "common.diff.tips": "The following is a before and after comparison of this change.",
   "common.flow.explain": "Explain",
   "common.know.text": "I see",
+  "common.know.not.me.text": "Got it",
 
   "header.getuser.error.text": "Error getting user profile",
 
@@ -335,6 +336,8 @@
   "targeting.semver.explain": "What is semver?",
   "targeting.semver.more": "Learn more",
   "targeting.rule.not.empty": "Please add a rule condition",
+  "targeting.size.tips": "The total content of this page can not exceed 1 M, and will not be released normally when it is larger than 1 M. Currently, it has reached {size} KB!",
+  "targeting.size.tips.title": "Warning Tips",
 
   "targeting.approval.tips": "Owner can set approval reviewers for this environment.",
   "targeting.approval.operation.skip.approval": "Skip Approval and Publish",

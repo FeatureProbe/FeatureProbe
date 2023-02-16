@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState, useCallback, useEffect, useRef } from 'react';
+import { SyntheticEvent, useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Form, Button, PaginationProps, Loader, TextAreaProps } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useParams, Prompt, useRouteMatch } from 'react-router-dom';
@@ -26,6 +26,8 @@ import { SEGMENT_EDIT_PATH } from 'router/routes';
 import { IRule, ICondition } from 'interfaces/targeting';
 import { IVersionParams } from 'interfaces/project';
 import styles from './index.module.scss';
+import { getBytes, MAX_SIZE } from 'utils/bytes';
+import SizeTips from 'components/SizeTips';
 
 interface IParams {
   projectKey: string;
@@ -73,6 +75,8 @@ const Info = () => {
     after?: unknown;
   }>({});
   const [comment, saveComment] = useState<string>('');
+  const [size, saveSize] = useState<number>(0);
+  const [sizeConfirm, setSizeConfirm] = useState<boolean>(false);
   const { ref, height = 1 } = useResizeObserver<HTMLDivElement>();
   const formRef = useRef();
   const intl = useIntl();
@@ -152,6 +156,28 @@ const Info = () => {
       rules: requestRules,
     });
   }, [segmentInfo, rules]);
+
+  //Check if the size of the data is too large
+  useEffect(() => {
+    if (publishSegment) {
+      const bytes = getBytes(JSON.stringify(publishSegment.rules));
+      saveSize(bytes);
+    }
+  }, [publishSegment]);
+
+  const sizeState = useMemo(() => {
+    let state = 'normal';
+    if (size >= MAX_SIZE) {
+      state = 'large';
+    } else if (size > MAX_SIZE * 0.8) {
+      state = 'near';
+    }
+    return state;
+  }, [size]);
+
+  useEffect(() => {
+    console.log(sizeState, size, MAX_SIZE - size);
+  }, [sizeState, size]);
 
   useEffect(() => {
     setValue('name', segmentInfo?.name);
@@ -291,10 +317,15 @@ const Info = () => {
       return;
     }
 
+    if(sizeState === 'large') {
+      message.error(intl.formatMessage({id: 'targeting.size.tips'}, { size: Math.floor(size / 1024) }));
+      return;
+    }
+
     setLoading(true);
     await fetchToggleList();
     setOpen(true);
-  }, [validateForm, fetchToggleList]);
+  }, [validateForm, sizeState, fetchToggleList, intl, size]);
 
   const onError = useCallback(() => {
     validateForm();
@@ -544,6 +575,9 @@ const Info = () => {
           </div>
         )}
       </div>
+      <SizeTips hide={sizeConfirm || sizeState === 'normal'} size={size} onConfirm={() => {
+        setSizeConfirm(true);
+      }} />
     </>
   );
 };

@@ -111,6 +111,7 @@
   "common.diff.tips": "以下为本次变更内容的前后对比。",
   "common.flow.explain": "流量解读",
   "common.know.text": "我知道了",
+  "common.know.not.me.text": "知道了",
   
   "header.getuser.error.text": "无法获取用户信息!",
 
@@ -336,6 +337,8 @@
   "targeting.semver.explain": "什么是语义版本？",
   "targeting.semver.more": "查看详情",
   "targeting.rule.not.empty": "请添加至少一个规则条件",
+  "targeting.size.tips": "该页面内容总量不可超过1M，大于1M时将不能正常发布，当前已达到{size}KB!",
+  "targeting.size.tips.title": "警告提示",
 
   "targeting.approval.tips": "支持为该项目统一设置审批人",
   "targeting.approval.operation.skip.approval": "跳过审批并发布",

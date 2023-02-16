@@ -13,6 +13,8 @@ export const useVarition = () => {
   const [variations, saveVariations] = useState<IVariation[]>([]);
   const name = getVariationName(variations);
 
+  // const saveVariations = (any: any) => 0;
+
   const handleAdd = () => {
     variations.push({
       id: uuidv4(),
