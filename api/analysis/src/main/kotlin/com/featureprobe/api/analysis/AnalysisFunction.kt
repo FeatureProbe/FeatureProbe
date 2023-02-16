@@ -119,11 +119,11 @@ fun distributionChart(p: ChartProperty, d: BetaDistribution): List<DistributionD
     return dots
 }
 
-fun statsSql(metric: String, toggle: String, start: Long, end: Long): String {
+fun statsSql(sdkKey: String, metric: String, toggle: String, start: Long, end: Long): String {
     return """
-WITH $RAW_VARIATION_TABLE as (${userProvideVariationSql()}),
+WITH $RAW_VARIATION_TABLE as (${userProvideVariationSql(sdkKey)}),
     $UNIQ_VARIATION_TABLE as (${uniqVariationSql(toggle, start, end)}),
-    $RAW_METRIC_TABLE as (${userProvideMetricSql(metric)}),
+    $RAW_METRIC_TABLE as (${userProvideMetricSql(sdkKey, metric)}),
     $METRIC_TABLE as (${metricSql(start, end)}),
     $CONVERT_USER_TABLE as (${convertUserSql()}),
     $CONVERT_COUNT_TABLE as (${convertCountSql()}),
@@ -132,37 +132,40 @@ SELECT v.variation, c.cvt, v.total FROM $CONVERT_COUNT_TABLE c, $VARIATION_COUNT
 WHERE c.variation = v.variation;"""
 }
 
-fun userProvideVariationSql(): String {
+fun userProvideVariationSql(sdkKey: String): String {
     return """
 SELECT 
     user_key, time, toggle_key, variation_index as variation 
-FROM access"""
+FROM access
+WHERE sdk_key = '$sdkKey'"""
 }
 
 fun uniqVariationSql(toggle: String, start: Long, end: Long): String {
     return """
 SELECT 
-    v.user_key, v.variation, v.time 
+    v.user_key, v.variation
 FROM $RAW_VARIATION_TABLE v 
 WHERE 
-    v.toggle_key = '$toggle' and v.time > '$start' and v.time < '$end'"""
+    v.toggle_key = '$toggle' and v.time > '$start' and v.time < '$end'
+GROUP BY v.user_key, v.variation"""
 }
 
 fun metricSql(start: Long, end: Long): String {
     return """
 SELECT 
-    *
+    user_key
 FROM $RAW_METRIC_TABLE v 
 WHERE 
-    v.time > '$start' and v.time < '$end'"""
+    v.time > '$start' and v.time < '$end'
+GROUP BY user_key"""
 }
 
-fun userProvideMetricSql(metric: String): String {
-    return "SELECT user_key, time FROM events WHERE name = '$metric'"
+fun userProvideMetricSql(sdkKey: String, metric: String): String {
+    return "SELECT user_key, time FROM events WHERE name = '$metric' AND sdk_key = '$sdkKey'"
 }
 
 fun convertUserSql(): String {
-    return "SELECT m.user_key, variation FROM $UNIQ_VARIATION_TABLE u JOIN $RAW_METRIC_TABLE m ON (u.user_key = m.user_key)"
+    return "SELECT m.user_key, variation FROM $UNIQ_VARIATION_TABLE u JOIN $METRIC_TABLE m ON (u.user_key = m.user_key) GROUP BY m.user_key, variation"
 }
 
 fun convertCountSql(): String {

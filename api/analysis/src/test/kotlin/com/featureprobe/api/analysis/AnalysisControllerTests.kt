@@ -107,7 +107,7 @@ class AnalysisControllerTests {
         val end = 1676273678L
 
         val result =
-            service.doAnalysis("sdkKey", "click_1", "toggle_1", "binomial", start, end)
+            service.doAnalysis("sdk_key", "click_1", "toggle_1", "binomial", start, end)
 
         Assert.assertNotNull(result.get())
         Assert.assertNotNull(result.get()!!["1"])
@@ -121,7 +121,7 @@ class AnalysisControllerTests {
         val end = 1676273669L
 
         val result =
-            service.doAnalysis("sdkKey", "click_not_collect", "toggle_not_collect", "binomial", start, end)
+            service.doAnalysis("sdk_key", "click_not_collect", "toggle_not_collect", "binomial", start, end)
 
         Assert.assertNotNull(result.get())
         Assert.assertTrue(result.get()!!.isEmpty())
@@ -133,7 +133,7 @@ class AnalysisControllerTests {
         val end = 1676273669L
 
         val result =
-            service.doAnalysis("sdkKey", "click_not_collect", "toggle_1", "binomial", start, end)
+            service.doAnalysis("sdk_key", "click_not_collect", "toggle_1", "binomial", start, end)
 
         Assert.assertNotNull(result.get())
         Assert.assertTrue(result.get()!!.isEmpty())

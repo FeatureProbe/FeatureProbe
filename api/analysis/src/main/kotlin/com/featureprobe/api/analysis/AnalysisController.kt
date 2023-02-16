@@ -53,8 +53,8 @@ class AnalysisService(
     @Value("\${app.analysis.iterations}") val iterationCount: Int = 1000,
     @Value("\${app.hikari.minimum-idle}") val hikariMinIdle: Int = 10,
     @Value("\${app.hikari.maximum-pool-size}") val hikariMaxPool: Int = 100,
-    @Value("\${app.hikari.idle-timeout}") val hikariIdleTimeout: Long = 60000,
-    @Value("\${app.hikari.max-lifetime}") val hikariMaxLifetime: Long = 30000,
+    @Value("\${app.hikari.idle-timeout}") val hikariIdleTimeout: Long = 30000,
+    @Value("\${app.hikari.max-lifetime}") val hikariMaxLifetime: Long = 60000,
     @Value("\${app.hikari.connection-timeout}") val hikariConnectTimeOut: Long = 30000,
     @Value("\${app.hikari.connection-test-query}") val hikariTtestQuery: String = "SELECT 1",
 ) {
@@ -102,7 +102,7 @@ class AnalysisService(
             return Err(NotSupportAnalysisType)
         }
 
-        val variationCount = variationCount(metric, toggle, start, end)
+        val variationCount = variationCount(sdkKey, metric, toggle, start, end)
 
         val distributions = variationCount.associate {
             it.variation to DistributionInfo(
@@ -115,8 +115,8 @@ class AnalysisService(
         return Ok(variationStats(distributions, iterationCount))
     }
 
-    fun variationCount(metric: String, toggle: String, start: Long, end: Long): List<VariationCount> {
-        val sql = statsSql(metric, toggle, start, end)
+    fun variationCount(sdkKey: String, metric: String, toggle: String, start: Long, end: Long): List<VariationCount> {
+        val sql = statsSql(sdkKey, metric, toggle, start, end)
         log.info(sql)
         val session = sessionOf(dataSource)
         session.use {
