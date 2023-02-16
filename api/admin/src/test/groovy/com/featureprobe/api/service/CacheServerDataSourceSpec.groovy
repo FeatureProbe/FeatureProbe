@@ -16,6 +16,7 @@ import com.featureprobe.api.dao.repository.DictionaryRepository
 import com.featureprobe.api.dao.repository.EnvironmentRepository
 import com.featureprobe.api.dao.repository.SegmentRepository
 import com.featureprobe.api.dao.repository.TargetingRepository
+import com.featureprobe.api.dao.repository.ToggleControlConfRepository
 import com.featureprobe.api.dao.repository.ToggleRepository
 import com.featureprobe.api.dto.SdkKeyResponse
 import com.featureprobe.api.dto.ServerResponse
@@ -46,6 +47,8 @@ class CacheServerDataSourceSpec extends Specification {
 
     PublishMessageRepository publishMessageRepository
 
+    ToggleControlConfRepository toggleControlConfRepository
+
     BaseServerService baseServerService
 
     CacheServerDataSource cacheServerDataSource
@@ -71,12 +74,13 @@ class CacheServerDataSourceSpec extends Specification {
         toggleRepository = Mock(ToggleRepository)
         targetingRepository = Mock(TargetingRepository)
         dictionaryRepository = Mock(DictionaryRepository)
+        toggleControlConfRepository = Mock(ToggleControlConfRepository)
         entityManager = Mock(SessionImpl)
         cache = Mock(MemoryCache)
         publishMessageRepository = Mock(PublishMessageRepository)
         eventPublisher = Mock()
         baseServerService = new BaseServerService(environmentRepository, segmentRepository, toggleRepository,
-                targetingRepository, dictionaryRepository, entityManager)
+                targetingRepository, dictionaryRepository, toggleControlConfRepository, entityManager)
         cacheServerDataSource = new CacheServerDataSource(cache, publishMessageRepository, baseServerService, eventPublisher)
         serverToggle = Mock(ServerToggleEntity)
         serverSegment = Mock(ServerSegmentEntity)
@@ -179,6 +183,9 @@ class CacheServerDataSourceSpec extends Specification {
                         uniqueKey: projectKey + "\$test_segment", rules: segmentRules)]
         2 * toggleRepository.findAllByProjectKeyAndOrganizationIdAndArchivedAndDeleted(projectKey, 1, false, false) >>
                 [new com.featureprobe.api.dao.entity.Toggle(projectKey: projectKey, key: toggleKey, returnType: "string", clientAvailability: false)]
+        2 * toggleControlConfRepository
+                .findByProjectKeyAndEnvironmentKeyAndOrganizationId(projectKey,
+                        environmentKey, 1) >> []
         2 * targetingRepository.findAllByProjectKeyAndEnvironmentKeyAndOrganizationIdAndDeleted(projectKey, environmentKey, 1, false) >>
                 [new Targeting(projectKey: projectKey, environmentKey: environmentKey,
                         toggleKey: toggleKey, content: rules, disabled: false)]

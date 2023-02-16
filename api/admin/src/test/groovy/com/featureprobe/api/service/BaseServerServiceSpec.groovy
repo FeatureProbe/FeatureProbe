@@ -15,6 +15,7 @@ class BaseServerServiceSpec extends Specification {
     ToggleRepository toggleRepository
     TargetingRepository targetingRepository
     DictionaryRepository dictionaryRepository
+    ToggleControlConfRepository toggleControlConfRepository
     EntityManager entityManager
     BaseServerService baseServerService
 
@@ -32,9 +33,10 @@ class BaseServerServiceSpec extends Specification {
         toggleRepository = Mock(ToggleRepository)
         targetingRepository = Mock(TargetingRepository)
         dictionaryRepository = Mock(DictionaryRepository)
+        toggleControlConfRepository = Mock(ToggleControlConfRepository)
         entityManager = Mock(SessionImpl)
         baseServerService = new BaseServerService(environmentRepository, segmentRepository, toggleRepository,
-                targetingRepository, dictionaryRepository, entityManager)
+                targetingRepository, dictionaryRepository, toggleControlConfRepository, entityManager)
         projectKey = "feature_probe"
         environmentKey = "test"
         toggleKey = "feature_toggle_unit_test"
@@ -81,6 +83,8 @@ class BaseServerServiceSpec extends Specification {
         1 * targetingRepository.findAllByProjectKeyAndEnvironmentKeyAndOrganizationIdAndDeleted(projectKey, environmentKey, 1, false) >>
                 [new Targeting(projectKey: projectKey, environmentKey: environmentKey,
                         toggleKey: toggleKey, content: rules, disabled: false)]
+        1 * toggleControlConfRepository
+                .findByProjectKeyAndEnvironmentKeyAndOrganizationId(projectKey, environmentKey, 1) >> [new ToggleControlConf(trackAccessEvents : true)]
         1 * environmentRepository.findAllServerEventBySdkKey(sdkKey) >> []
         with(serverResponse) {
             1 == toggles.size()

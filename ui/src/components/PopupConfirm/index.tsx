@@ -9,20 +9,19 @@ interface IProps {
   open: boolean;
   text: string;
   children: ReactElement;
+  icon?: ReactElement;
   handleCancel(e: SyntheticEvent): void;
   handleConfirm(e: SyntheticEvent): void;
 }
 
 const PopupConfirm = (props: IProps) => {
-  const { text, open, children, handleConfirm, handleCancel } = props;
+  const { text, open, children, icon, handleConfirm, handleCancel } = props;
 
   return (
     <Popup open={open} trigger={children} flowing hoverable on='click' className={styles.popup}>
       <div className={styles.content}>
-        <Icon customclass={styles.iconfont} type='error-circle' />
-        <span>
-          { text }
-        </span>
+        { icon || <Icon customclass={styles.iconfont} type='error-circle' /> }
+        <span>{ text }</span>
       </div>
       <div className={styles['btn-group']}>
         <Button className={styles['btn-cancel']} size='mini' secondary onClick={handleCancel}>

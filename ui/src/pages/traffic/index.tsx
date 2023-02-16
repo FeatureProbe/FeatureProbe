@@ -29,7 +29,7 @@ import { getTraffic } from 'services/toggle';
 
 import styles from './index.module.scss';
 
-const Metrics = () => {
+const Traffic = () => {
   const [ traffic, setTraffic ] = useState<ITraffic[]>([]);
   const [ summary, setSummary ] = useState<IValues[]>([]);
   const [ filterValue, setFilterValue ] = useState<string>('24');
@@ -45,7 +45,7 @@ const Metrics = () => {
   const initMetrics = useCallback(() => {
     getTraffic<ITrafficContent>(projectKey, environmentKey, toggleKey, {
       lastHours: filterValue,
-      metricType: fitlerType.toUpperCase(),
+      trafficType: fitlerType.toUpperCase(),
     }).then(res => {
       saveIsLoading(false);
       const { data, success } = res;
@@ -144,8 +144,8 @@ const Metrics = () => {
                             {id: 'targeting.variations.evaluations.text'}, 
                             {
                               type: fitlerType === 'name' 
-                                ? intl.formatMessage({id: 'common.name.text'}) 
-                                : intl.formatMessage({id: 'common.value.uppercase.text'}) 
+                                ? intl.formatMessage({id: 'common.name.lowercase.text'}) 
+                                : intl.formatMessage({id: 'common.value.text'}) 
                             }
                           )
                         }
@@ -205,7 +205,7 @@ const Metrics = () => {
 	);
 };
 
-export default Metrics;
+export default Traffic;
 
 ChartJS.register(
   CategoryScale,
