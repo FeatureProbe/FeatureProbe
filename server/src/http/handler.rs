@@ -25,7 +25,8 @@ use std::{
     sync::Arc,
     time::Duration,
 };
-use tracing::{debug, error};
+use log::info;
+use tracing::debug;
 
 #[async_trait]
 pub trait HttpHandler {
@@ -206,13 +207,16 @@ impl EventHandler for FpHttpHandler {
         let events_url = self.events_url.clone();
         let analysis_url = self.analysis_url.clone();
         let timeout = self.events_timeout;
-        let mut server_sdk_key = sdk_key.clone();
-        if sdk_key.contains("client") {
-            match self.repo.secret_keys().get(sdk_key.as_str()) {
-                Some(key) => server_sdk_key = key.clone(),
-                None =>  return Ok((StatusCode::UNAUTHORIZED, cors_headers(), "{}").into_response())
+        let server_sdk_key = {
+            if sdk_key.starts_with("client") {
+                match self.repo.secret_keys().get(sdk_key.as_str()) {
+                    Some(key) => key.clone(),
+                    None =>  return Ok((StatusCode::UNAUTHORIZED, cors_headers(), "{}").into_response())
+                }
+            } else{
+                sdk_key.clone()
             }
-        }
+        };
         let headers = build_header(headers, server_sdk_key, &user_agent);
         send_events(
             headers,
@@ -235,8 +239,6 @@ async fn send_events(
     data: VecDeque<Value>,
     http_client: Arc<Client>,
 ) {
-    let x = serde_json::to_string(&data).expect("TODO: panic message");
-    error!("----{x:?}");
     if let Some(analysis_url) = analysis_url {
         let headers = headers.clone();
         let analysis_url = analysis_url.clone();
@@ -266,12 +268,12 @@ async fn do_send_events(
         .timeout(timeout)
         .json(&data);
 
-    error!("{data:?}");
-    debug!("traffic post req: {:?}", traffic_request);
+    debug!("traffic post data: {data:?}");
+    debug!("traffic post req: {traffic_request:?}");
 
     match traffic_request.send().await {
-        Err(e) => error!("traffic post error: {}", e),
-        Ok(r) => error!("traffic post success: {:?}", r),
+        Err(e) => info!("traffic post error: {}", e),
+        Ok(r) => info!("traffic post success: {:?}", r),
     };
 }
 
