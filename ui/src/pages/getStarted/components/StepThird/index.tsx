@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Loader } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
@@ -27,6 +27,8 @@ const StepThird = (props: IProps) => {
   const { toggleKey, environmentKey } = useParams<IRouterParams>();
   const [ count, saveCount ] = useState<number>(1);
   const intl = useIntl();
+  const faqUrl = useRef('');
+
   const stepTitleCls = classNames(
     styles['step-title'],
     {
@@ -52,6 +54,14 @@ const StepThird = (props: IProps) => {
       });
     }
   }, [count, isLoading, checkToggleStatus, saveIsLoading]);
+
+  useEffect(() => {
+    if (intl.locale === 'zh-CN') {
+      faqUrl.current = 'https://docs.featureprobe.io/zh-CN/introduction/faq/#14-%E6%8E%A5%E5%85%A5%E5%BC%95%E5%AF%BC%E6%8F%90%E7%A4%BA-%E6%82%A8%E6%B2%A1%E6%9C%89%E6%AD%A4-sdk-%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E6%88%90%E5%8A%9F%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F-%E8%AF%A5%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5';
+    } else if(intl.locale === 'en-US') {
+      faqUrl.current = 'https://docs.featureprobe.io/introduction/faq/#14-how-to-solve-you-have-no-applications-connected-using-this-sdk-key-in-user-guidance-of-sdk-initialization';
+    }
+  }, [intl]);
 
   return (
     <div className={styles.step}>
@@ -106,15 +116,19 @@ const StepThird = (props: IProps) => {
                             className={styles['error-link']}
                             target='_blank'
                             rel='noreferrer'
-                            href='https://docs.featureprobe.io/zh-CN/how-to/faq/#14-%E6%8E%A5%E5%85%A5%E5%BC%95%E5%AF%BC%E6%8F%90%E7%A4%BA-%E6%82%A8%E6%B2%A1%E6%9C%89%E6%AD%A4-sdk-%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5%E6%88%90%E5%8A%9F%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F-%E8%AF%A5%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5'
+                            href={faqUrl.current}
                           >
                             <FormattedMessage id='connect.fourth.failed.link' />
                           </a>
                         </div>
                         <div className={styles['retry-connection']}>
-                          <Button primary className={styles['retry-connection-btn']} onClick={() => {
-                            saveIsLoading(true);
-                          }}>
+                          <Button 
+                            primary 
+                            className={styles['retry-connection-btn']} 
+                            onClick={() => {
+                              saveIsLoading(true);
+                            }}
+                          >
                             <FormattedMessage id='connect.fourth.failed.button' />
                           </Button>
                         </div>
