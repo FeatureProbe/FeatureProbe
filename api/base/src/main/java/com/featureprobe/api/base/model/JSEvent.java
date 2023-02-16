@@ -11,8 +11,6 @@ public class JSEvent {
 
     private String name;
 
-    private String pvName;
-
     private MatcherTypeEnum matcher;
 
     private String url;
