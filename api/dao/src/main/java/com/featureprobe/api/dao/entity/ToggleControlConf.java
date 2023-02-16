@@ -44,7 +44,7 @@ public class ToggleControlConf extends AbstractAuditEntity implements TenantSupp
     private String projectKey;
 
     @Column(name = "track_access_events", columnDefinition = "BIT", length = 1)
-    private Boolean trackAccessEvents;
+    private boolean trackAccessEvents;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "track_start_time")
@@ -60,4 +60,8 @@ public class ToggleControlConf extends AbstractAuditEntity implements TenantSupp
 
     @Column(name = "organization_id")
     private Long organizationId;
+
+    public String uniqueKey() {
+        return projectKey + "&" + environmentKey + "&" + toggleKey;
+    }
 }

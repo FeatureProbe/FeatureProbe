@@ -345,7 +345,7 @@ public class TargetingService {
         targetingResponse.setPublishTime(targeting.getPublishTime());
 
         Boolean trackAccessEvents = toggleControlConfService.queryToggleControlConf(targeting)
-                .getTrackAccessEvents();
+                .isTrackAccessEvents();
         targetingResponse.setTrackAccessEvents(trackAccessEvents);
         targetingResponse.setAllowEnableTrackAccessEvents(BooleanUtils.isFalse(trackAccessEvents)
                 && metricService.existsMetric(targeting.getProjectKey(),
@@ -393,7 +393,7 @@ public class TargetingService {
         ToggleControlConf toggleControlConf = toggleControlConfService.updateTrackAccessEvents(latestTargeting,
                 targetingPublishRequest.getTrackAccessEvents());
         TargetingResponse targetingResponse = TargetingMapper.INSTANCE.entityToResponse(latestTargeting);
-        targetingResponse.setTrackAccessEvents(toggleControlConf.getTrackAccessEvents());
+        targetingResponse.setTrackAccessEvents(toggleControlConf.isTrackAccessEvents());
 
         return targetingResponse;
     }
