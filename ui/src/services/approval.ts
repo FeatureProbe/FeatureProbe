@@ -26,9 +26,14 @@ export const getApprovalTotalByStatus = async<T> (params: IApprovalTotalParams) 
   });
 };
 
-interface IApprovalStatus {
+export interface IApprovalStatus {
   status: string;
   comment: string;
+  trackAccessEvents?: boolean;
+}
+
+export interface ITrackEvents {
+  trackAccessEvents?: boolean;
 }
 
 export const updateApprovalStatus = async<T> (projectKey: string, environmentKey: string, toggleKey: string, data: IApprovalStatus) => {
@@ -47,7 +52,7 @@ export const updateApprovalStatus = async<T> (projectKey: string, environmentKey
   });
 };
 
-export const publishTargetingDraft = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
+export const publishTargetingDraft = async<T> (projectKey: string, environmentKey: string, toggleKey: string, data?: ITrackEvents) => {
   const url = `${API.publishTargetingSketch
     .replace(':projectKey', projectKey)
     .replace(':environmentKey', environmentKey)
@@ -58,7 +63,8 @@ export const publishTargetingDraft = async<T> (projectKey: string, environmentKe
     method: 'PATCH',
     headers: {
       ...ApplicationJson()
-    }
+    },
+    body: JSON.stringify(data),
   });
 };
 

@@ -81,6 +81,8 @@ export interface IContent {
   locked?: boolean;
   lockedTime?: string;
   publishTime?: string;
+  trackAccessEvents: boolean;
+  allowEnableTrackAccessEvents: boolean;
 }
 
 export interface IModifyInfo {
@@ -108,7 +110,7 @@ export interface ITrafficContent {
 
 export interface ITrafficParams {
   lastHours: string;
-  metricType: string;
+  trafficType: string;
 }
 
 export interface IVersion {
@@ -118,7 +120,10 @@ export interface IVersion {
   createdTime: string;
   createdBy: string;
   disabled: boolean;
-  [key: string]: unknown; 
+  approvalComment?: string;
+  approvalBy?: string;
+  approvalStatus?: string;
+  approvalTime?: string;
 }
 
 export interface ITargetingVersion extends IVersion {
@@ -185,6 +190,7 @@ export interface ITargetingParams {
   comment?: string;
   content: ITarget;
   reviewers?: string[];
+  trackAccessEvents?: boolean;
 }
 
 export interface ITargetingDiff {
