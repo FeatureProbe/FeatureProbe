@@ -53,7 +53,7 @@ public class Targeting extends AbstractAuditEntity implements TenantSupport {
     @Column(columnDefinition = "BIT", length = 1)
     private boolean disabled;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
     @Temporal(TemporalType.TIMESTAMP)
