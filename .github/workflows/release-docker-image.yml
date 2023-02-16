@@ -140,7 +140,7 @@ jobs:
   
   release_ui:
     name: Release UI
-    if: ${{ github.event_name == 'release' || (inputs.build_select == 'ui' || inputs.build_select != 'all') }}
+    if: ${{ github.event_name == 'release' || (inputs.build_select == 'ui' || inputs.build_select == 'all') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
