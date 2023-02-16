@@ -2,6 +2,7 @@ package com.featureprobe.api.service
 
 import com.featureprobe.api.base.enums.MetricTypeEnum
 import com.featureprobe.api.base.enums.MatcherTypeEnum
+import com.featureprobe.api.config.AppConfig
 import com.featureprobe.api.dao.entity.Environment
 import com.featureprobe.api.dao.entity.Event
 import com.featureprobe.api.dao.entity.Metric
@@ -11,6 +12,7 @@ import com.featureprobe.api.dao.repository.EnvironmentRepository
 import com.featureprobe.api.dao.repository.EventRepository
 import com.featureprobe.api.dao.repository.MetricRepository
 import com.featureprobe.api.dao.repository.PublishMessageRepository
+import com.featureprobe.api.dao.repository.ToggleControlConfRepository
 import com.featureprobe.api.dto.MetricCreateRequest
 import org.hibernate.internal.SessionImpl
 import spock.lang.Specification
@@ -32,7 +34,11 @@ class MetricServiceSpec extends Specification {
 
     DictionaryRepository dictionaryRepository
 
+    ToggleControlConfRepository toggleControlConfRepository
+
     ChangeLogService changeLogService
+
+    AppConfig appConfig
 
     def projectKey
     def environmentKey
@@ -45,8 +51,9 @@ class MetricServiceSpec extends Specification {
         publishMessageRepository = Mock(PublishMessageRepository)
         environmentRepository = Mock(EnvironmentRepository)
         dictionaryRepository = Mock(DictionaryRepository)
+        toggleControlConfRepository = Mock(ToggleControlConfRepository)
         changeLogService = new ChangeLogService(publishMessageRepository, environmentRepository, dictionaryRepository)
-        eventService = new MetricService(eventRepository, metricRepository, environmentRepository, changeLogService, entityManager)
+        eventService = new MetricService(eventRepository, metricRepository, toggleControlConfRepository, environmentRepository, changeLogService, appConfig, entityManager)
         projectKey = "Test_Project"
         environmentKey = "online"
         toggleKey = "Test_Toggle"
