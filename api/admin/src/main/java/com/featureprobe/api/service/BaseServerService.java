@@ -299,6 +299,7 @@ public class BaseServerService {
         return serverEventEntities.stream()
                 .filter(serverEvent -> (MetricTypeEnum.PAGE_VIEW.equals(serverEvent.getType())
                         || (MetricTypeEnum.CLICK.equals(serverEvent.getType()))))
+                .filter(distinctByKey(ServerEventEntity::getName))
                 .map(serverEvent -> toEvent(serverEvent))
                 .collect(Collectors.toList());
     }
