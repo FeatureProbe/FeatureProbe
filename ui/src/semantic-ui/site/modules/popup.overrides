@@ -15,3 +15,11 @@
 .ui.popup:before {
   box-shadow: none;
 }
+
+.ui.bottom.left.popup:before {
+  box-shadow: none;
+}
+
+.ui.bottom.right.popup:before {
+  box-shadow: none;
+}

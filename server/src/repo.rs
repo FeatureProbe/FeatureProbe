@@ -147,6 +147,18 @@ impl SdkRepository {
         self.inner.all_evaluated_string(server_sdk_key, user)
     }
 
+    pub fn client_sdk_events_string(&self, client_sdk_key: &str) -> Result<String, FPServerError> {
+        let secret_mapping = self.inner.secret_mapping.read();
+        if secret_mapping.version() == 0 {
+            return Err(FPServerError::NotReady(client_sdk_key.to_string()));
+        }
+        let server_sdk_key = match secret_mapping.server_sdk_key(client_sdk_key) {
+            Some(sdk_key) => sdk_key,
+            None => return Err(FPServerError::NotFound(client_sdk_key.to_string())),
+        };
+        self.inner.all_event_string(server_sdk_key)
+    }
+
     pub fn client_sync_now(&self, sdk_key: &str, t: SyncType) -> Result<String, FPServerError> {
         let sdk_clients = self.inner.sdk_clients.write();
         let client = match sdk_clients.get(sdk_key) {
@@ -283,6 +295,20 @@ impl Inner {
             .collect();
         serde_json::to_string(&map).map_err(|e| FPServerError::JsonError(e.to_string()))
     }
+
+    fn all_event_string(&self, sdk_key: &str) -> Result<String, FPServerError> {
+        let clients = self.sdk_clients.read();
+        let client = match clients.get(sdk_key) {
+            Some(client) if !client.initialized() => {
+                return Err(FPServerError::NotReady(sdk_key.to_string()))
+            }
+            Some(client) => client,
+            None => return Err(FPServerError::NotReady(sdk_key.to_string())),
+        };
+        let arc_repo = client.repo();
+        let repo = arc_repo.read();
+        serde_json::to_string(&repo.events).map_err(|e| FPServerError::JsonError(e.to_string()))
+    }
 }
 
 #[cfg(test)]
@@ -351,6 +377,8 @@ mod tests {
 
         let repo_string_err = repository.server_sdk_repo_string(&non_sdk_key);
         assert_eq!(repo_string_err.err(), Some(NotFound(non_sdk_key)));
+        let events_string = repository.client_sdk_events_string(&client_sdk_key);
+        assert!(events_string.is_ok());
         let repo_string = repository.server_sdk_repo_string(&server_sdk_key);
         assert!(repo_string.is_ok());
         let r = serde_json::from_str::<Repository>(&repo_string.unwrap()).unwrap();
@@ -409,9 +437,11 @@ mod tests {
         let toggles_url =
             Url::parse(&format!("http://127.0.0.1:{}/api/server-sdk/toggles", port)).unwrap();
         let events_url = Url::parse(&format!("http://127.0.0.1:{}/api/events", port)).unwrap();
+        let analysis_url = None;
         let config = ServerConfig {
             toggles_url,
             events_url,
+            analysis_url,
             refresh_interval: Duration::from_secs(1),
             client_sdk_key: Some(client_sdk_key.to_owned()),
             server_sdk_key: Some(server_sdk_key.to_owned()),
@@ -444,9 +474,11 @@ mod tests {
         let toggles_url =
             Url::parse(&format!("http://127.0.0.1:{}/api/server-sdk/toggles", port)).unwrap();
         let events_url = Url::parse(&format!("http://127.0.0.1:{}/api/events", port)).unwrap();
+        let analysis_url = None;
         let config = ServerConfig {
             toggles_url,
             events_url,
+            analysis_url,
             refresh_interval: Duration::from_secs(1),
             client_sdk_key: Some(client_sdk_key.to_owned()),
             server_sdk_key: Some(server_sdk_key.to_owned()),
@@ -476,9 +508,11 @@ mod tests {
             Url::parse(&format!("http://127.0.0.1:{}/api/server-sdk/toggles", port)).unwrap();
         let events_url = Url::parse(&format!("http://127.0.0.1:{}/api/events", port)).unwrap();
         let keys_url = Url::parse(&format!("http://127.0.0.1:{}/api/secret-keys", port)).unwrap();
+        let analysis_url = None;
         let config = ServerConfig {
             toggles_url,
             events_url,
+            analysis_url,
             refresh_interval: Duration::from_millis(100),
             client_sdk_key: None,
             server_sdk_key: None,
