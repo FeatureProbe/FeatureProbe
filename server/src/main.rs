@@ -121,6 +121,7 @@ fn init_handler(
         repo: Arc::new(repo),
         http_client: Default::default(),
         events_url: server_config.events_url,
+        analysis_url: server_config.analysis_url,
         events_timeout: server_config.refresh_interval,
     })
 }

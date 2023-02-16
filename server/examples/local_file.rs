@@ -30,11 +30,14 @@ async fn main() {
     ))
     .unwrap();
     let events_url = Url::parse(&format!("http://0.0.0.0:{}/api/events", api_port)).unwrap();
+    let analysis_url =
+        Some(Url::parse(&format!("http://0.0.0.0:{}/analysis/events", api_port)).unwrap());
     let refresh_seconds = Duration::from_secs(1);
     let config = ServerConfig {
         toggles_url,
         events_url: events_url.clone(),
         keys_url: None,
+        analysis_url: None,
         refresh_interval: refresh_seconds,
         client_sdk_key: Some(client_sdk_key.clone()),
         server_sdk_key: Some(server_sdk_key.clone()),
@@ -57,6 +60,7 @@ async fn main() {
     let feature_probe_server = FpHttpHandler {
         repo: repo.clone(),
         events_url,
+        analysis_url,
         events_timeout: refresh_seconds,
         http_client: Default::default(),
     };
