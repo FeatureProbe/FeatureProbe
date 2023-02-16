@@ -1,0 +1,6 @@
+server:
+  port: 4006
+
+spring:
+  profiles:
+    active: online

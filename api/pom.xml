@@ -12,6 +12,7 @@
 
     <modules>
         <module>admin</module>
+        <module>analysis</module>
         <module>dao</module>
         <module>base</module>
     </modules>
