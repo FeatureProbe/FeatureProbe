@@ -6,6 +6,7 @@ import com.featureprobe.api.base.doc.EnvironmentKeyParameter;
 import com.featureprobe.api.base.doc.GetApiResponse;
 import com.featureprobe.api.base.doc.ProjectKeyParameter;
 import com.featureprobe.api.base.doc.ToggleKeyParameter;
+import com.featureprobe.api.dto.AnalysisResultResponse;
 import com.featureprobe.api.dto.MetricConfigResponse;
 import com.featureprobe.api.dto.MetricCreateRequest;
 import com.featureprobe.api.dto.MetricResponse;
@@ -57,5 +58,15 @@ public class MetricController {
                                       @PathVariable("toggleKey") String toggleKey) {
         return metricService.query(projectKey, environmentKey, toggleKey);
     }
+
+    @GetMapping("/analysis")
+    @GetApiResponse
+    @Operation(summary = "Get Metric", description = "Get a single metric by toggle.")
+    public AnalysisResultResponse analysis(@PathVariable("projectKey") String projectKey,
+                                           @PathVariable("environmentKey") String environmentKey,
+                                           @PathVariable("toggleKey") String toggleKey) {
+        return metricService.analysis(projectKey, environmentKey, toggleKey);
+    }
+
 
 }

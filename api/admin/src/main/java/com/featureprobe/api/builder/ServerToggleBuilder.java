@@ -15,8 +15,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ServerToggleBuilder {
@@ -40,6 +42,16 @@ public class ServerToggleBuilder {
 
     public ServerToggleBuilder builder() {
         this.toggle = new Toggle();
+        return this;
+    }
+
+    public ServerToggleBuilder trackAccessEvents(boolean trackAccessEvents) {
+        toggle.setTrackAccessEvents(trackAccessEvents);
+        return this;
+    }
+
+    public ServerToggleBuilder lastModified(Date lastModified) {
+        toggle.setLastModified(Objects.isNull(lastModified) ? null : lastModified.getTime());
         return this;
     }
 
