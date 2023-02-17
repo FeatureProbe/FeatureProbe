@@ -8,12 +8,15 @@ import kotliquery.HikariCP
 import kotliquery.queryOf
 import kotliquery.sessionOf
 import org.apache.commons.math3.distribution.BetaDistribution
+import org.flywaydb.core.Flyway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.*
+import javax.annotation.PostConstruct
 import javax.sql.DataSource
+
 
 @RestController
 class AnalysisController(val service: AnalysisService) {
@@ -56,7 +59,8 @@ class AnalysisService(
     @Value("\${app.hikari.idle-timeout}") val hikariIdleTimeout: Long = 30000,
     @Value("\${app.hikari.max-lifetime}") val hikariMaxLifetime: Long = 60000,
     @Value("\${app.hikari.connection-timeout}") val hikariConnectTimeOut: Long = 30000,
-    @Value("\${app.hikari.connection-test-query}") val hikariTtestQuery: String = "SELECT 1",
+    @Value("\${app.hikari.connection-test-query}") val hikariTestQuery: String = "SELECT 1",
+    @Value("\${flyway.enabled}") val flywayEnabled: Boolean = false
 ) {
 
     val log: Logger = LoggerFactory.getLogger("AnalyzeService")
@@ -68,9 +72,17 @@ class AnalysisService(
             this.idleTimeout = hikariIdleTimeout
             this.minimumIdle = hikariMinIdle
             this.maxLifetime = hikariMaxLifetime
-            this.connectionTestQuery = hikariTtestQuery
+            this.connectionTestQuery = hikariTestQuery
         }
         HikariCP.dataSource()
+    }
+
+    @PostConstruct
+    fun init() {
+        if (flywayEnabled) {
+            val flyway: Flyway = Flyway.configure().dataSource(url, user, password).load()
+            flyway.migrate()
+        }
     }
 
     fun storeEvents(request: EventRequest, sdkKey: String) {

@@ -1,6 +1,6 @@
 create table access
 (
-    time            bigint    not null,
+    time            bigint       not null,
     user_key        varchar(256) not null,
     toggle_key      varchar(256) not null,
     variation_index integer      not null,
@@ -11,7 +11,7 @@ create table access
 
 create table events
 (
-    time     bigint        not null,
+    time     bigint           not null,
     user_key varchar(256)     not null,
     name     varchar(256)     not null,
     value    double precision not null,
