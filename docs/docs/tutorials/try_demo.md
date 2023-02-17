@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Use Toggle
+# Use toggle
 
 You will learn how to use an existing toggle on the FeatureProbe platform, and observe how the configuration changes of the toggle affect the display of the demo webpage we provide.
 

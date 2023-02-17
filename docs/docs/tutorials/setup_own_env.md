@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Deploy a Private Environment 
+# Deploy a private environment 
 
 We will take you to deploy FeatureProbe on your own server resources, so that you can have your own private environment to experience the features of FeatureProbe, and you can also directly manage your online services through this private environment.
 
