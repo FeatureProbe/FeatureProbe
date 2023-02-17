@@ -41,7 +41,7 @@ test('click SizeTips', (done) => {
       wrapper: IntlWrapper,
     });
 
-    await userEvent.click(screen.getByText('Got it'));
+    await userEvent.click(screen.getByText('I see'));
     expect(handleConfirm).toBeCalled();
 
     done();
