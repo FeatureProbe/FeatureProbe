@@ -377,7 +377,7 @@ Click the "Projects" tab to enter the "Projects" list, obtain various SDK keys, 
 3. Open `example/index.html` and fill in `Client SDK Key` and `FeatureProbe URL` ("https://featureprobe.io/server")
 
 ~~~js title="example/index.html"
-const fpClient = new featureProbe. FeatureProbe({
+const fpClient = new featureProbe.FeatureProbe({
   // highlight-start
   remoteUrl: "https://featureprobe.io/server",
   clientSdkKey: // Paste client sdk key here,
@@ -387,13 +387,13 @@ const fpClient = new featureProbe. FeatureProbe({
 });
 ~~~
 
-4. Simulate the current user accessing the switch `tutorial_rollout` and get the switch status directly
+4. Simulate the current user accessing the toggle `tutorial_rollout` and get the toggle status directly
 
 ~~~js title="example/index.html"
 <script>
   // highlight-next-line
-  const user = new featureProbe. FPUser();
-  const fpClient = new featureProbe. FeatureProbe({
+  const user = new featureProbe.FPUser();
+  const fpClient = new featureProbe.FeatureProbe({
     remoteUrl: "https://featureprobe.io/server",
     clientSdkKey: // Paste client sdk key here,
     user,
