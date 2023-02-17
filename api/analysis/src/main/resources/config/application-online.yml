@@ -13,6 +13,10 @@ app:
     connection-timeout: 15000
     connection-test-query: SELECT 1
 
+flyway:
+  enabled: true
+  locations: db/migration
+
 logging:
   level:
     root: INFO
