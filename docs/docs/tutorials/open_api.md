@@ -2,7 +2,7 @@
 sidebar_position: 6
 ---
 
-# Publish Toggle with REST API
+# Publish toggle with REST API
 
 Every FeatureProbe feature begins as an REST API. You can perform any operation in the FeatureProbe product through the REST API.
 
