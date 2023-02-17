@@ -4,39 +4,38 @@ sidebar_position: 7
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# 使用自定义事件上报
+# Use metric analysis
 
 
-我们将带领你使用FeatureProbe的平台的指标分析功能。通过编写后端/前端程序，使用SDK实现 `自定义事件` 的数据上报，并在平台上查看分析的结果。
+We will guide you to use the metric analysis function of the FeatureProbe platform. By writing back-end/front-end programs, use the SDK to realize the data reporting of `custom events`, and view the analysis results on the platform.
 
 
-## 在平台上创建开关
-1. 登录我们提供的FeatureProbe[演示平台](https://featureprobe.io)，如果是第一次登录，请输入邮箱。后续可以继续使用你的邮箱访问到属于你的数据。
-2. 点击`+开关`新建一个开关
-![add](/tutorial_create_toggle_button_cn.png)
-3. 名字和标识都设置为`custom_event`，点击`创建并发布`
-![create](/tutorial_metric_analysis_create_cn.png)
-4. 从开关列表中点击`custom_event`，打开设置详情页
-![list](/tutorial_metric_analysis_list_click_cn.png)
-5. 将状态设置为`生效`，默认规则的返回值更改为按`百分比放量`，并设置50%为variation1，50%设置为variation2
-![list](/tutorial_metric_analysis_targeting_cn.png)
-6. 点击下方的`发布`按钮，并`确认`变更
-![list](/tutorial_metric_analysis_targeting_confirm_cn.png)
+## Create a toggle on the platform
+1. Log in to the FeatureProbe [demo platform](https://featureprobe.io). If you log in for the first time, please enter your email address. You can continue to use your email to access your data in the future.
+2. Click `+Toggle` to create a new toggle.
+![add](/tutorial_create_toggle_button_en.png)
+3. Set the name and key to `custom_event`, click `Create and publish`.
+![create](/tutorial_metric_analysis_create_en.png)
+4. Click `custom_event` from the toggle list to open the targeting details page.
+![list](/tutorial_metric_analysis_list_click_en.png)
+6. Set the status to `enabled`.
+Change the return variation of the default rule to `a percentage rollout`. Set 50% to variation1, 50% to variation2.
+![list](/tutorial_metric_analysis_targeting_en.png)
+6. Click the `Publish` button below and `Confirm` the changes.
+![list](/tutorial_metric_analysis_targeting_confirm_en.png)
 
 
+## Save metrics and start iteration
+1. Open the `Analysis` Tab, select the `Conversion` under `Custom` event type, configure the event name as `test_event`, and click `Save`.
+![list](/tutorial_metric_analysis_save_en.png)
 
+2. After the metric is saved successfully, click the `Start iteration` button to start collecting data.
+![list](/tutorial_metric_analysis_start_en.png)
 
-## 配置指标并开始收集数据
-1. 打开`指标分析`板块，选择`自定义事件`下的`转化率`指标，指标名配置为`test_event`，点击`保存`
-![list](/tutorial_metric_analysis_save_cn.png)
+## Control the backend program
+We provide a backend code example, from which you can start to experience how the backend code report custom event.
 
-2. 指标保存成功后，点击`收集数据`按钮，开始收集数据
-![list](/tutorial_metric_analysis_start_cn.png)
-
-## 编写后端程序
-我们提供一个后端的代码示例，你可以从这里开始体验后端代码如何上报自定义事件。
-
-### 编写代码 {#backend-code}
+### Write code {#backend-code}
 
 1. According to the language you are familiar with, download and open the corresponding back-end sample code.
 
@@ -319,9 +318,9 @@ const fpClient = new featureProbe.FeatureProbe({
 </Tabs>
 
 
-## 编写前端程序
+## Control the front-end program
 
-We provide a front-end js code example, and you can start to experience how the front-end code uses toggles.
+We provide a front-end js code example, and you can start to experience how the front-end code report custom event.
 
 ### Write code {#frontend-code}
 
@@ -353,29 +352,51 @@ const fpClient = new featureProbe. FeatureProbe({
 });
 ~~~
 
-5. Add the following code. Simulate 1000 users accessing the toggle. Among the users whose toggle return value is `true`, 55% of them report custom events, and among users whose toggle return value is `false`, 45% of them report custom events.
+5. Add the following code. 
+Simulate a lot of users are accessing the toggle. Among the users whose toggle return value is `true`, 55% of them report custom events, and among users whose toggle return value is `false`, 45% of them report custom events.
 
 ~~~js title="example/index.html"
 <script>
   const user = new featureProbe.FPUser();
+
   const fpClient = new featureProbe.FeatureProbe({
     remoteUrl: "https://featureprobe.io/server",
     clientSdkKey: // Paste client sdk key here,
     user,
-    refreshInterval: 5000,
+    refreshInterval: 1000,
   });
-  
-  fpClient.start();
+
+  const YOUR_TOGGLE_KEY = "tutorial_rollout";
+  const YOUR_EVENT_NAME = 'test_event';
 
   fpClient.waitUntilReady().then(() => {
     // highlight-start
-    const boolValue = fpClient. boolValue("tutorial_rollout", false);
+    const boolValue = fpClient. boolValue(YOUR_TOGGLE_KEY, false);
+    const random = Math.floor(Math.random() * (100 - 1) + 1);
+
+    if (boolValue) {
+      if (random <= 55) {
+        fpClient.track(YOUR_EVENT_NAME, user.getKey());
+      }
+    } else {
+      if (random > 55) {
+        fpClient.track(YOUR_EVENT_NAME, user.getKey());
+      }
+    }
+
+    // Reload page to simulate a new user visiting the page
+    setTimeout(() => {
+      location.reload();
+    }, 1100);
     // highlight-end
   })
-    
+
+  fpClient.start();
+
 </script>
 ~~~
 
+## Validate results
 
-
-
+Open the `Analysis` Tab on platform to view the result.
+![result](/tutorial_metric_analysis_result_en.png)
