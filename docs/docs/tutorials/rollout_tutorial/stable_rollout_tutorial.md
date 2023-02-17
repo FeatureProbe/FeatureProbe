@@ -4,7 +4,7 @@ sidebar_position: 1
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Stable Rollout
+# Stable rollout
 
 In most cases, we hope that in the process of gradual rollout , once a specific user enters a variation, he will always enter the variation without reducing the percentage.
 We don't want users to be confused when they see new features and sometimes they don't because of refreshing the page, re-opening the app, requesting to be assigned to another server instance, etc.
