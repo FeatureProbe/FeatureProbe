@@ -5,7 +5,7 @@ public enum TrafficType {
     VALUE, NAME;
 
     public boolean isNameType() {
-        return this == TrafficType.NAME;
+        return this.name().equals(TrafficType.NAME.name());
 
     }
 }

@@ -1,5 +1,6 @@
 package com.featureprobe.api.base.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.featureprobe.api.base.util.JsonMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 @Schema(description = "This is where you can express complex rules on attributes with conditions and operators. " +
         "<br/> rules、disabledServe、defaultServe、variations support independent update.")
 public class TargetingContent {
+
 
     @Schema(description = "Server a variation to specific users based on their attributes. " +
             "<br/> **Use OR(|) operation between multiple rules.**")

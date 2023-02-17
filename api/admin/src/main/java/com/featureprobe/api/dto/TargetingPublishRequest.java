@@ -11,12 +11,15 @@ import lombok.NoArgsConstructor;
 public class TargetingPublishRequest extends ToggleControlConfRequest {
 
     public TargetingPublishRequest(TargetingContent content, String comment, Boolean disabled,
-                                   Boolean trackAccessEvents) {
+                                   ToggleControlConfRequest toggleControlConfRequest) {
         this.content = content;
         this.comment = comment;
         this.disabled = disabled;
-        this.setTrackAccessEvents(trackAccessEvents);
+        if (toggleControlConfRequest != null) {
+            this.setTrackAccessEvents(toggleControlConfRequest.getTrackAccessEvents());
+        }
     }
+
 
     private TargetingContent content;
 

@@ -1,0 +1,21 @@
+app:
+  analysis:
+    iterations: 10000
+  datasource:
+    jdbcUrl: jdbc:mysql://localhost:3306/feature_probe_events
+    username: root
+    password: root
+  hikari:
+    minimum-idle: 10
+    maximum-pool-size: 100
+    idle-timeout: 60000
+    max-lifetime: 300000
+    connection-timeout: 15000
+    connection-test-query: SELECT 1
+
+logging:
+  level:
+    root: INFO
+  config: classpath:logback/logback.xml
+  file:
+    path: /logs

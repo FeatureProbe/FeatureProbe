@@ -2,6 +2,7 @@ package com.featureprobe.api.service;
 
 import com.featureprobe.api.base.constants.MessageKey;
 import com.featureprobe.api.base.util.JsonMapper;
+import com.featureprobe.api.base.util.ToggleContentLimitChecker;
 import com.featureprobe.api.dao.entity.SegmentVersion;
 import com.featureprobe.api.dao.exception.ResourceConflictException;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
@@ -121,6 +122,9 @@ public class SegmentService {
                 new ResourceNotFoundException(ResourceType.SEGMENT, projectKey + "_" + segmentKey));
         Long oldVersion = segment.getVersion();
         SegmentMapper.INSTANCE.mapEntity(publishRequest, segment);
+
+        ToggleContentLimitChecker.validateSize(segment.getRules());
+
         Segment updatedSegment = segmentRepository.saveAndFlush(segment);
         if (updatedSegment.getVersion() > oldVersion) {
             saveSegmentVersion(buildSegmentVersion(updatedSegment, publishRequest.getComment(), null));

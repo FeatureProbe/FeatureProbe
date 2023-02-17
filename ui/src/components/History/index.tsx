@@ -120,7 +120,6 @@ const History = (props: IProps) => {
                                 <span className={styles['version-popup']}>{ dayjs(item.createdTime).format('YYYY-MM-DD HH:mm:ss') }</span>
                               </span>
                             }
-                            position='top center'
                           />
                         </div>
                         {
@@ -142,7 +141,6 @@ const History = (props: IProps) => {
                                     <span className={styles['version-popup']}>{ dayjs(item.approvalTime).format('YYYY-MM-DD HH:mm:ss') }</span>
                                   </span>
                                 }
-                                position='top center'
                               />
                             </div>
                           )

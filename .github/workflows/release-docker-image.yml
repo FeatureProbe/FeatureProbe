@@ -20,6 +20,7 @@ on:
         - api
         - ui
         - server
+        - analysis
 
 permissions:
   contents: read
@@ -27,7 +28,7 @@ permissions:
 jobs:
   release_api:
     name: Release API
-    if: ${{ github.event_name == 'release' || (inputs.build_select != 'server' && inputs.build_select != 'ui') }}
+    if: ${{ github.event_name == 'release' || (inputs.build_select == 'api' || inputs.build_select == 'all') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -80,10 +81,66 @@ jobs:
         run: |
           docker buildx imagetools inspect featureprobe/api
         working-directory: ./api
+
+  release_analysis:
+    name: Release Analysis
+    if: ${{ github.event_name == 'release' || (inputs.build_select == 'analysis' || inputs.build_select == 'all') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: mvn -B package --file ./api/analysis/pom.xml
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2.2.1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2.1.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker Build API (by release)
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          docker buildx build \
+            --cache-from "type=local,src=/tmp/.buildx-cache" \
+            --platform linux/amd64,linux/arm64 \
+            --output "type=image,push=true" \
+            --tag featureprobe/analysis:${GITHUB_REF#refs/tags/} \
+            --tag featureprobe/analysis:latest \
+            --file ./Dockerfile ./
+        working-directory: ./api/analysis
+
+      - name: Docker Build Analysis (manual)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          docker buildx build \
+            --cache-from "type=local,src=/tmp/.buildx-cache" \
+            --platform linux/amd64,linux/arm64 \
+            --output "type=image,push=true" \
+            --tag featureprobe/analysis:$DOCKER_TAG \
+            --tag featureprobe/analysis:latest \
+            --file ./Dockerfile ./
+        env:
+          DOCKER_TAG: ${{ inputs.tag }}
+        working-directory: ./api/analysis
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect featureprobe/analysis
+        working-directory: ./api/analysis
   
   release_ui:
     name: Release UI
-    if: ${{ github.event_name == 'release' || (inputs.build_select != 'server' && inputs.build_select != 'api') }}
+    if: ${{ github.event_name == 'release' || (inputs.build_select == 'ui' || inputs.build_select == 'all') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -152,7 +209,7 @@ jobs:
 
   release_server:
     name: Release Server
-    if: ${{ github.event_name == 'release' || (inputs.build_select != 'ui' && inputs.build_select != 'api') }}
+    if: ${{ github.event_name == 'release' || (inputs.build_select == 'server' || inputs.build_select == 'all') }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -212,13 +269,14 @@ jobs:
         name: Inspect image
         run: |
           docker buildx imagetools inspect featureprobe/server
-        working-directory: ./server  
+        working-directory: ./server
+
 
   deployment:
     name: Deploy to Google Cloud
     uses: FeatureProbe/FeatureProbe/.github/workflows/gcloud.yml@main
     secrets: inherit # pass all secrets
-    needs: [release_api, release_ui, release_server]
+    needs: [release_api, release_ui, release_server, release_analysis]
     permissions:
       id-token: write
       contents: read
