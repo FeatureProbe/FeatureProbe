@@ -25,9 +25,9 @@ import { ISegmentInfo, IToggleList, IToggle, ISegmentVersion, ISegmentVersions }
 import { SEGMENT_EDIT_PATH } from 'router/routes';
 import { IRule, ICondition } from 'interfaces/targeting';
 import { IVersionParams } from 'interfaces/project';
-import styles from './index.module.scss';
 import { getBytes, MAX_SIZE } from 'utils/bytes';
 import SizeTips from 'components/SizeTips';
+import styles from './index.module.scss';
 
 interface IParams {
   projectKey: string;
@@ -174,10 +174,6 @@ const Info = () => {
     }
     return state;
   }, [size]);
-
-  useEffect(() => {
-    console.log(sizeState, size, MAX_SIZE - size);
-  }, [sizeState, size]);
 
   useEffect(() => {
     setValue('name', segmentInfo?.name);

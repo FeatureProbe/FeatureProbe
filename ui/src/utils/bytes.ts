@@ -6,5 +6,5 @@ export function getBytes(str: string) {
   return bytes;
 }
 
-export const MB = 1048576;
+const MB = 1048576;
 export const MAX_SIZE = MB;

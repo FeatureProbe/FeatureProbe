@@ -113,7 +113,6 @@
   "common.diff.tips": "以下为本次变更内容的前后对比。",
   "common.flow.explain": "流量解读",
   "common.know.text": "我知道了",
-  "common.know.not.me.text": "知道了",
   "common.metrics.text": "指标",
   "common.data.text": "数据",
   
@@ -342,7 +341,7 @@
   "targeting.semver.explain": "什么是语义版本？",
   "targeting.semver.more": "查看详情",
   "targeting.rule.not.empty": "请添加至少一个规则条件",
-  "targeting.size.tips": "该页面内容总量不可超过1M，大于1M时将不能正常发布，当前已达到{size}KB!",
+  "targeting.size.tips": "该页面内容总量不可超过1MB，大于1MB时将不能正常发布，当前已达到{size}KB!",
   "targeting.size.tips.title": "警告提示",
   "targeting.edit.tips": "指标分析数据正在收集中，除名称、描述之外的变更，有可能会影响指标分析结果的准确性。",
 

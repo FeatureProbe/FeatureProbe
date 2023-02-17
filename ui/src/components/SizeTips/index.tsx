@@ -29,7 +29,7 @@ const SizeTips: React.FC<SizeTipsProps> = (props) => {
       </div>
       <div className={styles['actions']}>
         <Button onClick={onConfirm} className={styles['button']} primary>
-          <FormattedMessage id="common.know.not.me.text" />
+          <FormattedMessage id="common.know.text" />
         </Button>
       </div>
     </div>
