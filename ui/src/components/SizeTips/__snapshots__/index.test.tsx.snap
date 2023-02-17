@@ -1,0 +1,92 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SizeTips snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="size-tips"
+  >
+    <div
+      class="main"
+    >
+      <div
+        class="icon"
+      >
+        <span
+          class="iconfont icon-warning-circle warning-icon"
+          customclass="warning-icon"
+          type="warning-circle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <div
+          class="tips-title"
+        >
+          Warning tips
+        </div>
+        <div
+          class="tips-content"
+        >
+          The total content of this page can not exceed 1 MB, and will not be released normally when it is larger than 1 MB. Currently, it has reached 0 KB!
+        </div>
+      </div>
+    </div>
+    <div
+      class="actions"
+    >
+      <button
+        class="ui primary button button"
+      >
+        I see
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`SizeTips snapshot 2`] = `
+<DocumentFragment>
+  <div
+    class="size-tips"
+    hidden=""
+  >
+    <div
+      class="main"
+    >
+      <div
+        class="icon"
+      >
+        <span
+          class="iconfont icon-warning-circle warning-icon"
+          customclass="warning-icon"
+          type="warning-circle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <div
+          class="tips-title"
+        >
+          Warning tips
+        </div>
+        <div
+          class="tips-content"
+        >
+          The total content of this page can not exceed 1 MB, and will not be released normally when it is larger than 1 MB. Currently, it has reached 0 KB!
+        </div>
+      </div>
+    </div>
+    <div
+      class="actions"
+    >
+      <button
+        class="ui primary button button"
+      >
+        I see
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
