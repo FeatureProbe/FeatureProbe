@@ -43,7 +43,7 @@ public class SegmentVersion extends AbstractAuditEntity implements TenantSupport
 
     private String comment;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String rules;
 
     private Long version;

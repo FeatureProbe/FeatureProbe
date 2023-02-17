@@ -104,7 +104,7 @@ public interface EnvironmentRepository extends JpaRepository<Environment, Long> 
             "INNER JOIN metric m ON env.organization_id = m.organization_id " +
             "AND env.project_key = m.project_key AND env.key = m.environment_key " +
             "INNER JOIN metric_event me ON m.id = me.metric_id " +
-            "INNER JOIN event e on me.event_id = e.id WHERE env.server_sdk_key=?1 GROUP BY e.name", nativeQuery = true)
+            "INNER JOIN event e on me.event_id = e.id WHERE env.server_sdk_key=?1", nativeQuery = true)
     List<ServerEventEntity> findAllServerEventBySdkKey(String sdkKey);
 
 }
