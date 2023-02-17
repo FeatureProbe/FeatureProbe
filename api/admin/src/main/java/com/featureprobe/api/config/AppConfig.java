@@ -18,4 +18,6 @@ public class AppConfig {
     private String serverDataSource;
 
     private String serverBaseUrls;
+
+    private String analysisUrl;
 }

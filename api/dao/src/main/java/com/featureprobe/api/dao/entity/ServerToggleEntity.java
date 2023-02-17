@@ -1,6 +1,7 @@
 package com.featureprobe.api.dao.entity;
 
 import javax.persistence.Column;
+import java.util.Date;
 
 public interface ServerToggleEntity {
 
@@ -18,6 +19,8 @@ public interface ServerToggleEntity {
 
     String getToggleKey();
 
+    Date getPublishTime();
+
     String getReturnType();
     @Column(columnDefinition = "TINYINT")
     Boolean getClientAvailability();
@@ -27,4 +30,8 @@ public interface ServerToggleEntity {
     Boolean getTargetingDisabled();
 
     String getTargetingContent();
+
+    @Column(columnDefinition = "TINYINT")
+    Boolean getTrackAccessEvents();
+
 }

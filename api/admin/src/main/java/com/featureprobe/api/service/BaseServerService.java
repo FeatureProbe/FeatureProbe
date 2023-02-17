@@ -15,11 +15,13 @@ import com.featureprobe.api.dao.entity.ServerSegmentEntity;
 import com.featureprobe.api.dao.entity.ServerToggleEntity;
 import com.featureprobe.api.dao.entity.Targeting;
 import com.featureprobe.api.dao.entity.Toggle;
+import com.featureprobe.api.dao.entity.ToggleControlConf;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
 import com.featureprobe.api.dao.repository.DictionaryRepository;
 import com.featureprobe.api.dao.repository.EnvironmentRepository;
 import com.featureprobe.api.dao.repository.SegmentRepository;
 import com.featureprobe.api.dao.repository.TargetingRepository;
+import com.featureprobe.api.dao.repository.ToggleControlConfRepository;
 import com.featureprobe.api.dao.repository.ToggleRepository;
 import com.featureprobe.api.dto.SdkKeyResponse;
 import com.featureprobe.api.dto.ServerResponse;
@@ -56,6 +58,8 @@ public class BaseServerService {
     private TargetingRepository targetingRepository;
 
     private DictionaryRepository dictionaryRepository;
+
+    private ToggleControlConfRepository toggleControlConfRepository;
 
     @PersistenceContext
     public EntityManager entityManager;
@@ -105,7 +109,7 @@ public class BaseServerService {
         Map<String, List<JSEvent>> eventMap = new HashMap<>();
         allServerEvent.stream()
                 .filter(e -> (MetricTypeEnum.PAGE_VIEW.equals(e.getType()) ||
-                        (MetricTypeEnum.CLICK.equals(e.getType()) && StringUtils.isNotBlank(e.getSelector()))))
+                        (MetricTypeEnum.CLICK.equals(e.getType()))))
                 .forEach(serverEvent -> {
                     if (eventMap.containsKey(serverEvent.getServerSdkKey())) {
                         eventMap.get(serverEvent.getServerSdkKey()).add(toEvent(serverEvent));
@@ -118,7 +122,8 @@ public class BaseServerService {
         Map<String, List<Toggle>> toggleMap = new HashMap<>();
         Map<String, List<Targeting>> targetingMap = new HashMap<>();
         Map<String, ServerEnv> serverEnvMap = new HashMap<>();
-        toggleSplit(toggleMap, targetingMap, serverEnvMap, allServerToggle);
+        Map<String, List<ToggleControlConf>> controlConfMap = new HashMap<>();
+        toggleSplit(toggleMap, targetingMap, serverEnvMap, controlConfMap, allServerToggle);
         Map<String, byte[]> allServerResponse = new HashMap<>();
         for (String serverSdkKey : targetingMap.keySet()) {
             List<Segment> segments = segmentsMap.getOrDefault(serverEnvMap.get(serverSdkKey)
@@ -129,8 +134,15 @@ public class BaseServerService {
                     .filter(distinctByKey(Toggle::uniqueKey)).collect(Collectors.toList());
             List<Targeting> targetingList = targetingMap.getOrDefault(serverSdkKey, Collections.emptyList()).stream()
                     .filter(distinctByKey(Targeting::uniqueKey)).collect(Collectors.toList());
-            ServerResponse serverResponse = new ServerResponse(buildServerToggles(segments, toggles, targetingList),
-                    buildServerSegments(segments), eventMap.getOrDefault(serverSdkKey,  Collections.emptyList()),
+            List<ToggleControlConf> controlConfList = controlConfMap
+                    .getOrDefault(serverSdkKey, Collections.emptyList()).stream()
+                    .filter(distinctByKey(ToggleControlConf::uniqueKey))
+                    .collect(Collectors.toList());
+            ServerResponse serverResponse = new ServerResponse(
+                    buildServerToggles(segments, toggles, targetingList, controlConfList),
+                    buildServerSegments(segments),
+                    eventMap.getOrDefault(serverSdkKey,  Collections.emptyList())
+                            .stream().filter(distinctByKey(JSEvent::getName)).collect(Collectors.toList()),
                     serverEnvMap.get(serverSdkKey).getEnvVersion());
             allServerResponse.put(serverSdkKey, JsonMapper.toJSONString(serverResponse).getBytes());
         }
@@ -140,6 +152,7 @@ public class BaseServerService {
     private void toggleSplit(Map<String, List<Toggle>> toggleMap,
                              Map<String, List<Targeting>> targetingMap ,
                              Map<String, ServerEnv> serverEnvMap,
+                             Map<String, List<ToggleControlConf>> controlConfMap,
                              List<ServerToggleEntity> allServerToggle)  {
         allServerToggle.stream().forEach(serverToggle -> {
             if (toggleMap.containsKey(getServerToggleUniqueKey(serverToggle))) {
@@ -163,6 +176,14 @@ public class BaseServerService {
 
             if (!serverEnvMap.containsKey(serverToggle.getServerSdkKey())) {
                 serverEnvMap.put(serverToggle.getServerSdkKey(), toServerEnv(serverToggle));
+            }
+
+            if (controlConfMap.containsKey(serverToggle.getServerSdkKey())) {
+                controlConfMap.get(serverToggle.getServerSdkKey()).add(toControlConf(serverToggle));
+            } else {
+                List<ToggleControlConf> controlConfList = new ArrayList<>();
+                controlConfList.add(toControlConf(serverToggle));
+                controlConfMap.put(serverToggle.getServerSdkKey(), controlConfList);
             }
         });
     }
@@ -207,6 +228,7 @@ public class BaseServerService {
         targeting.setOrganizationId(serverToggle.getOrganizationId());
         targeting.setProjectKey(serverToggle.getProjectKey());
         targeting.setEnvironmentKey(serverToggle.getEnvKey());
+        targeting.setPublishTime(serverToggle.getPublishTime());
         return targeting;
     }
 
@@ -221,15 +243,27 @@ public class BaseServerService {
 
     private JSEvent toEvent(ServerEventEntity serverEvent){
         JSEvent event = new JSEvent();
-        event.setType(serverEvent.getType());
-        event.setName(serverEvent.getName());
-        if (MetricTypeEnum.CLICK.equals(serverEvent.getType())) {
-            event.setPvName(MetricService.generatePVUniqueName(serverEvent.getMatcher(), serverEvent.getUrl()));
+        if (MetricTypeEnum.CLICK.equals(serverEvent.getType()) && StringUtils.isBlank(serverEvent.getSelector())) {
+            event.setType(MetricTypeEnum.PAGE_VIEW);
+        } else {
+            event.setType(serverEvent.getType());
         }
+        event.setName(serverEvent.getName());
         event.setMatcher(serverEvent.getMatcher());
         event.setUrl(serverEvent.getUrl());
         event.setSelector(serverEvent.getSelector());
         return event;
+    }
+
+    private ToggleControlConf toControlConf(ServerToggleEntity toggleEntity) {
+        ToggleControlConf controlConf = new ToggleControlConf();
+        controlConf.setOrganizationId(toggleEntity.getOrganizationId());
+        controlConf.setProjectKey(toggleEntity.getProjectKey());
+        controlConf.setEnvironmentKey(toggleEntity.getEnvKey());
+        controlConf.setToggleKey(toggleEntity.getToggleKey());
+        controlConf.setTrackAccessEvents(Objects.isNull(toggleEntity.getTrackAccessEvents()) ? false :
+                toggleEntity.getTrackAccessEvents());
+        return controlConf;
     }
 
     private List<com.featureprobe.sdk.server.model.Toggle> queryTogglesBySdkKey(String serverSdkKey) {
@@ -244,7 +278,10 @@ public class BaseServerService {
         List<Targeting> targetingList = targetingRepository
                 .findAllByProjectKeyAndEnvironmentKeyAndOrganizationIdAndDeleted(environment.getProject().getKey(),
                         environment.getKey(), environment.getOrganizationId(), false);
-        return buildServerToggles(segments, toggles, targetingList);
+        List<ToggleControlConf> controlConfList = toggleControlConfRepository
+                .findByProjectKeyAndEnvironmentKeyAndOrganizationId(environment.getProject().getKey(),
+                        environment.getKey(), environment.getOrganizationId());
+        return buildServerToggles(segments, toggles, targetingList, controlConfList);
     }
 
     private List<com.featureprobe.sdk.server.model.Segment> querySegmentsBySdkKey(String serverSdkKey) {
@@ -261,8 +298,8 @@ public class BaseServerService {
         List<ServerEventEntity> serverEventEntities = environmentRepository.findAllServerEventBySdkKey(serverSdkKey);
         return serverEventEntities.stream()
                 .filter(serverEvent -> (MetricTypeEnum.PAGE_VIEW.equals(serverEvent.getType())
-                        || (MetricTypeEnum.CLICK.equals(serverEvent.getType()) &&
-                        StringUtils.isNotBlank(serverEvent.getSelector()))))
+                        || (MetricTypeEnum.CLICK.equals(serverEvent.getType()))))
+                .filter(distinctByKey(ServerEventEntity::getName))
                 .map(serverEvent -> toEvent(serverEvent))
                 .collect(Collectors.toList());
     }
@@ -283,13 +320,18 @@ public class BaseServerService {
         }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    private List<com.featureprobe.sdk.server.model.Toggle> buildServerToggles(List<Segment> segments,
-                                                                              List<Toggle> toggles,
-                                                                              List<Targeting> targetingList) {
+    private List<com.featureprobe.sdk.server.model.Toggle> buildServerToggles(
+            List<Segment> segments,
+            List<Toggle> toggles,
+            List<Targeting> targetingList,
+            List<ToggleControlConf> controlConfList) {
         Map<String, Targeting> targetingByKey = targetingList.stream()
                 .collect(Collectors.toMap(Targeting::getToggleKey, Function.identity()));
+        Map<String, ToggleControlConf> controlConfByKey = controlConfList.stream()
+                .collect(Collectors.toMap(ToggleControlConf::getToggleKey, Function.identity()));
         return toggles.stream().map(toggle -> {
             Targeting targeting = targetingByKey.get(toggle.getKey());
+            ToggleControlConf controlConf = controlConfByKey.get(toggle.getKey());
             try {
                 return new ServerToggleBuilder().builder()
                         .key(toggle.getKey())
@@ -298,6 +340,9 @@ public class BaseServerService {
                         .returnType(toggle.getReturnType())
                         .forClient(toggle.getClientAvailability())
                         .rules(targeting.getContent())
+                        .trackAccessEvents(Objects.isNull(controlConf) ?
+                                false : controlConf.isTrackAccessEvents())
+                        .lastModified(targeting.getPublishTime())
                         .segments(segments.stream().collect(Collectors.toMap(Segment::getKey, Function.identity())))
                         .build();
             } catch (Exception e) {

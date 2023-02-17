@@ -2,7 +2,7 @@ import { lazy } from 'react';
 
 const Project = lazy(() => import('../pages/project'));
 const Toggle = lazy(() => import('../pages/toggle'));
-const Targeting = lazy(() => import('../pages/targeting'));
+const Targeting = lazy(() => import('../pages/toggleDetail'));
 const Member = lazy(() => import('../pages/member'));
 const Profile = lazy(() => import('../pages/profile'));
 const NotFound = lazy(() => import('../pages/notFound'));

@@ -12,6 +12,7 @@
 
     <modules>
         <module>admin</module>
+        <module>analysis</module>
         <module>dao</module>
         <module>base</module>
     </modules>
@@ -208,5 +209,12 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>maven-repo</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
 
 </project>

@@ -33,6 +33,10 @@ where
             "/api/client-sdk/toggles",
             get(client_sdk_toggles::<T>).options(client_cors),
         )
+        .route(
+            "/api/client-sdk/events",
+            get(client_sdk_events::<T>).options(client_cors),
+        )
         .route("/api/server-sdk/toggles", get(server_sdk_toggles::<T>))
         .route("/api/events", post(post_events::<T>).options(client_cors))
         .route("/internal/all_secrets", get(all_secrets::<T>)) // not for public network
@@ -65,6 +69,16 @@ where
     T: HttpHandler + Clone + Send + Sync + 'static,
 {
     handler.client_sdk_toggles(params, sdk_key).await
+}
+
+async fn client_sdk_events<T>(
+    sdk_key: TypedHeader<SdkAuthorization>,
+    Extension(handler): Extension<T>,
+) -> Result<Response, FPServerError>
+where
+    T: HttpHandler + Clone + Send + Sync + 'static,
+{
+    handler.client_sdk_events(sdk_key).await
 }
 
 async fn server_sdk_toggles<T>(
@@ -428,10 +442,12 @@ mod tests {
         .unwrap();
         let events_url =
             Url::parse(&format!("http://127.0.0.1:{}/api/events", target_port)).unwrap();
+        let analysis_url = None;
         let config = ServerConfig {
             toggles_url,
             events_url: events_url.clone(),
             refresh_interval: Duration::from_secs(1),
+            analysis_url: None,
             keys_url: None,
             client_sdk_key: Some(client_sdk_key.to_owned()),
             server_sdk_key: Some(server_sdk_key.to_owned()),
@@ -455,6 +471,7 @@ mod tests {
         let feature_probe_server = FpHttpHandler {
             repo: repo.clone(),
             events_url,
+            analysis_url,
             events_timeout: Duration::from_secs(10),
             http_client: Default::default(),
         };
