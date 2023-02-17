@@ -140,7 +140,7 @@ jobs:
   
   release_ui:
     name: Release UI
-    if: ${{ github.event_name == 'release' || (inputs.build_select == 'ui' || inputs.build_select != 'all') }}
+    if: ${{ github.event_name == 'release' || (inputs.build_select == 'ui' || inputs.build_select == 'all') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -276,7 +276,7 @@ jobs:
     name: Deploy to Google Cloud
     uses: FeatureProbe/FeatureProbe/.github/workflows/gcloud.yml@main
     secrets: inherit # pass all secrets
-    needs: [release_api, release_ui, release_server]
+    needs: [release_api, release_ui, release_server, release_analysis]
     permissions:
       id-token: write
       contents: read

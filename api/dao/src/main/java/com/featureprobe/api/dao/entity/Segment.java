@@ -50,7 +50,7 @@ public class Segment extends AbstractAuditEntity implements TenantSupport {
     @Version
     private Long version;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String rules;
 
     @Column(columnDefinition = "TINYINT")

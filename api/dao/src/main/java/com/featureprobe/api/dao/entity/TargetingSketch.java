@@ -55,7 +55,7 @@ public class TargetingSketch extends AbstractAuditEntity implements TenantSuppor
     @Column(name = "old_version")
     private Long oldVersion;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
     private String comment;

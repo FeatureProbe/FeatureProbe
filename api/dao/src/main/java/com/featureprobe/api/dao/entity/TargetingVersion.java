@@ -42,7 +42,7 @@ public class TargetingVersion extends AbstractAuditEntity implements TenantSuppo
 
     private String comment;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
     @Column(columnDefinition = "TINYINT")
