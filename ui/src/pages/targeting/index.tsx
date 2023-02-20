@@ -22,10 +22,10 @@ import {
 } from 'semantic-ui-react';
 import { useParams, useHistory, Prompt } from 'react-router-dom';
 import isEqual from 'lodash/isEqual';
+import cloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
 import { FormattedMessage, useIntl } from 'react-intl';
-import cloneDeep from 'lodash/cloneDeep';
 import { v4 as uuidv4 } from 'uuid';
 import { diff } from 'deep-diff';
 import Joyride, { CallBackProps, EVENTS, ACTIONS, Step } from 'react-joyride';
@@ -87,6 +87,7 @@ interface IProps {
   approvalInfo?: IApprovalInfo;
   toggleDisabled: boolean;
   trackEvents: boolean;
+  latestVersion: number;
   allowEnableTrackEvents: boolean;
   initialTargeting?: ITargeting;
   segmentList?: ISegmentList;
@@ -149,6 +150,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     initialTargeting,
     segmentList,
     trackEvents,
+    latestVersion,
     allowEnableTrackEvents,
     initTargeting,
     saveToggleDisable,
@@ -482,14 +484,16 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       let res;
       if (approvalInfo && approvalInfo.enableApproval) {
         res = await approveToggle(projectKey, environmentKey, toggleKey, {
-          comment,
           ...publishTargeting,
+          comment,
           reviewers: approvalInfo.reviewers,
+          baseVersion: latestVersion,
         });
       } else {
         const params: ITargetingParams = {
           ...publishTargeting,
           comment,
+          baseVersion: latestVersion,
         };
 
         if (isCollect === 'yes') {
@@ -512,18 +516,19 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       setLoading(false);
     }
   }, [
+    intl,
     approvalInfo, 
     comment, 
     isCollect, 
     allowEnableTrackEvents, 
     publishTargeting, 
-    newTrigger, 
-    newSetValue, 
     projectKey, 
     environmentKey, 
     toggleKey, 
+    latestVersion,
+    newTrigger, 
+    newSetValue, 
     initTargeting, 
-    intl
   ]);
 
   const disabledText = useMemo(() => {
