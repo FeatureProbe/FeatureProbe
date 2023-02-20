@@ -4,9 +4,9 @@ sidebar_position: 9
 
 # 如何使用指标分析
 
-该模块支持指标分析功能
-【图片】
-![evaluations screenshot](/evaluations_zh.png)
+该模块支持在开关中定义指标，并查看开关中所有分组对应的指标分析数据。
+
+![metric analysis screenshot](/metric_analysis.png)
 
 ## 定义指标
 
@@ -48,6 +48,5 @@ sidebar_position: 9
 
 为保证指标分析数据的完整性，当“指标信息已保存”且“未在指标数据收集中”时，在开关发布的时，提供「开始收集数据」的功能。
 
-【图片】
 
 注：指标分析数据分析中时，修改开关配置中“除名称、描述等信息”外的内容，有可能会影响指标分析结果的准确性。
