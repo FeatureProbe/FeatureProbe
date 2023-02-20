@@ -1,4 +1,4 @@
-name: Publish Crates
+name: Publish Server To Crates
 
 on:
   release:
