@@ -19,5 +19,5 @@ jobs:
             override: true
       - uses: katyo/publish-crates@v1
         with:
-            path: ./server
             registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+            path: ./server
