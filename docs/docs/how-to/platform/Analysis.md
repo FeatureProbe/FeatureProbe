@@ -48,5 +48,6 @@ Once the Metrics are saved, you can start collecting metrics analytics data.
 
 In order to ensure the integrity of the indicator analysis data, when the "indicator information has been saved" and "not in the indicator data collection", the function of "start collecting data" is provided when the toggle is released.
 
+![publish metric screenshot](/publish_metric_en.png)
 
 Note: When the indicator analysis data is being analyzed, modifying the content in the toggle configuration other than "information such as name and description" may affect the accuracy of the indicator analysis results.
