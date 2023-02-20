@@ -468,7 +468,7 @@
   "getstarted.react.third.step.title": "第三步：在App.js中引入FPProvider",
   "getstarted.react.fourth.step.title": "第四步：在App.js同级目录下创建home.js，并在home.js中引入withFPConsumer",
 
-  "platform.warning.text": "根据国家相关规定，严禁将FeatureProbe用于违法金融借贷、区块链虚拟币、博彩以及任何含有网络电信诈骗功能的应用程序，一旦被发现，将会立即停止你使用FeantureProbe相关功能，并上报给网络安全监管部门。",
+  "platform.warning.text": "根据国家相关规定，严禁将FeatureProbe用于违法金融借贷、区块链虚拟币、博彩以及任何含有网络电信诈骗功能的应用程序，一旦被发现，将会立即停止你使用FeatureProbe相关功能，并上报给网络安全监管部门。",
 
   "approvals.center": "审批中心",
   "approvals.lists": "审批列表",
