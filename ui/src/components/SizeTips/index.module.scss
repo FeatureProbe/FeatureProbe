@@ -1,0 +1,61 @@
+.size-tips {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  width: 348px;
+  background: #fff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.02), 0 4px 6px 6px rgba(0, 0, 0, 0.02), 0 4px 6px 0 rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  padding: 16px 24px;
+  z-index: 9999;
+
+  & > .main {
+    display: flex;
+
+    & > .icon {
+      margin-right: 8px;
+
+      & > .warning-icon {
+        font-size: 20px;
+        color: #ffc300;
+        vertical-align: text-top;
+      }
+    }
+
+    & > .content {
+      & > .tips-title {
+        font-size: 16px;
+        color: #000000de;
+        letter-spacing: 0;
+        line-height: 24px;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      & > .tips-content {
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.6);
+        letter-spacing: 0;
+        font-weight: 400;
+      }
+    }
+  }
+
+  & > .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+
+    & > .button {
+      display: inline-block;
+      height: 24px;
+      min-height: 0;
+      font-size: 12px;
+      color: #fff;
+      letter-spacing: 0;
+      line-height: 24px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+  }
+}

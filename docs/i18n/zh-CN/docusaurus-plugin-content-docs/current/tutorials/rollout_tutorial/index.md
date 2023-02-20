@@ -334,21 +334,21 @@ cd client-sdk-js
 3. 打开 `example/index.html` 填入 `客户端SDK密钥` 以及 `FeatureProbe网址`  ("https://featureprobe.io/server")
 
 ~~~js title="example/index.html"
-      const fpClient = new featureProbe.FeatureProbe({
-  //      highlight-start
-        remoteUrl: "https://featureprobe.io/server",
-        clientSdkKey: // Paste client sdk key here,
-  //      highlight-end
-        user,
-        refreshInterval: 5000,
-      });
+  const fpClient = new featureProbe.FeatureProbe({
+    // highlight-start
+    remoteUrl: "https://featureprobe.io/server",
+    clientSdkKey: // Paste client sdk key here,
+    // highlight-end
+    user,
+    refreshInterval: 5000,
+  });
 ~~~
 
 4. 模拟当前用户访问开关 `tutorial_rollout` ，直接获取开关状态
 
 ~~~js title="example/index.html"
   <script>
-  //      highlight-next-line
+    // highlight-next-line
     const user = new featureProbe.FPUser();
     const fpClient = new featureProbe.FeatureProbe({
       remoteUrl: "https://featureprobe.io/server",
@@ -359,10 +359,10 @@ cd client-sdk-js
   
     fpClient.start();
     fpClient.on("ready", function() {
-  //      highlight-start
+      // highlight-start
       const boolValue = fpClient.boolValue("tutorial_rollout", false);
       document.getElementById("boolean-result").innerText = boolValue;
-  //      highlight-end
+      // highlight-end
     });
   </script>
 ~~~

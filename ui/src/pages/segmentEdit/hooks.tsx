@@ -93,7 +93,7 @@ export const useRule = () => {
   };
 
   const handleChangeActive = (ruleIndex: number) => {
-    saveRules((rules) => {
+    saveRules((rules: IRule[]) => {
       rules[ruleIndex].active = !rules[ruleIndex].active;
       return [...rules];
     });

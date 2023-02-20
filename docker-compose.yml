@@ -17,12 +17,15 @@ services:
       - logging.level.root=INFO
       - logging.level.org.hibernate.SQL=INFO
       - logging.level.org.hibernate.type.descriptor.sql.BasicBinder=INFO
+      - app.analysis-url=http://analysisAPI:4006/analysis
+      - app.server-base-urls=http://127.0.0.1:4009/server
       - server.port=4008
       - TZ=Asia/Shanghai
     networks:
       - featureProbeNet
     depends_on:
       - database
+      - analysisAPI
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:4008/actuator/health"]
       timeout: 5s
@@ -41,6 +44,7 @@ services:
       - FP_TOGGLES_URL=http://backendAPI:4008/internal/server/toggles
       - FP_EVENTS_URL=http://backendAPI:4008/internal/server/events
       - FP_KEYS_URL=http://backendAPI:4008/internal/server/sdk_keys
+      - FP_ANALYSIS_URL=http://analysisAPI:4006/events
       - FP_REFRESH_SECONDS=3
       - TZ=Asia/Shanghai
     networks:
@@ -48,6 +52,8 @@ services:
     depends_on:
       backendAPI:
         condition: service_healthy
+      analysisAPI:
+        condition: service_started
 
   ui:
     image: featureprobe/ui
@@ -63,6 +69,22 @@ services:
       - backendAPI
       - serverAPI
       - redoc
+      - database
+
+  analysisAPI:
+    image: featureprobe/analysis
+    ports:
+      - "4006:4006"
+    environment:
+      - TZ=Asia/Shanghai
+      - app.datasource.jdbcUrl=jdbc:mysql://database:13306/feature_probe_events
+      - app.datasource.username=root
+      - app.datasource.password=root
+      - spring.profiles.active=online
+    networks:
+      - featureProbeNet
+    depends_on:
+      - database
 
   database:
     image: mariadb:10.5.8
@@ -74,6 +96,8 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=feature_probe
       - MYSQL_TCP_PORT=13306
+    volumes:
+      - ./init_scripts/db:/docker-entrypoint-initdb.d
 
   redoc:
     image: redocly/redoc
