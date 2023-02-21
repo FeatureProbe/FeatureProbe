@@ -511,7 +511,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
         saveComment('');
         saveIsCollect('');
       } else {
-        message.success(res.message || intl.formatMessage({ id: 'targeting.publish.error.text' }));
+        message.error(res.message || intl.formatMessage({ id: 'targeting.publish.error.text' }));
       }
       newSetValue('reason', '');
       newSetValue('radioGroup', '');
