@@ -21,6 +21,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
@@ -68,6 +69,10 @@ public class Targeting extends AbstractAuditEntity implements TenantSupport {
 
     @Enumerated(EnumType.STRING)
     private ToggleReleaseStatusEnum status;
+
+    @Version
+    @Column(name = "_lock_version")
+    private Long lockVersion;
 
     public String uniqueKey() {
         return projectKey + "&" + environmentKey + "&" + toggleKey;
