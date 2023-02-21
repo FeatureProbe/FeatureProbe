@@ -1,0 +1,115 @@
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: #212529;
+  margin-bottom: 16px;
+  line-height: 26px;
+}
+
+.modal-header-text {
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.modal-close-icon {
+  cursor: pointer;
+}
+
+.modal-content {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0 -16px -4px;
+  border-bottom: 1px solid rgba(206, 212, 218, 0.6);
+  padding-bottom: 24px;
+}
+
+.error-circle {
+  font-size: 17px !important;
+  color: #f5483b;
+  margin: 0 8px 0 14px;
+}
+
+.icon-info {
+  font-size: 14px !important;
+  color: #74788d;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+.collect {
+  padding: 0 24px;
+  align-items: center;
+}
+
+.collect-title {
+  margin-bottom: 8px;
+}
+
+.collect-content {
+  display: flex;
+  margin-left: 12px;
+}
+
+.collect-radio {
+  margin-right: 50px !important;
+}
+
+.comment {
+  padding: 0 24px;
+  align-items: center;
+}
+
+.comment-title {
+  margin-bottom: 8px;
+}
+
+.comment-input {
+  :global {
+    .ui.input {
+      width: 100%;
+    }
+
+    .ui.input > input {
+      height: 32px;
+    }
+  }
+}
+
+.approval {
+  padding: 0 24px;
+  margin-bottom: 24px;
+}
+
+.approval-content {
+  display: flex;
+  align-items: center;
+}
+
+.approval-dropdown {
+  flex: 1;
+}
+
+.approval-btn {
+  margin-left: 8px;
+  color: #556ee6;
+  cursor: pointer;
+}
+
+.diff-after {
+  margin-top: 12px;
+}
+
+.publish-tips {
+  background: #fff5f4;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #660e16;
+  margin: 0 24px 24px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  padding: 7px 0;
+}

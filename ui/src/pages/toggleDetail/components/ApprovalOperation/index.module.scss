@@ -1,0 +1,116 @@
+.dangerous-btn {
+  margin-left: 8px !important;
+  color: #f5483b !important;
+  border: 1px solid #f5483b !important;
+  min-width: 88px;
+}
+
+.dangerous-btn:hover {
+  background-color: transparent !important;
+}
+
+.btn {
+  margin-left: 8px !important;
+  min-width: 88px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: #212529;
+}
+
+.modal-header-icon {
+  font-size: 16px !important;
+  cursor: pointer;
+  color: #495057;
+}
+
+.modal-content {
+  margin-top: 15px;
+}
+
+.modal-continue-edit {
+  font-family: PingFangSC-Regular;
+  font-size: 13px;
+  color: #495057;
+}
+
+.radio-group {
+  display: flex;
+  margin-top: 8px;
+
+  :global {
+    label {
+      color: #212529 !important;
+    }
+  }
+}
+
+.radio-group-item {
+  margin-right: 80px !important;
+}
+
+.collect {
+  padding: 0;
+  align-items: center;
+  font-size: 13px;
+  color: #495057;
+}
+
+.collect-title {
+  margin-bottom: 8px;
+}
+
+.collect-content {
+  display: flex;
+  margin-left: 12px;
+
+  :global {
+    .ui.checkbox {
+      font-size: 13px !important;
+    }
+
+    .ui.checkbox label {
+      color: #495057;
+    }
+  }
+}
+
+.collect-radio {
+  margin-right: 50px !important;
+}
+
+.input {
+  margin-top: 8px !important;
+}
+
+.error-text {
+  color: #f46a6a;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  transform: scale(0.83);
+  transform-origin: left;
+}
+
+.label-required {
+  color: #ff5f57;
+  font-size: 20px;
+  margin-right: 4px;
+  height: 16px;
+  display: inline-block;
+  position: relative;
+  top: 5px;
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.footer-btn {
+  margin-left: 8px !important;
+}

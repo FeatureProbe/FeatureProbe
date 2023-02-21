@@ -125,7 +125,7 @@ const Info = () => {
         saveRules(targetRule);
         saveVersion(data.version ?? 0);
       } else {
-        message.error(res.message || intl.formatMessage({ id: 'toggles.targeting.error.text' }));
+        message.error(intl.formatMessage({ id: 'toggles.targeting.error.text' }));
       }
     });
   }, [intl, projectKey, saveOriginSegmentInfo, saveRules, saveSegmentInfo, segmentKey]);
@@ -264,7 +264,7 @@ const Info = () => {
         getSegmentInfo();
         initHistory();
       } else {
-        message.error(intl.formatMessage({ id: 'segments.edit.error' }));
+        message.error(res.message || intl.formatMessage({ id: 'segments.edit.error' }));
       }
     }
   }, [publishSegment, projectKey, segmentKey, comment, version, intl, getSegmentInfo, initHistory]);
@@ -343,10 +343,6 @@ const Info = () => {
     },
     [searchParams]
   );
-
-  // useEffect(() => {
-  //   fetchToggleList();
-  // }, [fetchToggleList, searchParams]);
 
   const reviewHistory = useCallback(
     (version: ISegmentVersion) => {
