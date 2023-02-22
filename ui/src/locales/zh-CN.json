@@ -581,11 +581,11 @@
   "diff.old.text": "旧/删除",
   "diff.create.text": "新/增加",
 
-  "analysis.indicator.name": "指标名称",
-  "analysis.indicator.name.placeholder": "请输入指标名称",
+  "analysis.metric.name": "指标名称",
+  "analysis.metric.name.placeholder": "请输入指标名称",
+  "analysis.metric.kind": "指标类型",
+  "analysis.metric.kind.placeholder": "请选择指标类型",
 
-  "analysis.event.kind": "事件类型",
-  "analysis.event.kind.placeholder": "请选择事件类型",
   "analysis.event.name": "事件名称",
   "analysis.event.name.placeholder": "请输入事件名称",
   "analysis.event.name.tip": "在代码中埋点时使用该事件名称。只支持包含：字母、数字、'.'、'_' 或 '-'。",

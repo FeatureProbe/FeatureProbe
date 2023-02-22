@@ -581,11 +581,11 @@
   "diff.old.text": "Old/Delete",
   "diff.create.text": "New/Create",
 
-  "analysis.indicator.name": "Metric name",
-  "analysis.indicator.name.placeholder": "Please input metric name",
+  "analysis.metric.name": "Metric name",
+  "analysis.metric.name.placeholder": "Please input metric name",
+  "analysis.metric.kind": "Metric type",
+  "analysis.metric.kind.placeholder": "Please select an metric type",
 
-  "analysis.event.kind": "Event type",
-  "analysis.event.kind.placeholder": "Please select an event type",
   "analysis.event.name": "Event name",
   "analysis.event.name.placeholder": "Please input event name",
   "analysis.event.name.tip": "Use this event name when reporting in code. Name can only contain letters, numbers, '.', '_' or '-'.",

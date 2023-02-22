@@ -29,10 +29,10 @@ const Metrics = (props: IProps) => {
   const { eventInfo, initTargeting, getEvent } = props;
 
   const intl = useIntl();
-  const [ indicatorName, saveIndicatorName ] = useState<string>('');
+  const [ metricName, saveMetricName ] = useState<string>('');
   const [ description, saveDescription ] = useState<string>('');
   const [ metricType, saveMetricType ] = useState<string>('');
-  const [ metricName, saveMetricName ] = useState<string>('');
+  const [ eventName, saveEventName ] = useState<string>('');
   const [ metricMatcher, saveMetricMatcher ] = useState<string>('');
   const [ metricUrl, saveMetricUrl ] = useState<string>('');
   const [ metricSelector, saveMetricSelector ] = useState<string>('');
@@ -73,7 +73,7 @@ const Metrics = (props: IProps) => {
       eventInfo?.type === NUMERIC && setValue('numeric', true);
       saveMetricType(CUSTOM);
       saveCustomMetricType(eventInfo.type);
-      eventInfo.name && saveMetricName(eventInfo.name);
+      eventInfo.name && saveEventName(eventInfo.name);
     }
   }, [eventInfo, setValue]);
 
@@ -107,7 +107,7 @@ const Metrics = (props: IProps) => {
     }
 
     saveCanSave(true);
-  }, [eventInfo, getValues, metricMatcher, metricName, metricSelector, metricUrl, metricType]);
+  }, [eventInfo, getValues, metricMatcher, eventName, metricSelector, metricUrl, metricType]);
 
   useEffect(() => {
     if (intl.locale === 'zh-CN') {
@@ -118,17 +118,17 @@ const Metrics = (props: IProps) => {
   }, [intl]);
 
   useEffect(() => {
-    register('indicatorName', {
+    register('metricName', {
       required: {
         value: true,
-        message: intl.formatMessage({id: 'analysis.indicator.name.placeholder'})
+        message: intl.formatMessage({id: 'analysis.metric.name.placeholder'})
       },
     });
 
     register('kind', { 
       required: {
         value: true,
-        message: intl.formatMessage({id: 'analysis.event.kind.placeholder'})
+        message: intl.formatMessage({id: 'analysis.metric.kind.placeholder'})
       },
     });
 
@@ -240,7 +240,7 @@ const Metrics = (props: IProps) => {
 
   const onSubmit = useCallback((data) => {
     const param: IEvent = {
-      metricName: data.indicatorName,
+      metricName: data.metricName,
       description: data.description,
       type: ''
     };
@@ -285,8 +285,8 @@ const Metrics = (props: IProps) => {
 
   const handleMetricTypeChange = useCallback((e: SyntheticEvent, data: DropdownProps) => {
     saveMetricType(data.value as string);
-    setValue('name', metricName);
-  }, [metricName, setValue]);
+    setValue('name', eventName);
+  }, [eventName, setValue]);
 
   return (
     <div className={styles.metrics}>
@@ -304,26 +304,26 @@ const Metrics = (props: IProps) => {
                 <Form.Field inline={true} className={styles.field}>
                   <label className={styles.label}>
                     <span className={styles['label-required']}>*</span>
-                    <FormattedMessage id='analysis.indicator.name' />
+                    <FormattedMessage id='analysis.metric.name' />
                   </label>
                   <div className={styles['field-right']}>
                     <Form.Input
                       fluid
-                      name='indicatorName'
-                      error={ errors.indicatorName ? true : false }
-                      value={indicatorName}
+                      name='metricName'
+                      error={ errors.metricName ? true : false }
+                      value={metricName}
                       placeholder={
-                        intl.formatMessage({id: 'analysis.indicator.name.placeholder'})
+                        intl.formatMessage({id: 'analysis.metric.name.placeholder'})
                       }
                       onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
                         setValue(detail.name, detail.value);
-                        saveIndicatorName(detail.value);
-                        await trigger('indicatorName');
+                        saveMetricName(detail.value);
+                        await trigger('metricName');
                       }}
                     />
                   </div>
                 </Form.Field>
-                { errors.indicatorName && <div className={styles['error-text']}>{ errors.indicatorName.message }</div> }
+                { errors.metricName && <div className={styles['error-text']}>{ errors.metricName.message }</div> }
               </Grid.Column>
               <Grid.Column width={8} className={styles.column}>
                 <Form.Field inline={true} className={styles.field}>
@@ -355,7 +355,7 @@ const Metrics = (props: IProps) => {
                 <Form.Field inline={true} className={styles.field}>
                   <label className={styles.label}>
                     <span className={styles['label-required']}>*</span>
-                    <FormattedMessage id='analysis.event.kind' />
+                    <FormattedMessage id='analysis.metric.kind' />
                   </label>
                   <div className={styles['field-right']}>
                     <Dropdown
@@ -367,7 +367,7 @@ const Metrics = (props: IProps) => {
                       name='kind'
                       value={metricType}
                       placeholder={
-                        intl.formatMessage({id: 'analysis.event.kind.placeholder'})
+                        intl.formatMessage({id: 'analysis.metric.kind.placeholder'})
                       } 
                       options={metricOptions} 
                       icon={<Icon customclass={styles['angle-down']} type='angle-down' />}
@@ -442,7 +442,7 @@ const Metrics = (props: IProps) => {
                       <Form.Input
                         fluid
                         name='name'
-                        value={metricName}
+                        value={eventName}
                         className={styles['field-right']}
                         error={ errors.name ? true : false }
                         placeholder={
@@ -450,7 +450,7 @@ const Metrics = (props: IProps) => {
                         }
                         onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
                           setValue(detail.name, detail.value);
-                          saveMetricName(detail.value);
+                          saveEventName(detail.value);
                           await trigger('name');
                         }}
                       />
