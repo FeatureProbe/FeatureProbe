@@ -219,7 +219,7 @@ const ApprovalOperation = (props: IProps) => {
     refreshInitialTargeting
   ]);
 
-  const handleCollectChange = useCallback((e: SyntheticEvent, detail: RadioProps) => {
+  const handleChangeCollect = useCallback((e: SyntheticEvent, detail: RadioProps) => {
     saveIsCollect(detail.value as string);
   }, []);
 
@@ -227,7 +227,7 @@ const ApprovalOperation = (props: IProps) => {
     saveComment(detail.value as string);
   }, []);
 
-  const renderHeader = useCallback(() => {
+  const renderModalHeader = useCallback(() => {
     if (status === 'PASS') {
       return intl.formatMessage({id: 'targeting.approval.modal.accept'});
     } else if (status === 'REVOKE') {
@@ -388,7 +388,7 @@ const ApprovalOperation = (props: IProps) => {
         <div>
           <div className={styles['modal-header']}>
             <span className={styles['modal-header-text']}>
-              { renderHeader() }
+              { renderModalHeader() }
             </span>
             <Icon customclass={styles['modal-header-icon']} type='close' onClick={() => { 
               setValue('reason', '');
@@ -437,7 +437,7 @@ const ApprovalOperation = (props: IProps) => {
                           checked={isCollect === 'yes'}
                           error={errors.isTrackEvent ? true : false}
                           onChange={async (e: SyntheticEvent, detail: RadioProps) => {
-                            handleCollectChange(e, detail);
+                            handleChangeCollect(e, detail);
                             setValue(detail.name || 'isTrackEvent', detail.value);
                             await trigger('isTrackEvent');
                           }}
@@ -451,7 +451,7 @@ const ApprovalOperation = (props: IProps) => {
                           checked={isCollect === 'no'}
                           error={errors.isTrackEvent ? true : false}
                           onChange={async (e: SyntheticEvent, detail: RadioProps) => {
-                            handleCollectChange(e, detail);
+                            handleChangeCollect(e, detail);
                             setValue(detail.name || 'isTrackEvent', detail.value);
                             await trigger('isTrackEvent');
                           }}
