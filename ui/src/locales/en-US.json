@@ -585,6 +585,12 @@
   "analysis.metric.name.placeholder": "Please input metric name",
   "analysis.metric.kind": "Metric type",
   "analysis.metric.kind.placeholder": "Please select an metric type",
+  "analysis.metric.unit.text": "Unit",
+  "analysis.metric.unit.placeholder": "Please input unit",
+  "analysis.metric.win.criteria.text": "Win criteria",
+  "analysis.metric.win.criteria.placeholder": "Please select win criteria",
+  "analysis.metric.target.win.criteria.greater": "Greater",
+  "analysis.metric.target.win.criteria.lower": "Lower",
 
   "analysis.event.name": "Event name",
   "analysis.event.name.placeholder": "Please input event name",

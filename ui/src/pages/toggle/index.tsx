@@ -10,6 +10,7 @@ import {
   DropdownProps, 
   InputOnChangeData,
   Checkbox,
+  CheckboxProps,
 } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { cloneDeep, debounce } from 'lodash';
@@ -53,6 +54,7 @@ interface ISearchParams {
   archived?: boolean;
   releaseStatusList?: string[];
   permanent?: boolean;
+  related?: boolean;
 }
 
 const Toggle = () => {
@@ -340,7 +342,14 @@ const Toggle = () => {
                   <div className={styles.heading}>
                     <FormattedMessage id='common.toggles.text' />
                     <div className={styles['with-me']}>
-                      <Checkbox label={intl.formatMessage({id: 'toggles.filter.related.me'})} />
+                      <Checkbox onChange={(e, detail: CheckboxProps) => {
+                        setSearchParams((param) => {
+                          return {
+                            ...param,
+                            related: detail.checked ?? false
+                          };
+                        });
+                      }} label={intl.formatMessage({id: 'toggles.filter.related.me'})} />
                       <div className={styles['icon-tips']}>
                         <Popup
                           inverted

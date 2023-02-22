@@ -1,11 +1,13 @@
 export interface IEvent {
   type: string;
-  metricName: string;
+  name: string;
   description: string;
-  name?: string;
+  eventName?: string;
   matcher?: string;
   url?: string;
   selector?: string;
+  winCriteria?: string;
+  unit?: string;
 }
 
 export interface IEventAnalysis {

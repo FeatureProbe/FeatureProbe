@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
@@ -13,9 +13,10 @@ import { getEventAnalysis, operateCollection } from 'services/analysis';
 import { IChartData, IEvent, IEventAnalysis, IDistribution, ITableData, IAnalysisItem } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
 import { ITarget } from 'interfaces/targeting';
+import TextLimit from 'components/TextLimit';
+import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, NUMERIC } from '../../constants';
 
 import styles from './index.module.scss';
-import TextLimit from 'components/TextLimit';
 
 interface IProps {
   eventInfo?: IEvent;
@@ -41,7 +42,17 @@ const Results = (props: IProps) => {
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
 
-   useEffect(() => {
+  const metricTypeText = useMemo(() => {
+    return new Map([
+      [CUSTOM, intl.formatMessage({id: 'analysis.event.custom'})],
+      [CONVERSION, `${intl.formatMessage({id: 'analysis.event.custom'})}${intl.locale === 'en-US' ? ':' : '：'}${intl.formatMessage({id: 'analysis.event.conversion'})}`],
+      [NUMERIC, `${intl.formatMessage({id: 'analysis.event.custom'})}${intl.locale === 'en-US' ? ':' : '：'}${intl.formatMessage({id: 'analysis.event.numeric'})}`],
+      [CLICK, intl.formatMessage({id: 'analysis.event.click'})],
+      [PAGE_VIEW, intl.formatMessage({id: 'analysis.event.pageview'})],
+    ]);
+  }, [intl]);
+
+  useEffect(() => {
     if (!targeting?.variations || !result) {
       return;
     };
@@ -184,10 +195,10 @@ const Results = (props: IProps) => {
           <div className={styles['result-content']}>
             <div className={styles['table-header']}>
               <div className={styles['metric-name']}>
-                <TextLimit text={eventInfo?.metricName ?? ''} maxLength={20} />
+                <TextLimit text={eventInfo?.name ?? ''} maxLength={20} />
               </div>
               <span>:</span>
-              <div className={styles['type']}>{eventInfo?.type}</div>
+              <div className={styles['type']}>{metricTypeText.get(eventInfo?.type ?? '')}</div>
             </div>
             <ResultTable data={tableData} />
           </div>
