@@ -29,6 +29,8 @@ const Metrics = (props: IProps) => {
   const { eventInfo, initTargeting, getEvent } = props;
 
   const intl = useIntl();
+  const [ indicatorName, saveIndicatorName ] = useState<string>('');
+  const [ description, saveDescription ] = useState<string>('');
   const [ metricType, saveMetricType ] = useState<string>('');
   const [ metricName, saveMetricName ] = useState<string>('');
   const [ metricMatcher, saveMetricMatcher ] = useState<string>('');
@@ -116,6 +118,13 @@ const Metrics = (props: IProps) => {
   }, [intl]);
 
   useEffect(() => {
+    register('indicatorName', {
+      required: {
+        value: true,
+        message: intl.formatMessage({id: 'analysis.indicator.name.placeholder'})
+      },
+    });
+
     register('kind', { 
       required: {
         value: true,
@@ -154,6 +163,18 @@ const Metrics = (props: IProps) => {
         value: metricType === PAGE_VIEW || metricType === CLICK,
         message: intl.formatMessage({id: 'analysis.event.target.url.placeholder'})
       },
+      validate: (value) => {
+        if(metricMatcher !== 'REGULAR') {
+          return true;
+        }
+        let isReg = true;
+        try {
+          new RegExp(value);
+        } catch {
+          isReg = false;
+        }
+        return isReg ? true : intl.formatMessage({id: 'analysis.event.target.url.matching.regex.error'});
+      }
     });
 
     register('selector', { 
@@ -170,7 +191,7 @@ const Metrics = (props: IProps) => {
       },
     });
 
-  }, [intl, metricType, register]);
+  }, [intl, metricMatcher, metricType, register]);
 
   const metricOptions = useMemo(() => {
     return [
@@ -219,6 +240,8 @@ const Metrics = (props: IProps) => {
 
   const onSubmit = useCallback((data) => {
     const param: IEvent = {
+      metricName: data.indicatorName,
+      description: data.description,
       type: ''
     };
 
@@ -276,6 +299,56 @@ const Metrics = (props: IProps) => {
         <Form autoComplete='off'onSubmit={handleSubmit(onSubmit)}>
           <Grid>
             <Grid.Row className={styles.row}>
+              {/* Name and description */}
+              <Grid.Column width={8} className={styles.column}>
+                <Form.Field inline={true} className={styles.field}>
+                  <label className={styles.label}>
+                    <span className={styles['label-required']}>*</span>
+                    <FormattedMessage id='analysis.indicator.name' />
+                  </label>
+                  <div className={styles['field-right']}>
+                    <Form.Input
+                      fluid
+                      name='indicatorName'
+                      error={ errors.indicatorName ? true : false }
+                      value={indicatorName}
+                      placeholder={
+                        intl.formatMessage({id: 'analysis.indicator.name.placeholder'})
+                      }
+                      onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
+                        setValue(detail.name, detail.value);
+                        saveIndicatorName(detail.value);
+                        await trigger('indicatorName');
+                      }}
+                    />
+                  </div>
+                </Form.Field>
+                { errors.indicatorName && <div className={styles['error-text']}>{ errors.indicatorName.message }</div> }
+              </Grid.Column>
+              <Grid.Column width={8} className={styles.column}>
+                <Form.Field inline={true} className={styles.field}>
+                  <label className={styles.label}>
+                    <FormattedMessage id='common.description.text' />
+                  </label>
+                  <div className={styles['field-right']}>
+                    <Form.Input
+                      fluid
+                      name='description'
+                      error={ errors.description ? true : false }
+                      value={description}
+                      placeholder={
+                        intl.formatMessage({id: 'common.description.required'})
+                      }
+                      onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
+                        setValue(detail.name, detail.value);
+                        saveDescription(detail.value);
+                      }}
+                    />
+                  </div>
+                </Form.Field>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row className={styles.row}>
 
               {/* event kind */}
               <Grid.Column width={8} className={styles.column}>
@@ -301,8 +374,8 @@ const Metrics = (props: IProps) => {
                       error={ errors.kind ? true : false }
                       onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
                         setValue(detail.name, detail.value);
-                        await trigger('kind');
                         handleMetricTypeChange(e, detail);
+                        await trigger('kind');
                       }}
                     />
 
@@ -319,8 +392,8 @@ const Metrics = (props: IProps) => {
                               error={ errors.conversion ? true : false }
                               onChange={async (e: SyntheticEvent, detail: RadioProps) => {
                                 setValue(detail.name || 'conversion', detail.checked);
-                                await trigger('conversion');
                                 saveCustomMetricType('CONVERSION');
+                                await trigger('conversion');
                               }}
                             />
                             <span className={styles['custom-metric-desc']}>
@@ -377,8 +450,8 @@ const Metrics = (props: IProps) => {
                         }
                         onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
                           setValue(detail.name, detail.value);
-                          await trigger('name');
                           saveMetricName(detail.value);
+                          await trigger('name');
                         }}
                       />
                     </Form.Field>
@@ -413,8 +486,8 @@ const Metrics = (props: IProps) => {
                           icon={<Icon customclass={styles['angle-down']} type='angle-down' />}
                           onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
                             setValue(detail.name, detail.value);
-                            await trigger('matcher');
                             saveMetricMatcher(detail.value as string);
+                            await trigger('matcher');
                           }}
                         />
                         { errors.matcher && <div className={styles['error-text-url']}>{ errors.matcher.message }</div> }
@@ -429,8 +502,8 @@ const Metrics = (props: IProps) => {
                           }
                           onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
                             setValue(detail.name, detail.value);
-                            await trigger('url');
                             saveMetricUrl(detail.value);
+                            await trigger('url');
                           }}
                         />
                         { errors.url && <div className={styles['error-text-url']}>{ errors.url.message }</div> }
@@ -475,8 +548,8 @@ const Metrics = (props: IProps) => {
                         placeholder={intl.formatMessage({id: 'analysis.event.click.target.placeholder'})} 
                         onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
                           setValue(detail.name, detail.value);
-                          await trigger('selector');
                           saveMetricSelector(detail.value);
+                          await trigger('selector');
                         }}
                       />
                     </Form.Field>

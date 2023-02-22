@@ -339,6 +339,20 @@ const Toggle = () => {
                 ) : (
                   <div className={styles.heading}>
                     <FormattedMessage id='common.toggles.text' />
+                    <div className={styles['with-me']}>
+                      <Checkbox label={intl.formatMessage({id: 'toggles.filter.related.me'})} />
+                      <div className={styles['icon-tips']}>
+                        <Popup
+                          inverted
+                          trigger={
+                            <Icon customclass={styles['icon-question']} type='question' />
+                          }
+                          content={intl.formatMessage({id: 'toggles.filter.related.me.tips'})}
+                          position='top center'
+                          className='popup-override'
+                        />
+                      </div>
+                    </div>
                   </div>
                 )
               }

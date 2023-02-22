@@ -226,6 +226,8 @@
   "toggles.filter.status": "Status",
   "toggles.filter.permanent.status": "Permanent",
   "toggles.filter.search.placeholder": "Search for keyword",
+  "toggles.filter.related.me": "Related to me",
+  "toggles.filter.related.me.tips": "I created the switch, or I changed it",
   "toggles.table.brief": "Brief",
   "toggles.table.publishing.status": "Publishing Status",
   "toggles.table.status": "Status",
@@ -579,6 +581,9 @@
   "diff.old.text": "Old/Delete",
   "diff.create.text": "New/Create",
 
+  "analysis.indicator.name": "Metric name",
+  "analysis.indicator.name.placeholder": "Please input metric name",
+
   "analysis.event.kind": "Event type",
   "analysis.event.kind.placeholder": "Please select an event type",
   "analysis.event.name": "Event name",
@@ -591,6 +596,7 @@
   "analysis.event.target.url.matching.exact": "Exact match",
   "analysis.event.target.url.matching.substring": "Substring match",
   "analysis.event.target.url.matching.regex": "Regular expression",
+  "analysis.event.target.url.matching.regex.error": "Enter the correct regular expression",
   "analysis.event.conversion": "Conversion",
   "analysis.event.conversion.desc": "Track when user take an action",
   "analysis.event.numeric": "Numeric",

@@ -46,6 +46,8 @@
 }
 
 .heading {
+  display: flex;
+  align-items: center;
   font-family: HelveticaNeue-Medium;
   font-size: 20px;
   color: #212529;
@@ -65,6 +67,26 @@
   background-image: url('images/archived.png');
   background-repeat: repeat-x;
   padding: 12px 24px;
+}
+
+.with-me {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+
+  & label {
+    font-size: 13px !important;
+    color: #74788d !important;
+    line-height: 18px;
+  }
+
+  & .icon-tips {
+    margin-left: 8px;
+
+    & .icon-question {
+      color: #74788d;
+    }
+  }
 }
 
 .icon-back {
@@ -130,7 +152,7 @@
   margin: 0 16px 0 0 !important;
 }
 
-.tags-field { 
+.tags-field {
   margin: 0 16px 0 0 !important;
 }
 
@@ -203,7 +225,7 @@
 
   :global {
     th {
-      padding-bottom: 0 !important
+      padding-bottom: 0 !important;
     }
   }
 }
@@ -233,13 +255,12 @@
 }
 
 .toggle-menu:hover {
-  background-color: #4458B8;
+  background-color: #4458b8;
 }
 
 .menu-angle-down {
   font-size: 24px !important;
 }
-
 
 .popup {
   padding: 8px 0 !important;

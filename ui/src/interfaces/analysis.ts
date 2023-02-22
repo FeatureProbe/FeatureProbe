@@ -1,5 +1,7 @@
 export interface IEvent {
   type: string;
+  metricName: string;
+  description: string;
   name?: string;
   matcher?: string;
   url?: string;

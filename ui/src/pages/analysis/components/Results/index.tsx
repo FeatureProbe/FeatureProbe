@@ -15,6 +15,7 @@ import { IRouterParams } from 'interfaces/project';
 import { ITarget } from 'interfaces/targeting';
 
 import styles from './index.module.scss';
+import TextLimit from 'components/TextLimit';
 
 interface IProps {
   eventInfo?: IEvent;
@@ -181,6 +182,13 @@ const Results = (props: IProps) => {
       {
         isHaveData ? (
           <div className={styles['result-content']}>
+            <div className={styles['table-header']}>
+              <div className={styles['metric-name']}>
+                <TextLimit text={eventInfo?.metricName ?? ''} maxLength={20} />
+              </div>
+              <span>:</span>
+              <div className={styles['type']}>{eventInfo?.type}</div>
+            </div>
             <ResultTable data={tableData} />
           </div>
         ) : (
