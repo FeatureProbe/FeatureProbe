@@ -203,7 +203,7 @@ const PublishModal = (props: IProps) => {
       split?: string[];
     } = {};
     if (serve.select !== undefined && typeof serve.select === 'number') {
-      obj.select = variations[serve.select].name;
+      obj.select = variations[serve.select]?.name;
     }
     if (serve.split !== undefined) {
       obj.split = serve.split.map((item: number, index: number) => {

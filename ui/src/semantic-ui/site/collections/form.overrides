@@ -11,7 +11,7 @@
 .ui.form .field.disabled :disabled {
   opacity: 1;
   background: #eef2f7;
-  border: 1px solid #ced4da;
+  border: 1px solid transparent;
   color: #adb5bc;
 }
 

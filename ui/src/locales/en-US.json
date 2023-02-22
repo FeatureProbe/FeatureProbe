@@ -346,8 +346,8 @@
   "targeting.edit.tips": "The metric data is being collected, and changes other than the name and description may affect the accuracy of the analysis results.",
 
   "targeting.approval.tips": "Owner can set approval reviewers for this environment.",
-  "targeting.approval.operation.skip.approval": "Skip Approval and Publish",
-  "targeting.approval.operation.view.changes": "Show Changes",
+  "targeting.approval.operation.skip.approval": "Skip approval and publish",
+  "targeting.approval.operation.view.changes": "Show changes",
   "targeting.approval.operation.publish": "Publish",
   "targeting.approval.operation.discard": "Discard",
   "targeting.approval.operation.abandon": "Abandon",

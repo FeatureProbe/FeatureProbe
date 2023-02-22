@@ -16,6 +16,7 @@ import TextLimit from 'components/TextLimit';
 import History from 'components/History';
 import Icon from 'components/Icon';
 import Loading from 'components/Loading';
+import SizeTips from 'components/SizeTips';
 import Rules from 'pages/targeting/components/Rules';
 import { useBeforeUnload } from 'pages/targeting/hooks';
 import ConfirmModal from '../Modal';
@@ -26,7 +27,6 @@ import { SEGMENT_EDIT_PATH } from 'router/routes';
 import { IRule, ICondition } from 'interfaces/targeting';
 import { IVersionParams } from 'interfaces/project';
 import { getBytes, MAX_SIZE } from 'utils/bytes';
-import SizeTips from 'components/SizeTips';
 import styles from './index.module.scss';
 
 interface IParams {
