@@ -6,6 +6,10 @@ sidebar_position: 1
 
 FeatureProbe is an open source feature management service. This SDK is used to control features in JavaScript programs.
 
+:::tip Notice
+For users who needs to use metric analysis, please upgrade JavaScript SDK to version [ 2.0.1 ](https://www.npmjs.com/package/featureprobe-client-sdk-js/v/2.0.1). From this version, we support sending click, page view, and custom events.
+:::
+
 :::note SDK quick links
 In addition to this reference guide, we provide source code, API reference documentation, and sample applications at the following links:
 
@@ -152,6 +156,60 @@ test("feature probe unit testing", (done) => {
 });
 ```
 
+## Send events
+JavaScript SDK supports sending `custom events`, `pageview events` and `click events`.
+
+The reporting of `pageview events` and `click events` is done by the SDK itself automatically, you have no need to write any code.
+
+### Send custom events
+After the SDK is ready, call the `track` api.
+
+NPM:
+
+```js
+fp.on('ready', function() {
+  const result = fp.boolValue('YOUR_TOGGLE_KEY', false);
+  if (result) {
+    do_some_thing();
+  } else {
+    do_other_thing();
+  }
+  const reason = fp.boolDetail('YOUR_TOGGLE_KEY', false);
+  console.log(reason);
+
+  // Send a custom event.
+  // The first parameter is the event name,
+  // the second parameter is the unique user key.
+  // highlight-start
+  fp.track('YOUR_CUSTOM_EVENT_NAME', user.getKey());
+  // highlight-end
+})
+
+```
+
+Or via CDN:
+
+```js
+fp.on('ready', function() {
+  const result = fp.boolValue('YOUR_TOGGLE_KEY', false);
+  if (result) {
+    do_some_thing();
+  } else {
+    do_other_thing();
+  }
+  const reason = fp.boolDetail('YOUR_TOGGLE_KEY', false);
+  console.log(reason);
+
+  // Send a custom event.
+  // The first parameter is the event name,
+  // the second parameter is the unique user key.
+  // highlight-start
+  fp.track('YOUR_CUSTOM_EVENT_NAME', user.getKey());
+  // highlight-end
+})
+
+```
+
 ## Available options
 
 This SDK takes the following options:
@@ -167,7 +225,7 @@ This SDK takes the following options:
 | timeoutInterval   | no            | 1000    | Timeout for SDK initialization, SDK will emit an `error` event when timeout is reaching  |
 
 
-## SDK Events：
+## SDK Events
 
 - **ready** - Emit `ready` event after successfully fetching toggles from `Server`
 - **cache_ready** - Emit `cache_ready` event after successfully fetching toggles from `LocalStorage`
