@@ -6,6 +6,11 @@ sidebar_position: 1
 
 本文介绍如何在一个前端项目中使用 FeatureProbe SDK。
 
+:::tip Notice
+JavaScript SDK 从 [ 2.0.1 ](https://www.npmjs.com/package/featureprobe-client-sdk-js/v/2.0.1) 版本开始支持事件上报的能力。目前支持的事件包括：`页面事件（pageview）`、`点击事件（click）`和`自定义事件`。
+:::
+
+
 :::note SDK quick links
 除了本参考指南外，我们还提供源代码、API 参考文档和示例应用程序，相关链接如下所示：
 
@@ -152,6 +157,59 @@ test("feature probe unit testing", (done) => {
 });
 ```
 
+## 上报事件
+JavaScript SDK 支持上报 `页面事件`，`点击事件`和`自定义事件`。
+
+其中，`页面事件`，`点击事件`由SDK自动触发，无法用户手动上报。
+
+### 上报自定义事件
+当SDK`ready`后，调用SDK提供的`track`方法上报自定义事件。
+
+NPM:
+
+```js
+fp.on('ready', function() {
+  const result = fp.boolValue('YOUR_TOGGLE_KEY', false);
+  if (result) {
+    do_some_thing();
+  } else {
+    do_other_thing();
+  }
+  const reason = fp.boolDetail('YOUR_TOGGLE_KEY', false);
+  console.log(reason);
+
+  // 上报自定义事件
+  // 第一个参数是自定义事件名
+  // 第二个参数是SDK初始化时创建的user对象的唯一key值
+  // highlight-start
+  fp.track('YOUR_CUSTOM_EVENT_NAME', user.getKey());
+  // highlight-end
+})
+
+```
+
+Or via CDN:
+
+```js
+fp.on('ready', function() {
+  const result = fp.boolValue('YOUR_TOGGLE_KEY', false);
+  if (result) {
+    do_some_thing();
+  } else {
+    do_other_thing();
+  }
+  const reason = fp.boolDetail('YOUR_TOGGLE_KEY', false);
+  console.log(reason);
+
+  // 上报自定义事件
+  // 第一个参数是自定义事件名
+  // 第二个参数是SDK初始化时创建的user对象的唯一key值
+  // highlight-start
+  fp.track('YOUR_CUSTOM_EVENT_NAME', user.getKey());
+  // highlight-end
+})
+
+```
 ## SDK初始化的参数
 
 | 选项            | 是否必填       | 默认值 | 描述                                                                                                                                      |
