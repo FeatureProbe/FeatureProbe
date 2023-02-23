@@ -182,7 +182,7 @@ WITH $RAW_VARIATION_TABLE AS (${userProvideVariationSql(sdkKey)}),
     $VARIATION_VARIANCE_TABLE AS (${variationVarianceSql()}),
     $VARIATION_STD_DEVIATION_TABLE AS (${variationStdDeviationSql()})
 SELECT s.variation, s.std_deviation, t.mean, t.count FROM $VARIATION_STD_DEVIATION_TABLE s, $VARIATION_MEAN_TABLE t
-WHERE s.variation = t.variation;"""
+WHERE s.variation = t.variation AND t.count > 1;"""
 
 fun userProvideVariationSql(sdkKey: String) =
     """
