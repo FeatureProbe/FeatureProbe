@@ -37,11 +37,13 @@ class AnalysisControllerTests {
     @Test
     fun testStoreEventsMysql() {
         testStoreEvents(mysql.jdbcUrl)
+        testStoreNullCustomEvents(mysql.jdbcUrl)
     }
 
     @Test
     fun testStoreEventsPg() {
         testStoreEvents(pg.jdbcUrl)
+        testStoreNullCustomEvents(pg.jdbcUrl)
     }
 
     fun testStoreEvents(jdbcUrl: String) {
@@ -66,6 +68,27 @@ class AnalysisControllerTests {
         )
 
         assert(accessEventCount == arrayListOf(2))
+        assert(customEventCount == arrayListOf(2))
+
+        session.run(queryOf("ROLLBACK").asExecute)
+    }
+
+    fun testStoreNullCustomEvents(jdbcUrl: String) {
+        val service = AnalysisService(jdbcUrl, "root", "root")
+        val event0 = CustomEvent(1676273668, "user0", "testStoreClickNoValue", null)
+        val event1 = CustomEvent(1676273668, "user1", "testStoreClickNoValue", null)
+        val req = EventRequest(arrayListOf(event0, event1))
+        val session = sessionOf(service.dataSource)
+
+        session.run(queryOf("BEGIN").asExecute)
+
+        service.storeEvents(req, "sdk_key")
+
+        val customEventCount: List<Int> = session.run(
+            queryOf("SELECT count(*) as c FROM events WHERE name = 'testStoreClickNoValue'")
+                .map { row -> row.int("c") }.asList
+        )
+
         assert(customEventCount == arrayListOf(2))
 
         session.run(queryOf("ROLLBACK").asExecute)

@@ -273,6 +273,8 @@ fun batchAddEvent(
     ps.setString(3, it.name)
     if (it.value != null) {
         ps.setDouble(4, it.value)
+    } else {
+        ps.setNull(4, java.sql.Types.DOUBLE)
     }
     ps.setString(5, sdkKey)
 
