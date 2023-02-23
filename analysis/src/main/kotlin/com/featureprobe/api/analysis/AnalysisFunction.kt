@@ -271,7 +271,9 @@ fun batchAddEvent(
     ps.setLong(1, it.time)
     ps.setString(2, it.user)
     ps.setString(3, it.name)
-    ps.setDouble(4, it.value)
+    if (it.value != null) {
+        ps.setDouble(4, it.value)
+    }
     ps.setString(5, sdkKey)
 
     ps.addBatch()

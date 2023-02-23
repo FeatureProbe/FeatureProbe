@@ -56,7 +56,7 @@ data class CustomEvent(
     val time: Long,
     val user: String,
     val name: String,
-    val value: Double,
+    val value: Double?,
 ) : Event("custom")
 
 data class EventRequest(
