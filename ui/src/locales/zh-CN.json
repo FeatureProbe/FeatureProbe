@@ -232,7 +232,6 @@
   "toggles.table.publishing.status": "发布状态",
   "toggles.table.status": "状态",
   "toggles.table.evaluation": "访问",
-  "toggles.total": "开关总量",
   "toggles.list.error.text": "获取开关列表失败!",
   "toggles.create.toggle": "创建开关",
   "toggles.create.text": "创建并发布",
@@ -618,7 +617,6 @@
   "analysis.event.save.success": "保存指标成功",
   "analysis.event.save.error": "保存指标失败",
   "analysis.event.get.error": "获取指标失败",
-  "analysis.event.coming.soon": "敬请期待",
 
   "analysis.result.tip": "请先保存“指标信息”，并点击【收集数据】。",
   "analysis.result.collect.time": "数据统计周期：",
