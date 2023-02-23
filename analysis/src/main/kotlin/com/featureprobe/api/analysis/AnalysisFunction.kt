@@ -22,27 +22,22 @@ fun winningPercentage(
     val variationWins = distributions.keys.associateWith { 0.0 }.toMutableMap()
 
     for (i in 0 until iteration) {
-        var maxSample: Double? = null
-        var maxVariation: String? = null
+        var winSample: Double? = null
+        var winVariation: String? = null
         for (entry in distributions) {
 
             val sample = entry.value.sample()
-            if (maxSample == null || maxSample < sample) {
-                maxSample = sample
-                maxVariation = entry.key
+            if (winSample == null || (winSample < sample && positiveWin) || (winSample > sample && !positiveWin)) {
+                winSample = sample
+                winVariation = entry.key
             }
         }
 
-        val w = variationWins[maxVariation] ?: 0.0
-        variationWins[maxVariation!!] = w + 1.0
+        val w = variationWins[winVariation] ?: 0.0
+        variationWins[winVariation!!] = w + 1.0
     }
 
-    if (positiveWin) {
-        return variationWins.map { it.key to it.value / iteration }.toMap()
-    } else {
-        return variationWins.map { it.key to (1.0 - it.value / iteration) }.toMap()
-    }
-
+    return variationWins.map { it.key to it.value / iteration }.toMap()
 }
 
 fun binomialVariationStats(
