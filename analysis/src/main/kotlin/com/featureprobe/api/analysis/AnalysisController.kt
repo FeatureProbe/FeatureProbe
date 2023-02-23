@@ -39,10 +39,9 @@ class AnalysisController(val service: AnalysisService) {
         @RequestParam toggle: String,
         @RequestParam metric: String,
         @RequestParam type: String,
-        @RequestParam numerator: String,
         @RequestParam start: Long,
         @RequestParam end: Long,
-        @RequestParam positiveWin: Boolean
+        @RequestParam positiveWin: Boolean = true
     ): AnalysisResponse {
         return when (val result = service.doAnalysis(sdkKey, metric, toggle, type, start, end, positiveWin)) {
             Err(NotSupportAnalysisType) -> AnalysisResponse(500, mapOf())

@@ -26,3 +26,5 @@ replay_pid*
 
 analysis//target
 .DS_Store
+.idea/
+target/
