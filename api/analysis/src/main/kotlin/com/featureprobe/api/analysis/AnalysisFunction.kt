@@ -3,14 +3,18 @@ package com.featureprobe.api.analysis
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
-import org.apache.commons.math3.distribution.BetaDistribution
+import org.apache.commons.math3.distribution.AbstractRealDistribution
 import java.io.IOException
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.sql.PreparedStatement
 import java.text.DecimalFormat
 
-fun winningPercentage(distributions: Map<String, DistributionInfo>, iteration: Int): Map<String, Double> {
+fun winningPercentage(
+    distributions: Map<String, AbstractRealDistribution>,
+    iteration: Int,
+    positiveWin: Boolean = true
+): Map<String, Double> {
     if (distributions.isEmpty()) {
         return mapOf()
     }
@@ -22,7 +26,7 @@ fun winningPercentage(distributions: Map<String, DistributionInfo>, iteration: I
         var maxVariation: String? = null
         for (entry in distributions) {
 
-            val sample = entry.value.distribution.sample()
+            val sample = entry.value.sample()
             if (maxSample == null || maxSample < sample) {
                 maxSample = sample
                 maxVariation = entry.key
@@ -33,38 +37,69 @@ fun winningPercentage(distributions: Map<String, DistributionInfo>, iteration: I
         variationWins[maxVariation!!] = w + 1.0
     }
 
-    return variationWins.map { it.key to it.value / iteration }.toMap()
+    if (positiveWin) {
+        return variationWins.map { it.key to it.value / iteration }.toMap()
+    } else {
+        return variationWins.map { it.key to (1.0 - it.value / iteration) }.toMap()
+    }
+
 }
 
-fun variationStats(
-    distributions: Map<String, DistributionInfo>,
-    iterationCount: Int
+fun binomialVariationStats(
+    distributionInfos: Map<String, BetaDistributionInfo>,
+    iterationCount: Int,
+    positiveWin: Boolean
 ): Map<String, VariationProperty> {
-    val chartProperty = chartProperties(distributions)
-    val winningPercentage = winningPercentage(distributions, iterationCount)
+    val distributions = distributionInfos.map { it.key to it.value.distribution }.toMap()
+    val chartProperty = chartProperty(distributions, true)
+    val winningPercentage = winningPercentage(distributions, iterationCount, positiveWin)
 
-    return distributions.map {
+    return distributionInfos.map {
         it.key to VariationProperty(
-            it.value.convert,
-            it.value.all,
+            it.value.sampleSize,
             it.value.distribution.numericalMean,
+            0.0,
             CredibleInterval(
                 it.value.distribution.inverseCumulativeProbability(0.05),
                 it.value.distribution.inverseCumulativeProbability(0.95),
             ),
-            distributionChart(chartProperty, it.value.distribution),
+            distributionChart(chartProperty!!, it.value.distribution, true),
             winningPercentage[it.key]
         )
     }.toMap()
 }
 
-fun chartProperties(ds: Map<String, DistributionInfo>): ChartProperty {
-    var minX = 1.0
-    var maxX = 0.0
-    var step = 1.0
+fun gaussianVariationStats(
+    distributionInfos: Map<String, GaussianDistributionInfo>,
+    iterationCount: Int,
+    positiveWin: Boolean
+): Map<String, VariationProperty> {
+    val distributions = distributionInfos.map { it.key to it.value.distribution }.toMap()
+    val chartProperty = chartProperty(distributions, false)
+    val winningPercentage = winningPercentage(distributions, iterationCount, positiveWin)
+
+    return distributionInfos.map {
+        it.key to VariationProperty(
+            it.value.sampleSize,
+            it.value.distribution.numericalMean,
+            it.value.distribution.standardDeviation,
+            CredibleInterval(
+                it.value.distribution.inverseCumulativeProbability(0.05),
+                it.value.distribution.inverseCumulativeProbability(0.95),
+            ),
+            distributionChart(chartProperty!!, it.value.distribution, false),
+            winningPercentage[it.key]
+        )
+    }.toMap()
+}
+
+fun chartProperty(ds: Map<String, AbstractRealDistribution>, binomial: Boolean): ChartProperty? {
+    var minX: Double? = null
+    var maxX: Double? = null
+    var step: Double? = null
     ds.map {
-        val xP05 = it.value.distribution.inverseCumulativeProbability(0.05)
-        val xP95 = it.value.distribution.inverseCumulativeProbability(0.95)
+        val xP05 = it.value.inverseCumulativeProbability(0.05)
+        val xP95 = it.value.inverseCumulativeProbability(0.95)
 
         //       <-- range --> <----range --> <---range----->
         //       |------|------|--------------|------|-------|
@@ -74,31 +109,35 @@ fun chartProperties(ds: Map<String, DistributionInfo>): ChartProperty {
         var min = xP05 - range / 2
         var max = xP95 + range / 2
 
-        if (min < 0.0) {
+        if (binomial && min < 0.0) {
             min = 0.0
         }
-        if (max > 1.0) {
+        if (binomial && max > 1.0) {
             max = 1.0
         }
 
-        if (minX > min) {
+        if (minX == null || min < minX!!) {
             minX = min
         }
 
-        if (maxX < max) {
+        if (maxX == null || maxX!! < max) {
             maxX = max
         }
 
         val s = range / 10
-        if (step > s) {
+        if (step == null || step!! > s) {
             step = s
         }
     }
 
-    return ChartProperty(minX, maxX, step)
+    if (ds.isEmpty()) {
+        return null
+    }
+    return ChartProperty(minX!!, maxX!!, step!!)
 }
 
-fun distributionChart(p: ChartProperty, d: BetaDistribution): List<DistributionDot> {
+
+fun distributionChart(p: ChartProperty, d: AbstractRealDistribution, binomial: Boolean): List<DistributionDot> {
     val dots = mutableListOf<DistributionDot>()
     val extendMoreDots = 3
     var dotIndex = 0
@@ -106,10 +145,10 @@ fun distributionChart(p: ChartProperty, d: BetaDistribution): List<DistributionD
         val x = p.min + (dotIndex - extendMoreDots) * p.step
         dotIndex++
 
-        if (x < 0) {
+        if (binomial && x < 0) {
             continue
         }
-        if (x > p.max + extendMoreDots * p.step || x > 1) {
+        if (x > p.max + extendMoreDots * p.step || (binomial && x > 1)) {
             break
         }
 
@@ -119,62 +158,94 @@ fun distributionChart(p: ChartProperty, d: BetaDistribution): List<DistributionD
     return dots
 }
 
-fun statsSql(sdkKey: String, metric: String, toggle: String, start: Long, end: Long): String {
-    return """
-WITH $RAW_VARIATION_TABLE as (${userProvideVariationSql(sdkKey)}),
-    $UNIQ_VARIATION_TABLE as (${uniqVariationSql(toggle, start, end)}),
-    $RAW_METRIC_TABLE as (${userProvideMetricSql(sdkKey, metric)}),
-    $METRIC_TABLE as (${metricSql(start, end)}),
-    $CONVERT_USER_TABLE as (${convertUserSql()}),
-    $CONVERT_COUNT_TABLE as (${convertCountSql()}),
-    $VARIATION_COUNT_TABLE as (${variationCountSql()})
+fun binomialStatsSql(sdkKey: String, metric: String, toggle: String, start: Long, end: Long) =
+    """
+WITH $RAW_VARIATION_TABLE AS (${userProvideVariationSql(sdkKey)}),
+    $UNIQ_VARIATION_TABLE AS (${uniqVariationSql(toggle, start, end)}),
+    $RAW_METRIC_TABLE AS (${userProvideMetricSql(sdkKey, metric)}),
+    $METRIC_TABLE AS (${uniqMetricSql(start, end)}),
+    $CONVERT_USER_TABLE AS (${convertUserSql()}),
+    $CONVERT_COUNT_TABLE AS (${convertCountSql()}),
+    $VARIATION_COUNT_TABLE AS (${variationCountSql()})
 SELECT v.variation, c.cvt, v.total FROM $CONVERT_COUNT_TABLE c, $VARIATION_COUNT_TABLE v
 WHERE c.variation = v.variation;"""
-}
 
-fun userProvideVariationSql(sdkKey: String): String {
-    return """
+fun gaussianStatsSql(sdkKey: String, metric: String, toggle: String, start: Long, end: Long) =
+    """
+WITH $RAW_VARIATION_TABLE AS (${userProvideVariationSql(sdkKey)}),
+    $UNIQ_VARIATION_TABLE AS (${uniqVariationSql(toggle, start, end)}),
+    $RAW_METRIC_TABLE AS (${userProvideMetricSql(sdkKey, metric)}),
+    $METRIC_USER_MEAN_TABLE AS (${userMeanMetricSql(start, end)}),
+    $USER_MEAN_VARIATION_TABLE AS (${userMeanVariationSql()}),
+    $VARIATION_MEAN_TABLE AS (${variationMeanSql()}),
+    $METRIC_USER_TOTAL_MEAN_TABLE AS (${metricUserTotalMeanSql()}),
+    $VARIATION_VARIANCE_TABLE AS (${variationVarianceSql()}),
+    $VARIATION_STD_DEVIATION_TABLE AS (${variationStdDeviationSql()})
+SELECT s.variation, s.std_deviation, t.mean, t.count FROM $VARIATION_STD_DEVIATION_TABLE s, $VARIATION_MEAN_TABLE t
+WHERE s.variation = t.variation;"""
+
+fun userProvideVariationSql(sdkKey: String) =
+    """
 SELECT 
-    user_key, time, toggle_key, variation_index as variation 
+    user_key, time, toggle_key, variation_index AS variation 
 FROM access
 WHERE sdk_key = '$sdkKey'"""
-}
 
-fun uniqVariationSql(toggle: String, start: Long, end: Long): String {
-    return """
+
+fun uniqVariationSql(toggle: String, start: Long, end: Long) =
+    """
 SELECT 
     v.user_key, v.variation
 FROM $RAW_VARIATION_TABLE v 
 WHERE 
     v.toggle_key = '$toggle' and v.time > '$start' and v.time < '$end'
 GROUP BY v.user_key, v.variation"""
-}
 
-fun metricSql(start: Long, end: Long): String {
-    return """
+fun uniqMetricSql(start: Long, end: Long) =
+    """
 SELECT 
     user_key
 FROM $RAW_METRIC_TABLE v 
 WHERE 
     v.time > '$start' and v.time < '$end'
 GROUP BY user_key"""
-}
 
-fun userProvideMetricSql(sdkKey: String, metric: String): String {
-    return "SELECT user_key, time FROM events WHERE name = '$metric' AND sdk_key = '$sdkKey'"
-}
+fun userMeanMetricSql(start: Long, end: Long) =
+    """
+SELECT 
+    user_key, AVG(value) AS mean
+FROM $RAW_METRIC_TABLE v 
+WHERE 
+    v.time > '$start' and v.time < '$end' AND value IS NOT NULL
+GROUP BY user_key"""
 
-fun convertUserSql(): String {
-    return "SELECT m.user_key, variation FROM $UNIQ_VARIATION_TABLE u JOIN $METRIC_TABLE m ON (u.user_key = m.user_key) GROUP BY m.user_key, variation"
-}
+fun userProvideMetricSql(sdkKey: String, metric: String) =
+    "SELECT user_key, time, value FROM events WHERE name = '$metric' AND sdk_key = '$sdkKey'"
 
-fun convertCountSql(): String {
-    return "SELECT COUNT(*) as cvt ,variation FROM $CONVERT_USER_TABLE GROUP BY variation"
-}
+fun convertUserSql() =
+    "SELECT m.user_key, variation FROM $UNIQ_VARIATION_TABLE u JOIN $METRIC_TABLE m ON (u.user_key = m.user_key) GROUP BY m.user_key, variation"
 
-fun variationCountSql(): String {
-    return "SELECT COUNT(*) as total, variation FROM $UNIQ_VARIATION_TABLE GROUP BY variation"
-}
+fun convertCountSql() =
+    "SELECT COUNT(*) AS cvt ,variation FROM $CONVERT_USER_TABLE GROUP BY variation"
+
+fun variationCountSql() =
+    "SELECT COUNT(*) AS total, variation FROM $UNIQ_VARIATION_TABLE GROUP BY variation"
+
+fun variationMeanSql() =
+    "SELECT AVG(mean) AS mean, variation, COUNT(*) AS count FROM $USER_MEAN_VARIATION_TABLE GROUP BY variation"
+
+fun userMeanVariationSql() =
+    "SELECT m.mean, v.variation, m.user_key FROM $METRIC_USER_MEAN_TABLE m, $UNIQ_VARIATION_TABLE v WHERE m.user_key = v.user_key"
+
+fun metricUserTotalMeanSql() =
+    "SELECT j.user_key, j.mean AS user_mean, t.mean AS total_mean, j.variation FROM $USER_MEAN_VARIATION_TABLE j, $VARIATION_MEAN_TABLE t where j.variation = t.variation"
+
+fun variationVarianceSql() =
+    "SELECT POWER(user_mean - total_mean, 2) AS variance, variation FROM $METRIC_USER_TOTAL_MEAN_TABLE"
+
+fun variationStdDeviationSql() =
+    "SELECT SQRT(SUM(variance)) AS std_deviation, variation FROM $VARIATION_VARIANCE_TABLE group by variation"
+
 
 fun batchAddVariation(
     ps: PreparedStatement,

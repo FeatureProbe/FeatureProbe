@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.apache.commons.math3.distribution.BetaDistribution
-import java.sql.Timestamp
+import org.apache.commons.math3.distribution.NormalDistribution
 
 const val RAW_VARIATION_TABLE: String = "__rawVariation"
 const val UNIQ_VARIATION_TABLE: String = "__uniqVariation"
@@ -13,6 +13,12 @@ const val METRIC_TABLE: String = "__metric"
 const val CONVERT_USER_TABLE: String = "__convertUser"
 const val CONVERT_COUNT_TABLE: String = "__convertCount"
 const val VARIATION_COUNT_TABLE: String = "__variationCount"
+const val METRIC_USER_MEAN_TABLE: String = "__metricUserMean"
+const val VARIATION_MEAN_TABLE: String = "__variationMean"
+const val USER_MEAN_VARIATION_TABLE: String = "__userMeanVariation"
+const val METRIC_USER_TOTAL_MEAN_TABLE: String = "__userTotalMean"
+const val VARIATION_VARIANCE_TABLE: String = "__variationVariance"
+const val VARIATION_STD_DEVIATION_TABLE: String = "__variationStdDeviation"
 
 const val INSERT_VARIATION_SQL =
     """INSERT INTO access (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key) 
@@ -70,7 +76,9 @@ sealed class AnalysisFailure
 
 object NotSupportAnalysisType : AnalysisFailure()
 
-data class VariationCount(val variation: String, val convert: Int, val all: Int)
+data class VariationConvert(val variation: String, val convert: Int, val sampleSize: Int)
+
+data class VariationGaussian(val variation: String, val mean: Double, val stdDeviation: Double, val sampleSize: Int)
 
 data class CredibleInterval(
     @JsonSerialize(using = CustomDoubleSerialize::class)
@@ -86,13 +94,16 @@ data class DistributionDot(
     val y: Double
 )
 
-data class DistributionInfo(val distribution: BetaDistribution, val convert: Int, val all: Int)
+data class BetaDistributionInfo(val distribution: BetaDistribution, val convert: Int, val sampleSize: Int)
+
+data class GaussianDistributionInfo(val distribution: NormalDistribution, val mean: Double, val stdDeviation: Double, val sampleSize: Int)
 
 data class VariationProperty(
-    val convert: Int,
-    val all: Int,
+    val sampleSize: Int,
     @JsonSerialize(using = CustomDoubleSerialize::class)
     val mean: Double,
+    @JsonSerialize(using = CustomDoubleSerialize::class)
+    val stdDeviation: Double,
     val credibleInterval: CredibleInterval,
     val distributionChart: List<DistributionDot>,
     @JsonSerialize(using = CustomDoubleSerialize::class)

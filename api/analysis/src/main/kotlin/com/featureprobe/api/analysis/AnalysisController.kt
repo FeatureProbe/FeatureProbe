@@ -8,6 +8,7 @@ import kotliquery.HikariCP
 import kotliquery.queryOf
 import kotliquery.sessionOf
 import org.apache.commons.math3.distribution.BetaDistribution
+import org.apache.commons.math3.distribution.NormalDistribution
 import org.flywaydb.core.Flyway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -38,10 +39,12 @@ class AnalysisController(val service: AnalysisService) {
         @RequestParam toggle: String,
         @RequestParam metric: String,
         @RequestParam type: String,
+        @RequestParam numerator: String,
         @RequestParam start: Long,
         @RequestParam end: Long,
+        @RequestParam positiveWin: Boolean
     ): AnalysisResponse {
-        return when (val result = service.doAnalysis(sdkKey, metric, toggle, type, start, end)) {
+        return when (val result = service.doAnalysis(sdkKey, metric, toggle, type, start, end, positiveWin)) {
             Err(NotSupportAnalysisType) -> AnalysisResponse(500, mapOf())
             else -> AnalysisResponse(200, result.get())
         }
@@ -108,34 +111,89 @@ class AnalysisService(
 
     fun doAnalysis(
         sdkKey: String, metric: String, toggle: String,
-        type: String, start: Long, end: Long
+        type: String, start: Long, end: Long,
+        positiveWin: Boolean = true
     ): Result<Map<String, VariationProperty>, AnalysisFailure> {
-        if (type != "binomial") {
-            return Err(NotSupportAnalysisType)
+        return when (type) {
+            "binomial" -> doAnalysisBinomial(sdkKey, metric, toggle, start, end, positiveWin)
+            "gaussian" -> doAnalysisGaussian(sdkKey, metric, toggle, start, end, positiveWin)
+            else -> Err(NotSupportAnalysisType)
         }
+    }
 
-        val variationCount = variationCount(sdkKey, metric, toggle, start, end)
+    fun doAnalysisBinomial(
+        sdkKey: String, metric: String, toggle: String,
+        start: Long, end: Long, positiveWin: Boolean
+    ): Result<Map<String, VariationProperty>, AnalysisFailure> {
+        val variationCount = binomialSqlExecute(sdkKey, metric, toggle, start, end)
 
         val distributions = variationCount.associate {
-            it.variation to DistributionInfo(
-                BetaDistribution(1.0 + it.convert, 1.0 + it.all - it.convert),
+            it.variation to BetaDistributionInfo(
+                BetaDistribution(1.0 + it.convert, 1.0 + it.sampleSize - it.convert),
                 it.convert,
-                it.all
+                it.sampleSize
             )
         }
 
-        return Ok(variationStats(distributions, iterationCount))
+        return Ok(binomialVariationStats(distributions, iterationCount, true))
     }
 
-    fun variationCount(sdkKey: String, metric: String, toggle: String, start: Long, end: Long): List<VariationCount> {
-        val sql = statsSql(sdkKey, metric, toggle, start, end)
+    fun doAnalysisGaussian(
+        sdkKey: String, metric: String, toggle: String, start: Long, end: Long, positiveWin: Boolean
+    ): Result<Map<String, VariationProperty>, AnalysisFailure> {
+        val variationGaussian = gaussianSqlExecute(sdkKey, metric, toggle, start, end)
+        val distributions = variationGaussian.associate {
+            it.variation to GaussianDistributionInfo(
+                NormalDistribution(it.mean, it.stdDeviation),
+                it.mean,
+                it.stdDeviation,
+                it.sampleSize
+            )
+        }
+
+        return Ok(gaussianVariationStats(distributions, iterationCount, positiveWin))
+    }
+
+    fun binomialSqlExecute(
+        sdkKey: String,
+        metric: String,
+        toggle: String,
+        start: Long,
+        end: Long
+    ): List<VariationConvert> {
+        val sql = binomialStatsSql(sdkKey, metric, toggle, start, end)
         log.info(sql)
         val session = sessionOf(dataSource)
         session.use {
             return session.run(
                 queryOf(sql)
                     .map { row ->
-                        VariationCount(row.string("variation"), row.int("cvt"), row.int("total"))
+                        VariationConvert(row.string("variation"), row.int("cvt"), row.int("total"))
+                    }.asList
+            )
+        }
+    }
+
+    fun gaussianSqlExecute(
+        sdkKey: String,
+        metric: String,
+        toggle: String,
+        start: Long,
+        end: Long
+    ): List<VariationGaussian> {
+        val sql = gaussianStatsSql(sdkKey, metric, toggle, start, end)
+        log.info(sql)
+        val session = sessionOf(dataSource)
+        session.use {
+            return session.run(
+                queryOf(sql)
+                    .map { row ->
+                        VariationGaussian(
+                            row.string("variation"),
+                            row.double("mean"),
+                            row.double("std_deviation"),
+                            row.int("count")
+                        )
                     }.asList
             )
         }

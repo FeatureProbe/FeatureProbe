@@ -72,36 +72,66 @@ class AnalysisControllerTests {
     }
 
     @Test
-    fun testConversionAnalysisMysql() {
-        testConversionAnalysis(mysql.jdbcUrl)
+    fun testBinomialAnalysisMysql() {
+        testBinomialAnalysis(mysql.jdbcUrl)
     }
 
     @Test
-    fun testConversionAnalysisPg() {
-        testConversionAnalysis(pg.jdbcUrl)
+    fun testBinomialAnalysisPg() {
+        testBinomialAnalysis(pg.jdbcUrl)
     }
 
     @Test
-    fun testVariationEmptyConversionAnalysisMysql() {
-        testVariationEmptyConversionAnalysis(mysql.jdbcUrl)
+    fun testVariationEmptyBinomialAnalysisMysql() {
+        testVariationEmptyAnalysis(mysql.jdbcUrl, "binomial")
     }
 
     @Test
-    fun testVariationEmptyConversionAnalysisPg() {
-        testVariationEmptyConversionAnalysis(pg.jdbcUrl)
+    fun testVariationEmptyBinomialAnalysisPg() {
+        testVariationEmptyAnalysis(pg.jdbcUrl, "binomial")
     }
 
     @Test
-    fun testEventEmptyConversionAnalysisMysql() {
-        testEventEmptyConversionAnalysis(mysql.jdbcUrl)
+    fun testEventEmptyBinomialAnalysisMysql() {
+        testEventEmptyAnalysis(mysql.jdbcUrl, "binomial")
     }
 
     @Test
-    fun testEventEmptyConversionAnalysisPg() {
-        testEventEmptyConversionAnalysis(pg.jdbcUrl)
+    fun testEventEmptyBinomialAnalysisPg() {
+        testEventEmptyAnalysis(pg.jdbcUrl, "binomial")
     }
 
-    fun testConversionAnalysis(jdbcUrl: String) {
+    @Test
+    fun testGaussianAnalysisMysql() {
+        testGaussianAnalysis(mysql.jdbcUrl)
+    }
+
+    @Test
+    fun testGaussianAnalysisPg() {
+        testGaussianAnalysis(pg.jdbcUrl)
+    }
+
+    @Test
+    fun testVariationEmptyGaussianAnalysisMysql() {
+        testVariationEmptyAnalysis(mysql.jdbcUrl, "gaussian")
+    }
+
+    @Test
+    fun testVariationEmptyGaussianAnalysisPg() {
+        testVariationEmptyAnalysis(pg.jdbcUrl, "gaussian")
+    }
+
+    @Test
+    fun testEventEmptyGaussianAnalysisMysql() {
+        testEventEmptyAnalysis(mysql.jdbcUrl, "gaussian")
+    }
+
+    @Test
+    fun testEventEmptyGaussianAnalysisPg() {
+        testEventEmptyAnalysis(pg.jdbcUrl, "gaussian")
+    }
+
+    fun testBinomialAnalysis(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
         val start = 1676273660L
         val end = 1676273678L
@@ -110,33 +140,57 @@ class AnalysisControllerTests {
             service.doAnalysis("sdk_key", "click_1", "toggle_1", "binomial", start, end)
 
         Assert.assertNotNull(result.get())
-        Assert.assertNotNull(result.get()!!["1"])
-        Assert.assertNotNull(result.get()!!["2"])
+        Assert.assertEquals(3, result.get()!!["1"]?.sampleSize)
+        Assert.assertEquals(0.6, result.get()!!["1"]?.mean!!, 0.1)
+        Assert.assertEquals(0.64, result.get()!!["1"]?.winningPercentage!!, 0.1)
 
+        Assert.assertEquals(2, result.get()!!["2"]?.sampleSize)
+        Assert.assertEquals(0.5, result.get()!!["2"]?.mean!!, 0.1)
+        Assert.assertEquals(0.36, result.get()!!["2"]?.winningPercentage!!, 0.1)
     }
 
-    fun testVariationEmptyConversionAnalysis(jdbcUrl: String) {
+    fun testVariationEmptyAnalysis(jdbcUrl: String, type: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
         val start = 1676273660L
         val end = 1676273669L
 
         val result =
-            service.doAnalysis("sdk_key", "click_not_collect", "toggle_not_collect", "binomial", start, end)
+            service.doAnalysis("sdk_key", "click_not_collect", "toggle_not_collect", type, start, end)
 
         Assert.assertNotNull(result.get())
         Assert.assertTrue(result.get()!!.isEmpty())
     }
 
-    fun testEventEmptyConversionAnalysis(jdbcUrl: String) {
+    fun testEventEmptyAnalysis(jdbcUrl: String, type: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
         val start = 1676273660L
         val end = 1676273669L
 
         val result =
-            service.doAnalysis("sdk_key", "click_not_collect", "toggle_1", "binomial", start, end)
+            service.doAnalysis("sdk_key", "click_not_collect", "toggle_1", type, start, end)
 
         Assert.assertNotNull(result.get())
         Assert.assertTrue(result.get()!!.isEmpty())
+    }
+
+    fun testGaussianAnalysis(jdbcUrl: String) {
+        val service = AnalysisService(jdbcUrl, "root", "root")
+        val start = 1676273660L
+        val end = 1676273678L
+
+        val result =
+            service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian", start, end)
+
+        Assert.assertNotNull(result.get())
+        Assert.assertEquals(4, result.get()!!["1"]?.sampleSize)
+        Assert.assertEquals(45.0, result.get()!!["1"]?.mean!!, 0.1)
+        Assert.assertEquals(44.72, result.get()!!["1"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(0.1, result.get()!!["1"]?.winningPercentage!!, 0.1)
+
+        Assert.assertEquals(4, result.get()!!["2"]?.sampleSize)
+        Assert.assertEquals(125.0, result.get()!!["2"]?.mean!!, 0.1)
+        Assert.assertEquals(44.72, result.get()!!["1"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(0.9, result.get()!!["2"]?.winningPercentage!!, 0.1)
     }
 
 }
