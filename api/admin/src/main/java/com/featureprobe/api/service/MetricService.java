@@ -28,6 +28,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 @Slf4j
 @AllArgsConstructor
@@ -94,8 +96,8 @@ public class MetricService {
                     orElse(new Event(pvUniqueName, request.getMatcher(), request.getUrl()));
             metric.getEvents().add(eventRepository.save(pvEvent));
         } else {
-            Event customEvent = eventRepository.findByName(request.getName()).
-                    orElse(new Event(request.getName(), request.getMatcher(), request.getUrl()));
+            Event customEvent = eventRepository.findByName(request.getEventName()).
+                    orElse(new Event(request.getEventName(), request.getMatcher(), request.getUrl()));
             metric.getEvents().add(eventRepository.save(customEvent));
         }
         Environment environment = environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey)
@@ -178,7 +180,7 @@ public class MetricService {
     private void validate(MetricCreateRequest request) {
 
         if (!(MetricTypeEnum.PAGE_VIEW.equals(request.getType()) || MetricTypeEnum.CLICK.equals(request.getType()))
-                && StringUtils.isBlank(request.getName())) {
+                && StringUtils.isBlank(request.getEventName())) {
             throw new IllegalArgumentException("validate.event_name_required");
         }
 
@@ -191,6 +193,9 @@ public class MetricService {
             throw new IllegalArgumentException("validate.event_selector_required");
         }
 
+        if (MetricTypeEnum.NUMERIC.equals(request.getType()) && Objects.isNull(request.getWinCriteria())) {
+            throw new IllegalArgumentException("validate.metric_win_criteria_required");
+        }
     }
 
     public boolean existsMetric(String projectKey, String environmentKey, String toggleKey) {

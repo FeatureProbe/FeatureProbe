@@ -38,6 +38,7 @@ import spock.lang.Specification
 import spock.lang.Title
 
 import javax.persistence.EntityManager
+import java.util.stream.Collectors
 
 @Title("Segment Unit Test")
 class SegmentServiceSpec extends Specification {
@@ -218,10 +219,10 @@ class SegmentServiceSpec extends Specification {
         then:
         1 * targetingSegmentRepository.findByProjectKeyAndSegmentKey(projectKey, segmentKey) >>
                 [new TargetingSegment(projectKey: projectKey, targetingId: 1, segmentKey: segmentKey)]
+        1 * targetingRepository.findAllById(_) >> [new Targeting(id: 1, toggleKey: "test_toggle")]
+        1 * toggleRepository.findAllByProjectKeyAndKeyIn(projectKey, ["test_toggle"]) >> [new Toggle(key: "test_toggle")]
         1 * targetingRepository.findAll(_, _) >> new PageImpl<>([new Targeting(toggleKey: "test_toggle",
                 projectKey: projectKey, environmentKey: "test", disabled: true)], Pageable.ofSize(1), 1)
-        1 * toggleRepository.findByProjectKeyAndKey(projectKey, "test_toggle") >>
-                Optional.of(new Toggle(name: "test_toggle", key: "test_toggle_key", desc: "this is a test toggle"))
         1 * environmentRepository
                 .findByProjectKeyAndKey(projectKey, "test") >> Optional.of(new Environment(name: "test", key: "test"))
         with(toggles) {
