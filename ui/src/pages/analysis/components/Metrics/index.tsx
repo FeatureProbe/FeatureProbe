@@ -225,7 +225,7 @@ const Metrics = (props: IProps) => {
     register('unit', { 
       required: {
         value: metricType === CUSTOM && customMetricType === NUMERIC,
-        message: intl.formatMessage({id: 'analysis.metric.unit.placeholder'})
+        message: intl.formatMessage({id: 'analysis.metric.unit.tips'})
       },
     });
 
