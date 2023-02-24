@@ -6,6 +6,7 @@ import com.featureprobe.api.base.enums.MetricTypeEnum;
 import com.featureprobe.api.base.enums.ResourceType;
 import com.featureprobe.api.base.enums.WinCriteria;
 import com.featureprobe.api.base.util.JsonMapper;
+import com.featureprobe.api.base.util.RegexValidator;
 import com.featureprobe.api.config.AppConfig;
 import com.featureprobe.api.dao.entity.Environment;
 import com.featureprobe.api.dao.entity.Event;
@@ -212,6 +213,13 @@ public class MetricService {
         if (MetricTypeEnum.NUMERIC.equals(request.getType()) && Objects.isNull(request.getWinCriteria())) {
             throw new IllegalArgumentException("validate.metric_win_criteria_required");
         }
+
+        if ((MetricTypeEnum.PAGE_VIEW.equals(request.getType()) || MetricTypeEnum.CLICK.equals(request.getType())) &&
+                (MatcherTypeEnum.REGULAR.equals(request.getMatcher()) &&
+                        !RegexValidator.validateRegex(request.getUrl()))) {
+            throw new IllegalArgumentException("validate.regex_invalid");
+        }
+
     }
 
     public boolean existsMetric(String projectKey, String environmentKey, String toggleKey) {
