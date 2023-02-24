@@ -157,11 +157,16 @@ test("feature probe unit testing", (done) => {
 ```
 
 ## Track events
-JavaScript SDK supports sending `custom events`, `pageview events` and `click events`.
 
-The reporting of `pageview events` and `click events` is done by the SDK itself automatically, you have no need to write any code.
+:::note
+JavaScript SDK supports event tracking from version 2.0.1.
+:::
 
-### Send custom events
+JavaScript SDK supports tracking `custom events`, `pageview events` and `click events`.
+
+The track of `pageview events` and `click events` is done by the SDK itself automatically, you have no need to write any code.
+
+### Track custom events
 After the SDK is ready, call the `track` api.
 
 
@@ -187,7 +192,6 @@ fp.on('ready', function() {
 })
 
 ```
-
 
 ## Available options
 

@@ -8,6 +8,10 @@ sidebar_position: 5
 To provide a better integration for use in React applications, React SDK builds on JavaScript SDK. Much of the JavaScript SDK functionality is also available for the React SDK to use. Please reference [JavaScript SDK](./javascript-sdk.md).
 :::
 
+:::info Notice
+For users who needs to use metric analysis, please upgrade React SDK to version [ 2.0.1 ](https://www.npmjs.com/package/featureprobe-client-sdk-react/v/2.0.1). From this version, we support sending click, page view, and custom events.
+:::
+
 :::note SDK quick links
 In addition to this reference guide, we provide source code, API reference documentation, and sample applications at the following links:
 
@@ -73,7 +77,6 @@ In this guide we explain how to use feature toggles in a `React` application usi
 ```js
 npx create-react-app react-demo && cd react-demo
 ```
-
 
 ### Step 2. Install the SDK:
 
@@ -278,6 +281,34 @@ function HookComponent() {
 }
 
 export default HookComponent;
+```
+
+## Track events
+
+:::note
+React SDK supports event tracking from version 2.0.1.
+:::
+
+React SDK supports tracking `custom events`, `pageview events` and `click events`.
+
+The track of `pageview events` and `click events` is done by the SDK itself automatically, you have no need to write any code.
+
+### Track custom events
+Use `useFPClient` hook to get a SDK instance, then call `track` api.
+
+
+```js
+import { useFPClient } from 'featureprobe-client-sdk-react';
+const fp = useFPClient();
+
+// Send a custom event.
+// The first parameter is the event name,
+// the second parameter is the unique user key.
+// the third parameter is optional, it means a metric value to track
+// highlight-start
+fp.track('YOUR_CUSTOM_EVENT_NAME_1', user.getKey());
+fp.track('YOUR_CUSTOM_EVENT_NAME_2', user.getKey(), 5.5);
+// highlight-end
 ```
 
 ## SDK Open API

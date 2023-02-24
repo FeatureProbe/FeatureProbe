@@ -158,6 +158,11 @@ test("feature probe unit testing", (done) => {
 ```
 
 ## 事件上报
+
+:::note
+JavaScript SDK 从 2.0.1 版本开始支持事件上报的能力。
+:::
+
 JavaScript SDK 支持上报 `页面事件`，`点击事件`和`自定义事件`。
 
 其中，`页面事件`，`点击事件`由SDK自动触发，无须用户手动上报。

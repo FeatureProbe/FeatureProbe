@@ -8,6 +8,10 @@ sidebar_position: 5
 React SDK是在 JavaScript SDK的基础上进行的封装，主要为了提升在React项目中的使用体验。JavaScript SDK中的大部分方法在React SDK中也同样适用，详见[JavaScript SDK](./javascript-sdk.md)。
 :::
 
+:::info Notice
+React SDK 从 [ 2.0.1 ](https://www.npmjs.com/package/featureprobe-client-sdk-react/v/2.0.1) 版本开始支持事件上报的能力。目前支持的事件包括：`页面事件（pageview）`、`点击事件（click）`和`自定义事件`。
+:::
+
 :::note SDK quick links
 除了本参考指南外，我们还提供源代码、API 参考文档和示例应用程序，相关链接如下所示：
 
@@ -273,6 +277,34 @@ function HookComponent() {
 }
 
 export default HookComponent;
+```
+
+
+## 事件上报
+
+:::note
+React SDK 从 2.0.1 版本开始支持事件上报的能力。
+:::
+
+React SDK 支持上报 `页面事件`，`点击事件`和`自定义事件`。
+
+其中，`页面事件`，`点击事件`由SDK自动触发，无须用户手动上报。
+
+### 上报自定义事件
+使用自定义hook`useFPClient`来获取`FeatureProbe`实例，调用`track`方法上报自定义事件。
+
+```js
+import { useFPClient } from 'featureprobe-client-sdk-react';
+const fp = useFPClient();
+
+// 上报自定义事件
+// 第一个参数是自定义事件名
+// 第二个参数是SDK初始化时创建的user对象的唯一key值
+// 第三个可选参数是自定义指标值
+// highlight-start
+fp.track('YOUR_CUSTOM_EVENT_NAME_1', user.getKey());
+fp.track('YOUR_CUSTOM_EVENT_NAME_2', user.getKey(), 5.5);
+// highlight-end
 ```
 
 ## SDK的API文档
