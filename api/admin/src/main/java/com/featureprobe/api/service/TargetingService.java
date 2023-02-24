@@ -63,6 +63,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
@@ -132,6 +133,9 @@ public class TargetingService {
             List<String> reviews = JsonMapper.toListObject(environment.getReviewers(), String.class);
             approvalRequest.setReviewers(reviews);
             Targeting targeting = selectTargeting(projectKey, environmentKey, toggleKey);
+            if (targeting.getStatus() == ToggleReleaseStatusEnum.PENDING_APPROVAL) {
+                throw new IllegalArgumentException("validate.approval.repeat");
+            }
             targeting.setStatus(ToggleReleaseStatusEnum.PENDING_APPROVAL);
             targetingRepository.save(targeting);
             ApprovalRecord approvalRecord = submitApproval(projectKey, environmentKey,
@@ -141,7 +145,7 @@ public class TargetingService {
             approval.setContent(JsonMapper.toJSONString(approvalRequest.getContent()));
             return buildApprovalResponse(approvalRecord, targeting, approval);
         }
-        throw new IllegalArgumentException("approval is disable");
+        throw new IllegalArgumentException("validate.approval.disable");
     }
 
     private ApprovalResponse buildApprovalResponse(ApprovalRecord approvalRecord, Targeting currentData,
@@ -379,15 +383,11 @@ public class TargetingService {
 
         Targeting latestTargeting = selectTargeting(projectKey, environmentKey, toggleKey);
         if (targetingPublishRequest.isUpdateTargetingRules()) {
-            long oldVersion = latestTargeting.getVersion();
-
             latestTargeting = updateTargeting(projectKey, latestTargeting, targetingPublishRequest);
-            if (latestTargeting.getVersion() > oldVersion) {
-                saveTargetingSegmentRefs(projectKey, latestTargeting, targetingPublishRequest.getContent());
-                saveTargetingVersion(buildTargetingVersion(latestTargeting,
-                        targetingPublishRequest.getComment(), approvalId));
-                saveVariationHistory(latestTargeting, targetingPublishRequest.getContent());
-            }
+            saveTargetingSegmentRefs(projectKey, latestTargeting, targetingPublishRequest.getContent());
+            saveTargetingVersion(buildTargetingVersion(latestTargeting,
+                    targetingPublishRequest.getComment(), approvalId));
+            saveVariationHistory(latestTargeting, targetingPublishRequest.getContent());
             latestTargeting.setStatus(ToggleReleaseStatusEnum.RELEASE);
         }
         ToggleControlConf toggleControlConf = toggleControlConfService.updateTrackAccessEvents(latestTargeting,
@@ -432,7 +432,9 @@ public class TargetingService {
         TargetingContent currentTargetingContent = JsonMapper.toObject(currentTargeting.getContent(),
                 TargetingContent.class);
         TargetingMapper.INSTANCE.mapContentEntity(updateTargetingPublishRequest.getContent(), currentTargetingContent);
+        validatePublishConflicts(currentTargeting, updateTargetingPublishRequest.getBaseVersion());
         validateTargetingContent(projectKey, currentTargetingContent);
+
         updateTargetingPublishRequest.setContent(currentTargetingContent);
         TargetingMapper.INSTANCE.mapEntity(updateTargetingPublishRequest, currentTargeting);
         currentTargeting.setVersion(currentTargeting.getVersion() + 1);
@@ -590,6 +592,14 @@ public class TargetingService {
             return Optional.empty();
         }
         return Optional.of(targetingSketches.getContent().get(0));
+    }
+
+    protected void validatePublishConflicts(Targeting targeting, Long baseVersion){
+        if (baseVersion != null) {
+            if (targeting.getVersion() != null && !targeting.getVersion().equals(baseVersion)) {
+                throw new OptimisticLockException("publish conflict");
+            }
+        }
     }
 
     protected void validateTargetingContent(String projectKey, TargetingContent content) {

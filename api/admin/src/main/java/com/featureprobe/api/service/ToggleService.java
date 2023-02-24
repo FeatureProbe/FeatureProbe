@@ -7,9 +7,11 @@ import com.featureprobe.api.base.enums.ResourceType;
 import com.featureprobe.api.base.enums.SketchStatusEnum;
 import com.featureprobe.api.base.enums.ToggleReleaseStatusEnum;
 import com.featureprobe.api.base.enums.VisitFilter;
+import com.featureprobe.api.base.model.PaginationRequest;
 import com.featureprobe.api.component.SpringBeanManager;
 import com.featureprobe.api.config.AppConfig;
 import com.featureprobe.api.dao.entity.Environment;
+import com.featureprobe.api.dao.entity.TargetingVersion;
 import com.featureprobe.api.dao.entity.TrafficCache;
 import com.featureprobe.api.dao.entity.Project;
 import com.featureprobe.api.dao.entity.Tag;
@@ -21,6 +23,7 @@ import com.featureprobe.api.dao.exception.ResourceConflictException;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
 import com.featureprobe.api.dao.exception.ResourceOverflowException;
 import com.featureprobe.api.base.enums.TrafficCacheTypeEnum;
+import com.featureprobe.api.dao.repository.TargetingVersionRepository;
 import com.featureprobe.api.mapper.ToggleMapper;
 import com.featureprobe.api.dao.repository.EnvironmentRepository;
 import com.featureprobe.api.dao.repository.TrafficRepository;
@@ -42,6 +45,7 @@ import com.featureprobe.sdk.server.FeatureProbe;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -97,6 +101,8 @@ public class ToggleService {
     private ProjectRepository projectRepository;
 
     private TargetingService targetingService;
+
+    private TargetingVersionRepository targetingVersionRepository;
 
     @PersistenceContext
     public EntityManager entityManager;
@@ -194,8 +200,14 @@ public class ToggleService {
                         searchRequest.getReleaseStatusList());
                 retainAllKeys(toggleKeys, keys);
             }
+            if (BooleanUtils.isTrue(searchRequest.getRelated())) {
+                isPrecondition = true;
+                Set<String> keys = queryToggleKeysByRelatedToMe(projectKey, environment.getKey());
+                retainAllKeys(toggleKeys, keys);
+            }
             togglePage = compoundQuery(projectKey, searchRequest, toggleKeys, isPrecondition);
             List<String> keys = togglePage.getContent().stream().map(Toggle::getKey).collect(Collectors.toList());
+
             Map<String, Targeting> targetingMap = queryTargetingMap(projectKey, searchRequest.getEnvironmentKey(),
                     keys);
             Map<String, TargetingSketch> targetingSketchMap = queryNewestTargetingSketchMap(projectKey,
@@ -212,6 +224,38 @@ public class ToggleService {
             return togglePage.map(item -> ToggleMapper.INSTANCE.entityToItemResponse(item,
                     appConfig.getToggleDeadline()));
         }
+    }
+
+    private Set<String> queryToggleKeysByRelatedToMe(String projectKey, String environmentKey) {
+        Specification spec = (root, query, cb) -> {
+            Predicate p1 = cb.equal(root.get("projectKey"), projectKey);
+            Predicate p2 = cb.equal(root.get("environmentKey"), environmentKey);
+
+            Predicate p3 = cb.equal(root.get("modifiedBy"), TokenHelper.getUserId());
+            Predicate p4 = cb.equal(root.get("createdBy"), TokenHelper.getUserId());
+            return query.where(cb.and(p1, p2, cb.or(p3, p4))).getRestriction();
+        };
+        Set<String> toggleKeys = targetingVersionRepository.findAll((Specification<TargetingVersion>) spec)
+                .stream()
+                .map(TargetingVersion::getToggleKey)
+                .collect(Collectors.toSet());
+
+        toggleKeys.addAll(
+                toggleRepository.findAll((root, query, cb) -> {
+                    Predicate p1 = cb.equal(root.get("projectKey"), projectKey);
+
+                    Predicate p3 = cb.equal(root.get("modifiedBy"), TokenHelper.getUserId());
+                    Predicate p4 = cb.equal(root.get("createdBy"), TokenHelper.getUserId());
+                    return query.where(cb.and(p1, cb.or(p3, p4))).getRestriction();
+                }).stream()
+                .map(Toggle::getKey)
+                .collect(Collectors.toSet()));
+
+        toggleKeys.addAll(targetingRepository.findAll((Specification<Targeting>) spec)
+                .stream()
+                .map(Targeting::getToggleKey)
+                .collect(Collectors.toSet()));
+        return toggleKeys;
     }
 
 
@@ -260,14 +304,15 @@ public class ToggleService {
         List<TargetingSketch> targetingSketches = targetingSketchRepository
                 .findByProjectKeyAndEnvironmentKeyAndStatusAndToggleKeyIn(projectKey, environmentKey,
                         SketchStatusEnum.PENDING, toggleKeys);
-        return targetingSketches.stream().collect(Collectors.toMap(TargetingSketch::uniqueKey, Function.identity()));
+        return targetingSketches.stream().collect(
+                Collectors.toMap(TargetingSketch::uniqueKey, Function.identity(), (x, y) -> x));
     }
 
     private Map<String, Targeting> queryTargetingMap(String projectKey, String environmentKey,
                                                      List<String> toggleKeys) {
         List<Targeting> targetingList = targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey,
                 environmentKey, toggleKeys);
-        return targetingList.stream().collect(Collectors.toMap(Targeting::uniqueKey, Function.identity()));
+        return targetingList.stream().collect(Collectors.toMap(Targeting::uniqueKey, Function.identity(), (x, y) -> x));
     }
 
     private Page<Toggle> compoundQuery(String projectKey, ToggleSearchRequest searchRequest, Set<String> toggleKeys,

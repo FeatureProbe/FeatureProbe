@@ -29,6 +29,9 @@ public class TargetingPublishRequest extends ToggleControlConfRequest {
     @Schema(description = "Disables the toggle.")
     private Boolean disabled;
 
+    @Schema(description = "The current updated version.")
+    private Long baseVersion;
+
     @JsonIgnore
     public Boolean isUpdateTargetingRules() {
         return disabled != null || content != null;

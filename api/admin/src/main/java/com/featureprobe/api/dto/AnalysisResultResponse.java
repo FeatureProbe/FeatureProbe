@@ -13,5 +13,7 @@ public class AnalysisResultResponse {
 
     private Date end;
 
+    private MetricConfigResponse metric;
+
     private Object data;
 }

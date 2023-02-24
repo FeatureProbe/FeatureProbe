@@ -13,6 +13,8 @@ public class MessageKey {
 
     public static final String INVALID_REQUEST = "validate.invalid_request";
 
+    public static final String CONFLICT_REQUEST = "validate.conflict_request";
+
     public static final String INVALID_OLD_PASSWORD = "validate.invalid_old_password";
 
     public static final String USING = "resource.error.using";

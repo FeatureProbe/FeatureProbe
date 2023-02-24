@@ -1,6 +1,7 @@
 package com.featureprobe.api.aop;
 
 
+import com.featureprobe.api.base.constants.MessageKey;
 import com.featureprobe.api.base.constants.ResponseCode;
 import com.featureprobe.api.base.exception.ForbiddenException;
 import com.featureprobe.api.base.model.BaseResponse;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.persistence.OptimisticLockException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -51,7 +53,7 @@ public class WebExceptionAspect {
     }
 
     @ExceptionHandler(value = ResourceConflictException.class)
-    public void resourceConflictHandler(HttpServletResponse response, ResourceConflictException e)
+    public void resourceConflictHandler(HttpServletResponse response)
             throws IOException {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
@@ -67,14 +69,18 @@ public class WebExceptionAspect {
         response.getWriter().write(toErrorResponse(ResponseCode.FORBIDDEN));
     }
 
-    @ExceptionHandler(value = IllegalArgumentException.class)
-    public void invalidArgumentHandler(HttpServletResponse response, IllegalArgumentException e)
+
+    @ExceptionHandler(value = {IllegalArgumentException.class, OptimisticLockException.class})
+    public void invalidArgumentHandler(HttpServletResponse response, RuntimeException e)
             throws IOException {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.getWriter().write(toErrorResponse(ResponseCode.INVALID_REQUEST,
-                i18nConverter.get(e.getMessage())));
-        log.error("invalidArgumentHandler", e);
+        String messageKey = e.getMessage();
+        if (e instanceof OptimisticLockException) {
+            messageKey = MessageKey.CONFLICT_REQUEST;
+        }
+        response.getWriter().write(toErrorResponse(ResponseCode.INVALID_REQUEST, i18nConverter.get(messageKey)));
+        log.warn("invalidArgumentHandler", e);
     }
 
     private String toErrorResponse(ResponseCode resourceCode) {

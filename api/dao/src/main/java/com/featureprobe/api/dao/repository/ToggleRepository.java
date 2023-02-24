@@ -18,6 +18,8 @@ public interface ToggleRepository extends JpaRepository<Toggle, Long>, JpaSpecif
 
     Optional<Toggle> findByProjectKeyAndKey(String projectKey, String key);
 
+    List<Toggle> findAllByProjectKeyAndKeyIn(String projectKey, Iterable<String> ids);
+
     Optional<Toggle> findByProjectKeyAndKeyAndArchived(String projectKey, String key, Boolean archived);
 
     List<Toggle> findAllByProjectKey(String projectKey);

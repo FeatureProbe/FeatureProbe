@@ -37,7 +37,9 @@ import com.featureprobe.api.mapper.SegmentVersionMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,12 +49,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Predicate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -105,7 +110,7 @@ public class SegmentService {
         Project project = projectRepository.findByKey(projectKey).orElseThrow(() ->
                 new ResourceNotFoundException(ResourceType.PROJECT, projectKey));
         Segment segment = segmentRepository.findByProjectKeyAndKey(projectKey, segmentKey).orElseThrow(() ->
-            new ResourceNotFoundException(ResourceType.SEGMENT, projectKey + "_" + segmentKey));
+                new ResourceNotFoundException(ResourceType.SEGMENT, projectKey + "_" + segmentKey));
         if (!StringUtils.equals(segment.getName(), updateRequest.getName())) {
             validateName(projectKey, updateRequest.getName());
         }
@@ -120,8 +125,11 @@ public class SegmentService {
                 new ResourceNotFoundException(ResourceType.PROJECT, projectKey));
         Segment segment = segmentRepository.findByProjectKeyAndKey(projectKey, segmentKey).orElseThrow(() ->
                 new ResourceNotFoundException(ResourceType.SEGMENT, projectKey + "_" + segmentKey));
-        Long oldVersion = segment.getVersion();
+
+        this.validatePublishConflicts(segment, publishRequest.getBaseVersion());
         SegmentMapper.INSTANCE.mapEntity(publishRequest, segment);
+        Long oldVersion = ObjectUtils.isNotEmpty(publishRequest.getBaseVersion())
+                ? publishRequest.getBaseVersion() : segment.getVersion();
 
         ToggleContentLimitChecker.validateSize(segment.getRules());
 
@@ -131,6 +139,14 @@ public class SegmentService {
         }
         saveSegmentChangeLog(project);
         return SegmentMapper.INSTANCE.entityToResponse(updatedSegment);
+    }
+
+    protected void validatePublishConflicts(Segment segment, Long baseVersion){
+        if (baseVersion != null) {
+            if (segment.getVersion() != null && !segment.getVersion().equals(baseVersion)) {
+                throw new OptimisticLockException("publish conflict");
+            }
+        }
     }
 
     private void saveSegmentChangeLog(Project project) {
@@ -170,8 +186,17 @@ public class SegmentService {
                                                     PaginationRequest paginationRequest) {
         List<TargetingSegment> targetingSegments = targetingSegmentRepository
                 .findByProjectKeyAndSegmentKey(projectKey, segmentKey);
-        Set<Long> targetingIds = targetingSegments.stream().map(TargetingSegment::getTargetingId)
-                .collect(Collectors.toSet());
+        List<Targeting> targetingList = targetingRepository.findAllById(
+                targetingSegments.stream().map(TargetingSegment::getTargetingId).collect(Collectors.toList()));
+        List<Toggle> toggles = toggleRepository.findAllByProjectKeyAndKeyIn(projectKey,
+                targetingList.stream().map(Targeting::getToggleKey).collect(Collectors.toList()));
+        Map<String, Toggle> toggleMap = toggles.stream()
+                .collect(Collectors.toMap(Toggle::getKey, Function.identity()));
+        Map<Long, String> targetingIdToToggleKey = targetingList.stream().
+                collect(Collectors.toMap(Targeting::getId, Targeting::getToggleKey));
+        List<Long> targetingIds = targetingSegments.stream().filter(targetingSegment ->
+            toggleMap.get(targetingIdToToggleKey.get(targetingSegment.getTargetingId())) != null)
+                .map(TargetingSegment::getTargetingId).collect(Collectors.toList());
         Pageable pageable = PageRequest.of(paginationRequest.getPageIndex(), paginationRequest.getPageSize(),
                 Sort.Direction.DESC, "createdTime");
         Specification<Targeting> spec = (root, query, cb) -> {
@@ -181,10 +206,9 @@ public class SegmentService {
         };
         Page<Targeting> targetingPage = targetingRepository.findAll(spec, pageable);
         Page<ToggleSegmentResponse> res = targetingPage.map(targeting -> {
-            Optional<Toggle> toggleOptional = toggleRepository
-                    .findByProjectKeyAndKey(projectKey, targeting.getToggleKey());
+            Toggle toggle = toggleMap.get(targeting.getToggleKey());
             ToggleSegmentResponse toggleSegmentResponse = SegmentMapper.INSTANCE
-                    .toggleToToggleSegment(toggleOptional.get());
+                    .toggleToToggleSegment(toggle);
             toggleSegmentResponse.setDisabled(targeting.isDisabled());
             Optional<Environment> environment = environmentRepository
                     .findByProjectKeyAndKey(projectKey, targeting.getEnvironmentKey());
@@ -211,6 +235,7 @@ public class SegmentService {
         segmentVersion.setProjectKey(segment.getProjectKey());
         return segmentVersion;
     }
+
     private void saveSegmentVersion(SegmentVersion segmentVersion) {
         segmentVersionRepository.save(segmentVersion);
     }

@@ -35,4 +35,7 @@ public class ToggleSearchRequest extends PaginationRequest {
     @Schema(description = "Whether the toggle is permanent.")
     private Boolean permanent;
 
+    @Schema(description = "A filter by related to me.")
+    private Boolean related;
+
 }

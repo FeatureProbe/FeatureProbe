@@ -33,4 +33,7 @@ public class SegmentResponse {
 
     @Schema(description = "The editor of the project.")
     private String modifiedBy;
+
+    @Schema(description = "The latest version.")
+    private Long version;
 }

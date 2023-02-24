@@ -1,6 +1,7 @@
 package com.featureprobe.api.dao.entity;
 
 import com.featureprobe.api.base.enums.MetricTypeEnum;
+import com.featureprobe.api.base.enums.WinCriteria;
 import com.featureprobe.api.dao.listener.TenantEntityListener;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,6 +43,17 @@ public class Metric  extends AbstractAuditEntity implements TenantSupport {
 
     @Column(name = "organization_id")
     private Long organizationId;
+
+    private String name;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    private String unit;
+
+    @Column(name = "win_criteria")
+    @Enumerated(EnumType.STRING)
+    private WinCriteria winCriteria;
 
     @Enumerated(EnumType.STRING)
     private MetricTypeEnum type;
