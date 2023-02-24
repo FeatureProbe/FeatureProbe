@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @EnvironmentKeyParameter
 @ToggleKeyParameter
 @ResourceExistsValidate
-@Tag(name = "Events", description = "The metric API allows you to create, " +
+@Tag(name = "Metric", description = "The metric API allows you to create, " +
         "update and query metric programmatically.")
 public class MetricController {
 
