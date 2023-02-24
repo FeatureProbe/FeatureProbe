@@ -4,6 +4,7 @@ import com.featureprobe.api.base.enums.ChangeLogType;
 import com.featureprobe.api.base.enums.MatcherTypeEnum;
 import com.featureprobe.api.base.enums.MetricTypeEnum;
 import com.featureprobe.api.base.enums.ResourceType;
+import com.featureprobe.api.base.enums.WinCriteria;
 import com.featureprobe.api.base.util.JsonMapper;
 import com.featureprobe.api.config.AppConfig;
 import com.featureprobe.api.dao.entity.Environment;
@@ -140,8 +141,17 @@ public class MetricService {
         } else {
             name = metric.getEvents().stream().findFirst().get().getName();
         }
-        String callRes = callAnalysisServer(environment.getServerSdkKey(), name, toggleKey, start, end);
-        return new AnalysisResultResponse(start, end, JsonMapper.toObject(callRes, Map.class).get("data"));
+        String type = "binomial";
+        boolean positiveWin = true;
+        if (MetricTypeEnum.NUMERIC.equals(metric.getType())) {
+            type = "gaussian";
+            positiveWin = WinCriteria.POSITIVE.equals(metric.getWinCriteria()) ? true : false;
+        }
+
+        String callRes = callAnalysisServer(environment.getServerSdkKey(), name, toggleKey, type,
+                positiveWin, start, end);
+        return new AnalysisResultResponse(start, end, MetricMapper.INSTANCE.entityToConfigResponse(metric),
+                JsonMapper.toObject(callRes, Map.class).get("data"));
     }
 
     public static String generatePVUniqueName(MatcherTypeEnum matcher, String url) {
@@ -149,12 +159,18 @@ public class MetricService {
         return DigestUtils.md2Hex(encodeStr.getBytes(StandardCharsets.UTF_8));
     }
 
-    private String callAnalysisServer(String sdkKey, String metric, String toggleKey,
-                                                          Date start, Date end) {
+    private String callAnalysisServer(String sdkKey,
+                                      String metric,
+                                      String toggleKey,
+                                      String type,
+                                      boolean positiveWin,
+                                      Date start,
+                                      Date end) {
         String res = "{}";
         try {
             String url = appConfig.getAnalysisUrl() + "?metric=" + metric +
-                    "&toggle=" + toggleKey + "&type=binomial&start="+ start.getTime() + "&end=" + end.getTime();
+                    "&toggle=" + toggleKey + "&type=" + type + "&positiveWin=" + positiveWin +
+                    "&start="+ start.getTime() + "&end=" + end.getTime();
             Request request = new Request.Builder()
                     .header("Authorization", sdkKey)
                     .url(url)
