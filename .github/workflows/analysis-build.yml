@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'api/analysis/**'
+      - 'analysis/**'
   pull_request:
     branches: [ main ]
     paths:
-      - 'api/analysis/**'
+      - 'analysis/**'
   workflow_dispatch:
 
 jobs:
@@ -27,5 +27,5 @@ jobs:
         cache: 'maven'
         
     - name: Build & Test
-      run: mvn -B verify --file ./api/analysis/pom.xml
+      run: mvn -B verify --file ./analysis/pom.xml
       
