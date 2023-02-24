@@ -179,8 +179,10 @@ fp.on('ready', function() {
   // Send a custom event.
   // The first parameter is the event name,
   // the second parameter is the unique user key.
+  // the third parameter is optional, it means a metric value to track
   // highlight-start
-  fp.track('YOUR_CUSTOM_EVENT_NAME', user.getKey());
+  fp.track('YOUR_CUSTOM_EVENT_NAME_1', user.getKey());
+  fp.track('YOUR_CUSTOM_EVENT_NAME_2', user.getKey(), 5.5);
   // highlight-end
 })
 
