@@ -16,6 +16,7 @@ import TextLimit from 'components/TextLimit';
 import History from 'components/History';
 import Icon from 'components/Icon';
 import Loading from 'components/Loading';
+import SizeTips from 'components/SizeTips';
 import Rules from 'pages/targeting/components/Rules';
 import { useBeforeUnload } from 'pages/targeting/hooks';
 import ConfirmModal from '../Modal';
@@ -26,7 +27,6 @@ import { SEGMENT_EDIT_PATH } from 'router/routes';
 import { IRule, ICondition } from 'interfaces/targeting';
 import { IVersionParams } from 'interfaces/project';
 import { getBytes, MAX_SIZE } from 'utils/bytes';
-import SizeTips from 'components/SizeTips';
 import styles from './index.module.scss';
 
 interface IParams {
@@ -57,6 +57,7 @@ const Info = () => {
     totalPages: 1,
   });
   const [total, setTotal] = useState<number>(0);
+  const [version, saveVersion] = useState<number>(0);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isPageLoading, saveIsLoading] = useState<boolean>(false);
   const [isHistoryLoading, setHistoryLoading] = useState(false);
@@ -95,41 +96,46 @@ const Info = () => {
 
   useBeforeUnload(!publishDisabled, intl.formatMessage({ id: 'targeting.page.leave.text' }));
 
+  const getSegmentInfo = useCallback(() => {
+    getSegmentDetail<ISegmentInfo>(projectKey, segmentKey).then((res) => {
+      const { data, success } = res;
+      saveIsLoading(false);
+      if (success && data) {
+        saveInitialSegment({
+          name: data.name,
+          key: data.key,
+          description: data.description,
+          rules: cloneDeep(data.rules),
+        });
+        saveSegmentInfo(cloneDeep(data));
+        saveOriginSegmentInfo(cloneDeep(data));
+        const targetRule = cloneDeep(data.rules);
+        targetRule.forEach((rule: IRule) => {
+          rule.id = uuidv4();
+          rule.conditions.forEach((condition: ICondition) => {
+            condition.id = uuidv4();
+            if (condition.type === DATETIME_TYPE && condition.objects) {
+              condition.datetime = condition.objects[0].slice(0, 19);
+              condition.timezone = condition.objects[0].slice(19);
+            }
+          });
+          rule.active = true;
+        });
+
+        saveRules(targetRule);
+        saveVersion(data.version ?? 0);
+      } else {
+        message.error(intl.formatMessage({ id: 'toggles.targeting.error.text' }));
+      }
+    });
+  }, [intl, projectKey, saveOriginSegmentInfo, saveRules, saveSegmentInfo, segmentKey]);
+
   useEffect(() => {
     if (match.path === SEGMENT_EDIT_PATH) {
       saveIsLoading(true);
-      getSegmentDetail<ISegmentInfo>(projectKey, segmentKey).then((res) => {
-        const { data, success } = res;
-        saveIsLoading(false);
-        if (success && data) {
-          saveInitialSegment({
-            name: data.name,
-            key: data.key,
-            description: data.description,
-            rules: cloneDeep(data.rules),
-          });
-          saveSegmentInfo(cloneDeep(data));
-          saveOriginSegmentInfo(cloneDeep(data));
-          const targetRule = cloneDeep(data.rules);
-          targetRule.forEach((rule: IRule) => {
-            rule.id = uuidv4();
-            rule.conditions.forEach((condition: ICondition) => {
-              condition.id = uuidv4();
-              if (condition.type === DATETIME_TYPE && condition.objects) {
-                condition.datetime = condition.objects[0].slice(0, 19);
-                condition.timezone = condition.objects[0].slice(19);
-              }
-            });
-            rule.active = true;
-          });
-
-          saveRules(targetRule);
-        } else {
-          message.error(res.message || intl.formatMessage({ id: 'toggles.targeting.error.text' }));
-        }
-      });
+      getSegmentInfo();
     }
-  }, [match.path, projectKey, segmentKey, saveSegmentInfo, saveOriginSegmentInfo, saveRules, intl]);
+  }, [match.path, getSegmentInfo]);
 
   useEffect(() => {
     const requestRules = cloneDeep(rules);
@@ -157,7 +163,7 @@ const Info = () => {
     });
   }, [segmentInfo, rules]);
 
-  //Check if the size of the data is too large
+  // Check if the size of the data is too large
   useEffect(() => {
     if (publishSegment) {
       const bytes = getBytes(JSON.stringify(publishSegment.rules));
@@ -250,18 +256,18 @@ const Info = () => {
       const res = await confirmPublishSegment(projectKey, segmentKey, {
         ...publishSegment,
         comment: comment,
+        baseVersion: version,
       });
       setLoading(false);
       if (res.success) {
         message.success(intl.formatMessage({ id: 'segments.edit.success' }));
-        saveInitialSegment(publishSegment);
-
+        getSegmentInfo();
         initHistory();
       } else {
-        message.error(intl.formatMessage({ id: 'segments.edit.error' }));
+        message.error(res.message || intl.formatMessage({ id: 'segments.edit.error' }));
       }
     }
-  }, [publishSegment, projectKey, segmentKey, comment, intl, initHistory]);
+  }, [publishSegment, projectKey, segmentKey, comment, version, intl, getSegmentInfo, initHistory]);
 
   const fetchToggleList = useCallback(async () => {
     return await getSegmentUsingToggles<IToggleList>(projectKey, segmentKey, searchParams).then((res) => {
@@ -337,10 +343,6 @@ const Info = () => {
     },
     [searchParams]
   );
-
-  useEffect(() => {
-    fetchToggleList();
-  }, [fetchToggleList, searchParams]);
 
   const reviewHistory = useCallback(
     (version: ISegmentVersion) => {
