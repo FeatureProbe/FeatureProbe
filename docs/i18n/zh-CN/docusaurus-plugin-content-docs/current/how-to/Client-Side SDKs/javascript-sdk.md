@@ -165,7 +165,6 @@ JavaScript SDK 支持上报 `页面事件`，`点击事件`和`自定义事件`�
 ### 上报自定义事件
 当SDK`ready`后，调用SDK提供的`track`方法上报自定义事件。
 
-NPM:
 
 ```js
 fp.on('ready', function() {
@@ -188,28 +187,7 @@ fp.on('ready', function() {
 
 ```
 
-Or via CDN:
 
-```js
-fp.on('ready', function() {
-  const result = fp.boolValue('YOUR_TOGGLE_KEY', false);
-  if (result) {
-    do_some_thing();
-  } else {
-    do_other_thing();
-  }
-  const reason = fp.boolDetail('YOUR_TOGGLE_KEY', false);
-  console.log(reason);
-
-  // 上报自定义事件
-  // 第一个参数是自定义事件名
-  // 第二个参数是SDK初始化时创建的user对象的唯一key值
-  // highlight-start
-  fp.track('YOUR_CUSTOM_EVENT_NAME', user.getKey());
-  // highlight-end
-})
-
-```
 ## SDK初始化的参数
 
 | 选项            | 是否必填       | 默认值 | 描述                                                                                                                                      |
