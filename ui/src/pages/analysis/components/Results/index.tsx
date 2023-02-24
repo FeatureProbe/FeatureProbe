@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
@@ -13,6 +13,8 @@ import { getEventAnalysis, operateCollection } from 'services/analysis';
 import { IChartData, IEvent, IEventAnalysis, IDistribution, ITableData, IAnalysisItem } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
 import { ITarget } from 'interfaces/targeting';
+import TextLimit from 'components/TextLimit';
+import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, NUMERIC } from '../../constants';
 
 import styles from './index.module.scss';
 
@@ -40,7 +42,17 @@ const Results = (props: IProps) => {
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
 
-   useEffect(() => {
+  const metricTypeText = useMemo(() => {
+    return new Map([
+      [CUSTOM, intl.formatMessage({id: 'analysis.event.custom'})],
+      [CONVERSION, `${intl.formatMessage({id: 'analysis.event.custom'})} - ${intl.formatMessage({id: 'analysis.event.conversion'})}`],
+      [NUMERIC, `${intl.formatMessage({id: 'analysis.event.custom'})} - ${intl.formatMessage({id: 'analysis.event.numeric'})}`],
+      [CLICK, intl.formatMessage({id: 'analysis.event.click'})],
+      [PAGE_VIEW, intl.formatMessage({id: 'analysis.event.pageview'})],
+    ]);
+  }, [intl]);
+
+  useEffect(() => {
     if (!targeting?.variations || !result) {
       return;
     };
@@ -181,7 +193,17 @@ const Results = (props: IProps) => {
       {
         isHaveData ? (
           <div className={styles['result-content']}>
-            <ResultTable data={tableData} />
+            <div className={styles['table-header']}>
+              <span className={styles['metric-name']}>
+                <TextLimit text={eventInfo?.name ?? ''} maxLength={20} />
+                <span>:</span>
+              </span>
+              <span className={styles['type']}>{metricTypeText.get(eventInfo?.type ?? '')}</span>
+            </div>
+            <ResultTable 
+              data={tableData}
+              eventInfo={eventInfo}
+            />
           </div>
         ) : (
           <div className={styles['no-data']}>
