@@ -160,7 +160,7 @@ We are growing a community to help newcomer to learn FeatureProbe. Don't hesitat
 
 If you want ask open questions about FeatureProbe, feature management or discuss these topics in general, join us on [![Join FeatureProbe on Slack](https://img.shields.io/badge/slack-join-blue?logo=slack)](https://join.slack.com/t/featureprobe/shared_invite/zt-1b5qd120x-R~dDbpgL85GgCLTtfNDj0Q) 
 
-Or if you prefer to talk in chinese, join our wechat group: 
+Or if you prefer to talk in Chinese, join our wechat group: 
 
 <img src="./pictures/Wechat0715.png" width = "250" />
 
