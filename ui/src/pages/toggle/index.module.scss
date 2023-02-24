@@ -46,6 +46,8 @@
 }
 
 .heading {
+  display: flex;
+  align-items: center;
   font-family: HelveticaNeue-Medium;
   font-size: 20px;
   color: #212529;
@@ -85,12 +87,21 @@
   font-size: 12px;
   color: #74788d;
   margin: 0 24px;
+  position: relative;
+}
+
+.btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 10;
 }
 
 .filter-form {
   flex: 1;
   display: flex;
   align-items: flex-end;
+  justify-content: space-between;
 
   :global .ui.dropdown > .text {
     vertical-align: middle;
@@ -98,6 +109,40 @@
     line-height: 25px !important;
     margin: 0 !important;
   }
+}
+
+.filter-form-left {
+  flex: 1;
+  display: flex;
+}
+
+.filter-form-right {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox {
+  font-size: 14px;
+
+  :global {
+    label {
+      font-size: 13px !important;
+      color: #74788d !important;
+    }
+
+    label:before {
+      width: 16px !important;
+      height: 16px !important;
+    }
+  }
+}
+
+.icon-info {
+  color: #74788d;
+  font-size: 14px;
+  margin-left: 4px;
+  position: relative;
+  top: 1px;
 }
 
 .label {
@@ -130,16 +175,14 @@
   margin: 0 16px 0 0 !important;
 }
 
-.tags-field { 
+.tags-field {
   margin: 0 16px 0 0 !important;
 }
 
 .keywords-field {
   margin-bottom: 0 !important;
+  margin-right: 16px !important;
   width: 280px !important;
-  position: absolute;
-  right: 24px;
-  bottom: 0;
 }
 
 .angle-down {
@@ -203,7 +246,7 @@
 
   :global {
     th {
-      padding-bottom: 0 !important
+      padding-bottom: 0 !important;
     }
   }
 }
@@ -233,13 +276,12 @@
 }
 
 .toggle-menu:hover {
-  background-color: #4458B8;
+  background-color: #4458b8;
 }
 
 .menu-angle-down {
   font-size: 24px !important;
 }
-
 
 .popup {
   padding: 8px 0 !important;

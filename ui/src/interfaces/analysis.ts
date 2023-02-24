@@ -1,9 +1,13 @@
 export interface IEvent {
   type: string;
-  name?: string;
+  name: string;
+  description: string;
+  eventName?: string;
   matcher?: string;
   url?: string;
   selector?: string;
+  winCriteria?: string;
+  unit?: string;
 }
 
 export interface IEventAnalysis {
