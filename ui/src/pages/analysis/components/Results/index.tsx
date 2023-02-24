@@ -45,8 +45,8 @@ const Results = (props: IProps) => {
   const metricTypeText = useMemo(() => {
     return new Map([
       [CUSTOM, intl.formatMessage({id: 'analysis.event.custom'})],
-      [CONVERSION, `${intl.formatMessage({id: 'analysis.event.custom'})}${intl.locale === 'en-US' ? ':' : ' - '}${intl.formatMessage({id: 'analysis.event.conversion'})}`],
-      [NUMERIC, `${intl.formatMessage({id: 'analysis.event.custom'})}${intl.locale === 'en-US' ? ':' : ' - '}${intl.formatMessage({id: 'analysis.event.numeric'})}`],
+      [CONVERSION, `${intl.formatMessage({id: 'analysis.event.custom'})} - ${intl.formatMessage({id: 'analysis.event.conversion'})}`],
+      [NUMERIC, `${intl.formatMessage({id: 'analysis.event.custom'})} - ${intl.formatMessage({id: 'analysis.event.numeric'})}`],
       [CLICK, intl.formatMessage({id: 'analysis.event.click'})],
       [PAGE_VIEW, intl.formatMessage({id: 'analysis.event.pageview'})],
     ]);
@@ -194,11 +194,11 @@ const Results = (props: IProps) => {
         isHaveData ? (
           <div className={styles['result-content']}>
             <div className={styles['table-header']}>
-              <div className={styles['metric-name']}>
+              <span className={styles['metric-name']}>
                 <TextLimit text={eventInfo?.name ?? ''} maxLength={20} />
-              </div>
-              <span>:</span>
-              <div className={styles['type']}>{metricTypeText.get(eventInfo?.type ?? '')}</div>
+                <span>:</span>
+              </span>
+              <span className={styles['type']}>{metricTypeText.get(eventInfo?.type ?? '')}</span>
             </div>
             <ResultTable 
               data={tableData}

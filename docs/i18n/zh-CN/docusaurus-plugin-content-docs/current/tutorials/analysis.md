@@ -87,10 +87,10 @@ Open the `examples/demo.js` file with an editor.
 </Tabs>
 
 2. 打开FeatureProbe平台[项目列表页面](https://featureprobe.io/projects)， 可以在开关详情页点击`项目`来打开
-![project](/tutorial_click_project_en.png)
+![project](/tutorial_click_project_cn.png)
 
 3. 复制`服务端SDK密钥`
-![sdk key](/tutorial_rollout_server_sdk_key_en.png)
+![sdk key](/tutorial_rollout_server_sdk_key_cn.png)
 
 4. 将`服务端SDK密钥`以及`FeatureProbe网址` ("https://featureprobe.io/server") 填入后端代码相应变量中
 
@@ -333,7 +333,7 @@ cd client-sdk-js
 点击『项目』Tab，可以进入『项目』列表，获取各类SDK key，以及修改项目和环境信息。
 :::
 
-![client sdk key](/tutorial_client_sdk_key_en.png)
+![client sdk key](/tutorial_client_sdk_key_cn.png)
 
 3. 打开 `example/index.html` 填入 `客户端SDK密钥` 以及 `FeatureProbe网址`  ("https://featureprobe.io/server")
 
