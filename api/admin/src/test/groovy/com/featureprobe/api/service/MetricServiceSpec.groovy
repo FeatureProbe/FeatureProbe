@@ -61,7 +61,7 @@ class MetricServiceSpec extends Specification {
 
     def "create a new CONVERSION metric"() {
         given:
-        MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CONVERSION, name: "access_feature")
+        MetricCreateRequest request = new MetricCreateRequest(name: "Test Metric", description: "desc", type: MetricTypeEnum.CONVERSION, eventName: "access_feature")
         when:
         def created = eventService.create(projectKey, environmentKey, toggleKey, request)
         then:
@@ -96,7 +96,7 @@ class MetricServiceSpec extends Specification {
 
     def "update a exists event "() {
         given:
-        MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CONVERSION, name: "access_feature2")
+        MetricCreateRequest request = new MetricCreateRequest(name: "Test Metric", description: "desc", type: MetricTypeEnum.CONVERSION, eventName: "access_feature2")
         when:
         def created = eventService.create(projectKey, environmentKey, toggleKey, request)
         then:
@@ -147,7 +147,7 @@ class MetricServiceSpec extends Specification {
         1 * metricRepository
                 .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.of(new Metric(type: MetricTypeEnum.CONVERSION, events: [new Event(name: "access_feature")]))
         MetricTypeEnum.CONVERSION.name() == metric.type.name()
-        "access_feature" == metric.name
+        "access_feature" == metric.eventName
     }
 
     def "query a not exists event by toggle"() {

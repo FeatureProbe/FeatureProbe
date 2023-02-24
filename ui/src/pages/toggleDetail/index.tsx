@@ -474,11 +474,12 @@ const ToggleDetail = () => {
                             trackEvents={originTrackEvents}
                             allowEnableTrackEvents={allowEnableTrackEvents}
                             disabled={
-                              targetingDisabled || 
-                              toggleArchived || 
-                              (approvalInfo?.enableApproval && approvalInfo.status !== 'RELEASE') || 
-                              trackEvents
+                              targetingDisabled
+                              || toggleArchived
+                              || (approvalInfo?.enableApproval && approvalInfo.status !== 'RELEASE')
+                              || trackEvents
                             }
+                            latestVersion={latestVersion}
                             targeting={targeting}
                             toggleInfo={toggleInfo}
                             segmentList={segmentList}

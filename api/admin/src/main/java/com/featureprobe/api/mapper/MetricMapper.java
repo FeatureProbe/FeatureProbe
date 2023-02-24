@@ -32,13 +32,12 @@ public interface MetricMapper {
     @Mapping(target = "events", expression = "java(toEventResponses(metric.getEvents()))")
     MetricResponse entityToResponse(Metric metric);
 
-    @Mapping(target = "name", expression = "java(toEventName(metric))")
+    @Mapping(target = "eventName", expression = "java(toEventName(metric))")
     @Mapping(target = "matcher", expression = "java(toEventMatcher(metric))")
     @Mapping(target = "url", expression = "java(toEventUrl(metric))")
     @Mapping(target = "selector", expression = "java(toEventSelector(metric))")
     MetricConfigResponse entityToConfigResponse(Metric metric);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "events", expression = "java(toEmptyEvents())")
     void mapEntity(MetricCreateRequest createRequest, @MappingTarget Metric metric);
 

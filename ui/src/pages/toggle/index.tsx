@@ -10,6 +10,7 @@ import {
   DropdownProps, 
   InputOnChangeData,
   Checkbox,
+  CheckboxProps,
 } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { cloneDeep, debounce } from 'lodash';
@@ -53,6 +54,7 @@ interface ISearchParams {
   archived?: boolean;
   releaseStatusList?: string[];
   permanent?: boolean;
+  related?: boolean;
 }
 
 const Toggle = () => {
@@ -344,158 +346,192 @@ const Toggle = () => {
               }
               <div className={styles.tips}>
                 <FormattedMessage id='toggles.description' />
+
+                <div className={styles.btn}>
+                  {
+                    !isArchived && (
+                      <EventTracker category='toggle' action='create-toggle'>
+                        <Button primary className={styles['add-button']} onClick={handleAddToggle}>
+                          <Icon customclass={styles['iconfont']} type='add' />
+                          <FormattedMessage id='common.toggle.text' />
+                        </Button>
+                      </EventTracker>
+                    )
+                  }
+                  <Popup
+                    basic
+                    open={archiveOpen}
+                    on='click'
+                    position='bottom right'
+                    className={styles.popup}
+                    trigger={
+                      <div 
+                        onClick={(e: SyntheticEvent) => {
+                          document.body.click();
+                          e.stopPropagation();
+                          setArchiveOpen(true);
+                        }}
+                        className={styles['toggle-menu']}
+                      >
+                        <Icon customclass={styles['menu-angle-down']} type='angle-down' />
+                      </div>
+                    }
+                  >
+                    <div className={styles['menu']} onClick={() => {
+                      setArchiveOpen(false);
+                    }}>
+                      {
+                        isArchived ? (
+                          <div className={styles['menu-item']} onClick={() => { 
+                            document.body.click();
+                            setArchived(false); 
+                            history.push(`/${projectKey}/${environmentKey}/toggles`);
+                            handleSearchArchivedList(false);
+                          }}>
+                            <FormattedMessage id='toggles.menu.view.active.toggle' />
+                          </div>
+                        ) : (
+                          <div className={styles['menu-item']} onClick={() => { 
+                            document.body.click();
+                            setArchived(true); 
+                            history.push(`/${projectKey}/${environmentKey}/toggles?isArchived=true`);
+                            handleSearchArchivedList(true);
+                          }}>
+                            <FormattedMessage id='toggles.menu.view.archive.toggle' />
+                          </div>
+                        )
+                      }
+                    </div>
+                  </Popup>
+                </div>
               </div>
               <div className={styles.add}>
                 <Form className={styles['filter-form']}>
-                  <Form.Field className={styles['evaluation-field']}>
-                    <label className={styles.label}>
-                      <FormattedMessage id='toggles.filter.evaluated' />
-                    </label>
-                    <Dropdown
-                      fluid 
-                      selection
-                      floating
-                      clearable
-                      selectOnBlur={false}
-                      className={styles['dropdown']}
-                      placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
-                      options={evaluationOptions} 
-                      icon={
-                        searchParams.visitFilter
-                          ? <Icon customclass={styles['angle-down']} type='remove-circle' />
-                          : <Icon customclass={styles['angle-down']} type='angle-down' />
-                      }
-                      onChange={handleEvaluationChange}
-                    />
-                  </Form.Field>
-                  <Form.Field className={styles['status-field']}>
-                    <label className={styles.label}>
-                      <FormattedMessage id='toggles.filter.status' />
-                    </label>
-                    <Dropdown 
-                      fluid 
-                      selection 
-                      floating
-                      clearable
-                      className={styles['status-dropdown']}
-                      selectOnBlur={false}
-                      placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
-                      options={statusOptions} 
-                      icon={
-                        typeof searchParams.disabled === 'boolean'
-                          ? <Icon customclass={styles['angle-down']} type='remove-circle' />
-                          : <Icon customclass={styles['angle-down']} type='angle-down' />
-                      }
-                      onChange={handleStatusChange}
-                    />
-                  </Form.Field>
-                  <Form.Field className={styles['tags-field']}>
-                    <label className={styles.label}>
-                      <FormattedMessage id='common.tags.text' />
-                    </label>
-                    <Dropdown 
-                      fluid 
-                      multiple 
-                      selection 
-                      floating
-                      clearable
-                      selectOnBlur={false}
-                      className={styles['dropdown']}
-                      placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
-                      options={tagOptions} 
-                      renderLabel={renderLabel}
-                      onChange={handleTagsChange}
-                      icon={
-                        searchParams.tags && searchParams.tags.length > 0
-                          ? <Icon customclass={styles['angle-down']} type='remove-circle' />
-                          : <Icon customclass={styles['angle-down']} type='angle-down' />
-                      }
-                    />
-                  </Form.Field>
-                  <Form.Field className={styles['permanent-field']}>
-                    <label className={styles.label}>
-                      <FormattedMessage id='toggles.filter.permanent.status' />
-                    </label>
-                    <Dropdown 
-                      fluid 
-                      selection 
-                      floating
-                      clearable
-                      className={styles['permanent-dropdown']}
-                      selectOnBlur={false}
-                      placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
-                      options={permanentOptions} 
-                      icon={
-                        typeof searchParams.permanent === 'boolean'
-                          ? <Icon customclass={styles['angle-down']} type='remove-circle' />
-                          : <Icon customclass={styles['angle-down']} type='angle-down' />
-                      }
-                      onChange={handlePermanentChange}
-                    />
-                  </Form.Field>
-                  <Form.Field className={styles['keywords-field']}>
-                    <Form.Input 
-                      placeholder={intl.formatMessage({id: 'toggles.filter.search.placeholder'})} 
-                      icon={<Icon customclass={styles['icon-search']} type='search' />}
-                      onChange={handleSearch}
-                    />
-                  </Form.Field>
-                </Form>
-                {
-                  !isArchived && (
-                    <EventTracker category='toggle' action='create-toggle'>
-                      <Button primary className={styles['add-button']} onClick={handleAddToggle}>
-                        <Icon customclass={styles['iconfont']} type='add' />
-                        <FormattedMessage id='common.toggle.text' />
-                      </Button>
-                    </EventTracker>
-                  )
-                }
-                <Popup
-                  basic
-                  open={archiveOpen}
-                  on='click'
-                  position='bottom right'
-                  className={styles.popup}
-                  trigger={
-                    <div 
-                      onClick={(e: SyntheticEvent) => {
-                        document.body.click();
-                        e.stopPropagation();
-                        setArchiveOpen(true);
-                      }}
-                      className={styles['toggle-menu']}
-                    >
-                      <Icon customclass={styles['menu-angle-down']} type='angle-down' />
-                    </div>
-                  }
-                >
-                  <div className={styles['menu']} onClick={() => {
-                    setArchiveOpen(false);
-                  }}>
-                    {
-                      isArchived ? (
-                        <div className={styles['menu-item']} onClick={() => { 
-                          document.body.click();
-                          setArchived(false); 
-                          history.push(`/${projectKey}/${environmentKey}/toggles`);
-                          handleSearchArchivedList(false);
-                        }}>
-                          <FormattedMessage id='toggles.menu.view.active.toggle' />
-                        </div>
-                      ) : (
-                        <div className={styles['menu-item']} onClick={() => { 
-                          document.body.click();
-                          setArchived(true); 
-                          history.push(`/${projectKey}/${environmentKey}/toggles?isArchived=true`);
-                          handleSearchArchivedList(true);
-                        }}>
-                          <FormattedMessage id='toggles.menu.view.archive.toggle' />
-                        </div>
-                      )
-                    }
+                  <div className={styles['filter-form-left']}>
+                    <Form.Field className={styles['evaluation-field']}>
+                      <label className={styles.label}>
+                        <FormattedMessage id='toggles.filter.evaluated' />
+                      </label>
+                      <Dropdown
+                        fluid 
+                        selection
+                        floating
+                        clearable
+                        selectOnBlur={false}
+                        className={styles['dropdown']}
+                        placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
+                        options={evaluationOptions} 
+                        icon={
+                          searchParams.visitFilter
+                            ? <Icon customclass={styles['angle-down']} type='remove-circle' />
+                            : <Icon customclass={styles['angle-down']} type='angle-down' />
+                        }
+                        onChange={handleEvaluationChange}
+                      />
+                    </Form.Field>
+                    <Form.Field className={styles['status-field']}>
+                      <label className={styles.label}>
+                        <FormattedMessage id='toggles.filter.status' />
+                      </label>
+                      <Dropdown 
+                        fluid 
+                        selection 
+                        floating
+                        clearable
+                        className={styles['status-dropdown']}
+                        selectOnBlur={false}
+                        placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
+                        options={statusOptions} 
+                        icon={
+                          typeof searchParams.disabled === 'boolean'
+                            ? <Icon customclass={styles['angle-down']} type='remove-circle' />
+                            : <Icon customclass={styles['angle-down']} type='angle-down' />
+                        }
+                        onChange={handleStatusChange}
+                      />
+                    </Form.Field>
+                    <Form.Field className={styles['tags-field']}>
+                      <label className={styles.label}>
+                        <FormattedMessage id='common.tags.text' />
+                      </label>
+                      <Dropdown 
+                        fluid 
+                        multiple 
+                        selection 
+                        floating
+                        clearable
+                        selectOnBlur={false}
+                        className={styles['dropdown']}
+                        placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
+                        options={tagOptions} 
+                        renderLabel={renderLabel}
+                        onChange={handleTagsChange}
+                        icon={
+                          searchParams.tags && searchParams.tags.length > 0
+                            ? <Icon customclass={styles['angle-down']} type='remove-circle' />
+                            : <Icon customclass={styles['angle-down']} type='angle-down' />
+                        }
+                      />
+                    </Form.Field>
+                    <Form.Field className={styles['permanent-field']}>
+                      <label className={styles.label}>
+                        <FormattedMessage id='toggles.filter.permanent.status' />
+                      </label>
+                      <Dropdown 
+                        fluid 
+                        selection 
+                        floating
+                        clearable
+                        className={styles['permanent-dropdown']}
+                        selectOnBlur={false}
+                        placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
+                        options={permanentOptions} 
+                        icon={
+                          typeof searchParams.permanent === 'boolean'
+                            ? <Icon customclass={styles['angle-down']} type='remove-circle' />
+                            : <Icon customclass={styles['angle-down']} type='angle-down' />
+                        }
+                        onChange={handlePermanentChange}
+                      />
+                    </Form.Field>
                   </div>
-                </Popup>
+                  <div className={styles['filter-form-right']}>
+                    <Form.Field className={styles['keywords-field']}>
+                      <Form.Input 
+                        placeholder={intl.formatMessage({id: 'toggles.filter.search.placeholder'})} 
+                        icon={<Icon customclass={styles['icon-search']} type='search' />}
+                        onChange={handleSearch}
+                      />
+                    </Form.Field>
+                    <Form.Field>
+                      <Checkbox
+                        className={styles.checkbox}
+                        onChange={(e, detail: CheckboxProps) => {
+                          setSearchParams((param) => {
+                            return {
+                              ...param,
+                              related: detail.checked ?? false
+                            };
+                          });
+                        }} 
+                        label={intl.formatMessage({id: 'toggles.filter.related.me'})} 
+                      />
+                      <Popup
+                        inverted
+                        trigger={
+                          <Icon customclass={styles['icon-info']} type='info' />
+                        }
+                        content={
+                          <span className={styles['icon-tips']}>
+                            { intl.formatMessage({id: 'toggles.filter.related.me.tips'}) }
+                          </span>
+                        }
+                        position='top right'
+                        className='popup-override'
+                      />
+                    </Form.Field>
+                  </div>
+                </Form>
               </div>
               {
                 isLoading ? (

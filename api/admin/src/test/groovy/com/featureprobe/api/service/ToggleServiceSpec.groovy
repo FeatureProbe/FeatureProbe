@@ -7,6 +7,7 @@ import com.featureprobe.api.config.AppConfig
 import com.featureprobe.api.base.enums.SketchStatusEnum
 import com.featureprobe.api.base.enums.ValidateTypeEnum
 import com.featureprobe.api.base.enums.VisitFilter
+import com.featureprobe.api.dao.entity.TargetingVersion
 import com.featureprobe.api.dao.exception.ResourceConflictException
 import com.featureprobe.api.dao.repository.*
 import com.featureprobe.api.dto.ToggleCreateRequest
@@ -72,6 +73,8 @@ class ToggleServiceSpec extends Specification {
 
     DictionaryRepository dictionaryRepository
 
+    TargetingVersionRepository targetingVersionRepository
+
     Set<String> toggleKeys = new HashSet()
 
     ApplicationContext applicationContext
@@ -96,14 +99,16 @@ class ToggleServiceSpec extends Specification {
         trafficCacheRepository = Mock(TrafficCacheRepository)
         targetingService = Mock(TargetingService)
         toggleTagRepository = Mock(ToggleTagRepository)
+        targetingVersionRepository = Mock(TargetingVersionRepository)
         projectRepository = Mock(ProjectRepository)
         publishMessageRepository = Mock(PublishMessageRepository)
         dictionaryRepository = Mock(DictionaryRepository)
+
         changeLogService = new ChangeLogService(publishMessageRepository, environmentRepository, dictionaryRepository)
         entityManager = Mock(SessionImpl)
         toggleService = new ToggleService(appConfig, toggleRepository, tagRepository, targetingRepository,
                 environmentRepository, trafficRepository, targetingSketchRepository, trafficCacheRepository,
-                toggleTagRepository, changeLogService, projectRepository, targetingService, entityManager)
+                toggleTagRepository, changeLogService, projectRepository, targetingService, targetingVersionRepository, entityManager)
         includeArchivedToggleService = new IncludeArchivedToggleService(toggleRepository, entityManager)
         projectKey = "feature_probe"
         environmentKey = "test"

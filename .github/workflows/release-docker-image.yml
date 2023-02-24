@@ -97,7 +97,7 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvn -B package --file ./api/analysis/pom.xml
+        run: mvn -B package --file ./analysis/pom.xml
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2.2.1
@@ -118,7 +118,7 @@ jobs:
             --tag featureprobe/analysis:${GITHUB_REF#refs/tags/} \
             --tag featureprobe/analysis:latest \
             --file ./Dockerfile ./
-        working-directory: ./api/analysis
+        working-directory: ./analysis
 
       - name: Docker Build Analysis (manual)
         if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -132,11 +132,11 @@ jobs:
             --file ./Dockerfile ./
         env:
           DOCKER_TAG: ${{ inputs.tag }}
-        working-directory: ./api/analysis
+        working-directory: ./analysis
       - name: Inspect image
         run: |
           docker buildx imagetools inspect featureprobe/analysis
-        working-directory: ./api/analysis
+        working-directory: ./analysis
   
   release_ui:
     name: Release UI

@@ -35,6 +35,8 @@ export interface ISegmentInfo {
   modifiedTime?: string;
   modifiedBy?: string;
   rules: IRule[];
+  version?: number;
+  baseVersion?: number;
 }
 
 export interface IToggle {

@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
@@ -26,6 +27,7 @@ import javax.persistence.Version;
 @Entity
 @Table(name = "segment")
 @DynamicInsert
+@DynamicUpdate
 @ToString(callSuper = true)
 @EntityListeners(TenantEntityListener.class)
 @FilterDef(name = "tenantFilter", parameters = {@ParamDef(name = "organizationId", type = "long")})
