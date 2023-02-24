@@ -11,9 +11,7 @@ public class ToggleContentLimitChecker {
             return false;
         }
         try {
-            if (content.getBytes().length < maxLength) {
-                return false;
-            }
+           return content.getBytes().length > maxLength;
         } catch (Exception e) {
         }
         return true;

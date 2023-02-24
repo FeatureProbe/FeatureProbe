@@ -38,6 +38,7 @@ import spock.lang.Specification
 import spock.lang.Title
 
 import javax.persistence.EntityManager
+import javax.persistence.OptimisticLockException
 import java.util.stream.Collectors
 
 @Title("Segment Unit Test")
@@ -153,6 +154,20 @@ class SegmentServiceSpec extends Specification {
         1 * segmentRepository.saveAndFlush(_) >> new Segment(name: segmentName, key: segmentKey, rules: rules, version: 2)
         1 * segmentVersionRepository.save(_)
         1 == published.getRules().size()
+    }
+
+
+    def "publish segment conflicts should be throws `OptimisticLockException`"() {
+        given:
+        def updateRules = JsonMapper.toListObject(rules, SegmentRuleModel.class)
+
+        when:
+        segmentService.publish(projectKey, segmentKey, new SegmentPublishRequest(rules: updateRules,  baseVersion: 100))
+
+        then:
+        1 * projectRepository.findByKey(projectKey) >> Optional.of(new Project())
+        1 * segmentRepository.findByProjectKeyAndKey(projectKey, segmentKey) >> Optional.of(new Segment(name: segmentName, key: segmentKey, rules: rules, version: 1))
+        thrown(OptimisticLockException)
     }
 
     def "query segment history version"() {

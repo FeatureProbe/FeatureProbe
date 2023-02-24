@@ -11,6 +11,7 @@ import com.featureprobe.api.base.util.JsonMapper
 import com.featureprobe.api.dao.entity.Member
 import com.featureprobe.api.dao.entity.Segment
 import com.featureprobe.api.dao.entity.ToggleControlConf
+import com.featureprobe.api.dao.exception.ResourceConflictException
 import com.featureprobe.api.dao.exception.ResourceNotFoundException
 import com.featureprobe.api.dto.CancelSketchRequest
 import com.featureprobe.api.dto.TargetingApprovalRequest
@@ -45,6 +46,7 @@ import spock.lang.Specification
 import spock.lang.Title
 
 import javax.persistence.EntityManager
+import javax.persistence.OptimisticLockException
 
 @Title("Targeting Unit Test")
 class TargetingServiceSpec extends Specification {
@@ -188,6 +190,27 @@ class TargetingServiceSpec extends Specification {
             content == it.content
             false == it.disabled
         }
+    }
+
+    def "publish targeting conflicts should be throws `OptimisticLockException`"() {
+        given:
+        TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
+        TargetingContent targetingContent = JsonMapper.toObject(content, TargetingContent.class);
+        targetingRequest.setContent(targetingContent)
+        targetingRequest.setDisabled(false)
+        targetingRequest.setBaseVersion(100)
+
+        when:
+        targetingService.publish(projectKey, environmentKey, toggleKey, targetingRequest)
+
+
+        then:
+        segmentRepository.existsByProjectKeyAndKey(projectKey, _) >> true
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >>
+                Optional.of(new Targeting(id: 1, toggleKey: toggleKey, environmentKey: environmentKey,
+                        content: content, disabled: true, version: 1))
+        1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(enableApproval: false, version: 1))
+        thrown(OptimisticLockException)
     }
 
     def "submit targeting approval"() {

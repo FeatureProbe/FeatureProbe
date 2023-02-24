@@ -95,6 +95,23 @@ Close the client before exiting to ensure accurate data reporting.
 fpClient.close();
 ```
 
+## Track Events
+
+:::note
+The Java SDK supports event tracking from version 2.0.1.
+:::
+
+
+The event tracking feature can record the actions taken by the user in the application as events.
+
+Events can be correlated in the switch's metrics. For more information about indicator analysis, please read [Indicator Analysis](../../tutorials/analysis).
+
+```java
+fpClient.track("YOUR_CUSTOM_EVENT_NAME", user);
+// Providing a metric value to track
+fpClient.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
+```
+
 ## Mock FeatureProbe for Unit test
 
 You can mock FeatureProbe SDK returned value, to run unit test of your code.
