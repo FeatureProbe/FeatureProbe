@@ -200,7 +200,10 @@ const Results = (props: IProps) => {
               <span>:</span>
               <div className={styles['type']}>{metricTypeText.get(eventInfo?.type ?? '')}</div>
             </div>
-            <ResultTable data={tableData} />
+            <ResultTable 
+              data={tableData}
+              eventInfo={eventInfo}
+            />
           </div>
         ) : (
           <div className={styles['no-data']}>

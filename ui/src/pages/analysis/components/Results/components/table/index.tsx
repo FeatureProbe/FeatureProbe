@@ -1,15 +1,16 @@
 import { FormattedMessage } from 'react-intl';
 import { Table } from 'semantic-ui-react';
 import { VariationColors } from 'constants/colors';
-import { ITableData } from 'interfaces/analysis';
+import { IEvent, ITableData } from 'interfaces/analysis';
 import styles from './index.module.scss';
 
 interface IProps {
   data?: ITableData[];
+  eventInfo?: IEvent;
 }
 
 const ResultTable = (props: IProps) => {
-  const { data } = props;
+  const { data, eventInfo } = props;
   
   return (
     <div>
@@ -53,7 +54,11 @@ const ResultTable = (props: IProps) => {
                     ]
                   </Table.Cell>
                   <Table.Cell>
-                    {item.mean}
+                    { item.mean }
+                    { eventInfo?.unit && <span>
+                        ({ eventInfo?.unit })
+                      </span> 
+                    }
                   </Table.Cell>
                 </Table.Row>
               );
