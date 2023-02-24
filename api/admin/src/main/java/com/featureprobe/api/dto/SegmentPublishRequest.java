@@ -14,4 +14,7 @@ public class SegmentPublishRequest {
     @Schema(description = "Release notes")
     private String comment;
 
+    @Schema(description = "The current updated version.")
+    private Long baseVersion;
+
 }

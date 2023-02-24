@@ -37,7 +37,9 @@ import com.featureprobe.api.mapper.SegmentVersionMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +49,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Predicate;
 import java.util.Collections;
@@ -120,8 +123,11 @@ public class SegmentService {
                 new ResourceNotFoundException(ResourceType.PROJECT, projectKey));
         Segment segment = segmentRepository.findByProjectKeyAndKey(projectKey, segmentKey).orElseThrow(() ->
                 new ResourceNotFoundException(ResourceType.SEGMENT, projectKey + "_" + segmentKey));
-        Long oldVersion = segment.getVersion();
+
+        this.validatePublishConflicts(segment, publishRequest.getBaseVersion());
         SegmentMapper.INSTANCE.mapEntity(publishRequest, segment);
+        Long oldVersion = ObjectUtils.isNotEmpty(publishRequest.getBaseVersion())
+                ? publishRequest.getBaseVersion() : segment.getVersion();
 
         ToggleContentLimitChecker.validateSize(segment.getRules());
 
@@ -131,6 +137,14 @@ public class SegmentService {
         }
         saveSegmentChangeLog(project);
         return SegmentMapper.INSTANCE.entityToResponse(updatedSegment);
+    }
+
+    protected void validatePublishConflicts(Segment segment, Long baseVersion){
+        if (baseVersion != null) {
+            if (segment.getVersion() != null && !segment.getVersion().equals(baseVersion)) {
+                throw new OptimisticLockException("publish conflict");
+            }
+        }
     }
 
     private void saveSegmentChangeLog(Project project) {

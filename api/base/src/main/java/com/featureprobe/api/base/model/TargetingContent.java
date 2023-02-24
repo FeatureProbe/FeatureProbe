@@ -1,11 +1,9 @@
 package com.featureprobe.api.base.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.featureprobe.api.base.util.JsonMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
