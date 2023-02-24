@@ -606,7 +606,7 @@
   "analysis.event.conversion": "Conversion",
   "analysis.event.conversion.desc": "Track when user take an action",
   "analysis.event.numeric": "Numeric",
-  "analysis.event.numeric.desc": "Track value changes against a baseline",
+  "analysis.event.numeric.desc": "Track value changes",
   "analysis.event.click.target": "Click target",
   "analysis.event.click.target.placeholder": "Please input a CSS selector",
   "analysis.event.click.target.tips": "CSS selectors are patterns used to select the element(s). ",

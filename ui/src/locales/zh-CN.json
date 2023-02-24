@@ -606,7 +606,7 @@
   "analysis.event.conversion": "转化率",
   "analysis.event.conversion.desc": "跟踪用户何时采取行动",
   "analysis.event.numeric": "数值",
-  "analysis.event.numeric.desc": "跟踪值相对于基线的变化",
+  "analysis.event.numeric.desc": "跟踪值的变化",
   "analysis.event.click.target": "点击元素",
   "analysis.event.click.target.placeholder": "请输入CSS选择器",
   "analysis.event.click.target.tips": "CSS选择器是用于选择元素的模式。",

@@ -461,9 +461,9 @@ const Metrics = (props: IProps) => {
                                 await trigger('customMetricType');
                               }}
                             />
-                            <span className={styles['custom-metric-desc']}>
+                            {/* <span className={styles['custom-metric-desc']}>
                               <FormattedMessage id='analysis.event.conversion.desc' />
-                            </span>
+                            </span> */}
                             { errors.customMetricType && <div className={styles['error-text-event']}>{ errors.customMetricType.message }</div> }
                           </div>
                           
@@ -483,9 +483,9 @@ const Metrics = (props: IProps) => {
                                 await trigger('customMetricType');
                               }}
                             />
-                            <span className={styles['custom-metric-desc']}>
+                            {/* <span className={styles['custom-metric-desc']}>
                               <FormattedMessage id='analysis.event.numeric.desc' />
-                            </span>
+                            </span> */}
                           </div>
                         </div>
                       )

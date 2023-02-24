@@ -45,8 +45,8 @@ const Results = (props: IProps) => {
   const metricTypeText = useMemo(() => {
     return new Map([
       [CUSTOM, intl.formatMessage({id: 'analysis.event.custom'})],
-      [CONVERSION, `${intl.formatMessage({id: 'analysis.event.custom'})}${intl.locale === 'en-US' ? ':' : '：'}${intl.formatMessage({id: 'analysis.event.conversion'})}`],
-      [NUMERIC, `${intl.formatMessage({id: 'analysis.event.custom'})}${intl.locale === 'en-US' ? ':' : '：'}${intl.formatMessage({id: 'analysis.event.numeric'})}`],
+      [CONVERSION, `${intl.formatMessage({id: 'analysis.event.custom'})}${intl.locale === 'en-US' ? ':' : ' - '}${intl.formatMessage({id: 'analysis.event.conversion'})}`],
+      [NUMERIC, `${intl.formatMessage({id: 'analysis.event.custom'})}${intl.locale === 'en-US' ? ':' : ' - '}${intl.formatMessage({id: 'analysis.event.numeric'})}`],
       [CLICK, intl.formatMessage({id: 'analysis.event.click'})],
       [PAGE_VIEW, intl.formatMessage({id: 'analysis.event.pageview'})],
     ]);

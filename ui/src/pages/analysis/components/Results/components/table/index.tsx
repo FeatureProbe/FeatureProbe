@@ -48,8 +48,8 @@ const ResultTable = (props: IProps) => {
                   </Table.Cell>
                   <Table.Cell>
                     [
-                      {(Number(item.credibleInterval?.lower) * 100).toFixed(2) + '%'}, 
-                      {(Number(item.credibleInterval?.upper) * 100).toFixed(2) + '%'}
+                      {item.credibleInterval?.lower}, 
+                      {item.credibleInterval?.upper}
                     ]
                   </Table.Cell>
                   <Table.Cell>
