@@ -95,6 +95,20 @@ Close the client before exiting to ensure accurate data reporting.
 fp.close();
 ```
 
+## Track Events
+
+:::note
+The Rust SDK supports event tracking from version 2.0.1.
+:::
+
+The event tracking feature can record the actions taken by the user in the application as events.
+Events can be correlated in the switch's metrics. For more information about indicator analysis, please read [Indicator Analysis](../../tutorials/analysis).
+```rust
+fp.track("YOUR_CUSTOM_EVENT_NAME", &user, None);
+// Providing a metric value to track
+fp.track("YOUR_CUSTOM_EVENT_NAME", &user, Some(5.5));
+```
+
 ## Unit Testing
 
 FeatureProbe SDK provides a set of mock mechanism, which can specify the return value of FeatureProbe SDK in unit test.

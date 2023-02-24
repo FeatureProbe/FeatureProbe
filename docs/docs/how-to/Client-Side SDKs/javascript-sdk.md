@@ -156,7 +156,7 @@ test("feature probe unit testing", (done) => {
 });
 ```
 
-## Send events
+## Track events
 JavaScript SDK supports sending `custom events`, `pageview events` and `click events`.
 
 The reporting of `pageview events` and `click events` is done by the SDK itself automatically, you have no need to write any code.
