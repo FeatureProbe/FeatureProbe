@@ -191,6 +191,7 @@ export interface ITargetingParams {
   content: ITarget;
   reviewers?: string[];
   trackAccessEvents?: boolean;
+  baseVersion?: number;
 }
 
 export interface ITargetingDiff {

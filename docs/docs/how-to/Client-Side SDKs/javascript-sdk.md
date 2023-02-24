@@ -164,7 +164,6 @@ The reporting of `pageview events` and `click events` is done by the SDK itself 
 ### Send custom events
 After the SDK is ready, call the `track` api.
 
-NPM:
 
 ```js
 fp.on('ready', function() {
@@ -187,28 +186,6 @@ fp.on('ready', function() {
 
 ```
 
-Or via CDN:
-
-```js
-fp.on('ready', function() {
-  const result = fp.boolValue('YOUR_TOGGLE_KEY', false);
-  if (result) {
-    do_some_thing();
-  } else {
-    do_other_thing();
-  }
-  const reason = fp.boolDetail('YOUR_TOGGLE_KEY', false);
-  console.log(reason);
-
-  // Send a custom event.
-  // The first parameter is the event name,
-  // the second parameter is the unique user key.
-  // highlight-start
-  fp.track('YOUR_CUSTOM_EVENT_NAME', user.getKey());
-  // highlight-end
-})
-
-```
 
 ## Available options
 
