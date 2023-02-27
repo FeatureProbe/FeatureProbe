@@ -617,6 +617,9 @@
   "analysis.event.save.success": "保存指标成功",
   "analysis.event.save.error": "保存指标失败",
   "analysis.event.get.error": "获取指标失败",
+  "analysis.event.target.url.test": "测试一下URL是否匹配？",
+  "analysis.event.target.url.match": "输入的URL匹配目标页面URL",
+  "analysis.event.target.url.not.match": "输入的URL不匹配目标页面URL",
 
   "analysis.result.tip": "请先保存“指标信息”，并点击【收集数据】。",
   "analysis.result.collect.time": "数据统计周期：",

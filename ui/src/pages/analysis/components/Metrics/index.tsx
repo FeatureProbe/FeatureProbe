@@ -3,6 +3,7 @@ import { Dropdown, DropdownProps, Form, Grid, InputOnChangeData, Popup, RadioPro
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
+import { findIndex } from 'lodash';
 import Icon from 'components/Icon';
 import SectionTitle from 'components/SectionTitle';
 import Button from 'components/Button';
@@ -10,6 +11,7 @@ import message from 'components/MessageBox';
 import { IEvent } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
 import { createEvent } from 'services/analysis';
+import { matchUrl } from 'utils/checkUrl';
 import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, NUMERIC } from '../../constants';
 
 import styles from './index.module.scss';
@@ -36,6 +38,9 @@ const Metrics = (props: IProps) => {
   const [ winCriteria, saveWinCriteria ] = useState<string>('');
   const [ canSave, saveCanSave ] = useState<boolean>(false);
   const [ saveLoading, setSaveLoading ] = useState<boolean>(false);
+  const [ popupOpen, setPopupOpen ] = useState<boolean>(false);
+  const [ isLegal, saveIsLegal ] = useState<boolean>(false);
+  const [ checkUrl, saveCheckUrl ] = useState<string>('');
   const selectorUrl = useRef('');
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
 
@@ -47,6 +52,17 @@ const Metrics = (props: IProps) => {
     trigger,
     getValues,
   } = useForm();
+
+  useEffect(() => {
+    const handler = () => {
+      if (popupOpen) {
+        setPopupOpen(false);
+      }
+    };
+    window.addEventListener('click', handler);
+
+    return () => window.removeEventListener('click', handler);
+  }, [popupOpen]);
 
   useEffect(() => {
     if(eventInfo) {
@@ -350,6 +366,16 @@ const Metrics = (props: IProps) => {
     setValue('name', eventName);
   }, [eventName, setValue]);
 
+  const getMatcherText = useCallback((key: string) => {
+    return urlMatchOption[findIndex(urlMatchOption, {value: key})].text;
+  }, [urlMatchOption]);
+
+  useEffect(() => {
+    if (!popupOpen) {
+      saveCheckUrl('');
+    }
+  }, [popupOpen]);
+
   return (
     <div className={styles.metrics}>
       <SectionTitle
@@ -573,6 +599,75 @@ const Metrics = (props: IProps) => {
                           }}
                         />
                         { errors.url && <div className={styles['error-text-url']}>{ errors.url.message }</div> }
+                        {
+                          metricUrl && (
+                            <Popup
+                              open={popupOpen}
+                              on='click'
+                              position='bottom right'
+                              className={styles['test-url-popup']}
+                              trigger={
+                                <div 
+                                  className={styles['test-url-text']} 
+                                  onClick={(e: SyntheticEvent) => {
+                                    document.body.click();
+                                    e.stopPropagation();
+                                    setPopupOpen(true);
+                                  }}
+                                >
+                                  <FormattedMessage id='analysis.event.target.url.test' />
+                                </div>
+                              }
+                            >
+                              <div 
+                                className={styles['test-url-popup-content']} 
+                                onClick={(e: SyntheticEvent) => {
+                                  e.stopPropagation();
+                                }}
+                              >
+                                <div className={styles['test-url-popup-title']}>
+                                  {getMatcherText(metricMatcher)}
+                                  <span className={styles['test-url-popup-divider']}>:</span>
+                                  {metricUrl}
+                                </div>
+                                <Form>
+                                  <Form.Input
+                                    className={styles['test-url-popup-url']}
+                                    error={ errors.url ? true : false }
+                                    value={checkUrl}
+                                    placeholder={
+                                      intl.formatMessage({id: 'analysis.event.target.url.placeholder'})
+                                    }
+                                    onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
+                                      e.stopPropagation();
+                                      saveCheckUrl(detail.value);
+                                      saveIsLegal(matchUrl(metricMatcher, metricUrl, detail.value));
+                                    }}
+                                  />
+                                </Form>
+                                {
+                                  checkUrl && (
+                                    <div>
+                                      {
+                                        isLegal ? (
+                                          <div className={styles['test-url-success']}>
+                                            <Icon type='success-circle' customclass={styles['test-url-success-icon']} />
+                                            <FormattedMessage id='analysis.event.target.url.match' />
+                                          </div>
+                                        ) : (
+                                          <div className={styles['test-url-error']}>
+                                            <Icon type='error-circle' customclass={styles['test-url-error-icon']} />
+                                            <FormattedMessage id='analysis.event.target.url.not.match' />
+                                          </div>
+                                        )
+                                      }
+                                    </div>
+                                  )
+                                }
+                              </div>
+                            </Popup>
+                          )
+                        }
                       </div>
                     </Form.Field>
                   </Grid.Column>
