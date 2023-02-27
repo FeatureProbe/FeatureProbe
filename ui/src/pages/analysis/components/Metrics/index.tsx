@@ -15,6 +15,7 @@ import { matchUrl } from 'utils/checkUrl';
 import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, NUMERIC } from '../../constants';
 
 import styles from './index.module.scss';
+import TextLimit from 'components/TextLimit';
 
 interface IProps {
   eventInfo?: IEvent;
@@ -579,6 +580,7 @@ const Metrics = (props: IProps) => {
                           onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
                             setValue(detail.name, detail.value);
                             saveMetricMatcher(detail.value as string);
+                            setPopupOpen(false);
                             await trigger('matcher');
                           }}
                         />
@@ -602,6 +604,7 @@ const Metrics = (props: IProps) => {
                         {
                           metricUrl && (
                             <Popup
+                              hideOnScroll
                               open={popupOpen}
                               on='click'
                               position='bottom right'
@@ -618,17 +621,15 @@ const Metrics = (props: IProps) => {
                                   <FormattedMessage id='analysis.event.target.url.test' />
                                 </div>
                               }
+                              onClick={(e: SyntheticEvent) => {
+                                e.stopPropagation();
+                              }}
                             >
-                              <div 
-                                className={styles['test-url-popup-content']} 
-                                onClick={(e: SyntheticEvent) => {
-                                  e.stopPropagation();
-                                }}
-                              >
+                              <div className={styles['test-url-popup-content']}>
                                 <div className={styles['test-url-popup-title']}>
                                   {getMatcherText(metricMatcher)}
                                   <span className={styles['test-url-popup-divider']}>:</span>
-                                  {metricUrl}
+                                  <TextLimit text={metricUrl ?? ''} maxWidth={220} />
                                 </div>
                                 <Form>
                                   <Form.Input
@@ -641,6 +642,7 @@ const Metrics = (props: IProps) => {
                                     onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
                                       e.stopPropagation();
                                       saveCheckUrl(detail.value);
+                                      console.log(matchUrl(metricMatcher, metricUrl, detail.value));
                                       saveIsLegal(matchUrl(metricMatcher, metricUrl, detail.value));
                                     }}
                                   />

@@ -9,24 +9,22 @@ function escapeStringRegexp(string: string): string {
 }
 
 export function matchUrl(matcher: string, originUrl: string, targetUrl: string): boolean {
-  let fullUrl;
   let href = '';
   let hash = '';
   let search = '';
 
   try {
-    fullUrl = new URL(targetUrl);
+    const fullUrl = new URL(targetUrl, '');
     href = fullUrl.href;
     hash = fullUrl.hash;
     search = fullUrl.search;
-
   } catch (error) {
     href = targetUrl;
   }
 
   let regex;
   let testUrl;
-  
+
   switch (matcher) {
     case 'EXACT':
       testUrl = href;
@@ -37,16 +35,18 @@ export function matchUrl(matcher: string, originUrl: string, targetUrl: string):
       regex = new RegExp('^' + escapeStringRegexp(originUrl) + '/?$');
       break;
     case 'SUBSTRING':
-      testUrl =  href.replace(search, '');
+      testUrl = href.replace(search, '');
       regex = new RegExp('.*' + escapeStringRegexp(originUrl) + '.*$');
       break;
     case 'REGULAR':
-      testUrl =  href.replace(search, '');
+      testUrl = href.replace(search, '');
       regex = new RegExp(originUrl);
       break;
     default:
       return false;
   }
+
+  console.log(testUrl);
 
   return regex.test(testUrl);
 }
