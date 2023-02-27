@@ -33,6 +33,7 @@ interface IAnalysisData {
     upper: number;
   };
   distributionChart: IDistribution[];
+  sampleSize: number;
 }
 
 export interface IChartData {
@@ -48,4 +49,5 @@ export interface ITableData {
     upper: number;
   };
   mean?: number;
+  sampleSize?: number;
 }

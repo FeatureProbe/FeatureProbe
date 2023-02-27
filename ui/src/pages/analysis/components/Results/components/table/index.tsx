@@ -23,6 +23,9 @@ const ResultTable = (props: IProps) => {
             <Table.HeaderCell className={styles['column-probability']}>
               <FormattedMessage id='analysis.result.table.percentage' />
             </Table.HeaderCell>
+            <Table.HeaderCell className={styles['column-probability']}>
+              <FormattedMessage id='analysis.result.table.samplesize' />
+            </Table.HeaderCell>
             <Table.HeaderCell>
               <FormattedMessage id='analysis.result.table.credibleInterval' />
             </Table.HeaderCell>
@@ -45,6 +48,11 @@ const ResultTable = (props: IProps) => {
                   <Table.Cell className={styles.probability}>
                     <div className={styles['probability-text']}>
                       {(Number(item.winningPercentage) * 100).toFixed(2) + '%'}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div>
+                      {item.sampleSize}
                     </div>
                   </Table.Cell>
                   <Table.Cell>
