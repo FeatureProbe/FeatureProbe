@@ -46,7 +46,5 @@ export function matchUrl(matcher: string, originUrl: string, targetUrl: string):
       return false;
   }
 
-  console.log(testUrl);
-
   return regex.test(testUrl);
 }

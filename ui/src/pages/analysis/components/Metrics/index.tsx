@@ -107,7 +107,7 @@ const Metrics = (props: IProps) => {
 
   useEffect(() => {
     const formValues = getValues();
-    if(
+    if (
       eventInfo?.name !== formValues.metricName ||
       eventInfo?.description !== formValues.description
     ) {
@@ -155,7 +155,20 @@ const Metrics = (props: IProps) => {
     }
 
     saveCanSave(true);
-  }, [eventInfo, getValues, metricMatcher, eventName, metricSelector, metricUrl, metricType, unit, winCriteria, metricName, description, customMetricType]);
+  }, [
+    eventInfo,
+    getValues,
+    metricMatcher,
+    eventName,
+    metricSelector,
+    metricUrl,
+    metricType,
+    unit,
+    winCriteria,
+    metricName,
+    description,
+    customMetricType,
+  ]);
 
   useEffect(() => {
     if (intl.locale === 'zh-CN') {
@@ -380,15 +393,15 @@ const Metrics = (props: IProps) => {
   return (
     <div className={styles.metrics}>
       <SectionTitle
-        title={intl.formatMessage({id: 'common.metrics.text'})}
         showTooltip={false}
+        title={intl.formatMessage({id: 'common.metrics.text'})}
       />
 
       <div className={styles['metrics-content']}>
         <Form autoComplete='off'onSubmit={handleSubmit(onSubmit)}>
           <Grid>
             <Grid.Row className={styles.row}>
-              {/* Name and description */}
+              {/* Metric name */}
               <Grid.Column width={8} className={styles.column}>
                 <Form.Field inline={true} className={styles.field}>
                   <label className={styles.label}>
@@ -414,6 +427,8 @@ const Metrics = (props: IProps) => {
                 </Form.Field>
                 { errors.metricName && <div className={styles['error-text']}>{ errors.metricName.message }</div> }
               </Grid.Column>
+
+              {/* Metric description */}
               <Grid.Column width={8} className={styles.column}>
                 <Form.Field inline={true} className={styles.field}>
                   <label className={styles.label}>
@@ -438,8 +453,7 @@ const Metrics = (props: IProps) => {
               </Grid.Column>
             </Grid.Row>
             <Grid.Row className={styles.row}>
-
-              {/* event kind */}
+              {/* Event type */}
               <Grid.Column width={8} className={styles.column}>
                 <Form.Field inline={true} className={styles.field}>
                   <label className={styles.label}>
@@ -523,7 +537,7 @@ const Metrics = (props: IProps) => {
                 { errors.kind && <div className={styles['error-text']}>{ errors.kind.message }</div> }
               </Grid.Column>
 
-              {/* event name */}
+              {/* Event name */}
               {
                 metricType === CUSTOM && (
                   <Grid.Column width={8} className={styles.column}>
@@ -556,7 +570,7 @@ const Metrics = (props: IProps) => {
                 )
               }
 
-              {/* event matcher and url */}
+              {/* Event matcher and url */}
               {
                 (metricType === PAGE_VIEW || metricType === CLICK) && (
                   <Grid.Column width={8} className={styles.column}>
@@ -642,7 +656,6 @@ const Metrics = (props: IProps) => {
                                     onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
                                       e.stopPropagation();
                                       saveCheckUrl(detail.value);
-                                      console.log(matchUrl(metricMatcher, metricUrl, detail.value));
                                       saveIsLegal(matchUrl(metricMatcher, metricUrl, detail.value));
                                     }}
                                   />
@@ -677,7 +690,7 @@ const Metrics = (props: IProps) => {
               }
             </Grid.Row>
 
-            {/* event target selector */}
+            {/* Event target selector */}
             {
               metricType === CLICK && (
                 <Grid.Row className={styles.row}>
@@ -722,10 +735,11 @@ const Metrics = (props: IProps) => {
               )
             }
 
-            {/* event unit and win criteria */}
             {
               metricType === CUSTOM && customMetricType ===  NUMERIC && (
                 <Grid.Row className={styles.row}>
+
+                  {/* Event unit */}
                   <Grid.Column width={8} className={styles.column}>
                     <Form.Field inline={true} className={styles.field}>
                       <label className={styles.label}>
@@ -751,6 +765,8 @@ const Metrics = (props: IProps) => {
                     </Form.Field>
                     { errors.unit && <div className={styles['error-text']}>{ errors.unit.message }</div> }
                   </Grid.Column>
+
+                  {/* Event win criteria */}
                   <Grid.Column width={8} className={styles.column}>
                     <Form.Field className={styles.field}>
                       <label className={styles.label}>
