@@ -14,7 +14,7 @@ import { IChartData, IEvent, IEventAnalysis, IDistribution, ITableData, IAnalysi
 import { IRouterParams } from 'interfaces/project';
 import { ITarget } from 'interfaces/targeting';
 import TextLimit from 'components/TextLimit';
-import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, NUMERIC } from '../../constants';
+import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, REVENUE, DURATION, COUNT } from '../../constants';
 
 import styles from './index.module.scss';
 
@@ -42,11 +42,18 @@ const Results = (props: IProps) => {
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
 
-  const metricTypeText = useMemo(() => {
+  const getMetricTypeText = useMemo(() => {
+    return new Map([
+      [CONVERSION, intl.formatMessage({id: 'analysis.event.conversion'})],
+      [COUNT, intl.formatMessage({id: 'analysis.event.count'})],
+      [REVENUE, intl.formatMessage({id: 'analysis.event.revenue'})],
+      [DURATION, intl.formatMessage({id: 'analysis.event.duration'})],
+    ]);
+  }, [intl]);
+
+  const getEventTypeText = useMemo(() => {
     return new Map([
       [CUSTOM, intl.formatMessage({id: 'analysis.event.custom'})],
-      [CONVERSION, `${intl.formatMessage({id: 'analysis.event.custom'})} - ${intl.formatMessage({id: 'analysis.event.conversion'})}`],
-      [NUMERIC, `${intl.formatMessage({id: 'analysis.event.custom'})} - ${intl.formatMessage({id: 'analysis.event.numeric'})}`],
       [CLICK, intl.formatMessage({id: 'analysis.event.click'})],
       [PAGE_VIEW, intl.formatMessage({id: 'analysis.event.pageview'})],
     ]);
@@ -199,7 +206,11 @@ const Results = (props: IProps) => {
                 <TextLimit text={eventInfo?.name ?? ''} maxLength={20} />
                 <span>:</span>
               </span>
-              <span className={styles['type']}>{metricTypeText.get(eventInfo?.type ?? '')}</span>
+              <span className={styles['type']}>
+                {getMetricTypeText.get(eventInfo?.metricType ?? '')}
+                {' - '}
+                {getEventTypeText.get(eventInfo?.eventType ?? '')}
+              </span>
             </div>
             <ResultTable 
               data={tableData}

@@ -26,8 +26,8 @@
 }
 
 .label {
-  width: 98px !important;
-  margin: 6px 12px 0 0 !important;
+  font-size: 13px;
+  color: #212529;
 }
 
 .label-required {
@@ -67,47 +67,9 @@
   margin-bottom: 0;
 }
 
-.custom-metric-row {
-  display: flex;
-  margin-top: 24px;
-}
-
-.custom-metric-radio {
-  flex: 1;
-}
-
-.custom-metric-radio-disabled {
-  cursor: not-allowed;
-}
-
-.custom-metric-desc {
-  background: #ececf6;
-  border-radius: 4px;
-  color: #495057;
-  font-size: 12px;
-  transform: scale(0.83);
-  padding: 1px 4px;
-  margin-left: 20px;
-}
-
-.custom-metric-desc-disabled {
-  background: #ececf6;
-  border-radius: 4px;
-  color: #495057;
-  font-size: 12px;
-  transform: scale(0.83);
-  padding: 1px 4px;
-  margin-left: 20px;
-  opacity: 0.8;
-  cursor: not-allowed;
-}
-
-.custom-metric {
-  margin-bottom: 3px !important;
-}
-
-.metrics-save {
-  margin-top: 24px;
+.column {
+  position: relative;
+  margin-bottom: 16px !important;
 }
 
 .btn {
@@ -123,6 +85,7 @@
 .tip-text {
   color: #74788d;
   font-size: 12px;
+  margin-left: 12px;
 }
 
 .error-text {
@@ -144,68 +107,36 @@
   margin-left: 26px;
 }
 
-.column {
-  position: relative;
+.divider {
+  width: 150px;
+  height: 1px;
+  background: rgba(206, 212, 218, 0.6);
+  margin: 8px 0;
 }
 
-.test-url-popup {
-  width: 320px;
-  height: 120px;
-  padding: 16px 24px !important;
-
-  &-title {
-    font-size: 16px;
-    color: rgba(0, 0, 0, 0.87);
-    line-height: 24px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 300px;
-  }
-
-  &-divider {
-    margin-right: 4px;
-  }
-
-  &-url {
-    width: 100%;
-    margin-top: 8px !important;
-  }
-
-  &-result {
-    font-size: 14px;
-    color: #f46a6a;
-  }
+.formula {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #212529;
+  margin-left: 88px;
 }
 
-.test-url-text {
+.formula-label {
+  margin-right: 12px;
+}
+
+.molecular {
+  text-align: center;
   font-size: 12px;
-  color: #5664ff;
-  text-align: right;
-  cursor: pointer;
+  color: #495057;
+  line-height: 1;
 }
 
-.test-url-success {
-  font-size: 14px;
-  color: #74788d;
-  margin-top: 4px;
-}
-
-.test-url-success-icon {
-  color: #00b365 !important;
-  margin-right: 4px;
-  vertical-align: middle;
-}
-
-.test-url-error {
-  font-size: 14px;
-  color: #f46a6a;
-  margin-top: 4px;
-}
-
-.test-url-error-icon {
-  color: #f5483b !important;
-  margin-right: 4px;
-  vertical-align: middle;
+.denominator {
+  text-align: center;
+  font-size: 12px;
+  color: #495057;
+  line-height: 1;
 }
