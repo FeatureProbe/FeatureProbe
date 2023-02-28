@@ -10,6 +10,12 @@
   border-radius: 12px;
   padding: 24px 16px;
   margin-top: 8px;
+
+  :global {
+    .ui.form .field {
+      margin-bottom: 0 !important;
+    }
+  }
 }
 
 .angle-down {
@@ -22,7 +28,6 @@
 .label {
   width: 98px !important;
   margin: 6px 12px 0 0 !important;
-  text-align: right;
 }
 
 .label-required {
@@ -37,6 +42,7 @@
 .field {
   display: flex;
   margin-bottom: 0 !important;
+  width: 100% !important;
 }
 
 .field-middle {
@@ -101,7 +107,6 @@
 }
 
 .metrics-save {
-  margin-left: 114px;
   margin-top: 24px;
 }
 
@@ -118,14 +123,13 @@
 .tip-text {
   color: #74788d;
   font-size: 12px;
-  margin-left: 122px;
 }
 
 .error-text {
   color: #f46a6a;
   font-size: 12px;
   position: relative;
-  margin-left: 122px;
+  margin-left: 12px;
 }
 
 .error-text-url {
