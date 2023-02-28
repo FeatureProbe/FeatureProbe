@@ -11,27 +11,32 @@ import com.featureprobe.api.config.AppConfig;
 import com.featureprobe.api.dao.entity.Environment;
 import com.featureprobe.api.dao.entity.Event;
 import com.featureprobe.api.dao.entity.Metric;
+import com.featureprobe.api.dao.entity.MetricIteration;
+import com.featureprobe.api.dao.entity.TargetingVersion;
 import com.featureprobe.api.dao.entity.ToggleControlConf;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
 import com.featureprobe.api.dao.repository.EnvironmentRepository;
 import com.featureprobe.api.dao.repository.EventRepository;
+import com.featureprobe.api.dao.repository.MetricIterationRepository;
 import com.featureprobe.api.dao.repository.MetricRepository;
+import com.featureprobe.api.dao.repository.TargetingVersionRepository;
 import com.featureprobe.api.dao.repository.ToggleControlConfRepository;
 import com.featureprobe.api.dto.AnalysisResultResponse;
 import com.featureprobe.api.dto.MetricConfigResponse;
 import com.featureprobe.api.dto.MetricCreateRequest;
+import com.featureprobe.api.dto.MetricIterationResponse;
 import com.featureprobe.api.dto.MetricResponse;
+import com.featureprobe.api.mapper.MetricIterationMapper;
 import com.featureprobe.api.mapper.MetricMapper;
+import com.featureprobe.api.mapper.TargetingVersionMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.RegExUtils;
-import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,17 +45,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -62,6 +64,10 @@ public class MetricService {
 
     private ToggleControlConfRepository toggleControlConfRepository;
     private EnvironmentRepository environmentRepository;
+
+    private MetricIterationRepository metricIterationRepository;
+
+    private TargetingVersionRepository targetingVersionRepository;
     private ChangeLogService changeLogService;
 
     private AppConfig appConfig;
@@ -153,6 +159,67 @@ public class MetricService {
                 positiveWin, start, end);
         return new AnalysisResultResponse(start, end, MetricMapper.INSTANCE.entityToConfigResponse(metric),
                 JsonMapper.toObject(callRes, Map.class).get("data"));
+    }
+
+    public List<MetricIterationResponse> iteration(String projectKey, String environmentKey, String toggleKey) {
+        List<MetricIteration> iterations = metricIterationRepository
+                .findAllByProjectKeyAndEnvironmentKeyAndToggleKeyOrderByStartAsc(projectKey, environmentKey,
+                        toggleKey);
+        List<MetricIterationResponse> responses = iterations.stream()
+                .map(iteration -> MetricIterationMapper.INSTANCE.entityToResponse(iteration))
+                .collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(responses)) {
+            Date time = Objects.isNull(responses.get(responses.size() - 1).getStop()) ?
+                    responses.get(responses.size() - 1).getStart() : responses.get(0).getStop();
+            List<TargetingVersion> versions = targetingVersionRepository
+                    .findAllByProjectKeyAndEnvironmentKeyAndToggleKeyAndCreatedTimeGreaterThanEqualOrderByVersionDesc(
+                            projectKey, environmentKey, toggleKey, time);
+            responses.forEach(response -> {
+                List<MetricIterationResponse.PublishRecord> records;
+                if (Objects.isNull(response.getStop())) {
+                    records = versions.stream()
+                            .filter(version -> version.getCreatedTime().after(response.getStart()))
+                            .map(version -> TargetingVersionMapper.INSTANCE.entityToPublishRecord(version))
+                            .collect(Collectors.toList());
+                } else {
+                    records = versions.stream()
+                            .filter(version -> version.getCreatedTime().after(response.getStart())
+                                    && version.getCreatedTime().before(response.getStop()))
+                            .map(version -> TargetingVersionMapper.INSTANCE.entityToPublishRecord(version))
+                            .collect(Collectors.toList());
+                }
+                response.setRecords(records);
+            });
+        }
+        return responses;
+    }
+
+    public MetricIteration updateMetricIteration(String projectKey, String environmentKey, String toggleKey,
+                                                 boolean trackAccessEvents, Date now) {
+        MetricIteration iteration;
+        if (trackAccessEvents) {
+            iteration = metricIterationRepository.save(buildMetricIteration(projectKey, environmentKey, toggleKey,
+                    now, null));
+        } else {
+            List<MetricIteration> iterations = metricIterationRepository
+                    .findAllByProjectKeyAndEnvironmentKeyAndToggleKeyOrderByStartAsc(projectKey, environmentKey,
+                            toggleKey);
+            MetricIteration latestIteration = iterations.get(0);
+            latestIteration.setStop(now);
+            return metricIterationRepository.save(latestIteration);
+        }
+        return iteration;
+    }
+
+    private MetricIteration buildMetricIteration(String projectKey, String environmentKey, String toggleKey,
+                                                 Date start, Date stop) {
+        MetricIteration iteration = new MetricIteration();
+        iteration.setProjectKey(projectKey);
+        iteration.setEnvironmentKey(environmentKey);
+        iteration.setToggleKey(toggleKey);
+        iteration.setStart(start);
+        iteration.setStop(stop);
+        return iteration;
     }
 
     public static String generatePVUniqueName(MatcherTypeEnum matcher, String url) {

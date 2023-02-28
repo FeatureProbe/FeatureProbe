@@ -392,6 +392,7 @@ public class TargetingService {
         }
         ToggleControlConf toggleControlConf = toggleControlConfService.updateTrackAccessEvents(latestTargeting,
                 targetingPublishRequest.getTrackAccessEvents());
+
         TargetingResponse targetingResponse = TargetingMapper.INSTANCE.entityToResponse(latestTargeting);
         targetingResponse.setTrackAccessEvents(toggleControlConf.isTrackAccessEvents());
 

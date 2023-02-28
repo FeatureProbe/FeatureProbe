@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -32,6 +33,13 @@ public interface TargetingVersionRepository extends JpaRepository<TargetingVersi
                                                                                                  String environmentKey,
                                                                                                  String toggleKey,
                                                                                                  Long version);
+
+    List<TargetingVersion>
+    findAllByProjectKeyAndEnvironmentKeyAndToggleKeyAndCreatedTimeGreaterThanEqualOrderByVersionDesc(
+            String projectKey,
+            String environmentKey,
+            String toggleKey,
+            Date start);
 
     long countByProjectKeyAndEnvironmentKeyAndToggleKey(String projectKey, String environmentKey, String toggleKey);
 
