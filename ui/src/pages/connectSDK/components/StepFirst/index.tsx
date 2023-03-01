@@ -17,10 +17,9 @@ import miniprogram from 'images/wechat-miniprogram.png';
 import reactLogo from 'images/react.svg';
 import { SdkLanguage } from '../StepSecond';
 
-import styles from '../Steps/index.module.scss';
+import styles from '../../index.module.scss';
 
 const SDK_LOGOS: {[key in SdkLanguage]: string} = {
-  // 'null': null,
   'Java': java,
   'Rust': rust,
   'Go': go,

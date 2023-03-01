@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { IRouterParams } from 'interfaces/project';
-import styles from '../Steps/index.module.scss';
+import styles from '../../index.module.scss';
 
 interface IProps {
   isLoading: boolean;

@@ -24,7 +24,7 @@ import {
   getMiniProgramCode,
   getReactCode,
 } from '../constants';
-import styles from '../Steps/index.module.scss';
+import styles from '../../index.module.scss';
 
 export type SdkLanguage = 
     'Java'

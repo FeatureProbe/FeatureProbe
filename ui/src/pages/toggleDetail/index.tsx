@@ -334,7 +334,7 @@ const ToggleDetail = () => {
   }, [history, projectKey, environmentKey, toggleKey, resetHistory]);
 
   const gotoGetStarted = useCallback(() => {
-    history.push(`/${projectKey}/${environmentKey}/${toggleKey}/get-started`);
+    history.push(`/${projectKey}/${environmentKey}/${toggleKey}/connect-sdk`);
   }, [history, projectKey, environmentKey, toggleKey]);
 
 	return (
