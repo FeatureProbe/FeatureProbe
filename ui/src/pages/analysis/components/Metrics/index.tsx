@@ -235,6 +235,7 @@ const Metrics = (props: IProps) => {
       metricType: data.metricType,
       eventType: data.eventType,
       winCriteria: data.winCriteria,
+      denominator: 'TOTAL_SAMPLE',
     };
 
     if (data.eventType === PAGE_VIEW) {

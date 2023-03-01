@@ -9,6 +9,7 @@ export interface IEvent {
   winCriteria: string;
   unit?: string;
   eventType: string;
+  denominator: string;
 }
 
 export interface IEventAnalysis {
