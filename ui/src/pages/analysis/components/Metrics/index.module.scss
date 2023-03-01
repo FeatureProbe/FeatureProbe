@@ -140,3 +140,65 @@
   color: #495057;
   line-height: 1;
 }
+
+.test-url-popup {
+  width: 320px;
+  height: 120px;
+  padding: 16px 24px !important;
+
+  &-title {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.87);
+    line-height: 24px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 300px;
+  }
+
+  &-divider {
+    margin-right: 4px;
+  }
+
+  &-url {
+    width: 100%;
+    margin-top: 8px !important;
+  }
+
+  &-result {
+    font-size: 14px;
+    color: #f46a6a;
+  }
+}
+
+.test-url-text {
+  font-size: 12px;
+  color: #5664ff;
+  text-align: right;
+  cursor: pointer;
+}
+
+.test-url-success {
+  font-size: 14px;
+  color: #74788d;
+  margin-top: 4px;
+}
+
+.test-url-success-icon {
+  color: #00b365 !important;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.test-url-error {
+  font-size: 14px;
+  color: #f46a6a;
+  margin-top: 4px;
+}
+
+.test-url-error-icon {
+  color: #f5483b !important;
+  margin-right: 4px;
+  vertical-align: middle;
+}
