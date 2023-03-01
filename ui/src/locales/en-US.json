@@ -606,6 +606,7 @@
   "analysis.event.target.url.matching.regex": "Regular expression",
   "analysis.event.target.url.matching.regex.error": "Enter the correct regular expression",
   "analysis.event.conversion": "Conversion",
+  "analysis.event.conversions": "Conversions",
   "analysis.event.conversion.desc": "(Percent of users who do something)",
   "analysis.event.count": "Count",
   "analysis.event.count.desc": "(Number of actions per user)",

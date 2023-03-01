@@ -1,7 +1,7 @@
 import { FormattedMessage } from 'react-intl';
-import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, COUNT, DURATION, REVENUE } from '../constants';
+import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, COUNT, DURATION, REVENUE, POSITIVE, NEGATIVE, SIMPLE, EXACT, SUBSTRING, REGULAR } from '../constants';
 
-const COLOR_CSS = {color: '#74788d'};
+const STYLE = {color: '#74788d', marginLeft: '4px'};
 
 export function getMetricTypeOptions() {
   return [
@@ -11,7 +11,7 @@ export function getMetricTypeOptions() {
       text: (
         <span>
           <FormattedMessage id='analysis.event.conversion' />
-          <span style={COLOR_CSS}>
+          <span style={STYLE}>
             <FormattedMessage id='analysis.event.conversion.desc' />
           </span>
         </span>
@@ -23,7 +23,7 @@ export function getMetricTypeOptions() {
       text: (
         <span>
           <FormattedMessage id='analysis.event.count' />
-          <span style={COLOR_CSS}>
+          <span style={STYLE}>
             <FormattedMessage id='analysis.event.count.desc' />
           </span>
         </span>
@@ -35,7 +35,7 @@ export function getMetricTypeOptions() {
       text: (
         <span>
           <FormattedMessage id='analysis.event.duration' />
-          <span style={COLOR_CSS}>
+          <span style={STYLE}>
             <FormattedMessage id='analysis.event.duration.desc' />
           </span>
         </span>
@@ -47,7 +47,7 @@ export function getMetricTypeOptions() {
       text: (
         <span>
           <FormattedMessage id='analysis.event.revenue' />
-          <span style={COLOR_CSS}>
+          <span style={STYLE}>
             <FormattedMessage id='analysis.event.revenue.desc' />
           </span>
         </span>
@@ -59,23 +59,23 @@ export function getMetricTypeOptions() {
 export function getUrlMatchOptions() {
   return [
     { 
-      key: 'simple', 
-      value: 'SIMPLE', 
+      key: SIMPLE, 
+      value: SIMPLE, 
       text: <FormattedMessage id='analysis.event.target.url.matching.simple' />
     },
     { 
-      key: 'exact', 
-      value: 'EXACT', 
+      key: EXACT, 
+      value: EXACT, 
       text: <FormattedMessage id='analysis.event.target.url.matching.exact' />
     },
     { 
-      key: 'substring', 
-      value: 'SUBSTRING', 
+      key: SUBSTRING, 
+      value: SUBSTRING, 
       text: <FormattedMessage id='analysis.event.target.url.matching.substring' />
     },
     { 
-      key: 'regex', 
-      value: 'REGULAR', 
+      key: REGULAR, 
+      value: REGULAR, 
       text: <FormattedMessage id='analysis.event.target.url.matching.regex' />
     },
   ];
@@ -84,13 +84,13 @@ export function getUrlMatchOptions() {
 export function getWinCriteriaOptions() {
   return [
     { 
-      key: 'greater', 
-      value: 'POSITIVE', 
+      key: POSITIVE, 
+      value: POSITIVE, 
       text: <FormattedMessage id='analysis.metric.target.win.criteria.greater' />
     },
     { 
-      key: 'lower', 
-      value: 'NEGATIVE', 
+      key: NEGATIVE, 
+      value: NEGATIVE, 
       text: <FormattedMessage id='analysis.metric.target.win.criteria.lower' />
     },
   ];

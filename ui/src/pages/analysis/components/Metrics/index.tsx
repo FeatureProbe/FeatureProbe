@@ -1,13 +1,14 @@
-import { useCallback, useState, SyntheticEvent, useEffect, useRef } from 'react';
+import { useCallback, useState, SyntheticEvent, useEffect, useRef, useMemo } from 'react';
 import { Dropdown, DropdownProps, Form, Grid, InputOnChangeData, Popup } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
+import isEqual from 'lodash/isEqual';
 import Icon from 'components/Icon';
 import SectionTitle from 'components/SectionTitle';
 import Button from 'components/Button';
 import message from 'components/MessageBox';
-import ValidateUrl from '../ValidateUrl';
+import CheckURL from '../CheckURL';
 import { IEvent } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
 import { createEvent } from 'services/analysis';
@@ -44,6 +45,7 @@ const Metrics = (props: IProps) => {
   const [ canSave, saveCanSave ] = useState<boolean>(false);
   const [ saveLoading, setSaveLoading ] = useState<boolean>(false);
   const [ popupOpen, setPopupOpen ] = useState<boolean>(false);
+  const [ initialFormValue, saveInitialFormValue ] = useState({});
   const selectorUrl = useRef('');
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
@@ -95,77 +97,37 @@ const Metrics = (props: IProps) => {
       eventInfo.selector && saveMetricSelector(eventInfo.selector);
     }
 
+    if (eventInfo?.eventType === CUSTOM) {
+      setValue('eventName', eventInfo.eventName);
+      eventInfo.eventName && saveEventName(eventInfo.eventName);
+    }
+
     if (eventInfo?.metricType === DURATION || eventInfo?.metricType === REVENUE) {
       setValue('unit', eventInfo?.unit);
       eventInfo?.unit && saveUnit(eventInfo.unit);
     }
 
-    console.log('origin---', getValues());
+    saveInitialFormValue(getValues());
   }, [eventInfo, getValues, setValue]);
 
   useEffect(() => {
     const formValues = getValues();
-    console.log(formValues);
-    // if (
-    //   eventInfo?.name !== formValues.metricName ||
-    //   eventInfo?.description !== formValues.description
-    // ) {
-    //   saveCanSave(true);
-    //   return;
-    // }
-
-    // if (metricType === PAGE_VIEW) {
-    //   if (
-    //     eventInfo?.type === formValues.kind  &&
-    //     eventInfo?.matcher === formValues.matcher &&
-    //     eventInfo?.url === formValues.url
-    //   ) {
-    //     saveCanSave(false);
-    //     return;
-    //   }
-    // } else if (metricType === CLICK) {
-    //   if (
-    //     eventInfo?.type === formValues.kind && 
-    //     eventInfo?.matcher === formValues.matcher &&
-    //     eventInfo?.url === formValues.url &&
-    //     eventInfo?.selector === formValues.selector
-    //   ) {
-    //     saveCanSave(false);
-    //     return;
-    //   }
-    // } else if (metricType === CUSTOM && customMetricType === CONVERSION) {
-    //   if (
-    //     eventInfo?.eventName === formValues.eventName &&
-    //     eventInfo?.type === customMetricType
-    //   ) {
-    //     saveCanSave(false);
-    //     return;
-    //   }
-    // } else if(metricType === CUSTOM && customMetricType === NUMERIC) {
-    //   if (
-    //     eventInfo?.eventName === formValues.eventName &&
-    //     eventInfo?.unit === formValues.unit &&
-    //     eventInfo?.winCriteria === formValues.winCriteria &&
-    //     eventInfo?.type === customMetricType
-    //   ) {
-    //     saveCanSave(false);
-    //     return;
-    //   }
-    // }
-
-    saveCanSave(true);
+    const isSame = isEqual(formValues, initialFormValue);
+    saveCanSave(!isSame);
   }, [
     eventInfo,
     getValues,
-    metricMatcher,
-    eventName,
-    metricSelector,
-    metricUrl,
-    metricType,
-    unit,
-    winCriteria,
     metricName,
     description,
+    metricType,
+    eventType,
+    eventName,
+    metricMatcher,
+    metricSelector,
+    metricUrl,
+    unit,
+    winCriteria,
+    initialFormValue,
   ]);
 
   useEffect(() => {
@@ -294,9 +256,6 @@ const Metrics = (props: IProps) => {
       param.unit = data.unit;
     }
 
-    console.log(param);
-    return;
-    
     setSaveLoading(true);
 
     createEvent(projectKey, environmentKey, toggleKey, param).then(res => {
@@ -326,6 +285,15 @@ const Metrics = (props: IProps) => {
     // User needs to fill event name again
     setValue('eventName', eventName);
   }, [eventName, setValue]);
+
+  const geMolecularText = useMemo(() => {
+    return new Map([
+      [CONVERSION, intl.formatMessage({id: 'analysis.event.conversions'})],
+      [COUNT, intl.formatMessage({id: 'analysis.event.count'})],
+      [REVENUE, intl.formatMessage({id: 'analysis.event.revenue'})],
+      [DURATION, intl.formatMessage({id: 'analysis.event.duration'})],
+    ]);
+  }, [intl]);
 
   return (
     <div className={styles.metrics}>
@@ -415,7 +383,6 @@ const Metrics = (props: IProps) => {
               {/* Event type and formula */}
               <Grid.Column width={8} className={styles.column}>
                 <Form.Field>
-                  
                   <div className={styles.field}>
                     <div className={styles['field-middle']}>
                       <div className={styles.label}>
@@ -449,7 +416,7 @@ const Metrics = (props: IProps) => {
                         <FormattedMessage id='analysis.event.formula' />
                       </label>
                       <div>
-                        <div className={styles.molecular}>1111</div>
+                        <div className={styles.molecular}>{geMolecularText.get(metricType ?? '')}</div>
                         <div className={styles.divider}></div>
                         <div className={styles.denominator}>
                           <FormattedMessage id='analysis.result.table.samplesize' />
@@ -540,7 +507,7 @@ const Metrics = (props: IProps) => {
                           { errors.url && <div className={styles['error-text-url']}>{ errors.url.message }</div> }
                           {
                             metricUrl && (
-                              <ValidateUrl 
+                              <CheckURL 
                                 metricUrl={metricUrl}
                                 popupOpen={popupOpen}
                                 metricMatcher={metricMatcher}

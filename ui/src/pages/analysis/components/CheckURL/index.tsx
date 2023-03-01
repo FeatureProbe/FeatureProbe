@@ -16,7 +16,7 @@ interface IProps {
   setPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ValidateUrl = (props: IProps) => {
+const CheckURL = (props: IProps) => {
   const { metricUrl, metricMatcher, popupOpen, setPopupOpen } = props;
   const [ isLegal, saveIsLegal ] = useState<boolean>(false);
   const [ checkUrl, saveCheckUrl ] = useState<string>('');
@@ -99,4 +99,4 @@ const ValidateUrl = (props: IProps) => {
   );
 };
 
-export default ValidateUrl;
+export default CheckURL;
