@@ -3,31 +3,29 @@ import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import ProjectLayout from 'layout/projectLayout';
 import Loading from 'components/Loading';
-import StepFirst from './components/StepFirst';
-import StepSecond, { SdkLanguage } from './components/StepSecond';
-import StepThird from './components/StepThird';
-import { ToggleReturnType } from './components/constants';
+import SelectSDK from './components/SelectSDK';
+import SetupCode from './components/SetupCode';
+import TestConnection from './components/TestConnection';
+import { ToggleReturnType, SdkLanguage, SDK_VERSION } from './constants';
 import { saveDictionary, getFromDictionary } from 'services/dictionary';
 import { getSdkVersion } from 'services/misc';
 import { getToggleAccess, getToggleInfo, getToggleAttributes } from 'services/toggle';
 import { getProjectInfo, getEnvironment } from 'services/project';
+import { getEventDetail } from 'services/analysis';
 import { IDictionary, IToggleInfo } from 'interfaces/targeting';
 import { IProject, IEnvironment, IRouterParams } from 'interfaces/project';
+import { IEvent } from 'interfaces/analysis';
 
 import styles from './index.module.scss';
 
-interface IStepDetail {
-  done: boolean;
-  projectKey?: string;
-  environmentKey?: string;
-  toggleKey?: string;
-  sdk?: string;
-}
-
 interface IStep {
-  step1: IStepDetail;
-  step2: IStepDetail;
-  step3: IStepDetail;
+  [x: string]: {
+    done: boolean;
+    projectKey?: string;
+    environmentKey?: string;
+    toggleKey?: string;
+    sdk?: string;
+  };
 }
 
 interface IAccess {
@@ -47,9 +45,6 @@ const step: IStep = {
 };
 
 const PREFIX = 'get_started_';
-const JAVA_SDK_VERSION = 'java_sdk_version';
-const RUST_SDK_VERSION = 'rust_sdk_version';
-const ANDROID_SDK_VERSION = 'android_sdk_version';
 
 const ConnectSDK = () => {
   const [ currentStep, saveCurrentStep ] = useState<number>(2);
@@ -67,6 +62,7 @@ const ConnectSDK = () => {
   const [ isStepLoading, saveIsStepLoading ] = useState<boolean>(true);
   const [ clientAvailability, saveClientAvailability ] = useState<boolean>(false);
   const [ attributes, saveAttributes ] = useState<string[]>([]);
+  const [ eventInfo, saveEventInfo ] = useState<IEvent>();
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
 
   const init = useCallback(async() => {
@@ -74,12 +70,13 @@ const ConnectSDK = () => {
 
     Promise.all([
       getFromDictionary<IDictionary>(key), 
-      getToggleAttributes<string[]>(projectKey, environmentKey, toggleKey)
+      getToggleAttributes<string[]>(projectKey, environmentKey, toggleKey),
+      getEventDetail<IEvent>(projectKey, environmentKey, toggleKey)
     ]).then(res => {
       saveIsStepLoading(false);
       if (res[0].success && res[0].data) {
         const savedData = JSON.parse(res[0].data.value);
-        console.log(savedData);
+
         if (savedData.step2.done) {
           saveCurrentStep(3);
           saveCurrentSDK(savedData.step1.sdk);
@@ -93,6 +90,10 @@ const ConnectSDK = () => {
 
       if (res[1].success && res[1].data) {
         saveAttributes(res[1].data);
+      }
+
+      if (res[2].success && res[2].data) {
+        saveEventInfo(res[2].data);
       }
     });
 
@@ -127,14 +128,7 @@ const ConnectSDK = () => {
 
   useEffect(() => {
     if (currentSDK) {
-      let key = '';
-      if (currentSDK === 'Java') {
-        key = JAVA_SDK_VERSION;
-      } else if (currentSDK === 'Rust') {
-        key = RUST_SDK_VERSION;
-      } else if (currentSDK === 'Android') {
-        key = ANDROID_SDK_VERSION;
-      }
+      const key = SDK_VERSION.get(currentSDK);
 
       if (key) {
         getSdkVersion<string>(key).then(res => {
@@ -146,6 +140,11 @@ const ConnectSDK = () => {
       }
     }
   }, [currentSDK]);
+
+  useEffect(() => {
+    console.log('currentSDK----', currentSDK);
+    console.log('eventInfo----', eventInfo);
+  }, [currentSDK, eventInfo]);
 
   const checkToggleStatus = useCallback(() => {
     getToggleAccess<IAccess>(projectKey, environmentKey, toggleKey).then(res => {
@@ -241,7 +240,7 @@ const ConnectSDK = () => {
           {
             isStepLoading ? <Loading /> : (
               <>
-                <StepFirst 
+                <SelectSDK 
                   currentStep={currentStep}
                   currentSDK={currentSDK}
                   clientAvailability={clientAvailability}
@@ -249,7 +248,7 @@ const ConnectSDK = () => {
                   saveCurrentSDK={saveCurrentSDK}
                   goBackToStep={goBackToStep}
                 />
-                <StepSecond 
+                <SetupCode 
                   attributes={attributes}
                   currentStep={currentStep}
                   currentSDK={currentSDK}
@@ -260,7 +259,7 @@ const ConnectSDK = () => {
                   saveStep={saveSecondStep}
                   goBackToStep={goBackToStep}
                 />
-                <StepThird 
+                <TestConnection 
                   isLoading={isLoading}
                   projectKey={projectKey}
                   environmentKey={environmentKey}

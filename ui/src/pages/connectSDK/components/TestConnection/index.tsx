@@ -22,7 +22,7 @@ interface IProps {
 const CURRENT = 3;
 const INTERVAL = 30;
 
-const StepThird = (props: IProps) => {
+const TestConnection = (props: IProps) => {
   const { currentStep, toggleAccess, isLoading, checkToggleStatus, saveIsLoading } = props;
   const { toggleKey, environmentKey } = useParams<IRouterParams>();
   const [ count, saveCount ] = useState<number>(1);
@@ -145,4 +145,4 @@ const StepThird = (props: IProps) => {
   );
 };
 
-export default StepThird;
+export default TestConnection;

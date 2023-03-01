@@ -4,84 +4,9 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import java from 'images/java.svg';
-import rust from 'images/rust.svg';
-import go from 'images/go.svg';
-import python from 'images/python.svg';
-import node from 'images/nodejs.svg';
-import javascript from 'images/javascript.svg';
-import android from 'images/android.svg';
-import swift from 'images/swift.svg';
-import apple from 'images/apple.svg';
-import miniprogram from 'images/wechat-miniprogram.png';
-import reactLogo from 'images/react.svg';
-import { SdkLanguage } from '../StepSecond';
+import { CLIENT_SIDE_SDKS, SdkLanguage, SDK_LOGOS, SERVER_SIDE_SDKS } from '../../constants';
 
 import styles from '../../index.module.scss';
-
-const SDK_LOGOS: {[key in SdkLanguage]: string} = {
-  'Java': java,
-  'Rust': rust,
-  'Go': go,
-  'Python': python,
-  'Node.js': node,
-  'JavaScript': javascript,
-  'Android': android,
-  'Swift': swift,
-  'Objective-C': apple,
-  'Mini Program': miniprogram,
-  'React': reactLogo,
-};
-
-const SERVER_SIDE_SDKS = [
-  {
-    name: 'Java',
-    logo: java,
-  },
-  {
-    name: 'Go',
-    logo: go,
-  },
-  {
-    name: 'Python',
-    logo: python,
-  },
-  {
-    name: 'Rust',
-    logo: rust,
-  },
-  {
-    name: 'Node.js',
-    logo: node,
-  },
-];
-
-const CLIENT_SIDE_SDKS = [
-  {
-    name: 'JavaScript',
-    logo: javascript,
-  },
-  {
-    name: 'Android',
-    logo: android,
-  },
-  {
-    name: 'Swift',
-    logo: swift,
-  },
-  {
-    name: 'Objective-C',
-    logo: apple,
-  },
-  {
-    name: 'Mini Program',
-    logo: miniprogram,
-  },
-  {
-    name: 'React',
-    logo: reactLogo,
-  }
-];
 
 interface IOption {
   name: string;
@@ -99,7 +24,7 @@ interface IProps {
 
 const CURRENT = 1;
 
-const StepFirst = (props: IProps) => {
+const SelectSDK = (props: IProps) => {
   const { currentStep, currentSDK, clientAvailability, saveStep, goBackToStep, saveCurrentSDK } = props;
   const [ selectedSDKLogo, saveSelectedSDKLogo ] = useState<string>('');
   const intl = useIntl();
@@ -276,4 +201,4 @@ const StepFirst = (props: IProps) => {
   );
 };
 
-export default StepFirst;
+export default SelectSDK;
