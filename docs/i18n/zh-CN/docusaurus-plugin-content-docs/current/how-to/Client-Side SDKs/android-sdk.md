@@ -36,7 +36,7 @@ val config = FpConfig(url!!, "client-9d885a68ca2955dfb3a7c95435c0c4faad70b50d", 
 val fp = FeatureProbe(config, user)
 ```
 
-### 步骤 3.  使用 FeatureProbe 开关
+### 步骤 3. 使用 FeatureProbe 开关
 
 ``` kotlin
 val showFeature = fp.boolValue("toggle_key", false)
@@ -47,7 +47,21 @@ if (showFeature) {
 }
 ```
 
-### 步骤 4. 单元测试 (可选)
+### 步骤 4. 事件上报
+
+:::note
+Kotlin SDK 从 2.0.2 版本开始支持事件上报的能力。
+:::
+
+事件跟踪功能可以将用户在应用程序中采取的操作记录为事件。
+可以在开关的指标中关联事件。更多指标分析相关的信息，请阅读[指标分析](../../tutorials/analysis)。
+
+```kotlin
+fp.track("YOUR_CUSTOM_EVENT_NAME")
+// Providing a metric value to track
+fp.track("YOUR_CUSTOM_EVENT_NAME", 5.5)
+
+### 步骤 5. 单元测试 (可选)
 
 ```kotlin
 val fp_for_test = FeatureProbe.newForTest("{ \"toggle_1\": true }")
