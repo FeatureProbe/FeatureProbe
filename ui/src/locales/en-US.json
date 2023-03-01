@@ -630,5 +630,6 @@
   "analysis.result.table.name": "Variation",
   "analysis.result.table.percentage": "Probability to be the best",
   "analysis.result.table.credibleInterval": "Credible inteval: 90%",
-  "analysis.result.table.mean": "Posterior mean"
+  "analysis.result.table.mean": "Posterior mean",
+  "analysis.result.table.samplesize": "Sample size"
 }

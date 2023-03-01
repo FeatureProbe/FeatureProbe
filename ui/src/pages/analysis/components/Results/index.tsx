@@ -81,6 +81,7 @@ const Results = (props: IProps) => {
         mean: result[item].mean,
         winningPercentage: result[item].winningPercentage,
         credibleInterval: result[item].credibleInterval,
+        sampleSize: result[item].sampleSize
       });
 
       labels = result[item].distributionChart.map((val: IDistribution) => {

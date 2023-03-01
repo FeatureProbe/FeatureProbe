@@ -630,5 +630,6 @@
   "analysis.result.table.name": "分组名称",
   "analysis.result.table.percentage": "胜出概率",
   "analysis.result.table.credibleInterval": "90%可信区间",
-  "analysis.result.table.mean": "后验均值"
+  "analysis.result.table.mean": "后验均值",
+  "analysis.result.table.samplesize": "样本总量"
 }
