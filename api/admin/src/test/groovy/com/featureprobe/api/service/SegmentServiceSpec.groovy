@@ -6,10 +6,8 @@ import com.featureprobe.api.base.util.JsonMapper
 import com.featureprobe.api.dao.entity.SegmentVersion
 import com.featureprobe.api.dao.exception.ResourceConflictException
 import com.featureprobe.api.dao.repository.SegmentVersionRepository
-import com.featureprobe.api.dao.utils.PageRequestUtil
 import com.featureprobe.api.dto.SegmentCreateRequest
 import com.featureprobe.api.dto.SegmentPublishRequest
-import com.featureprobe.api.dto.SegmentResponse
 import com.featureprobe.api.dto.SegmentSearchRequest
 import com.featureprobe.api.dto.SegmentUpdateRequest
 import com.featureprobe.api.dao.entity.Environment
@@ -18,7 +16,6 @@ import com.featureprobe.api.dao.entity.Segment
 import com.featureprobe.api.dao.entity.Targeting
 import com.featureprobe.api.dao.entity.TargetingSegment
 import com.featureprobe.api.dao.entity.Toggle
-import com.featureprobe.api.base.model.ConditionValue
 import com.featureprobe.api.base.model.SegmentRuleModel
 import com.featureprobe.api.dao.repository.PublishMessageRepository
 import com.featureprobe.api.dao.repository.DictionaryRepository
@@ -29,17 +26,13 @@ import com.featureprobe.api.dao.repository.TargetingRepository
 import com.featureprobe.api.dao.repository.TargetingSegmentRepository
 import com.featureprobe.api.dao.repository.ToggleRepository
 import com.featureprobe.api.dto.SegmentVersionRequest
-import com.featureprobe.api.dto.SegmentVersionResponse
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
 import spock.lang.Specification
 import spock.lang.Title
 
 import javax.persistence.EntityManager
 import javax.persistence.OptimisticLockException
-import java.util.stream.Collectors
 
 @Title("Segment Unit Test")
 class SegmentServiceSpec extends Specification {
