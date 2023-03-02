@@ -275,9 +275,10 @@ const Metrics = (props: IProps) => {
   const handleMetricTypeChange = useCallback((e: SyntheticEvent, data: DropdownProps) => {
     saveMetricType(data.value as string);
 
-    // User needs to select event type again
-    saveEventType('');
-    setValue('eventType', '');
+    if (data.value === DURATION || data.value === REVENUE) {
+      saveEventType(CUSTOM);
+      setValue('eventType', CUSTOM);
+    }
   }, [setValue]);
 
   const handleEventTypeChange = useCallback((e: SyntheticEvent, data: DropdownProps) => {
@@ -396,7 +397,8 @@ const Metrics = (props: IProps) => {
                         name='eventType'
                         value={eventType}
                         error={errors.eventType ? true : false}
-                        placeholder={intl.formatMessage({id: 'analysis.event.type.placeholder'})} 
+                        placeholder={intl.formatMessage({id: 'analysis.event.type.placeholder'})}
+                        disabled={!metricType}
                         options={
                           (metricType === CONVERSION || metricType === COUNT) ? getEventTypeOptions() : getSimpleEventTypeOptions()
                         } 
@@ -417,7 +419,7 @@ const Metrics = (props: IProps) => {
                         <FormattedMessage id='analysis.event.formula' />
                       </label>
                       <div>
-                        <div className={styles.molecular}>{geMolecularText.get(metricType ?? '')}</div>
+                        <div className={styles.molecular}>{geMolecularText.get(metricType ?? '') || ''}</div>
                         <div className={styles.divider}></div>
                         <div className={styles.denominator}>
                           <FormattedMessage id='analysis.result.table.samplesize' />
