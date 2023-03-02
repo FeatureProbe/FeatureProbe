@@ -72,3 +72,19 @@ export const operateCollection = async (projectKey: string, environmentKey: stri
     body: JSON.stringify(data),
   });
 };
+
+export const getMetricIterations = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
+  const url = `${
+    API.iterations
+      .replace(':projectKey', projectKey)
+      .replace(':environmentKey', environmentKey)
+      .replace(':toggleKey', toggleKey)
+  }`;
+  
+  return request<T>(url, {
+    method: 'GET',
+    headers: {
+      ...ApplicationJson()
+    },
+  });
+};

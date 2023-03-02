@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import dayjs from 'dayjs';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import SectionTitle from 'components/SectionTitle';
@@ -7,13 +6,14 @@ import NoData from 'components/NoData';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Modal from 'components/Modal';
+import TextLimit from 'components/TextLimit';
 import ResultTable from './components/table';
 import { IChart } from './components/chart';
-import { getEventAnalysis, operateCollection } from 'services/analysis';
-import { IChartData, IEvent, IEventAnalysis, IDistribution, ITableData, IAnalysisItem } from 'interfaces/analysis';
+import TimeLine from './components/timeline';
+import { getEventAnalysis, operateCollection, getMetricIterations } from 'services/analysis';
+import { IChartData, IEvent, IEventAnalysis, IDistribution, ITableData, IAnalysisItem, IMetricIteration } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
 import { ITarget } from 'interfaces/targeting';
-import TextLimit from 'components/TextLimit';
 import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, REVENUE, DURATION, COUNT } from '../../constants';
 
 import styles from './index.module.scss';
@@ -39,6 +39,7 @@ const Results = (props: IProps) => {
   const [ chartLabels, saveChartLabels ] = useState<unknown[]>([]);
   const [ chartData, saveChartData ] = useState<IChartData[]>();
   const [ tableData, saveTableData ] = useState<ITableData[]>();
+  const [ iterations, saveIterations ] = useState<IMetricIteration[]>([]);
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
 
@@ -112,9 +113,19 @@ const Results = (props: IProps) => {
     });
   }, [environmentKey, projectKey, toggleKey]);
 
+  const getIteration = useCallback(() => {
+    getMetricIterations<IMetricIteration[]>(projectKey, environmentKey, toggleKey).then(res => {
+      const { success, data } = res;
+      if (success && data) {
+        saveIterations(data);
+      }
+    });
+  }, [environmentKey, projectKey, toggleKey]);
+
   useEffect(() => {
     getEventResult();
-  }, [getEventResult]);
+    getIteration();
+  }, [getEventResult, getIteration]);
 
   const operateTrackCollection = useCallback(trackEvents => {
     saveSubmitLoading(true);
@@ -130,31 +141,9 @@ const Results = (props: IProps) => {
   }, [saveSubmitLoading, projectKey, environmentKey, toggleKey, initTargeting, getEventResult]);
 
   return (
-    <div className={styles.result}>
+    <div className={`result ${styles.result}`}>
       <SectionTitle title={intl.formatMessage({ id: 'common.data.text' })} showTooltip={false} />
       <div className={styles.start}>
-        <span className={styles['start-time']}>
-          {
-            startTime && (
-              <>
-                <FormattedMessage id="analysis.result.collect.time" />
-                {dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')}
-              </>
-            )
-          }
-          {
-            endTime && (
-              <>
-                <span className={styles.divider}>-</span> 
-                {
-                  trackEvents 
-                    ? <FormattedMessage id='analysis.result.collect.end' /> 
-                    : <span>{dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')}</span>
-                }
-              </>
-            )
-          }
-        </span>
         {
           !trackEvents ? (
             <Button
@@ -195,6 +184,14 @@ const Results = (props: IProps) => {
             <Icon customclass={styles['warning-circle']} type="warning-circle" />
             <FormattedMessage id="analysis.result.tip" />
           </div>
+        )
+      }
+
+      {
+        iterations.length > 0 && (
+          <TimeLine 
+            iterations={iterations}
+          />
         )
       }
 
