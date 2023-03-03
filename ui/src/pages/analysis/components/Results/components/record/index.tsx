@@ -10,7 +10,7 @@ interface IProps {
   item: IMetricIteration;
 }
 
-const TimeLine = (props: IProps) => {
+const Record = (props: IProps) => {
   const { item } = props;
   const [ menuOpen, setMenuOpen ] = useState<boolean>(false);
 
@@ -37,12 +37,16 @@ const TimeLine = (props: IProps) => {
         <div 
           className={styles['record-list']} 
           onClick={(e: SyntheticEvent) => {
-            setMenuOpen(true);
+            setMenuOpen(!menuOpen);
             e.stopPropagation();
           }}
         >
           <FormattedMessage id='analysis.timeline.toggle.changed' />
-          <Icon type='angle-down' customclass={styles['angle-down']} />
+          {
+            menuOpen
+              ? <Icon type='angle-up' customclass={styles['angle-down']} />
+              : <Icon type='angle-down' customclass={styles['angle-down']} />
+          }
         </div>
       }
     >
@@ -71,4 +75,4 @@ const TimeLine = (props: IProps) => {
   );
 };
 
-export default TimeLine;
+export default Record;

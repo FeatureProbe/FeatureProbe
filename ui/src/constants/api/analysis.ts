@@ -1,4 +1,4 @@
-const origin = '/api';
+import { origin } from './constant';
 
 const AnalysisURL = {
   metric: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/metric`,

@@ -5,27 +5,13 @@ import Record from '../record';
 import { IMetricIteration } from 'interfaces/analysis';
 import styles from './index.module.scss';
 
-
 interface IProps {
   iterations: IMetricIteration[]
 }
 
 const TimeLine = (props: IProps) => {
   const { iterations } = props;
-
   const [ width, saveWidth ] = useState<string | number>(0);
-  const [ menuOpen, setMenuOpen ] = useState<boolean>(false);
-
-  useEffect(() => {
-    const handler = () => {
-      if (menuOpen) {
-        setMenuOpen(false);
-      }
-    };
-    window.addEventListener('click', handler);
-
-    return () => window.removeEventListener('click', handler);
-  }, [menuOpen]);
 
   const handleResize = useCallback(() => {
     if (document.querySelector('.result')) {
@@ -52,16 +38,11 @@ const TimeLine = (props: IProps) => {
           return (
             <div className={styles.record} key={index}>
               <div className={styles['record-start']}>
-                {
-                  item.records && item.records.length > 0 && (
-                    <Record 
-                      item={item}
-                    />
-                  )
-                }
+                { item.records && item.records.length > 0 && <Record item={item} /> }
                 <div className={styles.line}>
-                  <span className={styles.circle}></span>
-                  <span className={styles.divider}></span>
+                  <span className={styles.circle} />
+                  <span className={styles.divider} />
+                  { index === iterations.length - 1 && <span className={styles.arrow} /> }
                 </div>
                 <div className={`${styles.start} ${styles.button}`}>
                   <FormattedMessage id='analysis.result.collect.start' />
@@ -70,13 +51,12 @@ const TimeLine = (props: IProps) => {
                   { dayjs(item.start).format('YYYY-MM-DD HH:mm:ss') }
                 </div>
               </div>
-
               {
                 item.stop && (
                   <div>
                     <div className={styles.line}>
-                      <span className={styles.circle}></span>
-                      <span className={styles.divider}></span>
+                      <span className={styles.circle} />
+                      <span className={styles.divider} />
                     </div>
                     <div className={`${styles.stop} ${styles.button}`}>
                       <FormattedMessage id='analysis.result.collect.stop' />

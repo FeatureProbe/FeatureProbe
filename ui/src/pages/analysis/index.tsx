@@ -4,7 +4,7 @@ import Metrics from './components/Metrics';
 import Results from './components/Results';
 import { IEvent } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
-import { getEventDetail, operateCollection } from 'services/analysis';
+import { getEventDetail } from 'services/analysis';
 import { ITarget } from 'interfaces/targeting';
 
 interface IProps {

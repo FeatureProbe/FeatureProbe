@@ -38,6 +38,15 @@
   margin-left: 4px;
 }
 
+.arrow {
+  float: left;
+  width: 0; 
+  height: 0;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent rgba(0, 0, 0, 0.07);
+}
+
 .button {
   height: 22px;
   background: rgba(86, 100, 255, 0.1);

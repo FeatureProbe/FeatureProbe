@@ -1,4 +1,4 @@
-const origin = '/api';
+import { origin } from './constant';
 
 const UserURI = {
   loginURI: `${origin}/login`,
