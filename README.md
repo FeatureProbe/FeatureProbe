@@ -10,6 +10,12 @@
 [![CN doc](https://img.shields.io/badge/文档-中文版-blue.svg)](https://docs.featureprobe.io/zh-CN/)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/FeatureProbe.svg?style=social&label=FeatureProbe)](https://twitter.com/FeatureProbe)
 
+![TS](https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB.svg?style=for-the-badge&logo=React&logoColor=black)
+![SpringBoot](https://img.shields.io/badge/Spring%20Boot-6DB33F.svg?style=for-the-badge&logo=Spring-Boot&logoColor=white)
+![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white)
+
+
 # 跳转到[国内中文版](https://gitee.com/featureprobe/FeatureProbe/blob/main/README_CN.md)
 
 
