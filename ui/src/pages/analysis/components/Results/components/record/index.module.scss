@@ -5,7 +5,7 @@
 .record {
   &-list {
     height: 28px;
-    background: #ffffff;
+    background: #fff;
     border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: 6px;
     display: inline-block;
@@ -25,7 +25,7 @@
   &-left {
     width: 2px;
     background: rgba(0, 0, 0, 0.07);
-    margin: 5px 5px 0px;
+    margin: 5px 5px 0;
   }
 
   &-right {
