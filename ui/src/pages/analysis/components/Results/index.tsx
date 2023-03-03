@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
+import Datetime from 'react-datetime';
+import { Form } from 'semantic-ui-react';
+import moment from 'moment';
+import dayjs from 'dayjs';
 import SectionTitle from 'components/SectionTitle';
 import NoData from 'components/NoData';
 import Button from 'components/Button';
@@ -10,11 +14,13 @@ import TextLimit from 'components/TextLimit';
 import ResultTable from './components/table';
 import { IChart } from './components/chart';
 import TimeLine from './components/timeline';
+import canlendar from 'images/calendar.svg';
 import { getEventAnalysis, operateCollection, getMetricIterations } from 'services/analysis';
 import { IChartData, IEvent, IEventAnalysis, IDistribution, ITableData, IAnalysisItem, IMetricIteration } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
 import { ITarget } from 'interfaces/targeting';
 import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, REVENUE, DURATION, COUNT } from '../../constants';
+import { useQuery } from 'hooks';
 
 import styles from './index.module.scss';
 
@@ -30,11 +36,12 @@ interface IProps {
 }
 
 const Results = (props: IProps) => {
+  const query = useQuery();
   const { trackEvents, allowEnableTrackEvents, submitLoading, targeting, eventInfo, initTargeting, saveSubmitLoading } = props;
   const [ open, saveOpen ] = useState<boolean>(false);
   const [ isHaveData, saveHaveData ] = useState<boolean>(false);
-  const [ startTime, saveStartTime ] = useState<string>('');
-  const [ endTime, saveEndTime ] = useState<string>('');
+  const [ start, saveStart ] = useState<string>(query.get('start') ?? '');
+  const [ end, saveEnd ] = useState<string>(query.get('end') ?? '');
   const [ result, saveResult ] = useState<IAnalysisItem>();
   const [ chartLabels, saveChartLabels ] = useState<unknown[]>([]);
   const [ chartData, saveChartData ] = useState<IChartData[]>();
@@ -42,6 +49,15 @@ const Results = (props: IProps) => {
   const [ iterations, saveIterations ] = useState<IMetricIteration[]>([]);
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
+  const history = useHistory();
+
+  const startDateValid = useCallback((current: moment.Moment) => {
+    return current.isBefore(moment(end));
+  }, [end]);
+
+  const endDateValid = useCallback((current: moment.Moment) => {
+    return current.isBefore(moment());
+  }, []);
 
   const getMetricTypeText = useMemo(() => {
     return new Map([
@@ -102,15 +118,19 @@ const Results = (props: IProps) => {
     }
   }, [result, targeting?.variations]);
 
-  const getEventResult = useCallback(() => {
-    getEventAnalysis<IEventAnalysis>(projectKey, environmentKey, toggleKey).then(res => {
+  const getEventResult = useCallback((startParam?: string, endParam?: string) => {
+    getEventAnalysis<IEventAnalysis>(projectKey, environmentKey, toggleKey, {
+      start: startParam || start,
+      end: endParam || end,
+    }).then(res => {
       const { success, data } = res;
       if (success && data) {
-        saveStartTime(data.start);
-        saveEndTime(data.end);
         saveResult(data.data);
+        saveStart(dayjs(data.start).format('YYYY-MM-DD HH:mm:ss'));
+        saveEnd(dayjs(data.end).format('YYYY-MM-DD HH:mm:ss'));
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environmentKey, projectKey, toggleKey]);
 
   const getIteration = useCallback(() => {
@@ -134,11 +154,11 @@ const Results = (props: IProps) => {
     }).then(res => {
       if (res.success) {
         initTargeting();
-        getEventResult();
+        getEventResult(start, end);
       }
       saveSubmitLoading(false);
     });
-  }, [saveSubmitLoading, projectKey, environmentKey, toggleKey, initTargeting, getEventResult]);
+  }, [saveSubmitLoading, projectKey, environmentKey, toggleKey, initTargeting, getEventResult, start, end]);
 
   return (
     <div className={`result ${styles.result}`}>
@@ -195,31 +215,95 @@ const Results = (props: IProps) => {
         )
       }
 
-      {
-        isHaveData ? (
-          <div className={styles['result-content']}>
-            <div className={styles['table-header']}>
-              <span className={styles['metric-name']}>
-                <TextLimit text={eventInfo?.name ?? ''} maxLength={20} />
-                <span>:</span>
-              </span>
-              <span className={styles['type']}>
-                {getMetricTypeText.get(eventInfo?.metricType ?? '')}
-                {' - '}
-                {getEventTypeText.get(eventInfo?.eventType ?? '')}
-              </span>
-            </div>
+      <div className={styles['result-content']}>
+        {
+          eventInfo && (
+            <Form className={styles['result-content-header']}>
+              <Form.Group>
+                <Form.Field>
+                  <div className={styles['table-header']}>
+                    <div className={styles['metric-name']}>
+                      <TextLimit text={eventInfo?.name ?? ''} maxLength={20} />
+                    </div>
+                    <div className={styles['type']}>
+                      {getMetricTypeText.get(eventInfo?.metricType ?? '')}
+                      {' - '}
+                      {getEventTypeText.get(eventInfo?.eventType ?? '')}
+                    </div>
+                  </div>
+                </Form.Field>
+                <Form.Field
+                  inline
+                  className={styles['datetime']}
+                >
+                  <label className={styles['datetime-label']}>
+                    <FormattedMessage id='anylysis.result.start.time' />
+                  </label>
+                  <Datetime
+                    dateFormat='YYYY-MM-DD'
+                    timeFormat='HH:mm:ss'
+                    inputProps={{
+                      placeholder: intl.formatMessage({id: 'anylysis.result.start.time'}),
+                    }}
+                    value={moment(start)}
+                    isValidDate={startDateValid}
+                    onChange={async (e: string | moment.Moment) => {
+                      if (!startDateValid(e as moment.Moment)) {
+                        return;
+                      }
+                      const current = (e as moment.Moment).format('YYYY-MM-DD HH:mm:ss');
+                      saveStart(current);
+                      getEventResult(current, end);
+                      history.push(`/${projectKey}/${environmentKey}/${toggleKey}/analysis?start=${current}&end=${end}`);
+                    }}
+                  />
+                  <img src={canlendar} alt='canlendar' className={styles['datetime-calendar']} />
+                </Form.Field>
+                <span className={styles['datetime-divider']}>-</span>
+                <Form.Field
+                  className={styles['datetime']}
+                >
+                  <label className={styles['datetime-label']}>
+                    <FormattedMessage id='anylysis.result.end.time' />
+                  </label>
+                  <Datetime
+                    dateFormat='YYYY-MM-DD'
+                    timeFormat='HH:mm:ss'
+                    inputProps={{
+                      placeholder: intl.formatMessage({id: 'anylysis.result.end.time'}),
+                    }}
+                    value={moment(end)}
+                    isValidDate={endDateValid}
+                    onChange={async (e: string | moment.Moment) => {
+                      if (!endDateValid(e as moment.Moment)) {
+                        return;
+                      }
+                      const current = (e as moment.Moment).format('YYYY-MM-DD HH:mm:ss');
+                      saveEnd(current);
+                      getEventResult(start, current);
+                      history.push(`/${projectKey}/${environmentKey}/${toggleKey}/analysis?start=${start}&end=${current}`);
+                    }}
+                  />
+                  <img src={canlendar} alt='canlendar' className={styles['datetime-calendar']} />
+                </Form.Field>
+              </Form.Group>
+            </Form>
+          )
+        }
+        
+        {
+          isHaveData ? (
             <ResultTable 
               data={tableData}
               eventInfo={eventInfo}
             />
-          </div>
-        ) : (
-          <div className={styles['no-data']}>
-            <NoData />
-          </div>
-        )
-      }
+          ) : (
+            <div className={styles['no-data']}>
+              <NoData />
+            </div>
+          )
+        }
+      </div>
 
       {
         isHaveData && chartData && (

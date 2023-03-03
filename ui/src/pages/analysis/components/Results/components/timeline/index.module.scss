@@ -1,11 +1,10 @@
 .timeline {
   display: flex;
-  height: 100px;
   align-items: center;
   overflow-x: auto;
   min-width: 1200px;
   align-items: flex-end;
-  padding: 0 24px;
+  padding: 20px 24px;
 }
 
 .record {

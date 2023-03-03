@@ -43,6 +43,10 @@
   margin-top: 16px;
 }
 
+.result-content-header {
+  margin-bottom: 12px;
+}
+
 .analysis-chart {
   margin-top: 16px;
   background: #fafafa;
@@ -75,23 +79,43 @@
 }
 
 .table-header {
-  display: flex;
   align-items: center;
-  margin-bottom: 8px;
 
   & > .metric-name {
-    font-size: 13px;
-    color: #74788d;
-    line-height: 20px;
-  }
-
-  & > .type {
-    margin-left: 4px;
-    padding: 4px 6px;
-    background: #ececf6;
-    border-radius: 6px;
     font-size: 13px;
     color: #212529;
     line-height: 20px;
   }
+
+  & > .type {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #495057;
+    line-height: 24px;
+    width: 140px;
+    height: 32px;
+    background: rgba(33, 37, 41, 0.04);
+  }
+}
+
+.datetime {
+  position: relative;
+}
+
+.datetime-calendar {
+  position: absolute;
+  right: 10px;
+  top: 28px;
+}
+
+.datetime-label {
+  font-size: 13px !important;
+  color: #212529 !important;
+}
+
+.datetime-divider {
+  margin-top: 24px;
+  color: #adb5bc;
+  font-size: 20px;
 }
