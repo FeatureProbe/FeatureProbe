@@ -33,7 +33,6 @@ interface IProps {
   submitLoading: boolean;
   initTargeting(): void;
   saveSubmitLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  operateTrackCollection(trackEvent: boolean): void;
 }
 
 const Results = (props: IProps) => {
@@ -156,12 +155,13 @@ const Results = (props: IProps) => {
       if (res.success) {
         initTargeting();
         getEventResult(start, end);
+        getIteration();
       } else {
         message.error(intl.formatMessage({id: 'targeting.approval.operate.error'}));
       }
       saveSubmitLoading(false);
     });
-  }, [saveSubmitLoading, projectKey, environmentKey, toggleKey, initTargeting, getEventResult, start, end, intl]);
+  }, [saveSubmitLoading, projectKey, environmentKey, toggleKey, initTargeting, getEventResult, start, end, getIteration, intl]);
 
   return (
     <div className={`result ${styles.result}`}>
@@ -180,7 +180,6 @@ const Results = (props: IProps) => {
                   saveOpen(true);
                 } else {
                   operateTrackCollection(true);
-                  getIteration();
                 }
               }}
             >
@@ -194,7 +193,6 @@ const Results = (props: IProps) => {
               className={styles['start-btn']}
               onClick={() => {
                 operateTrackCollection(false);
-                getIteration();
               }}
             >
               <FormattedMessage id="analysis.result.collect.stop" />
@@ -327,7 +325,6 @@ const Results = (props: IProps) => {
         handleConfirm={() => {
           operateTrackCollection(true);
           saveOpen(false);
-          getIteration();
         }}
       >
         <div>
