@@ -80,11 +80,13 @@
 
 .table-header {
   align-items: center;
+  margin-right: 24px;
 
   & > .metric-name {
     font-size: 13px;
     color: #212529;
     line-height: 20px;
+    height: 20px;
   }
 
   & > .type {
@@ -93,7 +95,6 @@
     font-size: 13px;
     color: #495057;
     line-height: 24px;
-    width: 140px;
     height: 32px;
     background: rgba(33, 37, 41, 0.04);
   }

@@ -11,6 +11,7 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Modal from 'components/Modal';
 import TextLimit from 'components/TextLimit';
+import message from 'components/MessageBox';
 import ResultTable from './components/table';
 import { IChart } from './components/chart';
 import TimeLine from './components/timeline';
@@ -155,10 +156,12 @@ const Results = (props: IProps) => {
       if (res.success) {
         initTargeting();
         getEventResult(start, end);
+      } else {
+        message.error(intl.formatMessage({id: 'targeting.approval.operate.error'}));
       }
       saveSubmitLoading(false);
     });
-  }, [saveSubmitLoading, projectKey, environmentKey, toggleKey, initTargeting, getEventResult, start, end]);
+  }, [saveSubmitLoading, projectKey, environmentKey, toggleKey, initTargeting, getEventResult, start, end, intl]);
 
   return (
     <div className={`result ${styles.result}`}>
@@ -177,6 +180,7 @@ const Results = (props: IProps) => {
                   saveOpen(true);
                 } else {
                   operateTrackCollection(true);
+                  getIteration();
                 }
               }}
             >
@@ -190,6 +194,7 @@ const Results = (props: IProps) => {
               className={styles['start-btn']}
               onClick={() => {
                 operateTrackCollection(false);
+                getIteration();
               }}
             >
               <FormattedMessage id="analysis.result.collect.stop" />
@@ -322,6 +327,7 @@ const Results = (props: IProps) => {
         handleConfirm={() => {
           operateTrackCollection(true);
           saveOpen(false);
+          getIteration();
         }}
       >
         <div>
