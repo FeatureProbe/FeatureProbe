@@ -1,6 +1,5 @@
 .timeline {
   display: flex;
-  align-items: center;
   overflow-x: auto;
   min-width: 1200px;
   align-items: flex-end;
@@ -39,7 +38,7 @@
   &-left {
     width: 2px;
     background: rgba(0, 0, 0, 0.07);
-    margin: 5px 5px 0px 5px;
+    margin: 5px 5px 0px;
   }
 
   &-right {
