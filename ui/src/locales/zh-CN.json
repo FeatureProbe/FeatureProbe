@@ -645,5 +645,6 @@
   "analysis.result.table.samplesize": "样本总量",
   "anylysis.result.start.time": "开始时间",
   "anylysis.result.end.time": "结束时间",
-  "analysis.timeline.toggle.changed": "开关变更"
+  "analysis.timeline.toggle.changed": "开关变更",
+  "analysis.result.timeline": "观测窗口"
 }
