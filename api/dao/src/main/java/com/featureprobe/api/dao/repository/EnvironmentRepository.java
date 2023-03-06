@@ -80,7 +80,7 @@ public interface EnvironmentRepository extends JpaRepository<Environment, Long> 
             "env.project_key as  projectKey,  \n" +
             "env.client_sdk_key as clientSdkKey,  \n" +
             "env.server_sdk_key as serverSdkKey,  \n" +
-            "m.type as type,\n" +
+            "e.type as type,\n" +
             "e.name as name,  \n" +
             "e.matcher as matcher,  \n" +
             "e.url as url,  \n" +
@@ -96,7 +96,7 @@ public interface EnvironmentRepository extends JpaRepository<Environment, Long> 
             "       env.project_key as  projectKey,\n" +
             "       env.client_sdk_key as clientSdkKey,\n" +
             "       env.server_sdk_key as serverSdkKey,\n" +
-            "       m.type as type,\n" +
+            "       e.type as type,\n" +
             "       e.name as name,\n" +
             "       e.matcher as matcher,\n" +
             "       e.url as url,\n" +

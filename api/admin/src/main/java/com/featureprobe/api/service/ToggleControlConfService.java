@@ -47,8 +47,10 @@ public class ToggleControlConfService {
     @Transactional(rollbackFor = Exception.class)
     public ToggleControlConf updateTrackAccessEvents(Targeting latestTargeting, Boolean trackAccessEvents) {
         ToggleControlConf toggleControlConf = queryToggleControlConf(latestTargeting);
-
         if (trackAccessEvents != null) {
+            if (toggleControlConf.isTrackAccessEvents() == trackAccessEvents.booleanValue()) {
+                return toggleControlConf;
+            }
             toggleControlConf.setTrackAccessEvents(trackAccessEvents);
             Date now = new Date();
             if (trackAccessEvents) {

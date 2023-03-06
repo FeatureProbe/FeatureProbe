@@ -1,5 +1,6 @@
 package com.featureprobe.api.dao.entity;
 
+import com.featureprobe.api.base.enums.AlgorithmDenominatorEnum;
 import com.featureprobe.api.base.enums.MetricTypeEnum;
 import com.featureprobe.api.base.enums.WinCriteria;
 import com.featureprobe.api.dao.listener.TenantEntityListener;
@@ -54,6 +55,9 @@ public class Metric  extends AbstractAuditEntity implements TenantSupport {
     @Column(name = "win_criteria")
     @Enumerated(EnumType.STRING)
     private WinCriteria winCriteria;
+
+    @Enumerated(EnumType.STRING)
+    private AlgorithmDenominatorEnum denominator;
 
     @Enumerated(EnumType.STRING)
     private MetricTypeEnum type;

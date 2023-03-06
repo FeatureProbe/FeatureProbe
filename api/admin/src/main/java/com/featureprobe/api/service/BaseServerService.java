@@ -1,7 +1,7 @@
 package com.featureprobe.api.service;
 
 import com.featureprobe.api.base.db.ExcludeTenant;
-import com.featureprobe.api.base.enums.MetricTypeEnum;
+import com.featureprobe.api.base.enums.EventTypeEnum;
 import com.featureprobe.api.base.enums.ResourceType;
 import com.featureprobe.api.base.model.JSEvent;
 import com.featureprobe.api.base.util.JsonMapper;
@@ -108,8 +108,8 @@ public class BaseServerService {
         });
         Map<String, List<JSEvent>> eventMap = new HashMap<>();
         allServerEvent.stream()
-                .filter(e -> (MetricTypeEnum.PAGE_VIEW.equals(e.getType()) ||
-                        (MetricTypeEnum.CLICK.equals(e.getType()))))
+                .filter(e -> (EventTypeEnum.PAGE_VIEW.equals(e.getType()) ||
+                        (EventTypeEnum.CLICK.equals(e.getType()))))
                 .forEach(serverEvent -> {
                     if (eventMap.containsKey(serverEvent.getServerSdkKey())) {
                         eventMap.get(serverEvent.getServerSdkKey()).add(toEvent(serverEvent));
@@ -243,8 +243,8 @@ public class BaseServerService {
 
     private JSEvent toEvent(ServerEventEntity serverEvent){
         JSEvent event = new JSEvent();
-        if (MetricTypeEnum.CLICK.equals(serverEvent.getType()) && StringUtils.isBlank(serverEvent.getSelector())) {
-            event.setType(MetricTypeEnum.PAGE_VIEW);
+        if (EventTypeEnum.CLICK.equals(serverEvent.getType()) && StringUtils.isBlank(serverEvent.getSelector())) {
+            event.setType(EventTypeEnum.PAGE_VIEW);
         } else {
             event.setType(serverEvent.getType());
         }
@@ -297,8 +297,8 @@ public class BaseServerService {
     private List<JSEvent> queryEventsBySdkKey(String serverSdkKey) {
         List<ServerEventEntity> serverEventEntities = environmentRepository.findAllServerEventBySdkKey(serverSdkKey);
         return serverEventEntities.stream()
-                .filter(serverEvent -> (MetricTypeEnum.PAGE_VIEW.equals(serverEvent.getType())
-                        || (MetricTypeEnum.CLICK.equals(serverEvent.getType()))))
+                .filter(serverEvent -> (EventTypeEnum.PAGE_VIEW.equals(serverEvent.getType())
+                        || (EventTypeEnum.CLICK.equals(serverEvent.getType()))))
                 .filter(distinctByKey(ServerEventEntity::getName))
                 .map(serverEvent -> toEvent(serverEvent))
                 .collect(Collectors.toList());

@@ -1,13 +1,13 @@
 package com.featureprobe.api.base.model;
 
-import com.featureprobe.api.base.enums.MetricTypeEnum;
+import com.featureprobe.api.base.enums.EventTypeEnum;
 import com.featureprobe.api.base.enums.MatcherTypeEnum;
 import lombok.Data;
 
 @Data
 public class JSEvent {
 
-    private MetricTypeEnum type;
+    private EventTypeEnum type;
 
     private String name;
 
