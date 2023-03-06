@@ -141,12 +141,14 @@ class AnalysisService(
         sdkKey: String, metric: String, toggle: String, start: Long, end: Long, positiveWin: Boolean
     ): Result<Map<String, VariationProperty>, AnalysisFailure> {
         val variationGaussian = gaussianSqlExecute(sdkKey, metric, toggle, start, end)
+
         val distributions = variationGaussian.associate {
+            val posterior = posteriorGaussian(GaussianParam(), GaussianParam(it.mean, it.stdDeviation, it.sampleSize))
             it.variation to GaussianDistributionInfo(
                 NormalDistribution(it.mean, it.stdDeviation),
-                it.mean,
-                it.stdDeviation,
-                it.sampleSize
+                posterior.mean,
+                posterior.stdDeviation,
+                posterior.sampleSize
             )
         }
 

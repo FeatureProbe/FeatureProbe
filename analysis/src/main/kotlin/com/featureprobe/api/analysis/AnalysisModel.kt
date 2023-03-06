@@ -111,3 +111,6 @@ data class VariationProperty(
 )
 
 data class ChartProperty(val min: Double, val max: Double, val step: Double)
+
+// Default is no information Prior value
+data class GaussianParam(val mean: Double = 0.0, val stdDeviation: Double = 1.0, val sampleSize: Int = 0)
