@@ -1,6 +1,7 @@
 package com.featureprobe.api.service;
 
 import com.featureprobe.api.base.enums.ChangeLogType;
+import com.featureprobe.api.base.enums.EventTypeEnum;
 import com.featureprobe.api.base.enums.MatcherTypeEnum;
 import com.featureprobe.api.base.enums.MetricTypeEnum;
 import com.featureprobe.api.base.enums.ResourceType;
@@ -21,6 +22,7 @@ import com.featureprobe.api.dao.repository.MetricIterationRepository;
 import com.featureprobe.api.dao.repository.MetricRepository;
 import com.featureprobe.api.dao.repository.TargetingVersionRepository;
 import com.featureprobe.api.dao.repository.ToggleControlConfRepository;
+import com.featureprobe.api.dto.AnalysisRequest;
 import com.featureprobe.api.dto.AnalysisResultResponse;
 import com.featureprobe.api.dto.MetricConfigResponse;
 import com.featureprobe.api.dto.MetricCreateRequest;
@@ -75,6 +77,10 @@ public class MetricService {
     @PersistenceContext
     public EntityManager entityManager;
 
+    private static String ALGORITHM_BINOMIAL = "binomial";
+
+    private static String ALGORITHM_GAUSSIAN = "gaussian";
+
     private final OkHttpClient httpClient = new OkHttpClient.Builder()
             .connectionPool( new ConnectionPool(5, 5, TimeUnit.SECONDS))
             .connectTimeout(Duration.ofSeconds(3))
@@ -89,23 +95,26 @@ public class MetricService {
         validate(request);
         Metric metric = metricRepository
                 .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey)
-                .orElse(new Metric(request.getType(), projectKey, environmentKey, toggleKey, new TreeSet<>()));
+                .orElse(new Metric(request.getMetricType(), projectKey, environmentKey, toggleKey, new TreeSet<>()));
         MetricMapper.INSTANCE.mapEntity(request, metric);
-        if (MetricTypeEnum.CLICK.equals(request.getType())) {
+        if (EventTypeEnum.CLICK.equals(request.getEventType())) {
             String clickUniqueName = generateClickUniqueName(request.getMatcher(), request.getUrl(),
                     request.getSelector());
             Event clickEvent = eventRepository.findByName(clickUniqueName)
-                    .orElse(new Event(clickUniqueName, request.getMatcher(), request.getUrl(), request.getSelector()));
+                    .orElse(new Event(EventTypeEnum.CLICK, clickUniqueName, request.getMatcher(), request.getUrl(),
+                            request.getSelector()));
             metric.getEvents().add(eventRepository.save(clickEvent));
         }
-        if (MetricTypeEnum.PAGE_VIEW.equals(request.getType()) || MetricTypeEnum.CLICK.equals(request.getType())) {
+        if (EventTypeEnum.PAGE_VIEW.equals(request.getEventType())
+                || EventTypeEnum.CLICK.equals(request.getEventType())) {
             String pvUniqueName = generatePVUniqueName(request.getMatcher(), request.getUrl());
             Event pvEvent = eventRepository.findByName(pvUniqueName).
-                    orElse(new Event(pvUniqueName, request.getMatcher(), request.getUrl()));
+                    orElse(new Event(EventTypeEnum.PAGE_VIEW, pvUniqueName, request.getMatcher(), request.getUrl()));
             metric.getEvents().add(eventRepository.save(pvEvent));
         } else {
             Event customEvent = eventRepository.findByName(request.getEventName()).
-                    orElse(new Event(request.getEventName(), request.getMatcher(), request.getUrl()));
+                    orElse(new Event(EventTypeEnum.CUSTOM, request.getEventName(), request.getMatcher(),
+                            request.getUrl()));
             metric.getEvents().add(eventRepository.save(customEvent));
         }
         Environment environment = environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey)
@@ -124,7 +133,8 @@ public class MetricService {
         return MetricMapper.INSTANCE.entityToConfigResponse(metric);
     }
 
-    public AnalysisResultResponse analysis(String projectKey, String environmentKey, String toggleKey) {
+    public AnalysisResultResponse analysis(String projectKey, String environmentKey, String toggleKey,
+                                           AnalysisRequest params) {
         Environment environment = environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(ResourceType.ENVIRONMENT, projectKey + "-" + environmentKey));
@@ -141,17 +151,21 @@ public class MetricService {
         if (Objects.isNull(end)) {
             end = new Date();
         }
+        if (Objects.nonNull(params.getStart()) && Objects.nonNull(params.getEnd())) {
+            start = params.getStart();
+            end = params.getEnd();
+        }
         String name ;
-        if (MetricTypeEnum.CLICK.equals(metric.getType())) {
+        if (MetricTypeEnum.CONVERSION.equals(metric.getType())) {
             name = metric.getEvents().stream().filter(event -> StringUtils.isBlank(event.getSelector()))
                     .findFirst().get().getName();
         } else {
             name = metric.getEvents().stream().findFirst().get().getName();
         }
-        String type = "binomial";
+        String type = ALGORITHM_BINOMIAL;
         boolean positiveWin = true;
-        if (MetricTypeEnum.NUMERIC.equals(metric.getType())) {
-            type = "gaussian";
+        if (!MetricTypeEnum.CONVERSION.equals(metric.getType())) {
+            type = ALGORITHM_GAUSSIAN;
             positiveWin = WinCriteria.POSITIVE.equals(metric.getWinCriteria()) ? true : false;
         }
 
@@ -169,8 +183,7 @@ public class MetricService {
                 .map(iteration -> MetricIterationMapper.INSTANCE.entityToResponse(iteration))
                 .collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(responses)) {
-            Date time = Objects.isNull(responses.get(responses.size() - 1).getStop()) ?
-                    responses.get(responses.size() - 1).getStart() : responses.get(0).getStop();
+            Date time = responses.get(0).getStart();
             List<TargetingVersion> versions = targetingVersionRepository
                     .findAllByProjectKeyAndEnvironmentKeyAndToggleKeyAndCreatedTimeGreaterThanEqualOrderByVersionDesc(
                             projectKey, environmentKey, toggleKey, time);
@@ -204,7 +217,7 @@ public class MetricService {
             List<MetricIteration> iterations = metricIterationRepository
                     .findAllByProjectKeyAndEnvironmentKeyAndToggleKeyOrderByStartAsc(projectKey, environmentKey,
                             toggleKey);
-            MetricIteration latestIteration = iterations.get(0);
+            MetricIteration latestIteration = iterations.get(iterations.size() - 1);
             latestIteration.setStop(now);
             return metricIterationRepository.save(latestIteration);
         }
@@ -263,26 +276,29 @@ public class MetricService {
 
     private void validate(MetricCreateRequest request) {
 
-        if (!(MetricTypeEnum.PAGE_VIEW.equals(request.getType()) || MetricTypeEnum.CLICK.equals(request.getType()))
+        if (!(EventTypeEnum.PAGE_VIEW.equals(request.getEventType())
+                || EventTypeEnum.CLICK.equals(request.getEventType()))
                 && StringUtils.isBlank(request.getEventName())) {
             throw new IllegalArgumentException("validate.event_name_required");
         }
 
-        if ((MetricTypeEnum.PAGE_VIEW.equals(request.getType()) || MetricTypeEnum.CLICK.equals(request.getType()))
+        if ((EventTypeEnum.PAGE_VIEW.equals(request.getEventType())
+                || EventTypeEnum.CLICK.equals(request.getEventType()))
                 && (request.getMatcher() == null || StringUtils.isBlank(request.getUrl()))) {
             throw new IllegalArgumentException("validate.event_url_required");
         }
 
-        if (MetricTypeEnum.CLICK.equals(request.getType()) && StringUtils.isBlank(request.getSelector())) {
+        if (EventTypeEnum.CLICK.equals(request.getEventType()) && StringUtils.isBlank(request.getSelector())) {
             throw new IllegalArgumentException("validate.event_selector_required");
         }
 
-        if (MetricTypeEnum.NUMERIC.equals(request.getType()) && Objects.isNull(request.getWinCriteria())) {
+        if (!MetricTypeEnum.CONVERSION.equals(request.getMetricType()) && Objects.isNull(request.getWinCriteria())) {
             throw new IllegalArgumentException("validate.metric_win_criteria_required");
         }
 
-        if ((MetricTypeEnum.PAGE_VIEW.equals(request.getType()) || MetricTypeEnum.CLICK.equals(request.getType())) &&
-                (MatcherTypeEnum.REGULAR.equals(request.getMatcher()) &&
+        if ((EventTypeEnum.PAGE_VIEW.equals(request.getEventType())
+                || EventTypeEnum.CLICK.equals(request.getEventType()))
+                && (MatcherTypeEnum.REGULAR.equals(request.getMatcher()) &&
                         !RegexValidator.validateRegex(request.getUrl()))) {
             throw new IllegalArgumentException("validate.regex_invalid");
         }

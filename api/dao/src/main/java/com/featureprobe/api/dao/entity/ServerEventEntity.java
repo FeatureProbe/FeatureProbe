@@ -1,5 +1,6 @@
 package com.featureprobe.api.dao.entity;
 
+import com.featureprobe.api.base.enums.EventTypeEnum;
 import com.featureprobe.api.base.enums.MetricTypeEnum;
 import com.featureprobe.api.base.enums.MatcherTypeEnum;
 
@@ -13,7 +14,7 @@ public interface ServerEventEntity {
 
     String getClientSdkKey();
 
-    MetricTypeEnum getType();
+    EventTypeEnum getType();
 
     String getName();
 
