@@ -468,6 +468,7 @@
   "getstarted.react.second.step.title": "Step2: Install SDK",
   "getstarted.react.third.step.title": "Step3: Import FPProvider in App.js",
   "getstarted.react.fourth.step.title": "Step4: Create a new file home.js in the same directory as App.js, import withFPConsumer in home.js",
+  "getstarted.track.event.title": "Add the following code and track custom event",
 
   "platform.warning.text": "According to the Cybersecurity Law, it is prohibited to use FeatureProbe for illegal financial lending, cryptocurrency, gambling and any applications containing Telemarketing Scams functions, once discovered, you will be immediately stopped from using FeatureProbe and reported to the Cyber Security Department.",
 

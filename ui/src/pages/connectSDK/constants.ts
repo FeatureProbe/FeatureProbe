@@ -115,6 +115,11 @@ interface IOption {
   clientSdkKey?: string;
 }
 
+interface ITrackOption {
+  intl: IntlShape;
+  eventName: string;
+}
+
 export const getJavaCode = (options: IOption) => {
   const { intl, sdkVersion, serverSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
   return [
@@ -156,6 +161,20 @@ ${returnType === 'boolean' ? `boolean boolValue = fpClient.boolValue("${toggleKe
 `fpClient.close();
 `
     }
+  ];
+};
+
+export const getJavaTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fpClient.track("${eventName}", user);
+// Providing a metric value to track
+fpClient.track("${eventName}", user, 5.5);
+`
+    },
   ];
 };
 

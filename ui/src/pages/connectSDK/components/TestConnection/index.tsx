@@ -15,15 +15,15 @@ interface IProps {
   projectKey: string;
   environmentKey: string;
   toggleKey: string;
+  totalStep: number;
   checkToggleStatus(): void;
   saveIsLoading(loading: boolean): void;
 }
 
-const CURRENT = 3;
 const INTERVAL = 30;
 
 const TestConnection = (props: IProps) => {
-  const { currentStep, toggleAccess, isLoading, checkToggleStatus, saveIsLoading } = props;
+  const { currentStep, toggleAccess, isLoading, totalStep, checkToggleStatus, saveIsLoading } = props;
   const { toggleKey, environmentKey } = useParams<IRouterParams>();
   const [ count, saveCount ] = useState<number>(1);
   const intl = useIntl();
@@ -32,7 +32,7 @@ const TestConnection = (props: IProps) => {
   const stepTitleCls = classNames(
     styles['step-title'],
     {
-      [styles['step-title-selected']]: currentStep === CURRENT
+      [styles['step-title-selected']]: currentStep === totalStep
     }
   );
 
@@ -67,13 +67,13 @@ const TestConnection = (props: IProps) => {
     <div className={styles.step}>
       <div className={styles['step-left']}>
         {
-          currentStep === CURRENT ? (
+          currentStep === totalStep ? (
             <div className={styles.circleCurrent}>
-              { CURRENT }
+              { totalStep }
             </div>
           ) : (
             <div className={styles.circle}>
-              { CURRENT }
+              { totalStep }
             </div>
           )
         }
@@ -84,7 +84,7 @@ const TestConnection = (props: IProps) => {
         </div>
         <div className={styles['step-detail']}>
           {
-            currentStep === CURRENT && (
+            currentStep === totalStep && (
               <>
                 {
                   toggleAccess ? (
