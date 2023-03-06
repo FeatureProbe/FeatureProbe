@@ -235,60 +235,59 @@ const Results = (props: IProps) => {
                     </div>
                   </div>
                 </Form.Field>
-                <Form.Field
-                  inline
-                  className={styles['datetime']}
-                >
-                  <label className={styles['datetime-label']}>
-                    <FormattedMessage id='anylysis.result.start.time' />
-                  </label>
-                  <Datetime
-                    dateFormat='YYYY-MM-DD'
-                    timeFormat='HH:mm:ss'
-                    inputProps={{
-                      placeholder: intl.formatMessage({id: 'anylysis.result.start.time'}),
-                    }}
-                    value={moment(start)}
-                    isValidDate={startDateValid}
-                    onChange={async (e: string | moment.Moment) => {
-                      if (!startDateValid(e as moment.Moment)) {
-                        return;
-                      }
-                      const current = (e as moment.Moment).format('YYYY-MM-DD HH:mm:ss');
-                      saveStart(current);
-                      getEventResult(current, end);
-                      history.push(`/${projectKey}/${environmentKey}/${toggleKey}/analysis?start=${current}&end=${end}`);
-                    }}
-                  />
-                  <img src={canlendar} alt='canlendar' className={styles['datetime-calendar']} />
-                </Form.Field>
-                <span className={styles['datetime-divider']}>-</span>
-                <Form.Field
-                  className={styles['datetime']}
-                >
-                  <label className={styles['datetime-label']}>
-                    <FormattedMessage id='anylysis.result.end.time' />
-                  </label>
-                  <Datetime
-                    dateFormat='YYYY-MM-DD'
-                    timeFormat='HH:mm:ss'
-                    inputProps={{
-                      placeholder: intl.formatMessage({id: 'anylysis.result.end.time'}),
-                    }}
-                    value={moment(end)}
-                    isValidDate={endDateValid}
-                    onChange={async (e: string | moment.Moment) => {
-                      if (!endDateValid(e as moment.Moment)) {
-                        return;
-                      }
-                      const current = (e as moment.Moment).format('YYYY-MM-DD HH:mm:ss');
-                      saveEnd(current);
-                      getEventResult(start, current);
-                      history.push(`/${projectKey}/${environmentKey}/${toggleKey}/analysis?start=${start}&end=${current}`);
-                    }}
-                  />
-                  <img src={canlendar} alt='canlendar' className={styles['datetime-calendar']} />
-                </Form.Field>
+                {
+                  iterations.length > 0 && (
+                    <>
+                      <Form.Field className={styles['datetime']}>
+                        <label className={styles['datetime-label']}>
+                          <FormattedMessage id='analysis.result.timeline' />
+                        </label>
+                        <Datetime
+                          dateFormat='YYYY-MM-DD'
+                          timeFormat='HH:mm:ss'
+                          inputProps={{
+                            placeholder: intl.formatMessage({id: 'anylysis.result.start.time'}),
+                          }}
+                          value={moment(start)}
+                          isValidDate={startDateValid}
+                          onChange={async (e: string | moment.Moment) => {
+                            if (!startDateValid(e as moment.Moment)) {
+                              return;
+                            }
+                            const current = (e as moment.Moment).format('YYYY-MM-DD HH:mm:ss');
+                            saveStart(current);
+                            getEventResult(current, end);
+                            history.push(`/${projectKey}/${environmentKey}/${toggleKey}/analysis?start=${current}&end=${end}`);
+                          }}
+                        />
+                        <img src={canlendar} alt='canlendar' className={styles['datetime-calendar']} />
+                      </Form.Field>
+                      <span className={styles['datetime-divider']}>-</span>
+                      <Form.Field className={styles['datetime']}>
+                        <div style={{height: '20px'}}></div>
+                        <Datetime
+                          dateFormat='YYYY-MM-DD'
+                          timeFormat='HH:mm:ss'
+                          inputProps={{
+                            placeholder: intl.formatMessage({id: 'anylysis.result.end.time'}),
+                          }}
+                          value={moment(end)}
+                          isValidDate={endDateValid}
+                          onChange={async (e: string | moment.Moment) => {
+                            if (!endDateValid(e as moment.Moment)) {
+                              return;
+                            }
+                            const current = (e as moment.Moment).format('YYYY-MM-DD HH:mm:ss');
+                            saveEnd(current);
+                            getEventResult(start, current);
+                            history.push(`/${projectKey}/${environmentKey}/${toggleKey}/analysis?start=${start}&end=${current}`);
+                          }}
+                        />
+                        <img src={canlendar} alt='canlendar' className={styles['datetime-calendar']} />
+                      </Form.Field>
+                    </>
+                  )
+                }
               </Form.Group>
             </Form>
           )
