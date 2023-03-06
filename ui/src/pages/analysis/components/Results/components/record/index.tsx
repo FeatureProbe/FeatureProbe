@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Popup } from 'semantic-ui-react';
 import dayjs from 'dayjs';
 import Icon from 'components/Icon';
+import TextLimit from 'components/TextLimit';
 import { IMetricIteration } from 'interfaces/analysis';
 import styles from './index.module.scss';
 
@@ -60,7 +61,10 @@ const Record = (props: IProps) => {
                 </div>
                 <div className={styles['record-right']}>
                   <div className={styles['record-title']}>
-                    {record.releaseNote}
+                    <TextLimit 
+                      text={record.releaseNote} 
+                      maxWidth={110}
+                    />
                   </div>
                   <div className={styles['record-time']}>
                     {dayjs(record.publishTime).format('YYYY-MM-DD HH:mm:ss')}

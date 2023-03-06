@@ -14,8 +14,14 @@ const TimeLine = (props: IProps) => {
   const [ width, saveWidth ] = useState<string | number>(0);
 
   const handleResize = useCallback(() => {
-    if (document.querySelector('.result')) {
-      saveWidth((document.querySelector('.result')?.clientWidth ?? 50) - 50);
+    const container = document.querySelector('.result');
+    if (container) {
+      saveWidth((container.clientWidth ?? 50) - 50);
+    }
+
+    const timeline = document.querySelector('.timeline');
+    if (timeline) {
+      timeline.scrollLeft = timeline.scrollWidth || 0;
     }
   }, []);
 
@@ -32,7 +38,7 @@ const TimeLine = (props: IProps) => {
   }, [handleResize]);
 
   return (
-    <div className={styles.timeline} style={{width}}>
+    <div className={`timeline ${styles.timeline}`} style={{width}}>
       {
         iterations.map((item, index) => {
           return (
@@ -42,7 +48,7 @@ const TimeLine = (props: IProps) => {
                 <div className={styles.line}>
                   <span className={styles.circle} />
                   <span className={styles.divider} />
-                  { index === iterations.length - 1 && <span className={styles.arrow} /> }
+                  { index === iterations.length - 1 && !item.stop && <span className={styles.arrow} /> }
                 </div>
                 <div className={`${styles.start} ${styles.button}`}>
                   <FormattedMessage id='analysis.result.collect.start' />
@@ -57,6 +63,7 @@ const TimeLine = (props: IProps) => {
                     <div className={styles.line}>
                       <span className={styles.circle} />
                       <span className={styles.divider} />
+                      { index === iterations.length - 1 && !!item.stop && <span className={styles.arrow} /> }
                     </div>
                     <div className={`${styles.stop} ${styles.button}`}>
                       <FormattedMessage id='analysis.result.collect.stop' />
