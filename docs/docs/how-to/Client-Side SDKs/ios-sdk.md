@@ -58,11 +58,29 @@ if showFeature {
 }
 ```
 
-### Step 4. Unit Testing (Optional)
+### Step 4. Track Events
+
+:::note
+The Swift SDK supports event tracking from version 2.0.2.
+:::
+
+
+The event tracking feature can record the actions taken by the user in the application as events.
+
+Events are related to toggle's metrics. For more information about event analysis, please read [Event Analysis](../../tutorials/analysis).
 
 ```swift
-let fp2 = FeatureProbe.newForTest(toggles: "{ \"toggle_1\": true }")
-let is_true = fp2.boolValue(key: "toggle_1", defaultValue: false)
+fp.track(event: "YOUR_CUSTOM_EVENT_NAME")
+// Providing a metric value to track
+fp.track(event: "YOUR_CUSTOM_EVENT_NAME", value: 5.5)
+```
+
+
+### Step 5. Unit Testing (Optional)
+
+```swift
+let fp = FeatureProbe.newForTest(toggles: "{ \"toggle_1\": true }")
+let is_true = fp.boolValue(key: "toggle_1", defaultValue: false)
 assert(is_true == true);
 ```
 
@@ -105,7 +123,25 @@ if (showFeature) {
 }
 ```
 
-### Step 4. Unit Testing (Optional)
+### Step 4. Track Events
+
+:::note
+The Objc SDK supports event tracking from version 2.0.2.
+:::
+
+
+The event tracking feature can record the actions taken by the user in the application as events.
+
+Events are related to toggle's metrics. For more information about event analysis, please read [Event Analysis](../../tutorials/analysis).
+
+```objective-c
+[fp trackWithEvent:@"YOUR_CUSTOM_EVENT_NAME"];
+// Providing a metric value to track
+[fp trackWithEvent:@"YOUR_CUSTOM_EVENT_NAME" value:5.5];
+ 
+```
+
+### Step 5. Unit Testing (Optional)
 
 ```objective-c
 #import "FeatureProbe-Swift.h"

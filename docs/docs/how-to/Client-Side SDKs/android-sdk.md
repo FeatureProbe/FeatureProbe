@@ -48,7 +48,24 @@ if (showFeature) {
 }
 ```
 
-### Step 4. Unit Testing (Optional)
+### Step 4. Track Events
+
+:::note
+The Kotlin SDK supports event tracking from version 2.0.2.
+:::
+
+
+The event tracking feature can record the actions taken by the user in the application as events.
+
+Events are related to toggle's metrics. For more information about event analysis, please read [Event Analysis](../../tutorials/analysis).
+
+```kotlin
+fp.track("YOUR_CUSTOM_EVENT_NAME")
+// Providing a metric value to track
+fp.track("YOUR_CUSTOM_EVENT_NAME", 5.5)
+```
+
+### Step 5. Unit Testing (Optional)
 
 ```kotlin
 val fp_for_test = FeatureProbe.newForTest("{ \"toggle_1\": true }")

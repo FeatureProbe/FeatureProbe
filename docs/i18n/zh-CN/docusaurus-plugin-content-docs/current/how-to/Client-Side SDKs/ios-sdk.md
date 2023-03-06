@@ -57,7 +57,21 @@ if showFeature {
 }
 ```
 
-### 步骤 4. 单元测试 (可选)
+### 步骤 4. 事件上报
+
+:::note
+Swift SDK 从 2.0.2 版本开始支持事件上报的能力。
+:::
+
+事件跟踪功能可以将用户在应用程序中采取的操作记录为事件。
+可以在开关的指标中关联事件。更多指标分析相关的信息，请阅读[指标分析](../../tutorials/analysis)。
+
+```swift
+fp.track(event: "YOUR_CUSTOM_EVENT_NAME")
+// Providing a metric value to track
+fp.track(event: "YOUR_CUSTOM_EVENT_NAME", value: 5.5)
+
+### 步骤 5. 单元测试 (可选)
 
 ```swift
 let fp2 = FeatureProbe.newForTest(toggles: "{ \"toggle_1\": true }")
@@ -104,7 +118,22 @@ if (showFeature) {
 }
 ```
 
-### 步骤 4. 单元测试 (可选)
+### 步骤 4. 事件上报
+
+:::note
+Objc SDK 从 2.0.2 版本开始支持事件上报的能力。
+:::
+
+事件跟踪功能可以将用户在应用程序中采取的操作记录为事件。
+可以在开关的指标中关联事件。更多指标分析相关的信息，请阅读[指标分析](../../tutorials/analysis)。
+
+```objectivec
+[fp trackWithEvent:@"YOUR_CUSTOM_EVENT_NAME"];
+// Providing a metric value to track
+[fp trackWithEvent:@"YOUR_CUSTOM_EVENT_NAME" value:5.5];
+
+
+### 步骤 5. 单元测试 (可选)
 
 ```objectivec
 #import "FeatureProbe-Swift.h"
