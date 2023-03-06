@@ -9,6 +9,10 @@ import CopyToClipboardPopup from 'components/CopyToClipboard';
 import {
   SdkLanguage,
   getJavaTrackCode,
+  getRustTrackCode,
+  getAndroidTrackCode,
+  getSwiftTrackCode,
+  getObjCTrackCode
 } from '../../constants';
 
 import styles from '../../index.module.scss';
@@ -65,7 +69,7 @@ const SetupCode = (props: IProps) => {
         case 'Rust': 
           saveLanguage('rust');
           saveOptions(
-            getJavaTrackCode({
+            getRustTrackCode({
               intl, 
               eventName,
             })
@@ -74,7 +78,7 @@ const SetupCode = (props: IProps) => {
         case 'Android': 
           saveLanguage('java');
           saveOptions(
-            getJavaTrackCode({
+            getAndroidTrackCode({
               intl, 
               eventName,
             })
@@ -83,7 +87,7 @@ const SetupCode = (props: IProps) => {
         case 'Swift': 
           saveLanguage('swift');
           saveOptions(
-            getJavaTrackCode({
+            getSwiftTrackCode({
               intl, 
               eventName,
             })
@@ -92,7 +96,7 @@ const SetupCode = (props: IProps) => {
         case 'Objective-C':
           saveLanguage('objectivec');
           saveOptions(
-            getJavaTrackCode({
+            getObjCTrackCode({
               intl, 
               eventName,
             })

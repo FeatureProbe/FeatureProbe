@@ -217,6 +217,20 @@ ${returnType === 'boolean' ? `let value = fp.bool_value("${toggleKey}", &user, f
   ];
 };
 
+export const getRustTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fp.track("${eventName}", &user, None);
+// Providing a metric value to track
+fp.track("${eventName}", &user, Some(5.5));
+`
+    },
+  ];
+};
+
 export const getGoCode = (options: IOption) => {
   const { intl, serverSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
   return [
@@ -354,6 +368,20 @@ val fp = FeatureProbe(config, user)
   ];
 };
 
+export const getAndroidTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fp.track("${eventName}");
+// Providing a metric value to track
+fp.track("${eventName}", 5.5);
+`
+    },
+  ];
+};
+
 export const getSwiftCode = (options: IOption) => {
   const { intl, clientSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
 
@@ -397,6 +425,20 @@ let fp = FeatureProbe(config: config, user: user)
   ];
 };
 
+export const getSwiftTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fp.track(event: "${eventName}");
+// Providing a metric value to track
+fp.track(event: "${eventName}", value: 5.5);
+`
+    },
+  ];
+};
+
 export const getObjCCode = (options: IOption) => {
   const { intl, clientSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
 
@@ -431,6 +473,20 @@ FeatureProbe *fp = [[FeatureProbe alloc] initWithConfig:config user:user];`
       name: '',
       code: `${returnType === 'boolean' ? `bool value = [fp boolValueWithKey: @"${toggleKey}" defaultValue: false];` : ''}${returnType === 'number' ? `double value = [fp numberValueWithKey: @"${toggleKey}" defaultValue: 1.0];` : ''}${returnType === 'string' ? `NSString* value = [fp stringValueWithKey: @"${toggleKey}" defaultValue: @"s"];` : ''}${returnType === 'json' ? `NSString* value = [fp jsonValueWithKey: @"${toggleKey}" defaultValue: @"{}"];` : ''}`
     }
+  ];
+};
+
+export const getObjCTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`[fp trackWithEvent:@"${eventName}"];
+// Providing a metric value to track
+[fp trackWithEvent:@"${eventName}" value:5.5];
+`
+    },
   ];
 };
 
