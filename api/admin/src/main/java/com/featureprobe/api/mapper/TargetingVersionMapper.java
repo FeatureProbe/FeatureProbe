@@ -1,6 +1,7 @@
 package com.featureprobe.api.mapper;
 
 import com.featureprobe.api.base.model.TargetingContent;
+import com.featureprobe.api.dto.MetricIterationResponse;
 import com.featureprobe.api.dto.TargetingVersionResponse;
 import com.featureprobe.api.dao.entity.TargetingVersion;
 import com.featureprobe.api.base.util.JsonMapper;
@@ -18,6 +19,12 @@ public interface TargetingVersionMapper extends BaseMapper {
             expression = "java(toTargetingContent(targetingVersion.getContent()))")
     @Mapping(target = "createdBy", expression = "java(getAccount(targetingVersion.getCreatedBy()))")
     TargetingVersionResponse entityToResponse(TargetingVersion targetingVersion);
+
+
+    @Mapping(target = "publishTime", source = "createdTime")
+    @Mapping(target = "version", source = "version")
+    @Mapping(target = "releaseNote", source = "comment")
+    MetricIterationResponse.PublishRecord entityToPublishRecord(TargetingVersion targetingVersion);
 
     default TargetingContent toTargetingContent(String content) {
         if (StringUtils.isNotBlank(content)) {

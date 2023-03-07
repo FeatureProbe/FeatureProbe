@@ -1,5 +1,7 @@
 package com.featureprobe.api.dto;
 
+import com.featureprobe.api.base.enums.AlgorithmDenominatorEnum;
+import com.featureprobe.api.base.enums.EventTypeEnum;
 import com.featureprobe.api.base.enums.MatcherTypeEnum;
 import com.featureprobe.api.base.enums.MetricTypeEnum;
 import com.featureprobe.api.base.enums.WinCriteria;
@@ -13,7 +15,7 @@ public class MetricConfigResponse {
     private Long id;
 
     @Schema(description = "The type of the metric.")
-    private MetricTypeEnum type;
+    private MetricTypeEnum metricType;
 
     @Schema(description = "The name of the metric.")
     private String name;
@@ -26,6 +28,12 @@ public class MetricConfigResponse {
 
     @Schema(description = "The win criteria of the NUMERIC metric.")
     private WinCriteria winCriteria;
+
+    @Schema(description = "The denominator of the metric.")
+    private AlgorithmDenominatorEnum denominator;
+
+    @Schema(description = "The type of the event.")
+    private EventTypeEnum eventType;
 
     @Schema(description = "The name of the event. Use the event name in the code buried point. <br/> " +
             "Only contain letters, numbers, '.', '_' Or '-', and the length is greater than 4.")

@@ -6,9 +6,11 @@ import com.featureprobe.api.base.doc.EnvironmentKeyParameter;
 import com.featureprobe.api.base.doc.GetApiResponse;
 import com.featureprobe.api.base.doc.ProjectKeyParameter;
 import com.featureprobe.api.base.doc.ToggleKeyParameter;
+import com.featureprobe.api.dto.AnalysisRequest;
 import com.featureprobe.api.dto.AnalysisResultResponse;
 import com.featureprobe.api.dto.MetricConfigResponse;
 import com.featureprobe.api.dto.MetricCreateRequest;
+import com.featureprobe.api.dto.MetricIterationResponse;
 import com.featureprobe.api.dto.MetricResponse;
 import com.featureprobe.api.service.MetricService;
 import com.featureprobe.api.validate.ResourceExistsValidate;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
@@ -64,9 +68,17 @@ public class MetricController {
     @Operation(summary = "Get Metric", description = "Get a single metric by toggle.")
     public AnalysisResultResponse analysis(@PathVariable("projectKey") String projectKey,
                                            @PathVariable("environmentKey") String environmentKey,
-                                           @PathVariable("toggleKey") String toggleKey) {
-        return metricService.analysis(projectKey, environmentKey, toggleKey);
+                                           @PathVariable("toggleKey") String toggleKey,
+                                           AnalysisRequest params) {
+        return metricService.analysis(projectKey, environmentKey, toggleKey, params);
     }
 
-
+    @GetMapping("/iterations")
+    @GetApiResponse
+    @Operation(summary = "Get Iteration", description = "Get a single metric iteration by toggle.")
+    public List<MetricIterationResponse> iteration(@PathVariable("projectKey") String projectKey,
+                                                   @PathVariable("environmentKey") String environmentKey,
+                                                   @PathVariable("toggleKey") String toggleKey) {
+        return metricService.iteration(projectKey, environmentKey, toggleKey);
+    }
 }

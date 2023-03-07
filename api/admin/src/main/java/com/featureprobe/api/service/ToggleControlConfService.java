@@ -19,6 +19,8 @@ public class ToggleControlConfService {
 
     ToggleControlConfRepository toggleControlConfRepository;
 
+    MetricService metricService;
+
     @PersistenceContext
     public EntityManager entityManager;
 
@@ -45,15 +47,20 @@ public class ToggleControlConfService {
     @Transactional(rollbackFor = Exception.class)
     public ToggleControlConf updateTrackAccessEvents(Targeting latestTargeting, Boolean trackAccessEvents) {
         ToggleControlConf toggleControlConf = queryToggleControlConf(latestTargeting);
-
         if (trackAccessEvents != null) {
+            if (toggleControlConf.isTrackAccessEvents() == trackAccessEvents.booleanValue()) {
+                return toggleControlConf;
+            }
             toggleControlConf.setTrackAccessEvents(trackAccessEvents);
+            Date now = new Date();
             if (trackAccessEvents) {
-                toggleControlConf.setTrackStartTime(new Date());
+                toggleControlConf.setTrackStartTime(now);
                 toggleControlConf.setTrackEndTime(null);
             } else {
-                toggleControlConf.setTrackEndTime(new Date());
+                toggleControlConf.setTrackEndTime(now);
             }
+            metricService.updateMetricIteration(latestTargeting.getProjectKey(), latestTargeting.getEnvironmentKey(),
+                    latestTargeting.getToggleKey(), trackAccessEvents, now);
         }
         toggleControlConf.setLastModified(new Date());
         toggleControlConfRepository.save(toggleControlConf);

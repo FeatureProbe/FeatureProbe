@@ -1,17 +1,23 @@
 package com.featureprobe.api.service
 
+import com.featureprobe.api.base.enums.AlgorithmDenominatorEnum
+import com.featureprobe.api.base.enums.EventTypeEnum
 import com.featureprobe.api.base.enums.MetricTypeEnum
 import com.featureprobe.api.base.enums.MatcherTypeEnum
 import com.featureprobe.api.config.AppConfig
 import com.featureprobe.api.dao.entity.Environment
 import com.featureprobe.api.dao.entity.Event
 import com.featureprobe.api.dao.entity.Metric
+import com.featureprobe.api.dao.entity.MetricIteration
+import com.featureprobe.api.dao.entity.TargetingVersion
 import com.featureprobe.api.dao.exception.ResourceNotFoundException
 import com.featureprobe.api.dao.repository.DictionaryRepository
 import com.featureprobe.api.dao.repository.EnvironmentRepository
 import com.featureprobe.api.dao.repository.EventRepository
+import com.featureprobe.api.dao.repository.MetricIterationRepository
 import com.featureprobe.api.dao.repository.MetricRepository
 import com.featureprobe.api.dao.repository.PublishMessageRepository
+import com.featureprobe.api.dao.repository.TargetingVersionRepository
 import com.featureprobe.api.dao.repository.ToggleControlConfRepository
 import com.featureprobe.api.dto.MetricCreateRequest
 import org.hibernate.internal.SessionImpl
@@ -26,7 +32,7 @@ class MetricServiceSpec extends Specification {
 
     EntityManager entityManager
 
-    MetricService eventService
+    MetricService metricService
 
     PublishMessageRepository publishMessageRepository
 
@@ -35,6 +41,10 @@ class MetricServiceSpec extends Specification {
     DictionaryRepository dictionaryRepository
 
     ToggleControlConfRepository toggleControlConfRepository
+
+    MetricIterationRepository metricIterationRepository
+
+    TargetingVersionRepository targetingVersionRepository
 
     ChangeLogService changeLogService
 
@@ -52,8 +62,11 @@ class MetricServiceSpec extends Specification {
         environmentRepository = Mock(EnvironmentRepository)
         dictionaryRepository = Mock(DictionaryRepository)
         toggleControlConfRepository = Mock(ToggleControlConfRepository)
+        metricIterationRepository = Mock(MetricIterationRepository)
+        targetingVersionRepository = Mock(TargetingVersionRepository)
         changeLogService = new ChangeLogService(publishMessageRepository, environmentRepository, dictionaryRepository)
-        eventService = new MetricService(eventRepository, metricRepository, toggleControlConfRepository, environmentRepository, changeLogService, appConfig, entityManager)
+        metricService = new MetricService(eventRepository, metricRepository, toggleControlConfRepository,
+                environmentRepository, metricIterationRepository, targetingVersionRepository, changeLogService, appConfig, entityManager)
         projectKey = "Test_Project"
         environmentKey = "online"
         toggleKey = "Test_Toggle"
@@ -61,9 +74,11 @@ class MetricServiceSpec extends Specification {
 
     def "create a new CONVERSION metric"() {
         given:
-        MetricCreateRequest request = new MetricCreateRequest(name: "Test Metric", description: "desc", type: MetricTypeEnum.CONVERSION, eventName: "access_feature")
+        MetricCreateRequest request = new MetricCreateRequest(name: "Test Metric", description: "desc",
+                metricType: MetricTypeEnum.CONVERSION, eventType: EventTypeEnum.CUSTOM, eventName: "access_feature",
+                denominator: AlgorithmDenominatorEnum.TOTAL_SAMPLE)
         when:
-        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
+        def created = metricService.create(projectKey, environmentKey, toggleKey, request)
         then:
         1 * metricRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.empty()
         1 * eventRepository.findByName("access_feature") >> Optional.empty()
@@ -78,9 +93,11 @@ class MetricServiceSpec extends Specification {
 
     def "create a new CLICK metric"() {
         given:
-        MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CLICK, url: "http://127.0.0.1/test", matcher: MatcherTypeEnum.SIMPLE, selector: "#123")
+        MetricCreateRequest request = new MetricCreateRequest(name: "Test Metric", description: "desc", metricType: MetricTypeEnum.CONVERSION,
+                eventType: EventTypeEnum.CLICK, url: "http://127.0.0.1/test", matcher: MatcherTypeEnum.SIMPLE, selector: "#123",
+                denominator: AlgorithmDenominatorEnum.TOTAL_SAMPLE)
         when:
-        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
+        def created = metricService.create(projectKey, environmentKey, toggleKey, request)
         then:
         1 * metricRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.empty()
         2 * eventRepository.findByName(_) >> Optional.empty()
@@ -89,73 +106,49 @@ class MetricServiceSpec extends Specification {
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(version: 1))
         1 * environmentRepository.save(_)
         1 * publishMessageRepository.save(_)
-        1 * metricRepository.save(_) >> new Metric(type: MetricTypeEnum.CLICK, events: new TreeSet<Event>([new Event(name: "123"), new Event(name: "321")]))
-        MetricTypeEnum.CLICK.name() == created.type.name()
+        1 * metricRepository.save(_) >> new Metric(type: MetricTypeEnum.CONVERSION,
+                events: new TreeSet<Event>([new Event(type: EventTypeEnum.CLICK, name: "123"), new Event(type: EventTypeEnum.PAGE_VIEW, name: "321")]))
+        MetricTypeEnum.CONVERSION.name() == created.type.name()
         2 == created.events.size()
     }
 
     def "update a exists event "() {
         given:
-        MetricCreateRequest request = new MetricCreateRequest(name: "Test Metric", description: "desc", type: MetricTypeEnum.CONVERSION, eventName: "access_feature2")
+        MetricCreateRequest request = new MetricCreateRequest(name: "Test Metric", description: "desc",
+                metricType: MetricTypeEnum.CONVERSION, eventType: EventTypeEnum.CUSTOM, eventName: "access_feature2", denominator: AlgorithmDenominatorEnum.TOTAL_SAMPLE)
         when:
-        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
+        def created = metricService.create(projectKey, environmentKey, toggleKey, request)
         then:
-        1 * metricRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.of(new Metric(type: MetricTypeEnum.NUMERIC, events: [new Event(name: "access_feature2")]))
-        1 * eventRepository.findByName("access_feature2") >> Optional.of(new Event(id: 1, name: "access_feature2"))
+        1 * metricRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.of(new Metric(type: MetricTypeEnum.CONVERSION, events: [new Event(name: "access_feature2")]))
+        1 * eventRepository.findByName("access_feature2") >> Optional.of(new Event(id: 1, type: EventTypeEnum.CUSTOM, name: "access_feature2"))
         1 * eventRepository.save(_) >> new Event(name: "access_feature2")
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(version: 1))
         1 * environmentRepository.save(_)
         1 * publishMessageRepository.save(_)
-        1 * metricRepository.save(_) >> new Metric(type: MetricTypeEnum.NUMERIC, events: [new Event(name: "access_feature2")])
-        MetricTypeEnum.NUMERIC.name() == created.type.name()
+        1 * metricRepository.save(_) >> new Metric(type: MetricTypeEnum.CONVERSION, events: [new Event(id: 1, type: EventTypeEnum.CUSTOM, name: "access_feature2")])
+        MetricTypeEnum.CONVERSION.name() == created.type.name()
         1 == created.events.size()
-    }
-
-
-    def "create a CONVERSION event: name is required"() {
-        given:
-        MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CONVERSION)
-        when:
-        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
-        then:
-        thrown(IllegalArgumentException)
-    }
-
-    def "create a PAGE_VIEW event: url is required"() {
-        given:
-        MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.PAGE_VIEW)
-        when:
-        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
-        then:
-        thrown(IllegalArgumentException)
-    }
-
-    def "create a CLICK event: selector is required"() {
-        given:
-        MetricCreateRequest request = new MetricCreateRequest(type: MetricTypeEnum.CLICK, matcher: MatcherTypeEnum.SIMPLE, url: "https://127.0.0.1/test")
-        when:
-        def created = eventService.create(projectKey, environmentKey, toggleKey, request)
-        then:
-        thrown(IllegalArgumentException)
-    }
-
-
-    def "query a event by toggle"() {
-        when:
-        def metric = eventService.query(projectKey, environmentKey, toggleKey)
-        then:
-        1 * metricRepository
-                .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.of(new Metric(type: MetricTypeEnum.CONVERSION, events: [new Event(name: "access_feature")]))
-        MetricTypeEnum.CONVERSION.name() == metric.type.name()
-        "access_feature" == metric.eventName
     }
 
     def "query a not exists event by toggle"() {
         when:
-        eventService.query(projectKey, environmentKey, toggleKey)
+        metricService.query(projectKey, environmentKey, toggleKey)
         then:
         1 * metricRepository
                 .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >> Optional.empty()
         thrown(ResourceNotFoundException)
+    }
+
+    def "query metric iteration"() {
+        when:
+        def iteration = metricService.iteration(projectKey, environmentKey, toggleKey)
+        then:
+        1 * metricIterationRepository.findAllByProjectKeyAndEnvironmentKeyAndToggleKeyOrderByStartAsc(projectKey, environmentKey,
+                        toggleKey) >> [new MetricIteration(start: new Date(System.currentTimeMillis()), stop: new Date(System.currentTimeMillis() + (24 * 60 * 60 * 1000)))]
+        1 * targetingVersionRepository
+                .findAllByProjectKeyAndEnvironmentKeyAndToggleKeyAndCreatedTimeGreaterThanEqualOrderByVersionDesc(
+                        projectKey, environmentKey, toggleKey, _) >> [new TargetingVersion(version: 1, createdTime: new Date(), comment: "Release 1")]
+        1 == iteration.size()
+        1 == iteration.get(0).records.size()
     }
 }

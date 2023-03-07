@@ -1,7 +1,7 @@
 package com.featureprobe.api.mapper;
 
+import com.featureprobe.api.base.enums.EventTypeEnum;
 import com.featureprobe.api.base.enums.MatcherTypeEnum;
-import com.featureprobe.api.base.enums.MetricTypeEnum;
 import com.featureprobe.api.dao.entity.Event;
 import com.featureprobe.api.dao.entity.Metric;
 import com.featureprobe.api.dto.EventResponse;
@@ -9,19 +9,14 @@ import com.featureprobe.api.dto.MetricConfigResponse;
 import com.featureprobe.api.dto.MetricCreateRequest;
 import com.featureprobe.api.dto.MetricResponse;
 import org.apache.commons.collections4.CollectionUtils;
-import org.codehaus.plexus.util.StringUtils;
-import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Mapper
@@ -33,12 +28,15 @@ public interface MetricMapper {
     MetricResponse entityToResponse(Metric metric);
 
     @Mapping(target = "eventName", expression = "java(toEventName(metric))")
+    @Mapping(target = "eventType", expression = "java(toEventType(metric))")
+    @Mapping(target = "metricType", source = "type")
     @Mapping(target = "matcher", expression = "java(toEventMatcher(metric))")
     @Mapping(target = "url", expression = "java(toEventUrl(metric))")
     @Mapping(target = "selector", expression = "java(toEventSelector(metric))")
     MetricConfigResponse entityToConfigResponse(Metric metric);
 
     @Mapping(target = "events", expression = "java(toEmptyEvents())")
+    @Mapping(target = "type", source = "metricType")
     void mapEntity(MetricCreateRequest createRequest, @MappingTarget Metric metric);
 
     default Set<EventResponse> toEventResponses(Set<Event> events) {
@@ -53,16 +51,32 @@ public interface MetricMapper {
         if (CollectionUtils.isEmpty(metric.getEvents())) {
             return null;
         }
-        if (MetricTypeEnum.CLICK.equals(metric.getType())) {
-            for(Iterator<Event> e=metric.getEvents().iterator(); e.hasNext();)
-            {
-                Event event = e.next();
-                if (StringUtils.isNotBlank(event.getSelector())) {
-                    return event.getName();
-                }
+        String eventName = "";
+        for(Iterator<Event> e=metric.getEvents().iterator(); e.hasNext();) {
+            Event event = e.next();
+            if (EventTypeEnum.CLICK.equals(event.getType())) {
+                return event.getName();
+            } else {
+                eventName = event.getName();
             }
         }
-        return metric.getEvents().iterator().next().getName();
+        return eventName;
+    }
+
+    default EventTypeEnum toEventType(Metric metric) {
+        if (CollectionUtils.isEmpty(metric.getEvents())) {
+            return null;
+        }
+        EventTypeEnum eventType = EventTypeEnum.CUSTOM;
+        for(Iterator<Event> e=metric.getEvents().iterator(); e.hasNext();) {
+            Event event = e.next();
+            if (EventTypeEnum.CLICK.equals(event.getType())) {
+                return event.getType();
+            } else {
+                eventType = event.getType();
+            }
+        }
+        return eventType;
     }
 
     default MatcherTypeEnum toEventMatcher(Metric metric) {
@@ -83,15 +97,13 @@ public interface MetricMapper {
         if (CollectionUtils.isEmpty(metric.getEvents())) {
             return null;
         }
-        if (MetricTypeEnum.CLICK.equals(metric.getType())) {
-            for(Iterator<Event> e=metric.getEvents().iterator(); e.hasNext();)
-            {
-                Event event = e.next();
-                if (StringUtils.isNotBlank(event.getSelector())) {
-                    return event.getSelector();
-                }
+        for(Iterator<Event> e=metric.getEvents().iterator(); e.hasNext();)
+        {
+            Event event = e.next();
+            if (EventTypeEnum.CLICK.equals(event.getType())) {
+                return event.getSelector();
             }
         }
-        return metric.getEvents().iterator().next().getSelector();
+        return null;
     }
 }

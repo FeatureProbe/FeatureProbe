@@ -1,5 +1,6 @@
 package com.featureprobe.api.dao.entity;
 
+import com.featureprobe.api.base.enums.EventTypeEnum;
 import com.featureprobe.api.base.enums.MatcherTypeEnum;
 import com.featureprobe.api.dao.listener.TenantEntityListener;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,9 @@ public class Event extends AbstractAuditEntity implements TenantSupport, Compara
     private String name;
 
     @Enumerated(EnumType.STRING)
+    private EventTypeEnum type;
+
+    @Enumerated(EnumType.STRING)
     private MatcherTypeEnum matcher;
 
     @Column(columnDefinition = "TEXT")
@@ -47,13 +51,15 @@ public class Event extends AbstractAuditEntity implements TenantSupport, Compara
     @Column(columnDefinition = "TEXT")
     private String selector;
 
-    public Event(String name, MatcherTypeEnum matcher, String url) {
+    public Event(EventTypeEnum type, String name, MatcherTypeEnum matcher, String url) {
+        this.type = type;
         this.name = name;
         this.matcher = matcher;
         this.url = url;
     }
 
-    public Event(String name, MatcherTypeEnum matcher, String url, String selector) {
+    public Event(EventTypeEnum type, String name, MatcherTypeEnum matcher, String url, String selector) {
+        this.type = type;
         this.name = name;
         this.matcher = matcher;
         this.url = url;
