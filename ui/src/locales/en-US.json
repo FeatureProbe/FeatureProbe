@@ -83,6 +83,7 @@
   "common.version.text": "version",
   "common.loading.text": "Loading...",
   "common.get.started.text": "Get started",
+  "common.connect.sdk.text": "Connect SDK",
   "common.current.version.text": "Current version",
   "common.version.change.text": "Changed ",
   "common.copy.uppercase.text": "Copy",
@@ -473,8 +474,7 @@
   "getstarted.react.fourth.step.title": "Step4: Create a new file home.js in the same directory as App.js, import withFPConsumer in home.js",
   "getstarted.track.event": "Set up event track",
   "getstarted.track.event.title": "Add the following code and track custom event",
-  "getstarted.track.event.not.support": "No custom events have been tracked yet.",
-  "getstarted.track.event.support.sdk": "Currently supports custom event tracking for Java, Rust, JavaScript, Android, Swift, Objective-C, and React SDK.",
+  "getstarted.track.event.support.sdk": "Currently supports tracking custom event for Java, Rust, JavaScript, Android, Swift, Objective-C, and React SDK.",
 
   "platform.warning.text": "According to the Cybersecurity Law, it is prohibited to use FeatureProbe for illegal financial lending, cryptocurrency, gambling and any applications containing Telemarketing Scams functions, once discovered, you will be immediately stopped from using FeatureProbe and reported to the Cyber Security Department.",
 

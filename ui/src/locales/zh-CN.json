@@ -83,6 +83,7 @@
   "common.version.text": "版本",
   "common.loading.text": "加载中...",
   "common.get.started.text": "接入引导",
+  "common.connect.sdk.text": "连接SDK",
   "common.current.version.text": "当前版本",
   "common.version.change.text": "版本变更",
   "common.copy.uppercase.text": "复制",
@@ -473,7 +474,6 @@
   "getstarted.react.fourth.step.title": "第四步：在App.js同级目录下创建home.js，并在home.js中引入withFPConsumer",
   "getstarted.track.event": "设置埋点上报",
   "getstarted.track.event.title": "添加以下代码，上报自定义事件",
-  "getstarted.track.event.not.support": "还没有上报自定义事件。",
   "getstarted.track.event.support.sdk": "目前支持Java、Rust、JavaScript、Android、Swift、Objective-C、React SDK的自定义事件上报。",
 
   "platform.warning.text": "根据国家相关规定，严禁将FeatureProbe用于违法金融借贷、区块链虚拟币、博彩以及任何含有网络电信诈骗功能的应用程序，一旦被发现，将会立即停止你使用FeatureProbe相关功能，并上报给网络安全监管部门。",

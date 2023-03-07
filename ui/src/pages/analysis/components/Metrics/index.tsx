@@ -42,9 +42,12 @@ const STEPS: Step[] = [
         <div className='joyride-title'>
           <FormattedMessage id='getstarted.track.event' />
         </div>
-        <ul className='joyride-item'>
-          <li><FormattedMessage id='guide.connect.sdk.content' /></li>
-        </ul>
+        <div className={styles['joyride-content']}>
+          <FormattedMessage id='guide.connect.sdk.content' />
+        </div>
+        <div className={styles['joyride-tips']}>
+          <FormattedMessage id="getstarted.track.event.support.sdk" />
+        </div>
       </div>
     ),
     placement: 'bottom',
@@ -722,7 +725,7 @@ const Metrics = (props: IProps) => {
         locale={{
           'back': intl.formatMessage({id: 'guide.last'}),
           'next': intl.formatMessage({id: 'guide.next'}),
-          'last': intl.formatMessage({id: 'guide.done'}),
+          'last': intl.formatMessage({id: 'common.know.text'}),
         }}
         floaterProps={{...floaterStyle}}
         styles={{...tourStyle}}

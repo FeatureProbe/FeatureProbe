@@ -305,7 +305,7 @@ const ProjectLayout = (props: IProps) => {
                 </Breadcrumb.Section>
                 <Breadcrumb.Divider icon={<Icon customclass={styles['breadcrumb-icon']} type='angle-right' />} />
                 <Breadcrumb.Section active>
-                  <FormattedMessage id='common.get.started.text' />
+                  <FormattedMessage id='common.connect.sdk.text' />
                 </Breadcrumb.Section>
               </>
             )
