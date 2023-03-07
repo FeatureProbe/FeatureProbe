@@ -5,10 +5,16 @@
 [![Last Release](https://img.shields.io/github/v/release/featureprobe/featureprobe)](https://github.com/FeatureProbe/FeatureProbe/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/featureprobe/api)](https://hub.docker.com/u/featureprobe)
 [![Apache-2.0 license](https://img.shields.io/github/license/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe/blob/main/LICENSE)
-[![Join FeatureProbe on Slack](https://img.shields.io/badge/slack-join-blue?logo=slack)](https://join.slack.com/t/featureprobe/shared_invite/zt-1b5qd120x-R~dDbpgL85GgCLTtfNDj0Q)
+[![Join FeatureProbe on Slack](https://img.shields.io/badge/slack-join-blue?logo=slack)](https://join.slack.com/t/featureprobe/shared_invite/zt-1qjcgy22s-1eeqZLs~RpoyovG8hMZu4w)
 [![EN doc](https://img.shields.io/badge/Docs-English-blue.svg)](https://docs.featureprobe.io/)
 [![CN doc](https://img.shields.io/badge/文档-中文版-blue.svg)](https://docs.featureprobe.io/zh-CN/)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/FeatureProbe.svg?style=social&label=FeatureProbe)](https://twitter.com/FeatureProbe)
+
+![TS](https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB.svg?style=for-the-badge&logo=React&logoColor=black)
+![SpringBoot](https://img.shields.io/badge/Spring%20Boot-6DB33F.svg?style=for-the-badge&logo=Spring-Boot&logoColor=white)
+![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white)
+
 
 # 跳转到[国内中文版](https://gitee.com/featureprobe/FeatureProbe/blob/main/README_CN.md)
 
@@ -158,7 +164,7 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 
 We are growing a community to help newcomer to learn FeatureProbe. Don't hesitate to reach out for help.
 
-If you want ask open questions about FeatureProbe, feature management or discuss these topics in general, join us on [![Join FeatureProbe on Slack](https://img.shields.io/badge/slack-join-blue?logo=slack)](https://join.slack.com/t/featureprobe/shared_invite/zt-1b5qd120x-R~dDbpgL85GgCLTtfNDj0Q) 
+If you want ask open questions about FeatureProbe, feature management or discuss these topics in general, join us on [![Join FeatureProbe on Slack](https://img.shields.io/badge/slack-join-blue?logo=slack)](https://join.slack.com/t/featureprobe/shared_invite/zt-1qjcgy22s-1eeqZLs~RpoyovG8hMZu4w) 
 
 Or if you prefer to talk in Chinese, join our wechat group: 
 

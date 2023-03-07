@@ -186,8 +186,8 @@ fp.on('ready', function() {
   // the second parameter is the unique user key.
   // the third parameter is optional, it means a metric value to track
   // highlight-start
-  fp.track('YOUR_CUSTOM_EVENT_NAME_1', user.getKey());
-  fp.track('YOUR_CUSTOM_EVENT_NAME_2', user.getKey(), 5.5);
+  fp.track('YOUR_CUSTOM_EVENT_NAME_1');
+  fp.track('YOUR_CUSTOM_EVENT_NAME_2', 5.5);
   // highlight-end
 })
 

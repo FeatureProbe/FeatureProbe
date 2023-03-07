@@ -104,7 +104,7 @@ The Java SDK supports event tracking from version 2.0.1.
 
 The event tracking feature can record the actions taken by the user in the application as events.
 
-Events can be correlated in the switch's metrics. For more information about event analysis, please read [Event Analysis](../../tutorials/analysis).
+Events are related to toggle's metrics. For more information about event analysis, please read [Event Analysis](../../tutorials/analysis).
 
 ```java
 fpClient.track("YOUR_CUSTOM_EVENT_NAME", user);
