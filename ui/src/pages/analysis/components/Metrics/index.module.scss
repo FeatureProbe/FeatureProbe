@@ -10,6 +10,12 @@
   border-radius: 12px;
   padding: 24px 16px;
   margin-top: 8px;
+
+  :global {
+    .ui.form .field {
+      margin-bottom: 0 !important;
+    }
+  }
 }
 
 .angle-down {
@@ -20,9 +26,8 @@
 }
 
 .label {
-  width: 98px !important;
-  margin: 6px 12px 0 0 !important;
-  text-align: right;
+  font-size: 13px;
+  color: #212529;
 }
 
 .label-required {
@@ -37,6 +42,7 @@
 .field {
   display: flex;
   margin-bottom: 0 !important;
+  width: 100% !important;
 }
 
 .field-middle {
@@ -61,48 +67,9 @@
   margin-bottom: 0;
 }
 
-.custom-metric-row {
-  display: flex;
-  margin-top: 24px;
-}
-
-.custom-metric-radio {
-  flex: 1;
-}
-
-.custom-metric-radio-disabled {
-  cursor: not-allowed;
-}
-
-.custom-metric-desc {
-  background: #ececf6;
-  border-radius: 4px;
-  color: #495057;
-  font-size: 12px;
-  transform: scale(0.83);
-  padding: 1px 4px;
-  margin-left: 20px;
-}
-
-.custom-metric-desc-disabled {
-  background: #ececf6;
-  border-radius: 4px;
-  color: #495057;
-  font-size: 12px;
-  transform: scale(0.83);
-  padding: 1px 4px;
-  margin-left: 20px;
-  opacity: 0.8;
-  cursor: not-allowed;
-}
-
-.custom-metric {
-  margin-bottom: 3px !important;
-}
-
-.metrics-save {
-  margin-left: 114px;
-  margin-top: 24px;
+.column {
+  position: relative;
+  margin-bottom: 16px !important;
 }
 
 .btn {
@@ -118,14 +85,14 @@
 .tip-text {
   color: #74788d;
   font-size: 12px;
-  margin-left: 122px;
+  margin-left: 12px;
 }
 
 .error-text {
   color: #f46a6a;
   font-size: 12px;
   position: relative;
-  margin-left: 122px;
+  margin-left: 12px;
 }
 
 .error-text-url {
@@ -140,8 +107,39 @@
   margin-left: 26px;
 }
 
-.column {
-  position: relative;
+.divider {
+  width: 150px;
+  height: 1px;
+  background: rgba(206, 212, 218, 0.6);
+  margin: 8px 0;
+}
+
+.formula {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #212529;
+  margin-left: 88px;
+}
+
+.formula-label {
+  margin-right: 12px;
+}
+
+.molecular {
+  text-align: center;
+  font-size: 12px;
+  color: #495057;
+  line-height: 1;
+  height: 12px;
+}
+
+.denominator {
+  text-align: center;
+  font-size: 12px;
+  color: #495057;
+  line-height: 1;
 }
 
 .test-url-popup {
