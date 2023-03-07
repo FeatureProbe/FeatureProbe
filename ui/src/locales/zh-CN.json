@@ -636,6 +636,7 @@
   "analysis.event.target.url.test": "测试一下URL是否匹配？",
   "analysis.event.target.url.match": "输入的URL与目标页面URL匹配",
   "analysis.event.target.url.not.match": "输入的URL与目标页面URL不匹配",
+  "analysis.event.available.sdk": "页面事件和点击事件仅适用于JavaScript和React SDK",
 
   "analysis.result.tip": "请先保存“指标信息”，并点击【收集数据】。",
   "analysis.result.collect.time": "数据统计周期：",

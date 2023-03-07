@@ -636,6 +636,7 @@
   "analysis.event.target.url.test": "Test if URL matches?",
   "analysis.event.target.url.match": "Your entered URL matches target URL",
   "analysis.event.target.url.not.match": "Your entered URL does not match target URL",
+  "analysis.event.available.sdk": "Page view and click events are only available for JavaScript and React SDK",
 
   "analysis.result.tip": "Create a metric to use analysis.",
   "analysis.result.collect.time": "Time frame: ",

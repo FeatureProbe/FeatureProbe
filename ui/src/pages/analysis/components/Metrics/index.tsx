@@ -488,6 +488,14 @@ const Metrics = (props: IProps) => {
                       </div>
                     </div>
                   </div>
+                  {
+                    (eventType === PAGE_VIEW || eventType === CLICK) && (
+                      <div className={styles['available-sdk']}>
+                        <Icon type='warning-circle' customclass={styles['warning-circle']} />
+                        <FormattedMessage id='analysis.event.available.sdk' />
+                      </div>
+                    )
+                  }
                 </Form.Field>
               </Grid.Column>
 
