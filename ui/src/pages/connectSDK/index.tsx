@@ -62,7 +62,7 @@ const ConnectSDK = () => {
   const [ isStepLoading, saveIsStepLoading ] = useState<boolean>(true);
   const [ clientAvailability, saveClientAvailability ] = useState<boolean>(false);
   const [ attributes, saveAttributes ] = useState<string[]>([]);
-  const [ eventInfo, saveEventInfo ] = useState<IEvent>();
+  // const [ eventInfo, saveEventInfo ] = useState<IEvent>();
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
 
   const init = useCallback(async() => {
@@ -92,9 +92,9 @@ const ConnectSDK = () => {
         saveAttributes(res[1].data);
       }
 
-      if (res[2].success && res[2].data) {
-        saveEventInfo(res[2].data);
-      }
+      // if (res[2].success && res[2].data) {
+      //   saveEventInfo(res[2].data);
+      // }
     });
 
     Promise.all([
