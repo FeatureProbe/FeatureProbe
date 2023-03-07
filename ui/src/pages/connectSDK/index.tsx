@@ -141,11 +141,6 @@ const ConnectSDK = () => {
     }
   }, [currentSDK]);
 
-  useEffect(() => {
-    console.log('currentSDK----', currentSDK);
-    console.log('eventInfo----', eventInfo);
-  }, [currentSDK, eventInfo]);
-
   const checkToggleStatus = useCallback(() => {
     getToggleAccess<IAccess>(projectKey, environmentKey, toggleKey).then(res => {
       const { data } = res;
