@@ -269,6 +269,22 @@ export const getToggleAccess = async<T> (projectKey: string, environmentKey: str
   });
 };
 
+export const getToggleTrackEvent = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
+  const url = `${
+    API.toggleTrackEventURI
+      .replace(':projectKey', projectKey)
+      .replace(':environmentKey', environmentKey)
+      .replace(':toggleKey', toggleKey)
+  }`;
+  
+  return request<T>(url, {
+    method: 'GET',
+    headers: {
+      ...ApplicationJson()
+    },
+  });
+};
+
 export const getTargetingDiff = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
   const url = `${
     API.targetingDiffURI

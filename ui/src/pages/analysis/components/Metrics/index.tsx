@@ -1,6 +1,7 @@
 import { useCallback, useState, SyntheticEvent, useEffect, useRef, useMemo } from 'react';
 import { Dropdown, DropdownProps, Form, Grid, InputOnChangeData, Popup } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import Joyride, { CallBackProps, EVENTS, Step, ACTIONS } from 'react-joyride';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import isEqual from 'lodash/isEqual';
@@ -11,8 +12,13 @@ import message from 'components/MessageBox';
 import CheckURL from '../CheckURL';
 import { IEvent } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
+import { IDictionary } from 'interfaces/targeting';
 import { createEvent } from 'services/analysis';
+import { getFromDictionary, saveDictionary } from 'services/dictionary';
 import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, COUNT, REVENUE, DURATION } from '../../constants';
+import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
+import { USER_TRACK_EVENT } from 'constants/dictionary_keys';
+
 import { 
   getEventTypeOptions,
   getMetricTypeOptions,
@@ -28,6 +34,25 @@ interface IProps {
   getEvent(): void;
   initTargeting(): void;
 }
+
+const STEPS: Step[] = [
+  {
+    content: (
+      <div>
+        <div className='joyride-title'>
+          <FormattedMessage id='getstarted.track.event' />
+        </div>
+        <ul className='joyride-item'>
+          <li><FormattedMessage id='guide.connect.sdk.content' /></li>
+        </ul>
+      </div>
+    ),
+    placement: 'bottom',
+    target: '.connect-sdk',
+    spotlightPadding: 10,
+    ...commonConfig
+  },
+];
 
 const Metrics = (props: IProps) => {
   const { eventInfo, initTargeting, getEvent } = props;
@@ -46,6 +71,8 @@ const Metrics = (props: IProps) => {
   const [ saveLoading, setSaveLoading ] = useState<boolean>(false);
   const [ popupOpen, setPopupOpen ] = useState<boolean>(false);
   const [ initialFormValue, saveInitialFormValue ] = useState({});
+  const [ run, saveRun ] = useState<boolean>(false);
+  const [ stepIndex, saveStepIndex ] = useState<number>(0);
   const selectorUrl = useRef('');
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
@@ -69,6 +96,25 @@ const Metrics = (props: IProps) => {
 
     return () => window.removeEventListener('click', handler);
   }, [popupOpen]);
+
+  const getUserGuide = useCallback(() => {
+    getFromDictionary<IDictionary>(USER_TRACK_EVENT).then(res => {
+      const { success, data } = res;
+      if (success && data) {
+        const savedData = JSON.parse(data.value);
+        if (parseInt(savedData) !== STEPS.length) {
+          setTimeout(() => {
+            saveRun(true);
+          }, 500);
+          saveStepIndex(parseInt(savedData));
+        }
+      } else {
+        setTimeout(() => {
+          saveRun(true);
+        }, 500);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if(eventInfo) {
@@ -265,12 +311,17 @@ const Metrics = (props: IProps) => {
         saveCanSave(false);
         initTargeting();
         getEvent();
+        
+        if (data.eventType === CUSTOM) {
+          getUserGuide();
+        }
+
       } else {
         message.error(intl.formatMessage({id: 'analysis.event.save.error'}));
       }
       setSaveLoading(false);
     });
-  }, [projectKey, environmentKey, toggleKey, intl, initTargeting, getEvent]);
+  }, [projectKey, environmentKey, toggleKey, intl, initTargeting, getEvent, getUserGuide]);
 
   const handleMetricTypeChange = useCallback((e: SyntheticEvent, data: DropdownProps) => {
     saveMetricType(data.value as string);
@@ -296,6 +347,16 @@ const Metrics = (props: IProps) => {
       [DURATION, intl.formatMessage({id: 'analysis.event.duration'})],
     ]);
   }, [intl]);
+
+  const handleJoyrideCallback = useCallback((data: CallBackProps) => {
+    const { action, index, type } = data;
+
+    if (([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND] as string[]).includes(type)) {
+      const nextStepIndex = index + (action === ACTIONS.PREV ? -1 : 1);
+      saveStepIndex(nextStepIndex);
+      saveDictionary(USER_TRACK_EVENT, nextStepIndex);
+    }
+  }, []);
 
   return (
     <div className={styles.metrics}>
@@ -637,6 +698,27 @@ const Metrics = (props: IProps) => {
           </div>
         </Form>
       </div>
+
+      <Joyride
+        run={run}
+        callback={handleJoyrideCallback}
+        stepIndex={stepIndex}
+        continuous
+        hideCloseButton
+        scrollToFirstStep
+        showProgress={false}
+        showSkipButton
+        steps={STEPS}
+        scrollOffset={100}
+        disableCloseOnEsc={true}
+        locale={{
+          'back': intl.formatMessage({id: 'guide.last'}),
+          'next': intl.formatMessage({id: 'guide.next'}),
+          'last': intl.formatMessage({id: 'guide.done'}),
+        }}
+        floaterProps={{...floaterStyle}}
+        styles={{...tourStyle}}
+      />
     </div>
   );
 };

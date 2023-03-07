@@ -255,7 +255,7 @@ const Info: React.FC<IProps> = (props) => {
               <div className={styles['info-title-right']}>
                 {
                   !toggleInfo?.archived && (
-                    <div className={styles['connect-sdk']} onClick={gotoGetStarted}>
+                    <div className={`${styles['connect-sdk']} connect-sdk`} onClick={gotoGetStarted}>
                       <Icon type='connect-sdk' customclass={styles['icon-connect-sdk']} />
                       <FormattedMessage id='toggle.connect' />
                     </div>

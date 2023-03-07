@@ -100,8 +100,11 @@ export const SDK_VERSION = new Map([
 export const AVAILABLE_SDKS = [
   'Java',
   'Rust',
+  'Android',
+  'Swift',
+  'Objective-C',
   'JavaScript',
-  'React'
+  'React',
 ];
 
 interface IOption {
@@ -545,6 +548,20 @@ fp.start();
   ];
 };
 
+export const getJSTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fp.track("${eventName}");
+// Providing a metric value to track
+fp.track("${eventName}", 5.5);
+`
+    },
+  ];
+};
+
 export const getMiniProgramCode = (options: IOption) => {
   const { intl, clientSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
   return [
@@ -639,6 +656,23 @@ const Home = ({ toggles, client }) => {
 };
 
 export default withFPConsumer(Home);
+`
+    },
+  ];
+};
+
+export const getReactTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`import { useFPClient } from 'featureprobe-client-sdk-client';
+
+const fp = useFPClient();
+fp.track("${eventName}");
+// Providing a metric value to track
+fp.track("${eventName}", 5.5);
 `
     },
   ];

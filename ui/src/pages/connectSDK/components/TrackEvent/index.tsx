@@ -12,7 +12,9 @@ import {
   getRustTrackCode,
   getAndroidTrackCode,
   getSwiftTrackCode,
-  getObjCTrackCode
+  getObjCTrackCode,
+  getJSTrackCode,
+  getReactTrackCode
 } from '../../constants';
 
 import styles from '../../index.module.scss';
@@ -105,7 +107,7 @@ const SetupCode = (props: IProps) => {
         case 'JavaScript':
           saveLanguage('javascript');
           saveOptions(
-            getJavaTrackCode({
+            getJSTrackCode({
               intl, 
               eventName,
             })
@@ -114,7 +116,7 @@ const SetupCode = (props: IProps) => {
         case 'React':
           saveLanguage('javascript');
           saveOptions(
-            getJavaTrackCode({
+            getReactTrackCode({
               intl, 
               eventName,
             })
@@ -156,7 +158,7 @@ const SetupCode = (props: IProps) => {
       </div>
       <div className={styles['step-right']}>
         <div className={stepTitleCls}>
-          <FormattedMessage id='设置埋点上报' />
+          <FormattedMessage id='getstarted.track.event' />
         </div>
         <div className={styles['step-detail']}>
           {
@@ -225,7 +227,7 @@ const SetupCode = (props: IProps) => {
             currentStep > CURRENT && (
               <div className={styles.card}>
                 <div className={styles['card-left']}>
-                  <FormattedMessage id='设置埋点上报' />
+                  <FormattedMessage id='getstarted.track.event' />
                 </div>
                 <div className={styles['card-right']}>
                   <Icon

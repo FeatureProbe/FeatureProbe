@@ -10,7 +10,7 @@ import TestConnection from './components/TestConnection';
 import { ToggleReturnType, SdkLanguage, SDK_VERSION, AVAILABLE_SDKS } from './constants';
 import { saveDictionary, getFromDictionary } from 'services/dictionary';
 import { getSdkVersion } from 'services/misc';
-import { getToggleAccess, getToggleInfo, getToggleAttributes } from 'services/toggle';
+import { getToggleAccess, getToggleInfo, getToggleAttributes, getToggleTrackEvent } from 'services/toggle';
 import { getProjectInfo, getEnvironment } from 'services/project';
 import { getEventDetail } from 'services/analysis';
 import { IDictionary, IToggleInfo } from 'interfaces/targeting';
@@ -31,6 +31,10 @@ interface IStep {
 
 interface IAccess {
   isAccess: boolean;
+}
+
+interface IReport {
+  isReport: boolean;
 }
 
 const step: IStep = {
@@ -57,11 +61,13 @@ const ConnectSDK = () => {
   const [ clientSdkKey, saveClientSdkKey ] = useState<string>('');
   const [ sdkVersion, saveSDKVersion ] = useState<string>('');
   const [ returnType, saveReturnType ] = useState<ToggleReturnType>('');
-  const [ toggleAccess, saveToggleAccess ] = useState<boolean>(false);
+  const [ isAccess, saveIsAccess ] = useState<boolean>(false);
+  const [ isReport, saveIsReport ] = useState<boolean>(false);
   const [ projectName, saveProjectName ] = useState<string>('');
   const [ environmentName, saveEnvironmentName ] = useState<string>('');
   const [ toggleName, saveToggleName ] = useState<string>('');
-  const [ isLoading, saveIsLoading ] = useState<boolean>(false);
+  const [ isAccessLoading, saveAccessLoading ] = useState<boolean>(false);
+  const [ isTrackLoading, saveTrackLoading ] = useState<boolean>(false);
   const [ isInfoLoading, saveIsInfoLoading ] = useState<boolean>(true);
   const [ isStepLoading, saveIsStepLoading ] = useState<boolean>(true);
   const [ clientAvailability, saveClientAvailability ] = useState<boolean>(false);
@@ -161,16 +167,28 @@ const ConnectSDK = () => {
     getToggleAccess<IAccess>(projectKey, environmentKey, toggleKey).then(res => {
       const { data } = res;
       if (res.success && data) {
-        saveToggleAccess(data.isAccess);
+        saveIsAccess(data.isAccess);
+      }
+    });
+  }, [projectKey, environmentKey, toggleKey]);
+
+  const checkEventTrack = useCallback(() => {
+    getToggleTrackEvent<IReport>(projectKey, environmentKey, toggleKey).then(res => {
+      const { data } = res;
+      if (res.success && data) {
+        saveIsReport(data.isReport);
       }
     });
   }, [projectKey, environmentKey, toggleKey]);
 
   useEffect(() => {
-    if (currentStep === 3) {
+    if (isTrackEvent && currentStep === 4) {
       checkToggleStatus();
-    }
-  }, [currentStep, checkToggleStatus]);
+      checkEventTrack();
+    } else if (!isTrackEvent && currentStep === 3) {
+      checkToggleStatus();
+    } 
+  }, [isTrackEvent, currentStep, checkToggleStatus, checkEventTrack]);
 
   const saveFirstStep = useCallback((sdk: string) => {
     step.step1.done = true;
@@ -184,23 +202,28 @@ const ConnectSDK = () => {
 
   const saveSecondStep = useCallback(() => {
     step.step2.done = true;
+    step.step1.sdk = currentSDK;
     saveDictionary(PREFIX + projectKey + '_' + environmentKey + '_' + toggleKey, step).then((res) => {
       if (res.success) {
         saveCurrentStep(currentStep + 1);
-        saveIsLoading(true);
+        if (!isTrackEvent) {
+          saveAccessLoading(true);
+        }
       }
     });
-  }, [projectKey, environmentKey, toggleKey, currentStep]);
+  }, [currentSDK, projectKey, environmentKey, toggleKey, currentStep, isTrackEvent]);
 
   const saveThirdStep = useCallback(() => {
     step.step3.done = true;
+    step.step1.sdk = currentSDK;
     saveDictionary(PREFIX + projectKey + '_' + environmentKey + '_' + toggleKey, step).then((res) => {
       if (res.success) {
         saveCurrentStep(currentStep + 1);
-        saveIsLoading(true);
+        saveAccessLoading(true);
+        saveTrackLoading(true);
       }
     });
-  }, [projectKey, environmentKey, toggleKey, currentStep]);
+  }, [currentSDK, projectKey, environmentKey, toggleKey, currentStep]);
 
   const goBackToStep = useCallback((currentStep: number) => {
     saveCurrentStep(currentStep);
@@ -302,15 +325,21 @@ const ConnectSDK = () => {
                 }
 
                 <TestConnection 
-                  isLoading={isLoading}
+                  isTrackLoading={isTrackLoading}
+                  isAccessLoading={isAccessLoading}
+                  isTrackEvent={isTrackEvent}
                   projectKey={projectKey}
                   environmentKey={environmentKey}
                   toggleKey={toggleKey}
                   currentStep={currentStep}
-                  toggleAccess={toggleAccess}
+                  isAccess={isAccess}
+                  isReport={isReport}
                   totalStep={isTrackEvent ? 4 : 3}
-                  saveIsLoading={saveIsLoading}
+                  eventName={eventInfo?.eventName ?? ''}
+                  saveAccessLoading={saveAccessLoading}
+                  saveTrackLoading={saveTrackLoading}
                   checkToggleStatus={checkToggleStatus}
+                  checkEventTrack={checkEventTrack}
                 />
               </>
             )

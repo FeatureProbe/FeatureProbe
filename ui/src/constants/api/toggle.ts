@@ -14,6 +14,7 @@ const ToggleURI = {
   tagsURI: `${origin}/projects/:projectKey/tags`,
   trafficURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/traffic`,
   toggleAccessURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/access`,
+  toggleTrackEventURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/metric/status`,
   toggleExistURI: `${origin}/projects/:projectKey/toggles/exists`,
   environmentExistURI: `${origin}/projects/:projectKey/environments/exists`,
   targetingVersionsURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/targeting/versions`,
