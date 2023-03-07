@@ -4,7 +4,7 @@ import Metrics from './components/Metrics';
 import Results from './components/Results';
 import { IEvent } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
-import { getEventDetail, operateCollection } from 'services/analysis';
+import { getEventDetail } from 'services/analysis';
 import { ITarget } from 'interfaces/targeting';
 
 interface IProps {
@@ -32,18 +32,6 @@ const Analysis = (props: IProps) => {
     getEvent();
   }, [getEvent]);
 
-  const operateTrackCollection = useCallback(trackEvents => {
-    saveSubmitLoading(true);
-    operateCollection(projectKey, environmentKey, toggleKey, {
-      trackAccessEvents: trackEvents
-    }).then(res => {
-      if (res.success) {
-        initTargeting();
-      }
-      saveSubmitLoading(false);
-    });
-  }, [environmentKey, projectKey, toggleKey, initTargeting]);
-
   return (
     <div>
       <Metrics 
@@ -51,6 +39,7 @@ const Analysis = (props: IProps) => {
         getEvent={getEvent}
         initTargeting={initTargeting}
       />
+      
       <Results 
         eventInfo={eventInfo}
         targeting={targeting}
@@ -59,7 +48,6 @@ const Analysis = (props: IProps) => {
         allowEnableTrackEvents={allowEnableTrackEvents}
         initTargeting={initTargeting}
         saveSubmitLoading={saveSubmitLoading}
-        operateTrackCollection={operateTrackCollection}
       />
     </div>
   );

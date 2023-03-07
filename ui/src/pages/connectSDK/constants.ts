@@ -1,6 +1,108 @@
 import { IntlShape } from 'react-intl';
+import java from 'images/java.svg';
+import rust from 'images/rust.svg';
+import go from 'images/go.svg';
+import python from 'images/python.svg';
+import node from 'images/nodejs.svg';
+import javascript from 'images/javascript.svg';
+import android from 'images/android.svg';
+import swift from 'images/swift.svg';
+import apple from 'images/apple.svg';
+import miniprogram from 'images/wechat-miniprogram.png';
+import reactLogo from 'images/react.svg';
 
 export type ToggleReturnType = '' | 'boolean' | 'number' | 'string' | 'json';
+
+export type SdkLanguage = 
+  'Java'
+  | 'Python'
+  | 'Rust'
+  | 'Go'
+  | 'Node.js'
+  | 'Android'
+  | 'Swift'
+  | 'Objective-C'
+  | 'JavaScript'
+  | 'Mini Program'
+  | 'React';
+
+
+export const SDK_LOGOS: {[key in SdkLanguage]: string} = {
+  'Java': java,
+  'Rust': rust,
+  'Go': go,
+  'Python': python,
+  'Node.js': node,
+  'JavaScript': javascript,
+  'Android': android,
+  'Swift': swift,
+  'Objective-C': apple,
+  'Mini Program': miniprogram,
+  'React': reactLogo,
+};
+
+export const SERVER_SIDE_SDKS = [
+  {
+    name: 'Java',
+    logo: java,
+  },
+  {
+    name: 'Go',
+    logo: go,
+  },
+  {
+    name: 'Python',
+    logo: python,
+  },
+  {
+    name: 'Rust',
+    logo: rust,
+  },
+  {
+    name: 'Node.js',
+    logo: node,
+  },
+];
+
+export const CLIENT_SIDE_SDKS = [
+  {
+    name: 'JavaScript',
+    logo: javascript,
+  },
+  {
+    name: 'Android',
+    logo: android,
+  },
+  {
+    name: 'Swift',
+    logo: swift,
+  },
+  {
+    name: 'Objective-C',
+    logo: apple,
+  },
+  {
+    name: 'Mini Program',
+    logo: miniprogram,
+  },
+  {
+    name: 'React',
+    logo: reactLogo,
+  }
+];
+
+export const SDK_VERSION = new Map([
+  ['Java', 'java_sdk_version'],
+  ['Rust', 'rust_sdk_version'],
+  ['Android', 'android_sdk_version'],
+]);
+
+export const AVAILABLE_SDKS = [
+  'Java',
+  'Rust',
+  'JavaScript',
+  'React'
+];
 
 interface IOption {
   intl: IntlShape;

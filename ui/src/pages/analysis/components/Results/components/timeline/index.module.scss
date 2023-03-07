@@ -1,0 +1,80 @@
+.timeline {
+  display: flex;
+  overflow-x: auto;
+  min-width: 1200px;
+  align-items: flex-end;
+  padding: 20px 24px;
+}
+
+.record {
+  display: flex;
+  position: relative;
+  align-items: flex-end;
+
+  &-start {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  margin-right: 4px;
+}
+
+.circle {
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border: 2px solid rgba(0, 0, 0, 0.24);
+  border-radius: 100%;
+}
+
+.divider {
+  width: 196px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.07);
+  margin-left: 4px;
+}
+
+.arrow {
+  float: left;
+  width: 0;
+  height: 0;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent rgba(0, 0, 0, 0.07);
+}
+
+.button {
+  height: 22px;
+  background: rgba(86, 100, 255, 0.1);
+  border-radius: 11px;
+  color: #5664ff;
+  font-size: 12px;
+  text-align: center;
+  line-height: 22px;
+  margin-top: 8px;
+  display: inline-block;
+  padding: 0 5px;
+  align-self: flex-start;
+}
+
+.start {
+  background: rgba(86, 100, 255, 0.1);
+  color: #5664ff;
+}
+
+.stop {
+  background: rgba(116, 120, 141, 0.1);
+  color: #74788d;
+}
+
+.time {
+  font-size: 12px;
+  color: #74788d;
+  text-align: left;
+  transform: scale(0.83);
+  transform-origin: left center;
+}

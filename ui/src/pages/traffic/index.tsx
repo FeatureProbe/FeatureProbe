@@ -90,7 +90,7 @@ const Traffic = () => {
   }, []);
 
   const handleGotoSDK = useCallback(() => {
-    history.push(`/${projectKey}/${environmentKey}/${toggleKey}/get-started`);
+    history.push(`/${projectKey}/${environmentKey}/${toggleKey}/connect-sdk`);
   }, [history, projectKey, environmentKey, toggleKey]);
 
   const menuNameCls = classNames({

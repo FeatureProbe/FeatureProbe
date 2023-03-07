@@ -47,10 +47,10 @@ export const VariationOpacityColors = [
 
 export const EnvironmentColors = [
   '#556ee6',
-  '#CFA004',
-  '#6EA40E',
-  '#3178CF',
-  '#26A4BA',
+  '#cfa004',
+  '#6ea40e',
+  '#3178cf',
+  '#26a4ba',
 ];
 
 export const EnvironmentBgColors = [

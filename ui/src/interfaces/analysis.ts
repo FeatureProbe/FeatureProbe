@@ -53,3 +53,15 @@ export interface ITableData {
   mean?: number;
   sampleSize?: number;
 }
+
+export interface IIterationRecord {
+  publishTime: string;
+  version: number;
+  releaseNote: string;
+}
+
+export interface IMetricIteration {
+  start: string;
+  stop?: string;
+  records: IIterationRecord[];
+}

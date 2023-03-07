@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { FieldErrors } from 'react-hook-form';
+import { useLocation } from 'react-router-dom';
 import { createContainer } from 'unstated-next';
 import { useLocalStorage } from 'utils/hooks';
 
@@ -70,4 +71,9 @@ export const useFormErrorScrollIntoView = (errors?: FieldErrors) => {
     registerErrorName,
     setBeforeScrollCallback,
   };
+};
+
+export const useQuery = () => {
+  const { search } = useLocation();
+  return React.useMemo(() => new URLSearchParams(search), [search]);
 };

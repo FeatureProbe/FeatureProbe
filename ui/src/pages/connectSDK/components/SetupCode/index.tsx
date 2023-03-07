@@ -23,21 +23,10 @@ import {
   getSwiftCode,
   getMiniProgramCode,
   getReactCode,
-} from '../constants';
-import styles from '../Steps/index.module.scss';
+  SdkLanguage,
+} from '../../constants';
 
-export type SdkLanguage = 
-    'Java'
-    | 'Python'
-    | 'Rust'
-    | 'Go'
-    | 'Node.js'
-    | 'Android'
-    | 'Swift'
-    | 'Objective-C'
-    | 'JavaScript'
-    | 'Mini Program'
-    | 'React';
+import styles from '../../index.module.scss';
 
 interface IProps {
   attributes: string[];
@@ -59,7 +48,7 @@ interface ICodeOption {
 
 const CURRENT = 2;
 
-const StepSecond = (props: IProps) => {
+const SetupCode = (props: IProps) => {
   const {
     attributes,
     currentStep, 
@@ -394,4 +383,4 @@ const StepSecond = (props: IProps) => {
   );
 };
 
-export default StepSecond;
+export default SetupCode;

@@ -1,4 +1,4 @@
-const origin = '/api';
+import { origin } from './constant';
 
 const ToggleURI = {
   getToggleListURI: `${origin}/projects/:projectKey/toggles`,

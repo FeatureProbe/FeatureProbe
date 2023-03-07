@@ -641,5 +641,9 @@
   "analysis.result.table.percentage": "胜出概率",
   "analysis.result.table.credibleInterval": "90%可信区间",
   "analysis.result.table.mean": "后验均值",
-  "analysis.result.table.samplesize": "样本总量"
+  "analysis.result.table.samplesize": "样本总量",
+  "anylysis.result.start.time": "开始时间",
+  "anylysis.result.end.time": "结束时间",
+  "analysis.timeline.toggle.changed": "开关变更",
+  "analysis.result.timeline": "观测窗口"
 }

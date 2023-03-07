@@ -1,4 +1,5 @@
 import request from '../utils/request';
+import qs from 'qs';
 import API from '../constants/api';
 import { ApplicationJson } from 'constants/api/contentType';
 import { IEvent } from 'interfaces/analysis';
@@ -19,13 +20,16 @@ export const getEventDetail = async<T> (projectKey: string, environmentKey: stri
   });
 };
 
-export const getEventAnalysis = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
+export const getEventAnalysis = async<T> (projectKey: string, environmentKey: string, toggleKey: string, params: {
+  start: string,
+  end: string
+}) => {
   const url = `${
     API.analysis
       .replace(':projectKey', projectKey)
       .replace(':environmentKey', environmentKey)
       .replace(':toggleKey', toggleKey)
-  }`;
+  }?${qs.stringify(params)}`;
   
   return request<T>(url, {
     method: 'GET',
@@ -70,5 +74,21 @@ export const operateCollection = async (projectKey: string, environmentKey: stri
       ...ApplicationJson()
     },
     body: JSON.stringify(data),
+  });
+};
+
+export const getMetricIterations = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
+  const url = `${
+    API.iterations
+      .replace(':projectKey', projectKey)
+      .replace(':environmentKey', environmentKey)
+      .replace(':toggleKey', toggleKey)
+  }`;
+  
+  return request<T>(url, {
+    method: 'GET',
+    headers: {
+      ...ApplicationJson()
+    },
   });
 };

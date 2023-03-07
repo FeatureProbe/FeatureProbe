@@ -641,5 +641,9 @@
   "analysis.result.table.percentage": "Probability to be the best",
   "analysis.result.table.credibleInterval": "Credible inteval: 90%",
   "analysis.result.table.mean": "Posterior mean",
-  "analysis.result.table.samplesize": "Sample size"
+  "analysis.result.table.samplesize": "Sample size",
+  "anylysis.result.start.time": "Start time",
+  "anylysis.result.end.time": "End time",
+  "analysis.timeline.toggle.changed": "Toggle changed",
+  "analysis.result.timeline": "Observation period"
 }

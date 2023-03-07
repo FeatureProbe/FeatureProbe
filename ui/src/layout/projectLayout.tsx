@@ -25,7 +25,7 @@ import {
   TARGETING_PATH, 
   SEGMENT_PATH, 
   SEGMENT_ADD_PATH, 
-  GET_STARTED_PATH,
+  CONNECT_SDK_PATH,
   SEGMENT_EDIT_PATH,
   SETTING_PATH,
 } from 'router/routes';
@@ -294,7 +294,7 @@ const ProjectLayout = (props: IProps) => {
             )
           }
           {
-            match.path === GET_STARTED_PATH && (
+            match.path === CONNECT_SDK_PATH && (
               <>
                 <Breadcrumb.Section link onClick={gotoToggle}>
                   <TextLimit text={projectInfo.name} maxWidth={190} popupProps={{ offset: [0, -12] }}  />

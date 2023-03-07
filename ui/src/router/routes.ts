@@ -10,7 +10,7 @@ const Login = lazy(() => import('../pages/login'));
 const DemoLogin = lazy(() => import('../pages/login/demoLogin'));
 const Segment = lazy(() => import('../pages/segment'));
 const SegmentEdit = lazy(() => import('../pages/segmentEdit'));
-const GetStarted = lazy(() => import('../pages/getStarted'));
+const GetStarted = lazy(() => import('../pages/connectSDK'));
 const Approvals = lazy(() => import('../pages/approval'));
 const ProjectSetting = lazy(() => import('../pages/projectSetting'));
 const ApiToken = lazy(() => import('../pages/apiToken'));
@@ -24,7 +24,7 @@ export const SEGMENT_PATH = '/:projectKey/:environmentKey/segments';
 export const SEGMENT_ADD_PATH = '/:projectKey/:environmentKey/segments/new';
 export const SEGMENT_EDIT_PATH = '/:projectKey/:environmentKey/segments/:segmentKey/:navigation';
 export const TARGETING_PATH = '/:projectKey/:environmentKey/:toggleKey/:navigation';
-export const GET_STARTED_PATH = '/:projectKey/:environmentKey/:toggleKey/get-started';
+export const CONNECT_SDK_PATH = '/:projectKey/:environmentKey/:toggleKey/connect-sdk';
 export const MEMBER_PATH = '/settings/members';
 export const PROFILE_PATH = '/user/profile';
 export const PERSONAL_APITOKEN_PATH = '/user/tokens';
@@ -66,7 +66,7 @@ export const headerRoutes = [
     component: ProjectSetting
   },
   {
-    path: GET_STARTED_PATH,
+    path: CONNECT_SDK_PATH,
     exact: true,
     component: GetStarted
   },
