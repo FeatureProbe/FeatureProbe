@@ -205,7 +205,7 @@ class TrafficChartServiceSpec extends Specification {
         then:
         1 * environmentRepository.findByProjectKeyAndKey("projectKey", "dev") >> Optional.of(new Environment(serverSdkKey: "123"))
         1 * trafficRepository.existsBySdkKeyAndToggleKey("123", "toggleKey") >> true
-        true == isAccess.getIsAccess()
+        isAccess
     }
 
     private setAuthContext(String account, String role) {

@@ -12,6 +12,7 @@ import com.featureprobe.api.dto.MetricConfigResponse;
 import com.featureprobe.api.dto.MetricCreateRequest;
 import com.featureprobe.api.dto.MetricIterationResponse;
 import com.featureprobe.api.dto.MetricResponse;
+import com.featureprobe.api.dto.MetricStatusResponse;
 import com.featureprobe.api.service.MetricService;
 import com.featureprobe.api.validate.ResourceExistsValidate;
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,5 +81,16 @@ public class MetricController {
                                                    @PathVariable("environmentKey") String environmentKey,
                                                    @PathVariable("toggleKey") String toggleKey) {
         return metricService.iteration(projectKey, environmentKey, toggleKey);
+    }
+
+
+    @GetApiResponse
+    @GetMapping("/status")
+    @Operation(summary = "Get metric status",
+            description = "Get whether the specified environment toggle is report metric data.")
+    public MetricStatusResponse status(@PathVariable("projectKey") String projectKey,
+                                       @PathVariable("environmentKey") String environmentKey,
+                                       @PathVariable("toggleKey") String toggleKey) {
+        return new MetricStatusResponse(metricService.isReport(projectKey, environmentKey, toggleKey));
     }
 }

@@ -57,7 +57,7 @@ public class TrafficController {
     public AccessStatusResponse query(@PathVariable("projectKey") String projectKey,
                                       @PathVariable("environmentKey") String environmentKey,
                                       @PathVariable("toggleKey") String toggleKey) {
-        return trafficChartService.isAccess(projectKey, environmentKey, toggleKey);
+        return new AccessStatusResponse(trafficChartService.isAccess(projectKey, environmentKey, toggleKey));
     }
 
 }

@@ -307,6 +307,18 @@ class ToggleServiceSpec extends Specification {
         }
     }
 
+    def "query toggle keys by related to me"() {
+        when:
+        Set<String> toggleKeys = toggleService.queryToggleKeysByRelatedToMe(projectKey,  environmentKey)
+
+        then:
+        1 * targetingRepository.findAll(_) >>  [new Targeting(toggleKey: toggleKey, environmentKey: environmentKey, projectKey: projectKey, disabled: true)]
+        1 * targetingVersionRepository.findAll(_) >>  [new TargetingVersion(toggleKey: toggleKey, environmentKey: environmentKey, projectKey: projectKey, disabled: true)]
+        1 * toggleRepository.findAll(_) >> []
+
+        1 == toggleKeys.size()
+    }
+
     def "search toggles in project"() {
         given:
         when:

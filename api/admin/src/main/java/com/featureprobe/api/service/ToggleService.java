@@ -7,7 +7,6 @@ import com.featureprobe.api.base.enums.ResourceType;
 import com.featureprobe.api.base.enums.SketchStatusEnum;
 import com.featureprobe.api.base.enums.ToggleReleaseStatusEnum;
 import com.featureprobe.api.base.enums.VisitFilter;
-import com.featureprobe.api.base.model.PaginationRequest;
 import com.featureprobe.api.component.SpringBeanManager;
 import com.featureprobe.api.config.AppConfig;
 import com.featureprobe.api.dao.entity.Environment;
@@ -226,36 +225,40 @@ public class ToggleService {
         }
     }
 
-    private Set<String> queryToggleKeysByRelatedToMe(String projectKey, String environmentKey) {
-        Specification spec = (root, query, cb) -> {
-            Predicate p1 = cb.equal(root.get("projectKey"), projectKey);
-            Predicate p2 = cb.equal(root.get("environmentKey"), environmentKey);
-
-            Predicate p3 = cb.equal(root.get("modifiedBy"), TokenHelper.getUserId());
-            Predicate p4 = cb.equal(root.get("createdBy"), TokenHelper.getUserId());
-            return query.where(cb.and(p1, p2, cb.or(p3, p4))).getRestriction();
-        };
-        Set<String> toggleKeys = targetingVersionRepository.findAll((Specification<TargetingVersion>) spec)
+    protected Set<String> queryToggleKeysByRelatedToMe(String projectKey, String environmentKey) {
+        Specification specification = getRelatedToMeToggleKeySpecification(projectKey,
+                environmentKey);
+        Set<String> toggleKeys = targetingVersionRepository.findAll((Specification<TargetingVersion>) specification)
                 .stream()
                 .map(TargetingVersion::getToggleKey)
                 .collect(Collectors.toSet());
 
+        Specification<Toggle> withoutEnvironmentKeySpec = getRelatedToMeToggleKeySpecification(projectKey, null);
         toggleKeys.addAll(
-                toggleRepository.findAll((root, query, cb) -> {
-                    Predicate p1 = cb.equal(root.get("projectKey"), projectKey);
+                toggleRepository.findAll(withoutEnvironmentKeySpec).stream()
+                        .map(Toggle::getKey)
+                        .collect(Collectors.toSet()));
 
-                    Predicate p3 = cb.equal(root.get("modifiedBy"), TokenHelper.getUserId());
-                    Predicate p4 = cb.equal(root.get("createdBy"), TokenHelper.getUserId());
-                    return query.where(cb.and(p1, cb.or(p3, p4))).getRestriction();
-                }).stream()
-                .map(Toggle::getKey)
-                .collect(Collectors.toSet()));
-
-        toggleKeys.addAll(targetingRepository.findAll((Specification<Targeting>) spec)
+        toggleKeys.addAll(targetingRepository.findAll((Specification<Targeting>) specification)
                 .stream()
                 .map(Targeting::getToggleKey)
                 .collect(Collectors.toSet()));
         return toggleKeys;
+    }
+
+    private Specification getRelatedToMeToggleKeySpecification(String projectKey, String environmentKey) {
+        return (root, query, cb) -> {
+            Predicate p1 = cb.equal(root.get("projectKey"), projectKey);
+            if (StringUtils.isNotBlank(environmentKey)) {
+                Predicate p2 = cb.equal(root.get("environmentKey"), environmentKey);
+                cb.and(p1, p2);
+            } else {
+                cb.and(p1);
+            }
+            Predicate p3 = cb.equal(root.get("modifiedBy"), TokenHelper.getUserId());
+            Predicate p4 = cb.equal(root.get("createdBy"), TokenHelper.getUserId());
+            return query.where(cb.and(cb.or(p3, p4))).getRestriction();
+        };
     }
 
 
