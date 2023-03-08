@@ -46,7 +46,7 @@ export interface IToggle {
   environmentKey: string;
   disabled: boolean;
   description: string;
-  isAnalyzing: boolean;
+  analyzing: boolean;
 }
 
 export interface IToggleList {

@@ -14,7 +14,6 @@ import isEqual from 'lodash/isEqual';
 import cloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { v4 as uuidv4 } from 'uuid';
 import Rules from './components/Rules';
 import DefaultRule from './components/DefaultRule';
 import DisabledServe from './components/DisabledServe';
@@ -85,15 +84,15 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     saveToggleDisable,
   } = props;
   const { rules, saveRules } = ruleContainer.useContainer();
-  const { variations, saveVariations } = variationContainer.useContainer();
-  const { defaultServe, saveDefaultServe } = defaultServeContainer.useContainer();
-  const { disabledServe, saveDisabledServe } = disabledServeContainer.useContainer();
-  const [open, setOpen] = useState<boolean>(false);
-  const [publishDisabled, setPublishDisabled] = useState<boolean>(true);
-  const [publishTargeting, setPublishTargeting] = useState<ITargeting>();
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const [size, saveSize] = useState<number>(0);
-  const [sizeConfirm, setSizeConfirm] = useState<boolean>(false);
+  const { variations } = variationContainer.useContainer();
+  const { defaultServe } = defaultServeContainer.useContainer();
+  const { disabledServe } = disabledServeContainer.useContainer();
+  const [ open, setOpen ] = useState<boolean>(false);
+  const [ publishDisabled, setPublishDisabled ] = useState<boolean>(true);
+  const [ publishTargeting, setPublishTargeting ] = useState<ITargeting>();
+  const [ isLoading, setLoading ] = useState<boolean>(false);
+  const [ size, saveSize ] = useState<number>(0);
+  const [ sizeConfirm, setSizeConfirm ] = useState<boolean>(false);
   const intl = useIntl();
   const formRef = useRef();
 
@@ -129,36 +128,6 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       });
     });
   }, [setBeforeScrollCallback, rules, saveRules]);
-
-  useEffect(() => {
-    if (targeting) {
-      const cloneVariations = cloneDeep(targeting.variations) || [];
-      cloneVariations.forEach((variation: IVariation) => {
-        variation.id = uuidv4();
-      });
-      saveVariations(cloneVariations);
-
-      const targetRule = cloneDeep(targeting.rules);
-      targetRule.forEach((rule: IRule) => {
-        rule.id = uuidv4();
-        rule.conditions.forEach((condition: ICondition) => {
-          condition.id = uuidv4();
-          if (condition.type === SEGMENT_TYPE) {
-            condition.subject = intl.formatMessage({ id: 'common.user.text' });
-          } else if (condition.type === DATETIME_TYPE && condition.objects) {
-            condition.datetime = condition.objects[0].slice(0, 19);
-            condition.timezone = condition.objects[0].slice(19);
-          }
-        });
-        rule.active = true;
-      });
-      saveRules(targetRule);
-
-      saveDefaultServe(targeting.defaultServe);
-      saveDisabledServe(targeting.disabledServe);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [targeting, saveVariations, saveRules, saveDefaultServe, saveDisabledServe]);
 
   useEffect(() => {
     saveSegmentList(segmentList);
@@ -333,7 +302,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   }, [disabledServe.select, variations]);
 
   return (
-    <>
+    <div>
       <Form onSubmit={handleSubmit(onSubmit, onError)} autoComplete="off" ref={formRef}>
         <div className={`${styles.status}`}>
           <div className={`${styles['joyride-status']} joyride-toggle-status`}>
@@ -433,7 +402,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       <SizeTips hide={sizeConfirm || sizeState === 'normal'} size={size} onConfirm={() => {
         setSizeConfirm(true);
       }} />
-    </>
+    </div>
   );
 });
 

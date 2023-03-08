@@ -58,7 +58,7 @@ const ToggleList = (props: IProps) => {
                   <Table.Cell>
                     <div className={styles['toggle-info']}>
                       {
-                        toggle.isAnalyzing && (
+                        toggle.analyzing && (
                           <img src={require('images/collect.gif')} className={styles.analysis} alt='collect' />
                         )
                       }
