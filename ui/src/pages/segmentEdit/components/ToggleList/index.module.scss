@@ -84,8 +84,15 @@
 .toggle-info {
   display: flex;
   align-items: center;
-  padding-left: 32px;
+  padding-left: 24px;
   position: relative;
+}
+
+.analysis {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  left: 4px;
 }
 
 .toggle-info-name {

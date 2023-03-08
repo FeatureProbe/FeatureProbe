@@ -153,7 +153,8 @@ const ToggleItem = (props: IProps) => {
             onClick={(e) => {
               e.stopPropagation();
               gotoEditing(segment);}
-            }>
+            }
+          >
             <FormattedMessage id='common.edit.text' />
           </div>
           <div 

@@ -41,87 +41,96 @@ const ToggleList = (props: IProps) => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {toggleList?.map((toggle: IToggle) => {
-            const listItem = classNames(styles['list-item'], {
-              [styles['list-item-enabled']]: !toggle.disabled,
-            });
+          {
+            toggleList?.map((toggle: IToggle) => {
+              const listItem = classNames(styles['list-item'], {
+                [styles['list-item-enabled']]: !toggle.disabled,
+              });
 
-            return (
-              <Table.Row
-                key={toggle.key}
-                className={listItem}
-                onClick={() => {
-                  handleGotoToggle(toggle.environmentKey, toggle.key);
-                }}
-              >
-                <Table.Cell>
-                  <div className={styles['toggle-info']}>
-                    <div className={styles['toggle-info-name']}>
-                      <TextLimit text={toggle.name} maxWidth={150} />
+              return (
+                <Table.Row
+                  key={toggle.key}
+                  className={listItem}
+                  onClick={() => {
+                    handleGotoToggle(toggle.environmentKey, toggle.key);
+                  }}
+                >
+                  <Table.Cell>
+                    <div className={styles['toggle-info']}>
+                      {
+                        toggle.isAnalyzing && (
+                          <img src={require('images/collect.gif')} className={styles.analysis} alt='collect' />
+                        )
+                      }
+                      <div className={styles['toggle-info-name']}>
+                        <TextLimit text={toggle.name} maxWidth={150} />
+                      </div>
+                      <div className={styles['toggle-info-key']}>
+                        <CopyToClipboardPopup text={toggle.key}>
+                          <div
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                            className={styles['toggle-info-key-label']}
+                          >
+                            {toggle.key}
+                          </div>
+                        </CopyToClipboardPopup>
+                      </div>
                     </div>
-                    <div className={styles['toggle-info-key']}>
-                      <CopyToClipboardPopup text={toggle.key}>
-                        <div
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          className={styles['toggle-info-key-label']}
-                        >
-                          {toggle.key}
+                    {toggle.description && (
+                      <div className={styles['toggle-info-description']}>
+                        <TextLimit text={toggle.description} maxWidth={242} />
+                      </div>
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className={styles['toggle-modified']}>
+                      <TextLimit text={toggle?.environmentName} maxWidth={100} />
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    {toggle?.disabled ? (
+                      <div className={styles['toggle-status']}>
+                        <div className={`${styles['toggle-status-icon']} ${styles['toggle-status-icon-disabled']}`}></div>
+                        <div className={`${styles['toggle-status-text']} ${styles['toggle-status-text-disabled']}`}>
+                          <FormattedMessage id="common.disabled.text" />
                         </div>
-                      </CopyToClipboardPopup>
-                    </div>
-                  </div>
-                  {toggle.description && (
-                    <div className={styles['toggle-info-description']}>
-                      <TextLimit text={toggle.description} maxWidth={242} />
-                    </div>
-                  )}
-                </Table.Cell>
-                <Table.Cell>
-                  <div className={styles['toggle-modified']}>
-                    <TextLimit text={toggle?.environmentName} maxWidth={100} />
-                  </div>
-                </Table.Cell>
-                <Table.Cell>
-                  {toggle?.disabled ? (
-                    <div className={styles['toggle-status']}>
-                      <div className={`${styles['toggle-status-icon']} ${styles['toggle-status-icon-disabled']}`}></div>
-                      <div className={`${styles['toggle-status-text']} ${styles['toggle-status-text-disabled']}`}>
-                        <FormattedMessage id="common.disabled.text" />
                       </div>
-                    </div>
-                  ) : (
-                    <div className={styles['toggle-status']}>
-                      <div className={`${styles['toggle-status-icon']} ${styles['toggle-status-icon-enabled']}`}></div>
-                      <div className={`${styles['toggle-status-text']} ${styles['toggle-status-text-enabled']}`}>
-                        <FormattedMessage id="common.enabled.text" />
+                    ) : (
+                      <div className={styles['toggle-status']}>
+                        <div className={`${styles['toggle-status-icon']} ${styles['toggle-status-icon-enabled']}`}></div>
+                        <div className={`${styles['toggle-status-text']} ${styles['toggle-status-text-enabled']}`}>
+                          <FormattedMessage id="common.enabled.text" />
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </Table.Cell>
-              </Table.Row>
-            );
-          })}
+                    )}
+                  </Table.Cell>
+                </Table.Row>
+              );
+            })
+          }
         </Table.Body>
       </Table>
-      {toggleList.length !== 0 ? (
-        <CustomPagination
-          total={total}
-          pagination={pagination}
-          hideTotal={true}
-          handlePageChange={handlePageChange}
-        />
-      ) : (
-        <div className={styles['no-data']}>
-          <div>
-            <img className={styles['no-data-image']} src={require('images/no-data.png')} alt='no-data' />
+      {
+        toggleList.length !== 0 ? (
+          <CustomPagination
+            total={total}
+            pagination={pagination}
+            hideTotal={true}
+            handlePageChange={handlePageChange}
+          />
+        ) : (
+          <div className={styles['no-data']}>
+            <div>
+              <img className={styles['no-data-image']} src={require('images/no-data.png')} alt='no-data' />
+            </div>
+            <div>
+              <FormattedMessage id='common.nodata.text' />
+            </div>
           </div>
-          <div>
-            <FormattedMessage id='common.nodata.text' />
-          </div>
-        </div>
-      )}
+        )
+      }
     </div>
   );
 };
