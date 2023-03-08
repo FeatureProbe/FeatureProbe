@@ -475,6 +475,8 @@
   "getstarted.track.event": "Set up event track",
   "getstarted.track.event.title": "Add the following code and track custom event",
   "getstarted.track.event.support.sdk": "Currently supports tracking custom event for Java, Rust, JavaScript, Android, Swift, Objective-C, and React SDK.",
+  "getstarted.track.pageview": "page view",
+  "getstarted.track.click": "click",
 
   "platform.warning.text": "According to the Cybersecurity Law, it is prohibited to use FeatureProbe for illegal financial lending, cryptocurrency, gambling and any applications containing Telemarketing Scams functions, once discovered, you will be immediately stopped from using FeatureProbe and reported to the Cyber Security Department.",
 

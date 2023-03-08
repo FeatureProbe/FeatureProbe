@@ -6,12 +6,13 @@ import classNames from 'classnames';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { IRouterParams } from 'interfaces/project';
+import { IEvent } from 'interfaces/analysis';
+import { CLICK, CUSTOM, PAGE_VIEW } from 'pages/analysis/constants';
 import styles from '../../index.module.scss';
 
 interface IProps {
   isAccessLoading: boolean;
   isTrackLoading: boolean;
-  isTrackEvent: boolean;
   currentStep: number;
   isAccess: boolean;
   isReport: boolean;
@@ -19,7 +20,7 @@ interface IProps {
   environmentKey: string;
   toggleKey: string;
   totalStep: number;
-  eventName: string;
+  eventInfo?: IEvent;
   checkToggleStatus(): void;
   checkEventTrack(): void;
   saveAccessLoading(loading: boolean): void;
@@ -29,15 +30,14 @@ interface IProps {
 const INTERVAL = 30;
 
 const TestConnection = (props: IProps) => {
-  const { 
+  const {
     currentStep,
     isAccess,
     isReport,
     isAccessLoading,
     isTrackLoading,
     totalStep,
-    eventName,
-    isTrackEvent,
+    eventInfo,
     checkToggleStatus,
     checkEventTrack,
     saveAccessLoading,
@@ -46,6 +46,7 @@ const TestConnection = (props: IProps) => {
   const { toggleKey, environmentKey } = useParams<IRouterParams>();
   const [ count, saveCount ] = useState<number>(1);
   const [ trackCount, saveTrackCount ] = useState<number>(1);
+  const [ displayName, saveDisplayName ] = useState<string>('');
   const intl = useIntl();
   const faqUrl = useRef('');
 
@@ -102,18 +103,26 @@ const TestConnection = (props: IProps) => {
     }
   }, [intl]);
 
+  useEffect(() => {
+    let name = '';
+    if (eventInfo?.eventType === CUSTOM) {
+      name = eventInfo?.eventName ?? '';
+    } else if (eventInfo?.eventType === PAGE_VIEW) {
+      name = intl.formatMessage({id: 'getstarted.track.pageview'});
+    } else if (eventInfo?.eventType === CLICK) {
+      name = intl.formatMessage({id: 'getstarted.track.click'});
+    }
+    saveDisplayName(name);
+  }, [eventInfo, intl]);
+
   return (
     <div className={styles.step}>
       <div className={styles['step-left']}>
         {
           currentStep === totalStep ? (
-            <div className={styles.circleCurrent}>
-              { totalStep }
-            </div>
+            <div className={styles.circleCurrent}>{ totalStep }</div>
           ) : (
-            <div className={styles.circle}>
-              { totalStep }
-            </div>
+            <div className={styles.circle}>{ totalStep }</div>
           )
         }
       </div>
@@ -134,7 +143,7 @@ const TestConnection = (props: IProps) => {
                   ) : (
                     isAccessLoading ? (
                       <div className={styles['connect-retrying']}>
-                        <Loader  size='small' active inline='centered' />
+                        <Loader size='small' active inline='centered' />
                         <div className={styles['connect-retrying-text']}>
                           {
                             intl.formatMessage({
@@ -177,7 +186,7 @@ const TestConnection = (props: IProps) => {
                 }
 
                 {
-                  isTrackEvent && (
+                  eventInfo && (
                     isReport ? (
                       <div className={styles['connect-success']}>
                         <Icon type='success-circle' customclass={styles['success-circle']} />
@@ -186,13 +195,13 @@ const TestConnection = (props: IProps) => {
                     ) : (
                       isTrackLoading ? (
                         <div className={styles['connect-retrying']}>
-                          <Loader  size='small' active inline='centered' />
+                          <Loader size='small' active inline='centered' />
                           <div className={styles['connect-retrying-text']}>
                             {
                               intl.formatMessage({
                                 id: 'connect.fourth.event.running'
                               }, {
-                                eventName,
+                                eventName: displayName,
                                 environment: environmentKey,
                                 toggle: toggleKey,
                               })
@@ -207,7 +216,7 @@ const TestConnection = (props: IProps) => {
                               intl.formatMessage({
                                 id: 'connect.fourth.event.failed'
                               }, {
-                                eventName,
+                                eventName: displayName,
                                 environment: environmentKey,
                                 toggle: toggleKey,
                               })

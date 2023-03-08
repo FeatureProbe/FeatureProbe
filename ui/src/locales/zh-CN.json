@@ -475,6 +475,8 @@
   "getstarted.track.event": "设置埋点上报",
   "getstarted.track.event.title": "添加以下代码，上报自定义事件",
   "getstarted.track.event.support.sdk": "目前支持Java、Rust、JavaScript、Android、Swift、Objective-C、React SDK的自定义事件上报。",
+  "getstarted.track.pageview": "页面",
+  "getstarted.track.click": "点击",
 
   "platform.warning.text": "根据国家相关规定，严禁将FeatureProbe用于违法金融借贷、区块链虚拟币、博彩以及任何含有网络电信诈骗功能的应用程序，一旦被发现，将会立即停止你使用FeatureProbe相关功能，并上报给网络安全监管部门。",
 
