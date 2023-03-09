@@ -1,6 +1,6 @@
 import { SyntheticEvent } from 'react';
-import { Table, PaginationProps } from 'semantic-ui-react';
-import { FormattedMessage } from 'react-intl';
+import { Table, PaginationProps, Popup } from 'semantic-ui-react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 import { IToggle } from 'interfaces/segment';
@@ -23,6 +23,7 @@ interface IProps {
 
 const ToggleList = (props: IProps) => {
   const { toggleList, total, pagination, handlePageChange, handleGotoToggle } = props;
+  const intl = useIntl();
 
   return (
     <div>
@@ -59,7 +60,15 @@ const ToggleList = (props: IProps) => {
                     <div className={styles['toggle-info']}>
                       {
                         toggle.analyzing && (
-                          <img src={require('images/collect.gif')} className={styles.analysis} alt='collect' />
+                          <Popup
+                            inverted
+                            className='popup-override'
+                            trigger={
+                              <img src={require('images/collect.gif')} className={styles.analysis} alt='collect' />
+                            }
+                            content={intl.formatMessage({id: 'analysis.ongoing'})}
+                            position='top center'
+                          />
                         )
                       }
                       <div className={styles['toggle-info-name']}>
