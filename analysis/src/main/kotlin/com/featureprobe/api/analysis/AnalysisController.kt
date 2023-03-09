@@ -33,6 +33,14 @@ class AnalysisController(val service: AnalysisService) {
         return EventResponse(200)
     }
 
+    @GetMapping("/exists_event")
+    fun existEvents(
+        @RequestParam metric: String,
+        @RequestHeader(value = "Authorization") sdkKey: String) : EventExistsResponse  {
+
+        return EventExistsResponse(200, service.existsEvent(sdkKey, metric))
+    }
+
     @GetMapping("/analysis")
     fun getAnalysis(
         @RequestHeader(value = "Authorization") sdkKey: String,
@@ -48,6 +56,7 @@ class AnalysisController(val service: AnalysisService) {
             else -> AnalysisResponse(200, result.get())
         }
     }
+
 }
 
 @Service
@@ -105,6 +114,16 @@ class AnalysisService(
 
             variationPrepStmt.executeLargeBatch()
             eventPrepStmt.executeLargeBatch()
+        }
+    }
+
+    fun existsEvent(sdkKey: String, metric: String): Boolean {
+        val session = sessionOf(dataSource)
+        session.use {
+            return (session.run(
+                    queryOf(EXISTS_EVENT_SQL, sdkKey, metric)
+                            .map { row -> row.int("count") > 0 }.asList)[0]
+            )
         }
     }
 

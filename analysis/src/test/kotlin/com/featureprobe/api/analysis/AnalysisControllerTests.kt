@@ -46,6 +46,15 @@ class AnalysisControllerTests {
         testStoreNullCustomEvents(pg.jdbcUrl)
     }
 
+    @Test
+    fun testStoreEventExists() {
+        testStoreEvents(pg.jdbcUrl)
+        val service = AnalysisService(pg.jdbcUrl, "root", "root")
+
+        assert(service.existsEvent("sdk_key", "testStoreClick"));
+        assert(!service.existsEvent("sdk_key", "testStoreClick_not_exists"));
+    }
+
     fun testStoreEvents(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
         val access0 = AccessEvent(1676273668, "user0", "testStoreEventsToggle", 1, 1, 1)

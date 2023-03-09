@@ -28,6 +28,9 @@ const val INSERT_EVENT_SQL =
     """INSERT INTO events (time, user_key, name, value, sdk_key)
 VALUES (?, ?, ?, ?, ?);"""
 
+const val EXISTS_EVENT_SQL =
+    """SELECT COUNT(1) FROM EVENTS WHERE sdk_key = ? AND name = ?;"""
+
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY,
@@ -66,6 +69,12 @@ data class EventRequest(
 data class EventResponse(
     val status: Int
 )
+
+data class EventExistsResponse(
+        val status: Int,
+        val exists: Boolean
+)
+
 
 data class AnalysisResponse(
     val status: Int,
