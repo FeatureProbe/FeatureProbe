@@ -19,5 +19,5 @@ public class AppConfig {
 
     private String serverBaseUrls;
 
-    private String analysisUrl;
+    private String analysisBaseUrl;
 }

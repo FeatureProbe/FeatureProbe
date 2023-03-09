@@ -39,6 +39,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +53,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -82,7 +84,7 @@ public class MetricService {
     private static String ALGORITHM_GAUSSIAN = "gaussian";
 
     private final OkHttpClient httpClient = new OkHttpClient.Builder()
-            .connectionPool( new ConnectionPool(5, 5, TimeUnit.SECONDS))
+            .connectionPool(new ConnectionPool(5, 5, TimeUnit.SECONDS))
             .connectTimeout(Duration.ofSeconds(3))
             .readTimeout(Duration.ofSeconds(3))
             .writeTimeout(Duration.ofSeconds(3))
@@ -135,9 +137,6 @@ public class MetricService {
 
     public AnalysisResultResponse analysis(String projectKey, String environmentKey, String toggleKey,
                                            AnalysisRequest params) {
-        Environment environment = environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(ResourceType.ENVIRONMENT, projectKey + "-" + environmentKey));
         Metric metric = metricRepository
                 .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceType.METRIC, projectKey + "-"
@@ -155,21 +154,15 @@ public class MetricService {
             start = params.getStart();
             end = params.getEnd();
         }
-        String name ;
-        if (MetricTypeEnum.CONVERSION.equals(metric.getType())) {
-            name = metric.getEvents().stream().filter(event -> StringUtils.isBlank(event.getSelector()))
-                    .findFirst().get().getName();
-        } else {
-            name = metric.getEvents().stream().findFirst().get().getName();
-        }
         String type = ALGORITHM_BINOMIAL;
+        String name = getMetricName(metric);
         boolean positiveWin = true;
         if (!MetricTypeEnum.CONVERSION.equals(metric.getType())) {
             type = ALGORITHM_GAUSSIAN;
             positiveWin = WinCriteria.POSITIVE.equals(metric.getWinCriteria()) ? true : false;
         }
 
-        String callRes = callAnalysisServer(environment.getServerSdkKey(), name, toggleKey, type,
+        String callRes = callAnalysisServer(querySdkServerKey(projectKey, environmentKey), name, toggleKey, type,
                 positiveWin, start, end);
         return new AnalysisResultResponse(start, end, MetricMapper.INSTANCE.entityToConfigResponse(metric),
                 JsonMapper.toObject(callRes, Map.class).get("data"));
@@ -235,6 +228,24 @@ public class MetricService {
         return iteration;
     }
 
+    private String querySdkServerKey(String projectKey, String environmentKey) {
+        Environment environment = environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(ResourceType.ENVIRONMENT, projectKey + "-" + environmentKey));
+        return environment.getServerSdkKey();
+    }
+
+    private static String getMetricName(Metric metric) {
+        String name ;
+        if (MetricTypeEnum.CONVERSION.equals(metric.getType())) {
+            name = metric.getEvents().stream().filter(event -> StringUtils.isBlank(event.getSelector()))
+                    .findFirst().get().getName();
+        } else {
+            name = metric.getEvents().stream().findFirst().get().getName();
+        }
+        return name;
+    }
+
     public static String generatePVUniqueName(MatcherTypeEnum matcher, String url) {
         String encodeStr = matcher.name() + url;
         return DigestUtils.md2Hex(encodeStr.getBytes(StandardCharsets.UTF_8));
@@ -247,20 +258,27 @@ public class MetricService {
                                       boolean positiveWin,
                                       Date start,
                                       Date end) {
+
+        String query = "metric=" + metric +
+                "&toggle=" + toggleKey + "&type=" + type + "&positiveWin=" + positiveWin +
+                "&start=" + start.getTime() + "&end=" + end.getTime();
+        return this.callAnalysisServer("/analysis", query, sdkKey);
+    }
+
+    private String callAnalysisServer(String path, String query, String sdkKey) {
         String res = "{}";
         try {
-            String url = appConfig.getAnalysisUrl() + "?metric=" + metric +
-                    "&toggle=" + toggleKey + "&type=" + type + "&positiveWin=" + positiveWin +
-                    "&start="+ start.getTime() + "&end=" + end.getTime();
+            String url = appConfig.getAnalysisBaseUrl() + path + "?" + query;
             Request request = new Request.Builder()
                     .header("Authorization", sdkKey)
                     .url(url)
                     .get()
                     .build();
-            Response response =  httpClient.newCall(request).execute();
+            Response response = httpClient.newCall(request).execute();
             if (response.isSuccessful()) {
                 res = response.body().string();
             }
+            log.info("Request analysis server, url: {}, sdkKey: {}, response: {}", url, sdkKey, response);
         } catch (IOException e) {
             log.error("Call Analysis Server Error: {}", e);
             throw new RuntimeException(e);
@@ -268,11 +286,11 @@ public class MetricService {
         return res;
     }
 
+
     private static String generateClickUniqueName(MatcherTypeEnum matcher, String url, String selector) {
         String encodeStr = matcher.name() + url + selector;
         return DigestUtils.md2Hex(encodeStr.getBytes(StandardCharsets.UTF_8));
     }
-
 
     private void validate(MetricCreateRequest request) {
 
@@ -310,4 +328,17 @@ public class MetricService {
                 .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey).isPresent();
     }
 
+    public boolean isReport(String projectKey, String environmentKey, String toggleKey) {
+        String sdkServerKey = querySdkServerKey(projectKey, environmentKey);
+        Optional<Metric> metric = metricRepository
+                .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey);
+        if (!metric.isPresent()) {
+            return false;
+        }
+        String metricName = metric.get().getName();
+        String query = "metric=" + metricName;
+        String response = callAnalysisServer("/exists_event", query, sdkServerKey);
+
+        return BooleanUtils.toBoolean(String.valueOf(JsonMapper.toObject(response, Map.class).get("exists")));
+    }
 }

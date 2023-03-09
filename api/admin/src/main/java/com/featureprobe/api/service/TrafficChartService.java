@@ -3,7 +3,6 @@ package com.featureprobe.api.service;
 import com.featureprobe.api.base.model.TargetingContent;
 import com.featureprobe.api.base.model.Variation;
 import com.featureprobe.api.dto.TrafficPoint;
-import com.featureprobe.api.dto.AccessStatusResponse;
 import com.featureprobe.api.dto.TrafficResponse;
 import com.featureprobe.api.dao.entity.Environment;
 import com.featureprobe.api.dao.entity.Traffic;
@@ -69,10 +68,10 @@ public class TrafficChartService {
     private static final int MAX_QUERY_POINT_COUNT = 12;
     private static final int GROUP_BY_DAY_HOURS = 24;
 
-    public AccessStatusResponse isAccess(String projectKey, String environmentKey, String toggleKey) {
+    public boolean isAccess(String projectKey, String environmentKey, String toggleKey) {
         String serverSdkKey = queryEnvironmentServerSdkKey(projectKey, environmentKey);
         boolean isAccess = trafficRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey);
-        return new AccessStatusResponse(isAccess);
+        return isAccess;
     }
 
     public TrafficResponse query(String projectKey, String environmentKey, String toggleKey, TrafficType trafficType,
