@@ -11,7 +11,7 @@ sidebar_position: 4
 
 ## 架构
 
-所有SDK必须包含如下组件：
+所有 SDK 必须包含如下组件：
 
  - [接收开关的变更](#接收开关的变更)
  - [评估开关的结果](#评估开关的结果)
@@ -21,15 +21,15 @@ sidebar_position: 4
 
 ## 接收开关的变更
 
-FeatureProbe SDK 将所有的开关都存储在内存中。目前提供两种不同的方式来对开关进行更新：异步轮询和长连接。对于已经支持长连接的SDK，默认会选择长连接的更新方式。异步轮询的更新实现是必须的，因为长连接实现依赖异步轮询来进行最后的兜底。
+FeatureProbe SDK 将所有的开关都存储在内存中。目前提供两种不同的方式来对开关进行更新：异步轮询和长连接。对于已经支持长连接的 SDK，默认会选择长连接的更新方式。异步轮询的更新实现是必须的，因为长连接实现依赖异步轮询来进行最后的兜底。
 
-在开关的存储方面，服务端SDK和客户端SDK有不同的实现。服务端SDK直接将开关规则存储在内存中。而客户端SDK由于数据安全性问题和用户相对固定，存储的是已经评估好的开关结果。
+在开关的存储方面，服务端SDK 和客户端SDK 有不同的实现。服务端SDK 直接将开关规则存储在内存中。而客户端SDK 由于数据安全性问题和用户相对固定，存储的是已经评估好的开关结果。
 
-### 服务端SDK接收开关变更
+### 服务端 SDK 接收开关变更
 
-当我们通过FeatureProbe平台或者Open API对开关的配置做出变更时, 服务端SDK需要对内存中保存的开关规则进行更新。目前需提供如下两种实现：
+当我们通过 FeatureProbe 平台或者 Open API 对开关的配置做出变更时, 服务端SDK 需要对内存中保存的开关规则进行更新。目前需提供如下两种实现：
 
- 1、**通过异步轮询Server获取开关规则**
+ 1、**通过异步轮询获取开关规则**
 
 Server获取开关配置API协议：
 ```shell
@@ -116,11 +116,11 @@ curl --location --request GET 'https://featureprobe.io/server/api/server-sdk/tog
 }
 ```
 
-1、该API需要使用HTTP请求头将Authorization设置为${sdk_key}，以便在轮询API时进行身份验证。其中${sdk_key}是客户端应用程序传递给 FeatureProbe配置的Server SDK 密钥。
+1、该 API 需要使用 HTTP 请求头将 Authorization 设置为 ${sdk_key}，以便在轮询API时进行身份验证。其中 ${sdk_key} 是客户端应用程序传递给    FeatureProbe 配置的 Server SDK 密钥。
 
 2、实现异步轮询机制，可以使用定时器或轮询库来定期发送HTTP请求以获取最新的开关规则，建议默认频率为5s。
     
-3、将轮询API的请求地址（synchronizerUrl）和轮询频率（refreshInterval）作为配置项通过FPConfig提供给用户，使得用户可以自定义轮询频率和请求地址。
+3、将轮询 API 的请求地址（synchronizerUrl）和轮询频率（refreshInterval）作为配置项通过 FPConfig 提供给用户，使得用户可以自定义轮询频率和请求地址。
 
 ***可供参考的代码[异步轮询Java实现](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/server/PollingSynchronizer.java)***
 
@@ -130,20 +130,20 @@ curl --location --request GET 'https://featureprobe.io/server/api/server-sdk/tog
 
 1、首先需要实现异步轮询机制，以便作为长连接更新的备选方案。
 
-2、需要引入[socket-io](https://github.com/socketio)客户端依赖到您的SDK中，并在SDK初始化时与FeatureProbe Server建立长连接。您可以在建立连接时发送一个“register”事件，并携带一个名为key值为${sdk_key}的参数，以便在后续的身份验证过程中进行验证。其中${sdk_key}是客户端应用程序传递给 FeatureProbe配置的Server SDK 密钥。
+2、需要引入 [socket-io](https://github.com/socketio) 客户端依赖到您的 SDK 中，并在 SDK 初始化时与 FeatureProbe Server 建立长连接。您可以在建立连接时发送一个 “register” 事件，并携带一个名为 key, 值为${sdk_key}的参数，以便在后续的身份验证过程中进行验证。其中${sdk_key}是客户端应用程序传递给 FeatureProbe 配置的 Server SDK 密钥。
 
-3、监听名为“update”的事件，以便在开关配置发生更改时立即通知客户端主动通过轮询API拉取最新开关规则。
+3、监听名为 “update” 的事件，以便在开关配置发生更改时立即通知客户端主动通过轮询API拉取最新开关规则。
 
-4、最后需要将长连接的地址（realtimeUri）通过FPConfig暴露给用户，以方便自定义配置。
+4、最后需要将长连接的地址（realtimeUri）通过 FPConfig 暴露给用户，以方便自定义配置。
 
-***可供参考的代码[长链接Java实现](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/server/StreamingSynchronizer.java)***
+***可供参考的代码[长链接 Java 实现](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/server/StreamingSynchronizer.java)***
 
 ### 客户端SDK接收开关变更
 
-当我们通过FeatureProbe 平台或者Open API对开关的配置做出变更或添加新的page_view或Click事件指标时, 客户端SDK需要更新内存中的开关对于的结果和事件集。目前需提供如下两种实现：
+当我们通过 FeatureProbe 平台或者 Open API 对开关的配置做出变更或添加新的 page_view 或 click 事件指标时, 客户端SDK 需要更新内存中的开关对于的结果和事件集。目前需提供如下两种实现：
 
- 1、**通过异步轮询Server获取开关配置API**
-Server获取开关结果API协议：
+ 1、**通过异步轮询获取开关配置**
+Server 获取开关结果API协议：
 ```shell
 curl --location --request GET 'http://featureprobe-df.intra.xiaojukeji.com/server/api/client-sdk/toggles?user=eyJrZXkiOiIxNjc4MjYyODkzODk2IiwiYXR0cnMiOnt9fQ%3D%3D' \
 --header 'Authorization: client-48e0f6f34baef833e1e10df90615b957b1739fb5' 
@@ -163,15 +163,15 @@ curl --location --request GET 'http://featureprobe-df.intra.xiaojukeji.com/serve
 }
 ```
 
-1、该API需要使用HTTP请求头将Authorization设置为${sdk_key}，以便在轮询API时进行身份验证。其中${sdk_key}是客户端应用程序传递给 FeatureProbe配置的Client SDK 密钥。
+1、该 API 需要使用 HTTP 请求头将 Authorization 设置为 ${sdk_key}，以便在轮询 API 时进行身份验证。其中 ${sdk_key} 是客户端应用程序传递给  FeatureProbe 配置的 Client SDK 密钥。
 
-2、还需要使用HTTP请求参数将user设置为${FPUser}，参数值为将FPUser对象Json序列化后进行Base64编码的字符串。
+2、还需要使用 HTTP 请求参数将 user 设置为 ${FPUser}，参数值为将 FPUser 对象Json序列化后进行Base64编码的字符串。
 
-3、实现异步轮询机制，可以使用定时器或轮询库来定期发送HTTP请求以获取最新的开关规则，建议默认频率为5s。
+3、实现异步轮询机制，可以使用定时器或轮询库来定期发送 HTTP 请求以获取最新的开关规则，建议默认频率为5s。
     
-4、将轮询API的请求地址（synchronizerUrl）和轮询频率（refreshInterval）作为配置项通过FPConfig提供给用户，使得用户可以自定义轮询频率和请求地址。
+4、将轮询 API 的请求地址（synchronizerUrl）和轮询频率（refreshInterval）作为配置项通过FPConfig提供给用户，使得用户可以自定义轮询频率和请求地址。
 
-***可供参考的代码[异步轮询Javascript实现](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#)中的fetchToggles()方法***
+***可供参考的代码[异步轮询 Javascript 实现](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#)中的fetchToggles()方法***
 
 
 2、**通过长链接获取开关变更事件然后主动触发轮询API**
@@ -180,29 +180,29 @@ curl --location --request GET 'http://featureprobe-df.intra.xiaojukeji.com/serve
 
 1、首先需要实现异步轮询机制，以便作为长连接更新的备选方案。
 
-2、需要引入[socket-io](https://github.com/socketio)客户端依赖到您的SDK中，并在SDK初始化时与FeatureProbe Server建立长连接。您可以在建立连接时发送一个“register”事件，并携带一个名为key值为${sdk_key}的参数，以便在后续的身份验证过程中进行验证。其中${sdk_key}是客户端应用程序传递给 FeatureProbe配置的Client SDK 密钥。
+2、需要引入[socket-io](https://github.com/socketio)客户端依赖到您的SDK中，并在 SDK 初始化时与 FeatureProbe Server 建立长连接。您可以在建立连接时发送一个 “register” 事件，并携带一个名为 key 值为 ${sdk_key} 的参数，以便在后续的身份验证过程中进行验证。其中 ${sdk_key} 是客户端应用程序传递给 FeatureProbe 配置的 Client SDK 密钥。
 
-3、监听名为“update”的事件，以便在开关配置发生更改时立即通知客户端主动通过轮询API拉取最新开关规则。
+3、监听名为 “update” 的事件，以便在开关配置发生更改时立即通知客户端主动通过轮询API拉取最新开关规则。
 
-4、最后需要将长连接的地址（realtimeUri）通过FPConfig暴露给用户，以方便自定义配置。
+4、最后需要将长连接的地址（realtimeUri）通过 FPConfig 暴露给用户，以方便自定义配置。
 
 ***可供参考的代码[长链接Javascript实现#](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#)中的connectSocket()方法***
 
 ## 评估开关的结果
 
-服务端和客户端SDK在开关结果评估的方式上不一致。
+服务端和客户端SDK 在开关结果评估的方式上不一致。
 
 ### 服务端SDK评估开关结果
 
-服务端SDK需要在本地内存实现对开关的规则计算，具体计算方法请阅读[开关规则评估](./evalution_rules)
+服务端SDK 需要在本地内存实现对开关的规则计算，具体计算方法请阅读[开关规则评估](./evalution_rules)
 
 ### 客户端SDK评估开关结果
 
-客户端SDK不用实现开关规则计算的逻辑，由FeatureProbe服务负责开关规则计算。所以对于客户端SDK在实现上述获取开关结果的
+客户端SDK不用实现开关规则计算的逻辑，由 FeatureProbe 服务负责开关规则计算。所以对于客户端SDK 在实现上述获取开关结果的
 
 ## 上报事件
 
-目前FeatureProbe提供4事件类型的上报：
+目前 FeatureProbe 提供4事件类型的上报：
 
 - **custom**: 当应用程序调用 SDK 的 track 方法时发送的事件。
 - **event**: 开关评估信息。
@@ -213,7 +213,7 @@ curl --location --request GET 'http://featureprobe-df.intra.xiaojukeji.com/serve
 
 所有的 SDK 必须以异步的方式将一段时间内的事件批量发送给 FeatureProbe 服务器。SDK 需启用一个定时任务，默认每隔 5 秒执行一次，将这段时间内产生的事件一并发送给服务器。
 
-上报事件API协议
+上报事件 API 协议
 
 ```shell
 curl --location --request POST 'https://featureprobe.io/server/api/events' \
@@ -286,5 +286,5 @@ curl --location --request POST 'https://featureprobe.io/server/api/events' \
 
 ## 参考资料
 
- - 可供参考的服务端SDK实现: [Java SDK](https://github.com/FeatureProbe/server-sdk-java) 和 [接口文档](https://featureprobe.github.io/server-sdk-java/)
- - 可供参考的客户端SDK实现: [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js) 和 [接口文档](https://featureprobe.github.io/client-sdk-js/)
+ - 可供参考的服务端SDK 实现: [Java SDK](https://github.com/FeatureProbe/server-sdk-java) 和 [接口文档](https://featureprobe.github.io/server-sdk-java/)
+ - 可供参考的客户端SDK 实现: [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js) 和 [接口文档](https://featureprobe.github.io/client-sdk-js/)
