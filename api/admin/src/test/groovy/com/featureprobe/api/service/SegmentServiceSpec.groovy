@@ -4,8 +4,10 @@ import com.featureprobe.api.base.enums.ValidateTypeEnum
 import com.featureprobe.api.base.model.PaginationRequest
 import com.featureprobe.api.base.util.JsonMapper
 import com.featureprobe.api.dao.entity.SegmentVersion
+import com.featureprobe.api.dao.entity.ToggleControlConf
 import com.featureprobe.api.dao.exception.ResourceConflictException
 import com.featureprobe.api.dao.repository.SegmentVersionRepository
+import com.featureprobe.api.dao.repository.ToggleControlConfRepository
 import com.featureprobe.api.dto.SegmentCreateRequest
 import com.featureprobe.api.dto.SegmentPublishRequest
 import com.featureprobe.api.dto.SegmentSearchRequest
@@ -26,6 +28,7 @@ import com.featureprobe.api.dao.repository.TargetingRepository
 import com.featureprobe.api.dao.repository.TargetingSegmentRepository
 import com.featureprobe.api.dao.repository.ToggleRepository
 import com.featureprobe.api.dto.SegmentVersionRequest
+import org.apache.zookeeper.Op
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import spock.lang.Specification
@@ -57,6 +60,8 @@ class SegmentServiceSpec extends Specification {
 
     SegmentVersionRepository segmentVersionRepository
 
+    ToggleControlConfRepository toggleControlConfRepository
+
     ChangeLogService changeLogService
 
     EntityManager entityManager
@@ -76,9 +81,10 @@ class SegmentServiceSpec extends Specification {
         changeLogRepository = Mock(PublishMessageRepository)
         dictionaryRepository = Mock(DictionaryRepository)
         segmentVersionRepository = Mock(SegmentVersionRepository)
+        toggleControlConfRepository = Mock(ToggleControlConfRepository)
         ChangeLogService changeLogService = new ChangeLogService(changeLogRepository, environmentRepository, dictionaryRepository)
         segmentService = new SegmentService(segmentRepository, targetingSegmentRepository, targetingRepository,
-                toggleRepository, environmentRepository, projectRepository, segmentVersionRepository, changeLogService, entityManager)
+                toggleRepository, environmentRepository, projectRepository, segmentVersionRepository, toggleControlConfRepository, changeLogService, entityManager)
 
         projectKey = "feature_probe"
         segmentKey = "test_segment_key"
@@ -233,6 +239,9 @@ class SegmentServiceSpec extends Specification {
                 projectKey: projectKey, environmentKey: "test", disabled: true)], Pageable.ofSize(1), 1)
         1 * environmentRepository
                 .findByProjectKeyAndKey(projectKey, "test") >> Optional.of(new Environment(name: "test", key: "test"))
+        1 * toggleControlConfRepository
+                .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey,
+                        _, _) >> Optional.of(new ToggleControlConf(trackAccessEvents: true))
         with(toggles) {
             1 == toggles.size
         }
