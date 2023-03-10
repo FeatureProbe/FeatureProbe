@@ -131,7 +131,7 @@ Objc SDK 从 2.0.2 版本开始支持事件上报的能力。
 [fp trackWithEvent:@"YOUR_CUSTOM_EVENT_NAME"];
 // Providing a metric value to track
 [fp trackWithEvent:@"YOUR_CUSTOM_EVENT_NAME" value:5.5];
-
+```
 
 ### 步骤 5. 单元测试 (可选)
 
