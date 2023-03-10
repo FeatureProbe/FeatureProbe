@@ -83,6 +83,7 @@
   "common.version.text": "version",
   "common.loading.text": "Loading...",
   "common.get.started.text": "Get started",
+  "common.connect.sdk.text": "Connect SDK",
   "common.current.version.text": "Current version",
   "common.version.change.text": "Changed ",
   "common.copy.uppercase.text": "Copy",
@@ -423,7 +424,10 @@
   "connect.fourth.success": "SDK connected successfully",
   "connect.fourth.failed.button": "Retry Connection",
   "connect.fourth.failed.link": "Common reasons for failed",
-
+  "connect.fourth.event.running": "Listening for {eventName} event for {toggle} in the {environment} environment.",
+  "connect.fourth.event.failed": "You have no applications listening for {eventName} event for {toggle} in the {environment} environment.",
+  "connect.fourth.event.success": "Event tracked successfully",
+  
   "getstarted.java.first.step": "Step 1: Install the Java SDK to your project",
   "getstarted.java.first.step.name.one": "Use your exist project, or create a new one as follow:",
   "getstarted.java.first.step.name.two": "Add FeatureProbe Java SDK to dependency",
@@ -468,6 +472,11 @@
   "getstarted.react.second.step.title": "Step2: Install SDK",
   "getstarted.react.third.step.title": "Step3: Import FPProvider in App.js",
   "getstarted.react.fourth.step.title": "Step4: Create a new file home.js in the same directory as App.js, import withFPConsumer in home.js",
+  "getstarted.track.event": "Set up event track",
+  "getstarted.track.event.title": "Add the following code and track custom event",
+  "getstarted.track.event.support.sdk": "Currently supports tracking custom event for Java, Rust, JavaScript, Android, Swift, Objective-C, and React SDK.",
+  "getstarted.track.pageview": "page view",
+  "getstarted.track.click": "click",
 
   "platform.warning.text": "According to the Cybersecurity Law, it is prohibited to use FeatureProbe for illegal financial lending, cryptocurrency, gambling and any applications containing Telemarketing Scams functions, once discovered, you will be immediately stopped from using FeatureProbe and reported to the Cyber Security Department.",
 
@@ -525,6 +534,8 @@
   "guide.project.step1.content2": "All environments contain all toggles under the project, but the settings of toggles in each environment are usually different",
   "guide.project.step2.title": "Environment SDK key",
   "guide.project.step2.content1": "Quickly copy the environment “SDK Key” for SDK initialization",
+
+  "guide.connect.sdk.content": "Go to [Connect SDK] page to learn how to track custom event",
 
   "guide.next": "Next",
   "guide.last": "Previous",
@@ -627,6 +638,7 @@
   "analysis.event.target.url.test": "Test if URL matches?",
   "analysis.event.target.url.match": "Your entered URL matches target URL",
   "analysis.event.target.url.not.match": "Your entered URL does not match target URL",
+  "analysis.event.available.sdk": "Page view and click events are only available for JavaScript and React SDK",
 
   "analysis.result.tip": "Create a metric to use analysis.",
   "analysis.result.collect.time": "Time frame: ",

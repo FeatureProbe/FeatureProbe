@@ -40,12 +40,13 @@ export interface ISegmentInfo {
 }
 
 export interface IToggle {
-  name: string,
-  key: string,
-  environmentName: string,
-  environmentKey: string,
-  disabled: boolean,
-  description: string
+  name: string;
+  key: string;
+  environmentName: string;
+  environmentKey: string;
+  disabled: boolean;
+  description: string;
+  analyzing: boolean;
 }
 
 export interface IToggleList {

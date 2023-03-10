@@ -100,8 +100,11 @@ export const SDK_VERSION = new Map([
 export const AVAILABLE_SDKS = [
   'Java',
   'Rust',
+  'Android',
+  'Swift',
+  'Objective-C',
   'JavaScript',
-  'React'
+  'React',
 ];
 
 interface IOption {
@@ -113,6 +116,11 @@ interface IOption {
   toggleKey?: string;
   serverSdkKey?: string;
   clientSdkKey?: string;
+}
+
+interface ITrackOption {
+  intl: IntlShape;
+  eventName: string;
 }
 
 export const getJavaCode = (options: IOption) => {
@@ -159,6 +167,20 @@ ${returnType === 'boolean' ? `boolean boolValue = fpClient.boolValue("${toggleKe
   ];
 };
 
+export const getJavaTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fpClient.track("${eventName}", user);
+// Providing a metric value to track
+fpClient.track("${eventName}", user, 5.5);
+`
+    },
+  ];
+};
+
 export const getRustCode = (options: IOption) => {
   const { intl, sdkVersion, serverSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
 
@@ -195,6 +217,20 @@ ${returnType === 'boolean' ? `let value = fp.bool_value("${toggleKey}", &user, f
           `fp.close();
 `
     }
+  ];
+};
+
+export const getRustTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fp.track("${eventName}", &user, None);
+// Providing a metric value to track
+fp.track("${eventName}", &user, Some(5.5));
+`
+    },
   ];
 };
 
@@ -335,6 +371,20 @@ val fp = FeatureProbe(config, user)
   ];
 };
 
+export const getAndroidTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fp.track("${eventName}");
+// Providing a metric value to track
+fp.track("${eventName}", 5.5);
+`
+    },
+  ];
+};
+
 export const getSwiftCode = (options: IOption) => {
   const { intl, clientSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
 
@@ -378,6 +428,20 @@ let fp = FeatureProbe(config: config, user: user)
   ];
 };
 
+export const getSwiftTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fp.track(event: "${eventName}");
+// Providing a metric value to track
+fp.track(event: "${eventName}", value: 5.5);
+`
+    },
+  ];
+};
+
 export const getObjCCode = (options: IOption) => {
   const { intl, clientSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
 
@@ -412,6 +476,20 @@ FeatureProbe *fp = [[FeatureProbe alloc] initWithConfig:config user:user];`
       name: '',
       code: `${returnType === 'boolean' ? `bool value = [fp boolValueWithKey: @"${toggleKey}" defaultValue: false];` : ''}${returnType === 'number' ? `double value = [fp numberValueWithKey: @"${toggleKey}" defaultValue: 1.0];` : ''}${returnType === 'string' ? `NSString* value = [fp stringValueWithKey: @"${toggleKey}" defaultValue: @"s"];` : ''}${returnType === 'json' ? `NSString* value = [fp jsonValueWithKey: @"${toggleKey}" defaultValue: @"{}"];` : ''}`
     }
+  ];
+};
+
+export const getObjCTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`[fp trackWithEvent:@"${eventName}"];
+// Providing a metric value to track
+[fp trackWithEvent:@"${eventName}" value:5.5];
+`
+    },
   ];
 };
 
@@ -467,6 +545,20 @@ fp.start();
 });
 `
     }
+  ];
+};
+
+export const getJSTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fp.track("${eventName}");
+// Providing a metric value to track
+fp.track("${eventName}", 5.5);
+`
+    },
   ];
 };
 
@@ -564,6 +656,23 @@ const Home = ({ toggles, client }) => {
 };
 
 export default withFPConsumer(Home);
+`
+    },
+  ];
+};
+
+export const getReactTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`import { useFPClient } from 'featureprobe-client-sdk-client';
+
+const fp = useFPClient();
+fp.track("${eventName}");
+// Providing a metric value to track
+fp.track("${eventName}", 5.5);
 `
     },
   ];

@@ -79,7 +79,7 @@ const ToggleDetail = () => {
     saveActiveItem(navigation);
   }, [navigation]);
 
-  // get toggle basic info
+  // Get toggle basic info
   const initToggleInfo = useCallback(() => {
     getToggleInfo<IToggleInfo>(projectKey, environmentKey, toggleKey).then(async(res) => {
       saveIsInfoLoading(false);
@@ -99,7 +99,7 @@ const ToggleDetail = () => {
     });
   }, [intl, projectKey, environmentKey, toggleKey, history]);
 
-  // get segment list info
+  // Get segment list
   const initSegmentList = useCallback(() => {
     getSegmentList<ISegmentList>(projectKey, {
       pageIndex: 0,
@@ -117,7 +117,7 @@ const ToggleDetail = () => {
     initSegmentList();
   }, [initToggleInfo, initSegmentList]);
 
-  // get toggle targeting info
+  // Get toggle targeting
   const initTargeting = useCallback(() => {
     getTargeting<IContent>(projectKey, environmentKey, toggleKey).then(res => {
       saveIsTargetingLoading(false);
@@ -232,7 +232,7 @@ const ToggleDetail = () => {
     }
   }, [currentVersion, initTargeting, getVersionsByVersion]);
 
-  // get normal history versions
+  // Get normal history versions
   const getVersionsList = useCallback(() => {
     const params: IVersionParams = {
       pageIndex: historyPageIndex,
@@ -260,7 +260,7 @@ const ToggleDetail = () => {
     });
   }, [versions, currentVersion, rememberVersion, historyPageIndex, projectKey, environmentKey, toggleKey, intl]);
 
-  // click to view history detail
+  // Click to view history detail
   const reviewHistory = useCallback((version: ITargetingVersion) => {
     saveActiveVersion(version);
     if (pageInitCount === 0 && !formRef.current) {
@@ -283,7 +283,7 @@ const ToggleDetail = () => {
     }
   }, [pageInitCount, latestVersion]);
 
-  // click to quit viewing history
+  // Click to quit viewing history
   const quiteReviewHistory = useCallback(() => {
     saveCount(0);
     initTargeting();
@@ -371,6 +371,7 @@ const ToggleDetail = () => {
             allowEnableTrackEvents={allowEnableTrackEvents}
             isInfoLoading={isInfoLoading}
             targetingDisabled={targetingDisabled}
+            targeting={targeting}
             gotoGetStarted={gotoGetStarted}
             initTargeting={() => {
               initTargeting();

@@ -170,17 +170,40 @@
   vertical-align: bottom;
 }
 
+.warning-circle-not-supported {
+  color: #ffc300;
+  font-size: 20px !important;
+  margin-right: 5px;
+  vertical-align: bottom;
+}
+
+.support-sdk-text {
+  color: #592d00;
+}
+
 .retry-connection {
   margin-top: 14px;
 }
 
-.retry-connection-btn {
-  width: 175px !important;
+.connect-failed {
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.connect-success {
+  margin-bottom: 16px;
+  font-size: 13px;
 }
 
 .connect-retrying {
   display: flex;
   align-items: center;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.connect-not-support {
+  font-size: 13px;
 }
 
 .connect-retrying-text {
