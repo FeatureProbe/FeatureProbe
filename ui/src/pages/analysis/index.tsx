@@ -18,6 +18,7 @@ const Analysis = (props: IProps) => {
   const { trackEvents, targeting, allowEnableTrackEvents, initTargeting } = props;
   const [ eventInfo, saveEventInfo ] = useState<IEvent>();
   const [ submitLoading, saveSubmitLoading ] = useState<boolean>(false);
+  const [ isLoading, saveMetricLoading ] = useState<boolean>(true);
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
 
   const getEvent = useCallback(() => {
@@ -25,6 +26,7 @@ const Analysis = (props: IProps) => {
       if (res.success && res.data) {
         saveEventInfo(res.data);
       }
+      saveMetricLoading(false);
     });
   }, [environmentKey, projectKey, toggleKey]);
 
@@ -36,6 +38,7 @@ const Analysis = (props: IProps) => {
     <div>
       <Metrics 
         eventInfo={eventInfo}
+        isLoading={isLoading}
         getEvent={getEvent}
         initTargeting={initTargeting}
       />

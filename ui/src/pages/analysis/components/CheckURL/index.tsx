@@ -31,7 +31,7 @@ const CheckURL = (props: IProps) => {
 
   const getMatcherText = useCallback((key: string) => {
     const urlMatchOption = getUrlMatchOptions();
-    return urlMatchOption[findIndex(urlMatchOption, {value: key})].text;
+    return urlMatchOption[findIndex(urlMatchOption, {value: key})]?.text;
   }, []);
 
   return (

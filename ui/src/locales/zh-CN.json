@@ -83,6 +83,7 @@
   "common.version.text": "版本",
   "common.loading.text": "加载中...",
   "common.get.started.text": "接入引导",
+  "common.connect.sdk.text": "连接SDK",
   "common.current.version.text": "当前版本",
   "common.version.change.text": "版本变更",
   "common.copy.uppercase.text": "复制",
@@ -418,11 +419,14 @@
   "connect.second.client.sdks": "客户端SDK：",
   "connect.third.title": "设置应用程序",
   "connect.fourth.title": "测试应用程序",
-  "connect.fourth.running": "正在{environment}环境中监听{toggle}的事件。",
+  "connect.fourth.running": "正在{environment}环境中监听{toggle}开关的事件。",
   "connect.fourth.failed": "您没有此SDK密钥连接成功的应用程序。",
-  "connect.fourth.success": "连接成功！",
+  "connect.fourth.success": "SDK连接成功！",
   "connect.fourth.failed.button": "重试连接",
   "connect.fourth.failed.link": "常见失败原因",
+  "connect.fourth.event.running": "正在{environment}环境中监听{toggle}开关的{eventName}事件。",
+  "connect.fourth.event.failed": "您没有应用程序正在{environment}环境中监听{toggle}开关的{eventName}事件。",
+  "connect.fourth.event.success": "事件上报成功！",
 
   "getstarted.java.first.step": "第一步：将SDK添加到您的应用",
   "getstarted.java.first.step.name.one": "使用一个已有的工程，或者如下创建一个新的工程",
@@ -468,6 +472,11 @@
   "getstarted.react.second.step.title": "第二步：安装SDK",
   "getstarted.react.third.step.title": "第三步：在App.js中引入FPProvider",
   "getstarted.react.fourth.step.title": "第四步：在App.js同级目录下创建home.js，并在home.js中引入withFPConsumer",
+  "getstarted.track.event": "设置埋点上报",
+  "getstarted.track.event.title": "添加以下代码，上报自定义事件",
+  "getstarted.track.event.support.sdk": "目前支持Java、Rust、JavaScript、Android、Swift、Objective-C、React SDK的自定义事件上报。",
+  "getstarted.track.pageview": "页面",
+  "getstarted.track.click": "点击",
 
   "platform.warning.text": "根据国家相关规定，严禁将FeatureProbe用于违法金融借贷、区块链虚拟币、博彩以及任何含有网络电信诈骗功能的应用程序，一旦被发现，将会立即停止你使用FeatureProbe相关功能，并上报给网络安全监管部门。",
 
@@ -525,6 +534,8 @@
   "guide.project.step1.content2": "所有环境里都包含项目下的所有开关，但是开关在各个环境内的设置通常是不同的",
   "guide.project.step2.title": "环境的SDK密钥",
   "guide.project.step2.content1": "快速拷贝环境的“SDK密钥”，用于SDK初始化。",
+
+  "guide.connect.sdk.content": "进入“连接SDK”页面查看如何上报自定义事件",
 
   "guide.next": "下一个",
   "guide.last": "上一个",
@@ -627,6 +638,7 @@
   "analysis.event.target.url.test": "测试一下URL是否匹配？",
   "analysis.event.target.url.match": "输入的URL与目标页面URL匹配",
   "analysis.event.target.url.not.match": "输入的URL与目标页面URL不匹配",
+  "analysis.event.available.sdk": "页面事件和点击事件仅适用于JavaScript和React SDK",
 
   "analysis.result.tip": "请先保存“指标信息”，并点击【收集数据】。",
   "analysis.result.collect.time": "数据统计周期：",

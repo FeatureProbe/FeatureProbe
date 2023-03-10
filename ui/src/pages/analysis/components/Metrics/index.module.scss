@@ -5,6 +5,11 @@
   padding: 24px;
 }
 
+.loading-box {
+  min-height: 200px;
+  position: relative;
+}
+
 .metrics-content {
   background: #fafafa;
   border-radius: 12px;
@@ -114,6 +119,18 @@
   margin: 8px 0;
 }
 
+.warning-circle {
+  font-size: 12px !important;
+  color: #ffc300;
+  margin-left: 12px;
+  margin-right: 4px;
+}
+
+.available-sdk {
+  font-size: 12px;
+  color: #d48806;
+}
+
 .formula {
   flex: 1;
   display: flex;
@@ -202,4 +219,19 @@
   color: #f5483b !important;
   margin-right: 4px;
   vertical-align: middle;
+}
+
+.joyride-content {
+  font-size: 14px;
+  color: #74788d;
+  margin-top: 7px;
+}
+
+.joyride-tips {
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #74788d;
+  padding: 7px 9px;
+  margin-top: 12px;
 }

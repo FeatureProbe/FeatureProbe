@@ -3,6 +3,7 @@ import { Grid, Popup, Loader } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { v4 as uuidv4 } from 'uuid';
 import Diff from 'components/Diff';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
 import Button from 'components/Button';
@@ -16,12 +17,14 @@ import { DiffStatusContent } from 'components/Diff/DiffStatus';
 import { DiffServe } from 'components/Diff/DiffServe';
 import PopupConfirm from 'components/PopupConfirm';
 import ApprovalOperation from '../ApprovalOperation';
-import { variationContainer } from 'pages/targeting/provider';
+import { defaultServeContainer, disabledServeContainer, variationContainer, ruleContainer } from 'pages/targeting/provider';
 import { getTargetingDiff } from 'services/toggle';
-import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, ITarget, IServe, IRule } from 'interfaces/targeting';
+import { DATETIME_TYPE, SEGMENT_TYPE } from 'components/Rule/constants';
+import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, ITarget, IServe, IRule, IVariation, ICondition } from 'interfaces/targeting';
 import { IRouterParams } from 'interfaces/project';
 
 import styles from './index.module.scss';
+import { cloneDeep } from 'lodash';
 
 interface IProps {
   toggleInfo?: IToggleInfo;
@@ -32,6 +35,7 @@ interface IProps {
   trackEvents: boolean;
   allowEnableTrackEvents: boolean;
   activeItem: string;
+  targeting?: ITarget;
   gotoGetStarted(): void;
   initTargeting(): void;
   saveApprovalInfo(approvalInfo: IApprovalInfo): void;
@@ -49,6 +53,7 @@ const Info: React.FC<IProps> = (props) => {
     targetingDisabled,
     trackEvents,
     allowEnableTrackEvents,
+    targeting,
     gotoGetStarted,
     initTargeting,
     saveApprovalInfo,
@@ -68,9 +73,42 @@ const Info: React.FC<IProps> = (props) => {
     content: ITarget;
   }>();
   const [ isDiffLoading, saveIsDiffLoading ] = useState<boolean>(false);
-  const { variations } = variationContainer.useContainer();
+  const { saveRules } = ruleContainer.useContainer();
+  const { variations, saveVariations } = variationContainer.useContainer();
+  const { saveDefaultServe } = defaultServeContainer.useContainer();
+  const { saveDisabledServe } = disabledServeContainer.useContainer();
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
+
+  useEffect(() => {
+    if (targeting) {
+      const cloneVariations = cloneDeep(targeting.variations) || [];
+      cloneVariations.forEach((variation: IVariation) => {
+        variation.id = uuidv4();
+      });
+      saveVariations(cloneVariations);
+
+      const targetRule = cloneDeep(targeting.rules);
+      targetRule.forEach((rule: IRule) => {
+        rule.id = uuidv4();
+        rule.conditions.forEach((condition: ICondition) => {
+          condition.id = uuidv4();
+          if (condition.type === SEGMENT_TYPE) {
+            condition.subject = intl.formatMessage({ id: 'common.user.text' });
+          } else if (condition.type === DATETIME_TYPE && condition.objects) {
+            condition.datetime = condition.objects[0].slice(0, 19);
+            condition.timezone = condition.objects[0].slice(19);
+          }
+        });
+        rule.active = true;
+      });
+
+      saveRules(targetRule);
+      saveDefaultServe(targeting.defaultServe);
+      saveDisabledServe(targeting.disabledServe);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targeting, saveVariations, saveRules, saveDefaultServe, saveDisabledServe]);
 
   useEffect(() => {
     if (approvalInfo?.status) {
@@ -109,7 +147,6 @@ const Info: React.FC<IProps> = (props) => {
       saveDiffOpen(true);
     }
   }, [projectKey, environmentKey, toggleKey]);
-
 
   const preDiffServe = useCallback(
     (serve?: IServe) => {
@@ -255,7 +292,7 @@ const Info: React.FC<IProps> = (props) => {
               <div className={styles['info-title-right']}>
                 {
                   !toggleInfo?.archived && (
-                    <div className={styles['connect-sdk']} onClick={gotoGetStarted}>
+                    <div className={`${styles['connect-sdk']} connect-sdk`} onClick={gotoGetStarted}>
                       <Icon type='connect-sdk' customclass={styles['icon-connect-sdk']} />
                       <FormattedMessage id='toggle.connect' />
                     </div>

@@ -6,38 +6,59 @@ import classNames from 'classnames';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { IRouterParams } from 'interfaces/project';
+import { IEvent } from 'interfaces/analysis';
+import { CLICK, CUSTOM, PAGE_VIEW } from 'pages/analysis/constants';
 import styles from '../../index.module.scss';
 
 interface IProps {
-  isLoading: boolean;
+  isAccessLoading: boolean;
+  isTrackLoading: boolean;
   currentStep: number;
-  toggleAccess: boolean;
+  isAccess: boolean;
+  isReport: boolean;
   projectKey: string;
   environmentKey: string;
   toggleKey: string;
+  totalStep: number;
+  eventInfo?: IEvent;
   checkToggleStatus(): void;
-  saveIsLoading(loading: boolean): void;
+  checkEventTrack(): void;
+  saveAccessLoading(loading: boolean): void;
+  saveTrackLoading(loading: boolean): void;
 }
 
-const CURRENT = 3;
 const INTERVAL = 30;
 
 const TestConnection = (props: IProps) => {
-  const { currentStep, toggleAccess, isLoading, checkToggleStatus, saveIsLoading } = props;
+  const {
+    currentStep,
+    isAccess,
+    isReport,
+    isAccessLoading,
+    isTrackLoading,
+    totalStep,
+    eventInfo,
+    checkToggleStatus,
+    checkEventTrack,
+    saveAccessLoading,
+    saveTrackLoading,
+  } = props;
   const { toggleKey, environmentKey } = useParams<IRouterParams>();
   const [ count, saveCount ] = useState<number>(1);
+  const [ trackCount, saveTrackCount ] = useState<number>(1);
+  const [ displayName, saveDisplayName ] = useState<string>('');
   const intl = useIntl();
   const faqUrl = useRef('');
 
   const stepTitleCls = classNames(
     styles['step-title'],
     {
-      [styles['step-title-selected']]: currentStep === CURRENT
+      [styles['step-title-selected']]: currentStep === totalStep
     }
   );
 
   useEffect(() => {
-    if (isLoading) {
+    if (isAccessLoading && !isAccess) {
       const timer = setInterval(() => {
         saveCount(count + 1);
         checkToggleStatus();
@@ -45,7 +66,7 @@ const TestConnection = (props: IProps) => {
 
       if (count >= INTERVAL) {
         clearInterval(timer);
-        saveIsLoading(false);
+        saveAccessLoading(false);
         saveCount(1);
       }
   
@@ -53,7 +74,26 @@ const TestConnection = (props: IProps) => {
         clearInterval(timer);
       });
     }
-  }, [count, isLoading, checkToggleStatus, saveIsLoading]);
+  }, [count, isAccessLoading, checkToggleStatus, saveAccessLoading, isAccess]);
+
+  useEffect(() => {
+    if (isTrackLoading && !isReport) {
+      const timer = setInterval(() => {
+        saveTrackCount(trackCount + 1);
+        checkEventTrack();
+      }, 1000);
+
+      if (trackCount >= INTERVAL) {
+        clearInterval(timer);
+        saveTrackLoading(false);
+        saveTrackCount(1);
+      }
+  
+      return (() => {
+        clearInterval(timer);
+      });
+    }
+  }, [trackCount, isTrackLoading, saveTrackLoading, checkEventTrack, isReport]);
 
   useEffect(() => {
     if (intl.locale === 'zh-CN') {
@@ -63,18 +103,26 @@ const TestConnection = (props: IProps) => {
     }
   }, [intl]);
 
+  useEffect(() => {
+    let name = '';
+    if (eventInfo?.eventType === CUSTOM) {
+      name = eventInfo?.eventName ?? '';
+    } else if (eventInfo?.eventType === PAGE_VIEW) {
+      name = intl.formatMessage({id: 'getstarted.track.pageview'});
+    } else if (eventInfo?.eventType === CLICK) {
+      name = intl.formatMessage({id: 'getstarted.track.click'});
+    }
+    saveDisplayName(name);
+  }, [eventInfo, intl]);
+
   return (
     <div className={styles.step}>
       <div className={styles['step-left']}>
         {
-          currentStep === CURRENT ? (
-            <div className={styles.circleCurrent}>
-              { CURRENT }
-            </div>
+          currentStep === totalStep ? (
+            <div className={styles.circleCurrent}>{ totalStep }</div>
           ) : (
-            <div className={styles.circle}>
-              { CURRENT }
-            </div>
+            <div className={styles.circle}>{ totalStep }</div>
           )
         }
       </div>
@@ -84,18 +132,18 @@ const TestConnection = (props: IProps) => {
         </div>
         <div className={styles['step-detail']}>
           {
-            currentStep === CURRENT && (
+            currentStep === totalStep && (
               <>
                 {
-                  toggleAccess ? (
+                  isAccess ? (
                     <div className={styles['connect-success']}>
                       <Icon type='success-circle' customclass={styles['success-circle']} />
                       <FormattedMessage id='connect.fourth.success' />
                     </div>
                   ) : (
-                    isLoading ? (
+                    isAccessLoading ? (
                       <div className={styles['connect-retrying']}>
-                        <Loader  size='small' active inline='centered' />
+                        <Loader size='small' active inline='centered' />
                         <div className={styles['connect-retrying-text']}>
                           {
                             intl.formatMessage({
@@ -126,13 +174,75 @@ const TestConnection = (props: IProps) => {
                             primary 
                             className={styles['retry-connection-btn']} 
                             onClick={() => {
-                              saveIsLoading(true);
+                              saveAccessLoading(true);
                             }}
                           >
                             <FormattedMessage id='connect.fourth.failed.button' />
                           </Button>
                         </div>
                       </div>
+                    )
+                  )
+                }
+
+                {
+                  eventInfo && (
+                    isReport ? (
+                      <div className={styles['connect-success']}>
+                        <Icon type='success-circle' customclass={styles['success-circle']} />
+                        <FormattedMessage id='connect.fourth.event.success' />
+                      </div>
+                    ) : (
+                      isTrackLoading ? (
+                        <div className={styles['connect-retrying']}>
+                          <Loader size='small' active inline='centered' />
+                          <div className={styles['connect-retrying-text']}>
+                            {
+                              intl.formatMessage({
+                                id: 'connect.fourth.event.running'
+                              }, {
+                                eventName: displayName,
+                                environment: environmentKey,
+                                toggle: toggleKey,
+                              })
+                            }
+                          </div>
+                        </div>
+                      ) : (
+                        <div className={styles['connect-failed']}>
+                          <div>
+                            <Icon type='error-circle' customclass={styles['error-circle']} />
+                            {
+                              intl.formatMessage({
+                                id: 'connect.fourth.event.failed'
+                              }, {
+                                eventName: displayName,
+                                environment: environmentKey,
+                                toggle: toggleKey,
+                              })
+                            }
+                            {/* <a 
+                              className={styles['error-link']}
+                              target='_blank'
+                              rel='noreferrer'
+                              href={faqUrl.current}
+                            >
+                              <FormattedMessage id='connect.fourth.failed.link' />
+                            </a> */}
+                          </div>
+                          <div className={styles['retry-connection']}>
+                            <Button 
+                              primary 
+                              className={styles['retry-connection-btn']} 
+                              onClick={() => {
+                                saveTrackLoading(true);
+                              }}
+                            >
+                              <FormattedMessage id='connect.fourth.failed.button' />
+                            </Button>
+                          </div>
+                        </div>
+                      )
                     )
                   )
                 }
