@@ -116,11 +116,11 @@ curl --location --request GET 'https://featureprobe.io/server/api/server-sdk/tog
 }
 ```
 
-1、该 API 需要使用 HTTP 请求头将 Authorization 设置为 ${sdk_key}，以便在轮询API时进行身份验证。其中 ${sdk_key} 是客户端应用程序传递给    FeatureProbe 配置的 Server SDK 密钥。
+- 该 API 需要使用 HTTP 请求头将 Authorization 设置为 ${sdk_key}，以便在轮询API时进行身份验证。其中 ${sdk_key} 是客户端应用程序传递给    FeatureProbe 配置的 Server SDK 密钥。
 
-2、实现异步轮询机制，可以使用定时器或轮询库来定期发送HTTP请求以获取最新的开关规则，建议默认频率为5s。
+- 实现异步轮询机制，可以使用定时器或轮询库来定期发送HTTP请求以获取最新的开关规则，建议默认频率为5s。
     
-3、将轮询 API 的请求地址（synchronizerUrl）和轮询频率（refreshInterval）作为配置项通过 FPConfig 提供给用户，使得用户可以自定义轮询频率和请求地址。
+- 将轮询 API 的请求地址（synchronizerUrl）和轮询频率（refreshInterval）作为配置项通过 FPConfig 提供给用户，使得用户可以自定义轮询频率和请求地址。
 
 ***可供参考的代码[异步轮询Java实现](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/server/PollingSynchronizer.java)***
 
@@ -128,13 +128,13 @@ curl --location --request GET 'https://featureprobe.io/server/api/server-sdk/tog
 
 当对开关变更的延迟有更高的要求时，可以通过实现长连接更新方式来进行优化。下面是实现步骤：
 
-1、首先需要实现异步轮询机制，以便作为长连接更新的备选方案。
+- 首先需要实现异步轮询机制，以便作为长连接更新的备选方案。
 
-2、需要引入 [socket-io](https://github.com/socketio) 客户端依赖到您的 SDK 中，并在 SDK 初始化时与 FeatureProbe Server 建立长连接。您可以在建立连接时发送一个 “register” 事件，并携带一个名为 key, 值为${sdk_key}的参数，以便在后续的身份验证过程中进行验证。其中${sdk_key}是客户端应用程序传递给 FeatureProbe 配置的 Server SDK 密钥。
+- 需要引入 [socket-io](https://github.com/socketio) 客户端依赖到您的 SDK 中，并在 SDK 初始化时与 FeatureProbe Server 建立长连接。您可以在建立连接时发送一个 “register” 事件，并携带一个名为 key, 值为${sdk_key}的参数，以便在后续的身份验证过程中进行验证。其中${sdk_key}是客户端应用程序传递给 FeatureProbe 配置的 Server SDK 密钥。
 
-3、监听名为 “update” 的事件，以便在开关配置发生更改时立即通知客户端主动通过轮询API拉取最新开关规则。
+- 监听名为 “update” 的事件，以便在开关配置发生更改时立即通知客户端主动通过轮询API拉取最新开关规则。
 
-4、最后需要将长连接的地址（realtimeUri）通过 FPConfig 暴露给用户，以方便自定义配置。
+- 最后需要将长连接的地址（realtimeUri）通过 FPConfig 暴露给用户，以方便自定义配置。
 
 ***可供参考的代码[长链接 Java 实现](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/server/StreamingSynchronizer.java)***
 
@@ -163,13 +163,13 @@ curl --location --request GET 'http://featureprobe-df.intra.xiaojukeji.com/serve
 }
 ```
 
-1、该 API 需要使用 HTTP 请求头将 Authorization 设置为 ${sdk_key}，以便在轮询 API 时进行身份验证。其中 ${sdk_key} 是客户端应用程序传递给  FeatureProbe 配置的 Client SDK 密钥。
+- 该 API 需要使用 HTTP 请求头将 Authorization 设置为 ${sdk_key}，以便在轮询 API 时进行身份验证。其中 ${sdk_key} 是客户端应用程序传递给  FeatureProbe 配置的 Client SDK 密钥。
 
-2、还需要使用 HTTP 请求参数将 user 设置为 ${FPUser}，参数值为将 FPUser 对象Json序列化后进行Base64编码的字符串。
+- 还需要使用 HTTP 请求参数将 user 设置为 ${FPUser}，参数值为将 FPUser 对象Json序列化后进行Base64编码的字符串。
 
-3、实现异步轮询机制，可以使用定时器或轮询库来定期发送 HTTP 请求以获取最新的开关规则，建议默认频率为5s。
+- 实现异步轮询机制，可以使用定时器或轮询库来定期发送 HTTP 请求以获取最新的开关规则，建议默认频率为5s。
     
-4、将轮询 API 的请求地址（synchronizerUrl）和轮询频率（refreshInterval）作为配置项通过FPConfig提供给用户，使得用户可以自定义轮询频率和请求地址。
+- 将轮询 API 的请求地址（synchronizerUrl）和轮询频率（refreshInterval）作为配置项通过FPConfig提供给用户，使得用户可以自定义轮询频率和请求地址。
 
 ***可供参考的代码[异步轮询 Javascript 实现](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#)中的fetchToggles()方法***
 
@@ -178,13 +178,13 @@ curl --location --request GET 'http://featureprobe-df.intra.xiaojukeji.com/serve
 
 当对开关变更的延迟有更高的要求时，可以通过实现长连接更新方式来进行优化。下面是实现步骤：
 
-1、首先需要实现异步轮询机制，以便作为长连接更新的备选方案。
+- 首先需要实现异步轮询机制，以便作为长连接更新的备选方案。
 
-2、需要引入[socket-io](https://github.com/socketio)客户端依赖到您的SDK中，并在 SDK 初始化时与 FeatureProbe Server 建立长连接。您可以在建立连接时发送一个 “register” 事件，并携带一个名为 key 值为 ${sdk_key} 的参数，以便在后续的身份验证过程中进行验证。其中 ${sdk_key} 是客户端应用程序传递给 FeatureProbe 配置的 Client SDK 密钥。
+- 需要引入[socket-io](https://github.com/socketio)客户端依赖到您的SDK中，并在 SDK 初始化时与 FeatureProbe Server 建立长连接。您可以在建立连接时发送一个 “register” 事件，并携带一个名为 key 值为 ${sdk_key} 的参数，以便在后续的身份验证过程中进行验证。其中 ${sdk_key} 是客户端应用程序传递给 FeatureProbe 配置的 Client SDK 密钥。
 
-3、监听名为 “update” 的事件，以便在开关配置发生更改时立即通知客户端主动通过轮询API拉取最新开关规则。
+- 监听名为 “update” 的事件，以便在开关配置发生更改时立即通知客户端主动通过轮询API拉取最新开关规则。
 
-4、最后需要将长连接的地址（realtimeUri）通过 FPConfig 暴露给用户，以方便自定义配置。
+- 最后需要将长连接的地址（realtimeUri）通过 FPConfig 暴露给用户，以方便自定义配置。
 
 ***可供参考的代码[长链接Javascript实现#](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#)中的connectSocket()方法***
 
