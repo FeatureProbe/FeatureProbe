@@ -115,11 +115,11 @@ Example response protocol:
 }
 ```
 
-1、This API requires setting the Authorization HTTP request header to ${sdk_key} to authenticate when polling the API. ${sdk_key} is the Server SDK key passed by the client application to FeatureProbe configuration.
+- This API requires setting the Authorization HTTP request header to ${sdk_key} to authenticate when polling the API. ${sdk_key} is the Server SDK key passed by the client application to FeatureProbe configuration.
 
-2、To implement asynchronous polling, a timer or polling library can be used to periodically send HTTP requests to retrieve the latest feature flag rules. The recommended default frequency is 5 seconds.
+- To implement asynchronous polling, a timer or polling library can be used to periodically send HTTP requests to retrieve the latest feature flag rules. The recommended default frequency is 5 seconds.
     
-3、The request address for the polling API (synchronizerUrl) and polling frequency (refreshInterval) should be provided to users as configuration options through FPConfig, so that users can customize the polling frequency and request address.
+- The request address for the polling API (synchronizerUrl) and polling frequency (refreshInterval) should be provided to users as configuration options through FPConfig, so that users can customize the polling frequency and request address.
 
 ***Reference [Java code for implementing asynchronous polling](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/server/PollingSynchronizer.java)***
 
@@ -127,13 +127,13 @@ Example response protocol:
 
 When there is a higher requirement for the latency of feature flags changes, optimization can be achieved by implementing the streaming api update method. The following are the implementation steps:
 
-1、First, it is necessary to implement the asynchronous polling mechanism as an alternative solution for streaming api updates.
+- First, it is necessary to implement the asynchronous polling mechanism as an alternative solution for streaming api updates.
 
-2、To implement the streaming api mechanism, you will need to add the [socket-io](https://github.com/socketio) client dependency to your SDK and establish a long connection with the FeatureProbe Server during SDK initialization. You can send a "register" event with a parameter named key and a value of ${sdk_key} to verify the SDK's identity during the authentication process. Here, ${sdk_key} is the Server SDK key passed by the client application to the FeatureProbe configuration.
+- To implement the streaming api mechanism, you will need to add the [socket-io](https://github.com/socketio) client dependency to your SDK and establish a long connection with the FeatureProbe Server during SDK initialization. You can send a "register" event with a parameter named key and a value of ${sdk_key} to verify the SDK's identity during the authentication process. Here, ${sdk_key} is the Server SDK key passed by the client application to the FeatureProbe configuration.
 
-3、Listen to the "update" event so that when the feature flags configuration changes, the client is immediately notified to proactively pull the latest switch rule through the polling API.
+- Listen to the "update" event so that when the feature flags configuration changes, the client is immediately notified to proactively pull the latest switch rule through the polling API.
 
-4、Finally, the address of the streaming api (realtimeUri) needs to be exposed to users through FPConfig to facilitate custom configuration.
+- Finally, the address of the streaming api (realtimeUri) needs to be exposed to users through FPConfig to facilitate custom configuration.
 
 ***Reference [Java code for implementing streaming api](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/server/StreamingSynchronizer.java)***
 
@@ -162,13 +162,13 @@ Example response protocol:
 }
 ```
 
-1、This API requires setting the Authorization HTTP request header to ${sdk_key} for authentication during polling API. ${sdk_key} is the Client SDK key passed by the client application to FeatureProbe configuration.
+- This API requires setting the Authorization HTTP request header to ${sdk_key} for authentication during polling API. ${sdk_key} is the Client SDK key passed by the client application to FeatureProbe configuration.
 
-2、Additionally, the API requires setting the user parameter in the HTTP request as ${FPUser}, with its value being the Base64-encoded string obtained from serializing the FPUser object to a JSON format.
+- Additionally, the API requires setting the user parameter in the HTTP request as ${FPUser}, with its value being the Base64-encoded string obtained from serializing the FPUser object to a JSON format.
 
-3、To implement the asynchronous polling mechanism, you can use a timer or a polling library to periodically send HTTP requests to obtain the latest feature flags result. It is recommended to set the default frequency to 5 seconds.
+- To implement the asynchronous polling mechanism, you can use a timer or a polling library to periodically send HTTP requests to obtain the latest feature flags result. It is recommended to set the default frequency to 5 seconds.
     
-4、Make the polling API's request address (synchronizerUrl) and polling frequency (refreshInterval) available as configuration options through FPConfig, so that users can customize the polling frequency and request address.
+- Make the polling API's request address (synchronizerUrl) and polling frequency (refreshInterval) available as configuration options through FPConfig, so that users can customize the polling frequency and request address.
 
 ***Reference [Javascript code for implementing asynchronous polling](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#) fetchToggles() method***
 
@@ -177,13 +177,13 @@ Example response protocol:
 
 Here are the steps to implement streaming api for updating feature flag changes with high latency requirements:
 
-1、First, implement asynchronous polling mechanism as an alternative solution for streaming api updates
+- First, implement asynchronous polling mechanism as an alternative solution for streaming api updates
 
-2、To implement the streaming api mechanism, you will need to add the [socket-io](https://github.com/socketio) client dependency to your SDK and establish a long connection with the FeatureProbe Server during SDK initialization. You can send a "register" event with a parameter named key and a value of ${sdk_key} to verify the SDK's identity during the authentication process. Here, ${sdk_key} is the Server SDK key passed by the client application to the FeatureProbe configuration.
+- To implement the streaming api mechanism, you will need to add the [socket-io](https://github.com/socketio) client dependency to your SDK and establish a long connection with the FeatureProbe Server during SDK initialization. You can send a "register" event with a parameter named key and a value of ${sdk_key} to verify the SDK's identity during the authentication process. Here, ${sdk_key} is the Server SDK key passed by the client application to the FeatureProbe configuration.
 
-3、Listen to the "update" event so that when the feature flags configuration changes, the client is immediately notified to proactively pull the latest switch rule through the polling API.
+- Listen to the "update" event so that when the feature flags configuration changes, the client is immediately notified to proactively pull the latest switch rule through the polling API.
 
-4、Finally, the address of the streaming api (realtimeUri) needs to be exposed to users through FPConfig to facilitate custom configuration.
+- Finally, the address of the streaming api (realtimeUri) needs to be exposed to users through FPConfig to facilitate custom configuration.
 
 ***Reference [Javascript code for implementing streaming api](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#) connectSocket() method***
 
