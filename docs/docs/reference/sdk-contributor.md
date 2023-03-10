@@ -144,7 +144,7 @@ When we make changes to the feature flags configuration or add new page_view or 
  1、**Getting feature flag result through asynchronous polling**
 Protocol for the API used by the server to retrieve feature flag result:
 ```shell
-curl --location --request GET 'http://featureprobe-df.intra.xiaojukeji.com/server/api/client-sdk/toggles?user=eyJrZXkiOiIxNjc4MjYyODkzODk2IiwiYXR0cnMiOnt9fQ%3D%3D' \
+curl --location --request GET 'https://featureprobe.io/server/api/client-sdk/toggles?user=eyJrZXkiOiIxNjc4MjYyODkzODk2IiwiYXR0cnMiOnt9fQ%3D%3D' \
 --header 'Authorization: client-48e0f6f34baef833e1e10df90615b957b1739fb5' 
 ```
 Example response protocol:

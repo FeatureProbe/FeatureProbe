@@ -4,9 +4,11 @@ import com.featureprobe.api.base.constants.MessageKey;
 import com.featureprobe.api.base.util.JsonMapper;
 import com.featureprobe.api.base.util.ToggleContentLimitChecker;
 import com.featureprobe.api.dao.entity.SegmentVersion;
+import com.featureprobe.api.dao.entity.ToggleControlConf;
 import com.featureprobe.api.dao.exception.ResourceConflictException;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
 import com.featureprobe.api.dao.repository.SegmentVersionRepository;
+import com.featureprobe.api.dao.repository.ToggleControlConfRepository;
 import com.featureprobe.api.dao.utils.PageRequestUtil;
 import com.featureprobe.api.dto.SegmentCreateRequest;
 import com.featureprobe.api.dto.SegmentPublishRequest;
@@ -39,7 +41,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -56,7 +57,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -79,6 +79,7 @@ public class SegmentService {
 
     private SegmentVersionRepository segmentVersionRepository;
 
+    private ToggleControlConfRepository toggleControlConfRepository;
     private ChangeLogService changeLogService;
 
     @PersistenceContext
@@ -212,6 +213,11 @@ public class SegmentService {
             toggleSegmentResponse.setDisabled(targeting.isDisabled());
             Optional<Environment> environment = environmentRepository
                     .findByProjectKeyAndKey(projectKey, targeting.getEnvironmentKey());
+            Optional<ToggleControlConf> toggleControlConfOptional = toggleControlConfRepository
+                    .findByProjectKeyAndEnvironmentKeyAndToggleKey(targeting.getProjectKey(),
+                            targeting.getEnvironmentKey(), targeting.getToggleKey());
+            toggleSegmentResponse.setAnalyzing(toggleControlConfOptional.isPresent() ?
+                    toggleControlConfOptional.get().isTrackAccessEvents() : false);
             toggleSegmentResponse.setEnvironmentName(environment.get().getName());
             toggleSegmentResponse.setEnvironmentKey(environment.get().getKey());
             return toggleSegmentResponse;

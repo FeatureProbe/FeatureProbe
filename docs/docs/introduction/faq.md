@@ -142,7 +142,7 @@ Here are some common problems and solutions during the use of FeatureProbe.
       console.log("Error initing Javascript SDK!")
   })
   ~~~
-  
+
 </TabItem>
 
 <TabItem value="MiniProgram" label="MiniProgram">
@@ -152,9 +152,45 @@ Here are some common problems and solutions during the use of FeatureProbe.
     console.log("Error initing MiniProgram SDK!")
   })
   ~~~
-  
+
 </TabItem>
 </Tabs>
+
+
+
+### 1.5 How to troubleshoot "You don't have any application listening for the X event on X toggle in X environment"?
+
+- Please make sure that the test application displays "✅ SDK connection successful" first. If you receive a prompt saying "You don't have any application with successful SDK key connection", please follow the troubleshooting steps corresponding to section [1.4](/introduction/faq#14-how-to-solve-you-have-no-applications-connected-using-this-sdk-key-in-user-guidance-of-sdk-initialization) first.
+
+- Confirm that the collection of metric data is in the enabled state. For instructions on how to do this, please refer to the "[Save metrics and start iteration](/tutorials/analysis#save-metrics-and-start-iteration)" section.
+
+- If the metric's event type is "custom event", you need to use the track function provided by the SDK to report event data. The function call is as follows:
+
+  <Tabs groupId="language">
+     <TabItem value="java" label="Java" default>
+
+  ~~~java  title="src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java"
+  fpClient.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
+  ~~~
+
+    </TabItem>
+
+     <TabItem value="rust" label="Rust">
+
+  ~~~rust title="examples/demo.rs"
+  fpClient.track("YOUR_CUSTOM_EVENT_NAME", &user, Some(5.5));
+  ~~~
+
+    </TabItem>
+
+  </Tabs>
+
+  Please note that `YOUR_CUSTOM_EVENT_NAME` must match the "Event Name" in the metric.
+
+- If the metric's event type is "Page Event" or "Click Event", please use the JavaScript and React SDK for integration (without manual event reporting). Also, make sure that the "Target Page URL" set in the metric matches the page URL for reporting events. For "Click Events", make sure that the CSS selector for the "click element" set in the
+
+
+## 
 
 
 ## 2. Deployment problems

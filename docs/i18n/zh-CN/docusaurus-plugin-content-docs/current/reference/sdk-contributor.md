@@ -145,7 +145,7 @@ curl --location --request GET 'https://featureprobe.io/server/api/server-sdk/tog
  1、**通过异步轮询获取开关配置**
 Server 获取开关结果API协议：
 ```shell
-curl --location --request GET 'http://featureprobe-df.intra.xiaojukeji.com/server/api/client-sdk/toggles?user=eyJrZXkiOiIxNjc4MjYyODkzODk2IiwiYXR0cnMiOnt9fQ%3D%3D' \
+curl --location --request GET 'https://featureprobe.io/server/api/client-sdk/toggles?user=eyJrZXkiOiIxNjc4MjYyODkzODk2IiwiYXR0cnMiOnt9fQ%3D%3D' \
 --header 'Authorization: client-48e0f6f34baef833e1e10df90615b957b1739fb5' 
 ```
 响应协议示例:
