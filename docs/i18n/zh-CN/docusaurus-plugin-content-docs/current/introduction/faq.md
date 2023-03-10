@@ -168,6 +168,41 @@ import TabItem from '@theme/TabItem';
 
   </Tabs>
 
+### 1.5 接入引导提示 “您没有应用程序正在 *x* 环境中监听 *x* 开关的 *x* 事件” 该如何排查？
+
+- 请先需确保测试应用程序中显示 *"✅ SDK连接成功"*，如提示 *“您没有此 SDK 密钥连接成功的应用程序”*，请先按照 [1.4](/introduction/faq#14-接入引导提示-您没有此-sdk-密钥连接成功的应用程序-该如何排查) 对应的步骤进行排查。
+
+- 确认指标的收集数据是已开启状态，操作方式见：[配置指标并开始收集数据](/tutorials/analysis#%E9%85%8D%E7%BD%AE%E6%8C%87%E6%A0%87%E5%B9%B6%E5%BC%80%E5%A7%8B%E6%94%B6%E9%9B%86%E6%95%B0%E6%8D%AE)
+
+- 如指标的事件类型是“自定义事件”，需要通过 SDK 提供的 `track` 函数上报事件数据，调用函数如下所示：
+
+  <Tabs groupId="language">
+     <TabItem value="java" label="Java" default>
+
+  ~~~java  title="src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java"
+  fpClient.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
+  ~~~
+
+    </TabItem>
+
+     <TabItem value="rust" label="Rust">
+
+  ~~~rust title="examples/demo.rs"
+  fpClient.track("YOUR_CUSTOM_EVENT_NAME", &user, Some(5.5));
+  ~~~
+
+    </TabItem>
+
+  </Tabs>
+
+  需要注意的是 `YOUR_CUSTOM_EVENT_NAME` 必须和指标中的 “事件名称” 保持一致。 
+
+  *目前仅 Java/Rust SDK 支持自定义事件的数据上报。*
+
+  
+
+- 如指标的事件类型是 “页面事件” 或 “点击事件”，请使用 JavaScript 和 React SDK 接入*（无须手工上报事件）*，并且检查指标中所设置 “目标页面URL” 和需要上报事件的页面 URL 是否匹配。其中 “点击事件” 还需要保证所设置“点击元素” 的 CSS 选择器和实际访问页面的元素的 path 是否匹配。
+
 
 
 
