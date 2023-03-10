@@ -158,11 +158,11 @@ Here are some common problems and solutions during the use of FeatureProbe.
 
 
 
-### 1.5 How to troubleshoot "You don't have any application listening for the X event on X switch in X environment"?
+### 1.5 How to troubleshoot "You don't have any application listening for the X event on X toggle in X environment"?
 
-- Please make sure that the test application displays "✅ SDK connection successful" first. If you receive a prompt saying "You don't have any application with successful SDK key connection", please follow the troubleshooting steps corresponding to section  [1.4](/introduction/faq#14-接入引导提示-您没有此-sdk-密钥连接成功的应用程序-该如何排查) first.
+- Please make sure that the test application displays "✅ SDK connection successful" first. If you receive a prompt saying "You don't have any application with successful SDK key connection", please follow the troubleshooting steps corresponding to section [1.4](/introduction/faq#14-how-to-solve-you-have-no-applications-connected-using-this-sdk-key-in-user-guidance-of-sdk-initialization) first.
 
-- Confirm that the collection of metric data is in the enabled state. For instructions on how to do this, please refer to the "[Configure Metrics and Start Collecting Data](/tutorials/analysis#%E9%85%8D%E7%BD%AE%E6%8C%87%E6%A0%87%E5%B9%B6%E5%BC%80%E5%A7%8B%E6%94%B6%E9%9B%86%E6%95%B0%E6%8D%AE)" section.
+- Confirm that the collection of metric data is in the enabled state. For instructions on how to do this, please refer to the "[Save metrics and start iteration](/tutorials/analysis#save-metrics-and-start-iteration)" section.
 
 - If the metric's event type is "custom event", you need to use the track function provided by the SDK to report event data. The function call is as follows:
 
