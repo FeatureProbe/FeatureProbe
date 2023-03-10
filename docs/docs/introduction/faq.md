@@ -158,7 +158,7 @@ Here are some common problems and solutions during the use of FeatureProbe.
 
 
 
-### 1.5 How to troubleshoot "You don't have any application listening for the X event on X toggle in X environment"?
+### 1.5 How to solve "You don't have any application listening for the X event on X toggle in X environment"?
 
 - Please make sure that the test application displays "✅ SDK connection successful" first. If you receive a prompt saying "You don't have any application with successful SDK key connection", please follow the troubleshooting steps corresponding to section [1.4](/introduction/faq#14-how-to-solve-you-have-no-applications-connected-using-this-sdk-key-in-user-guidance-of-sdk-initialization) first.
 
