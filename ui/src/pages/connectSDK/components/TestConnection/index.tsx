@@ -102,7 +102,7 @@ const TestConnection = (props: IProps) => {
       metricFaqUrl.current = 'https://docs.featureprobe.io/zh-CN/introduction/faq#15-%E6%8E%A5%E5%85%A5%E5%BC%95%E5%AF%BC%E6%8F%90%E7%A4%BA-%E6%82%A8%E6%B2%A1%E6%9C%89%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%AD%A3%E5%9C%A8-x-%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9B%91%E5%90%AC-x-%E5%BC%80%E5%85%B3%E7%9A%84-x-%E4%BA%8B%E4%BB%B6-%E8%AF%A5%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5';
     } else if(intl.locale === 'en-US') {
       faqUrl.current = 'https://docs.featureprobe.io/introduction/faq/#14-how-to-solve-you-have-no-applications-connected-using-this-sdk-key-in-user-guidance-of-sdk-initialization';
-      metricFaqUrl.current = 'https://docs.featureprobe.io/introduction/faq#15-%E6%8E%A5%E5%85%A5%E5%BC%95%E5%AF%BC%E6%8F%90%E7%A4%BA-%E6%82%A8%E6%B2%A1%E6%9C%89%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%AD%A3%E5%9C%A8-x-%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9B%91%E5%90%AC-x-%E5%BC%80%E5%85%B3%E7%9A%84-x-%E4%BA%8B%E4%BB%B6-%E8%AF%A5%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5';
+      metricFaqUrl.current = 'https://docs.featureprobe.io/introduction/faq/#15-how-to-solve-you-dont-have-any-application-listening-for-the-x-event-on-x-toggle-in-x-environment';
     }
   }, [intl]);
 
