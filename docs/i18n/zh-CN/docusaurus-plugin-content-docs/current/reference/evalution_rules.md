@@ -40,17 +40,17 @@ SDK 会遍历规则，直到找到与给定用户匹配的第一条规则。如�
 
 | **运算符** | **参数类型** | **命中条件** |
 | -------------------- | -------| --------------------------------------- |
-| is one of            | string | user属性值至少与其中一个值完全匹配    |
-| ends with            | string | user属性值至少是其中一个值的尾子句    |
-| starts with          | string | user属性值至少是其中一个值的首子句    |
-| contains             | string | user属性值至少是其中一个值的子句      |
-| matches regex        | string | user属性值至少与其中一个正则表达式匹配 |
-| is not any of        | string | user属性值不与其中任何一个值完全匹配   |
-| does not end with    | string | user属性值不是其中任何一个值的尾子句   |
-| does not start with  | string | user属性值不是其中任何一个值的首子句   |
-| does not contain     | string | user属性值不是其中任何一个值的子句     |
-| does not match regex | string | user属性值不与其中任何一个正则表达式匹配 |
-| is in                | segment | user在其中任意一个人群组中            |
+| is one of            | string | 至少与其中一个值与user属性值完全匹配    |
+| ends with            | string | 至少其中一个值是user属性值的尾子句    |
+| starts with          | string | 至少是其中一个值是user属性值的首子句    |
+| contains             | string | 至少是其中一个值是user属性值的子句       |
+| matches regex        | string | 至少与其中一个正则表达式与user属性值匹配 |
+| is not any of        | string | 任何一个值不与user属性值完全匹配   |
+| does not end with    | string | 所有值都不是user属性值尾子句   |
+| does not start with  | string | 所有值都不是user属性值首子句   |
+| does not contain     | string | 所有值都不是user属性值子句     |
+| does not match regex | string | 所有正则表达式都与user属性值不匹配 |
+| is in                | segment | user在其中任意一个人群组中       |
 | is not in            | segment | user不在所有人群组中                   |
 | after                | datetime | user属性值在这个日期之后或等于该日期 |
 | before               | datetime | user属性值在这个日期之前          |
@@ -99,7 +99,7 @@ SDK 会遍历规则，直到找到与给定用户匹配的第一条规则。如�
 
 1、将 FPUser 的 Key 值与开关的盐值连接，如果开关的盐值为 null，则使用开关的 Key 代替。
 
-2、使用 SHA1 散列算法对上一步得到的字符串进行散列，生成一个 40 位的散列字符串。
+2、使用 SHA1 散列算法对上一步得到的字符串进行散列，生成一个散列字符串。
 
 3、从散列字符串中取出后 4 位，并将其转换为十进制整数。
 

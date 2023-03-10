@@ -2,72 +2,72 @@
 sidebar_position: 5
 ---
 
-# 开关规则计算算法
+# Rule Evaluation
 
-## 概述
+## Overview
 
-本文档介绍用于开关规则计算的算法。
+This document introduces the algorithm used for feature flag rule calculation.
 
-## 规则计算
+## Rule calculation
 
-所有服务端SDK都需提供实现开关的规则计算。
+All server-side SDKs need to provide implementation of feature flag rule calculation.
 
-SDK的规则计算接口设计如下:
+The interface design for SDK's rule calculation is as follows:
 ```java
 private <T> T genericEvaluate(String toggleKey, FPUser user, T defaultValue)
 ```
 
-规则计算分为如下步骤：
+Rule calculation consists of the following steps:
 
-- [前置检查](#前置检查)：
-- [规则检查](#规则检查)：
+- [Pre-check](#Pre-check)：
+- [Rule-check](#Rule-check)：
 
-### 前置检查
+### Pre-check
 
-1、如果当前开关 Key 不存在，则返回函数中预设的默认值。
+1、If the current feature flag key does not exist, return the default value set in the function.
 
-2、如果开关处于未生效状态，则返回开关配置中预设的未生效分组值。
+2、If the feature flag is in an disabled state, return the preset disabled group value in the feature flag configuration.
 
-### 规则检查
+### Rule-check
 
-在FeatureProbe开关规则中，匹配规则是通过多个条件子句来匹配任意用户的。为了匹配规则，必须满足所有条件子句。
+1、In FeatureProbe feature flag rules, matching rules are matched to any user through multiple conditional clauses. To match the rule, all conditional clauses must be satisfied.
 
-SDK会遍历规则，直到找到与给定用户匹配的第一条规则。如果规则配置的分组索引，则直接返回对应的分组值、规则的索引、开关版本和命中原因。如果规则配置的是按比例推出，则按照[推出逻辑](#百分比推出)计算命中的分组，并返回对应的分组值、规则的索引、开关版本和命中原因。
+2、The SDK will iterate through the rules until it finds the first rule that matches the given user. If the rule is configured with a group index, it directly returns the corresponding group value, rule index, feature flag version, and hit reason. If the rule is configured to be rolled out by percentage, the hit group is calculated according to the [rollout logic](#Rollout), and the corresponding group value, rule index, feature flag version, and hit reason are returned.
 
-如果所有规则都未命中，则匹配默认规则。
+3、If none of the rules are hit, match the default rule.
 
-### 条件运算符
+### Conditional operators
 
-| **运算符** | **参数类型** | **命中条件** |
+| **Operators** | **Parameter types** | **Matching conditions** |
 | -------------------- | -------| --------------------------------------- |
-| is one of            | string | user属性值至少与其中一个值完全匹配    |
-| ends with            | string | user属性值至少是其中一个值的尾子句    |
-| starts with          | string | user属性值至少是其中一个值的首子句    |
-| contains             | string | user属性值至少是其中一个值的子句      |
-| matches regex        | string | user属性值至少与其中一个正则表达式匹配 |
-| is not any of        | string | user属性值不与其中任何一个值完全匹配   |
-| does not end with    | string | user属性值不是其中任何一个值的尾子句   |
-| does not start with  | string | user属性值不是其中任何一个值的首子句   |
-| does not contain     | string | user属性值不是其中任何一个值的子句     |
-| does not match regex | string | user属性值不与其中任何一个正则表达式匹配 |
-| is in                | segment | user在其中任意一个人群组中            |
-| is not in            | segment | user不在所有人群组中                   |
-| after                | datetime | user属性值在这个日期之后或等于该日期 |
-| before               | datetime | user属性值在这个日期之前          |
-| =                    | number/semver | 属性值至少等于其中一个值      |
-| !=                   | number/semver | 属性值与所有值不相等           |
-| >                    | number/semver | 属性值至少大其中一个值  |
-| >=                   | number/semver | 属性值至少大于等于其中一个值  |
-| <                    | number/semver | 属性值至少小于其中一个值  |
-| <=                   | number/semver | 属性值至少小于等于其中一个值 |
+| is one of            | string | The user attribute value exactly matches the clause value |
+| ends with            | string | The user attribute value ends with the clause value |
+| starts with          | string | The user attribute value starts with the clause value     |
+| contains             | string | The user attribute value contains the clause value   |
+| matches regex        | string | The user attribute value matches at least one regular expression |
+| is not any of        | string | The user attribute value not matches the clause value   |
+| does not end with    | string | The user attribute value not ends with the clause value   |
+| does not start with  | string | The user attribute value not starts with the clause value   |
+| does not contain     | string | The user attribute value not contains the clause value     |
+| does not match regex | string | The user attribute value not matches at least one regular expression |
+| is in                | segment | The user is at least in one of your segment  |
+| is not in            | segment | The user does not belong to any segment                  |
+| after                | datetime | The user attribute value of the user is after or equal to the given date |
+| before               | datetime | The user attribute value of the user is before the given date          |
+| =                    | number/semver |    least equal to one of  |
+| !=                   | number/semver |    not equal to all           |
+| >                    | number/semver |    least greater than one of  |
+| >=                   | number/semver |    least greater than or equal to one of |
+| <                    | number/semver |    least less than one of  |
+| <=                   | number/semver |    least less than or equal to one of |
 
-当规则条件的值类型为“segment”时，值列表是该 segment 的唯一键，通过该键可以获取到相应的 Segment 规则。与开关的规则匹配计算类似，只要当前的 FPUser 命中了该人群组中的任意一个规则，就认为该 FPUser 属于该人群组。如果该键不存在，则认为该 FPUser 未命中该人群组。
+When the value type of the rule condition is "segment", the value list is the unique key of that segment, and the corresponding segment rule can be obtained through this key. Similar to the feature flag rule matching calculation, as long as the current FPUser hits any rule in the population group, it is considered that the FPUser belongs to that population group. If the key does not exist, it is considered that the FPUser does not belong to that population group.
 
-### 百分比推出
+### Rollout
 
-开关规则可以配置分组按百分比推出。
+feature flag can be configured to push out groups by percentage.
 
-百分比规则格式如下：
+The format of percentage rules is as follows：
 ```json
 [
     [
@@ -91,21 +91,21 @@ SDK会遍历规则，直到找到与给定用户匹配的第一条规则。如�
 ]
 ```
 
-规则是由 0 到 10000 间的整数组成的 3 维数组。第一维数组的下标与分组的下标对应。第二维数组表示每个分组的权重。
+The rules are a 3-dimensional array consisting of integers between 0 and 10000. The index of the first dimension array corresponds to the index of the grouping. The second-dimensional array represents the weight of each group.
 
-为了进行分组匹配，我们只需要通过 FPUser 的 key 属性使用散列算法计算出一个 0 到 10000 间的整数值，然后查找该整数值在第二维数组中的位置，进而确定该 FPUser 命中的分组下标，即对应第一维数组的下标。
+To perform group matching, we only need to use the hash algorithm through the key property of FPUser to calculate an integer value between 0 and 10000, and then look up the position of the integer value in the second-dimensional array to determine the grouping index that the FPUser hits, that is, corresponding to the index of the first-dimensional array.
 
-***散列算法***
+***Hash algorithm***
 
-1、将 FPUser 的 Key 值与开关的盐值连接，如果开关的盐值为 null，则使用开关的 Key 代替。
+1、Concatenate the Key value of FPUser with the salt value of the feature flag. If the salt value of the feature flag is null, use the Key of the feature flag instead.
 
-2、使用 SHA1 散列算法对上一步得到的字符串进行散列，生成一个 40 位的散列字符串。
+2、The previous concatenated string with SHA1 hash algorithm resulting in a hash string.
 
-3、从散列字符串中取出后 4 位，并将其转换为十进制整数。
+3、Extract the last 4 characters from the hash string and convert it into a decimal integer.
 
-4、对上一步得到的整数进行取模操作，得到一个介于 0 到 10000 之间的整数，作为分组匹配的依据。
+4、Perform a modulo operation on the integer obtained in the previous step, resulting in an integer between 0 and 10000 that will serve as the basis for group matching.
 
-***参考代码(java):***
+***Reference (java):***
 ```java
 private int hash(String hashKey, String hashSalt, int bucketSize) {
     String value = hashKey + hashSalt;

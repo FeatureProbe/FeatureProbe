@@ -2,41 +2,40 @@
 sidebar_position: 4
 ---
 
-# SDK 贡献指南
+# SDK Contribution Guide
 
-## 概述
+## Overview
 
-本文档旨在介绍 FeatureProbe SDK 的工作原理，以帮助那些想要为 FeatureProbe 创建新的 SDK，或为现有 SDK 做出贡献的人。
-我们的所有 SDK 都是开源的，我们也欢迎社区成员为其做出贡献。
+This document aims to introduce the workings of the FeatureProbe SDK in order to assist those who wish to create new SDKs for FeatureProbe or contribute to existing ones. All of our SDKs are open-source, and we welcome contributions from members of the community.
 
-## 架构
+## Architecture
 
-所有SDK必须包含如下组件：
+All SDKs must include the following components:
 
- - [接收开关的变更](#接收开关的变更)
- - [评估开关的结果](#评估开关的结果)
- - [上报事件](#上报事件)
-
+ - [Receiving changes to feature flags](#Receiving changes to feature flags)
+ - [Evaluating feature flag results](#Evaluating feature flag results)
+ - [Track events](#Track events)
 
 
-## 接收开关的变更
 
-FeatureProbe SDK 将所有的开关都存储在内存中。目前提供两种不同的方式来对开关进行更新：异步轮询和长连接。对于已经支持长连接的SDK，默认会选择长连接的更新方式。异步轮询的更新实现是必须的，因为长连接实现依赖异步轮询来进行最后的兜底。
+## Receiving changes to feature flags
 
-在开关的存储方面，服务端SDK和客户端SDK有不同的实现。服务端SDK直接将开关规则存储在内存中。而客户端SDK由于数据安全性问题和用户相对固定，存储的是已经评估好的开关结果。
+The FeatureProbe SDK stores all feature flags in memory. Currently, two different methods are provided to update feature flags: asynchronous polling and streaming api. For SDKs that already support streaming api, streaming api is the default update method. The implementation of asynchronous polling is necessary because the streaming api implementation relies on asynchronous polling as a fallback.
 
-### 服务端SDK接收开关变更
+Regarding feature flag storage, server-side SDKs and client-side SDKs have different implementations. Server-side SDKs store feature flag rules directly in memory. On the other hand, client-side SDKs store the evaluated feature flag results due to data security concerns and the relatively stable nature of users.
 
-当我们通过FeatureProbe平台或者Open API对开关的配置做出变更时, 服务端SDK需要对内存中保存的开关规则进行更新。目前需提供如下两种实现：
+### Receiving changes to feature flags in server-side SDKs.
 
- 1、**通过异步轮询Server获取开关规则**
+When we make changes to the configuration of feature flags through the FeatureProbe platform or Open API, server-side SDKs need to update the feature flag rules stored in memory. Currently, the following two implementations need to be provided:
 
-Server获取开关配置API协议：
+ 1、**Getting feature flag rules through asynchronous polling**
+
+Protocol for the API used by the server to retrieve feature flag configurations：
 ```shell
 curl --location --request GET 'https://featureprobe.io/server/api/server-sdk/toggles' \
 --header 'Authorization: server-9e53c5db4fd75049a69df8881f3bc90edd58fb06'   
 ```
-响应协议示例:
+Example response protocol:
 ```json
 {
     "segments": {
@@ -116,39 +115,39 @@ curl --location --request GET 'https://featureprobe.io/server/api/server-sdk/tog
 }
 ```
 
-1、该API需要使用HTTP请求头将Authorization设置为${sdk_key}，以便在轮询API时进行身份验证。其中${sdk_key}是客户端应用程序传递给 FeatureProbe配置的Server SDK 密钥。
+1、This API requires setting the Authorization HTTP request header to ${sdk_key} to authenticate when polling the API. ${sdk_key} is the Server SDK key passed by the client application to FeatureProbe configuration.
 
-2、实现异步轮询机制，可以使用定时器或轮询库来定期发送HTTP请求以获取最新的开关规则，建议默认频率为5s。
+2、To implement asynchronous polling, a timer or polling library can be used to periodically send HTTP requests to retrieve the latest feature flag rules. The recommended default frequency is 5 seconds.
     
-3、将轮询API的请求地址（synchronizerUrl）和轮询频率（refreshInterval）作为配置项通过FPConfig提供给用户，使得用户可以自定义轮询频率和请求地址。
+3、The request address for the polling API (synchronizerUrl) and polling frequency (refreshInterval) should be provided to users as configuration options through FPConfig, so that users can customize the polling frequency and request address.
 
-***可供参考的代码[异步轮询Java实现](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/server/PollingSynchronizer.java)***
+***Reference [Java code for implementing asynchronous polling](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/server/PollingSynchronizer.java)***
 
- 2、**通过长链接获取开关变更事件然后主动触发获取开关规则**
+ 2、**Retrieve feature flags change events through streaming api**
 
-当对开关变更的延迟有更高的要求时，可以通过实现长连接更新方式来进行优化。下面是实现步骤：
+When there is a higher requirement for the latency of feature flags changes, optimization can be achieved by implementing the streaming api update method. The following are the implementation steps:
 
-1、首先需要实现异步轮询机制，以便作为长连接更新的备选方案。
+1、First, it is necessary to implement the asynchronous polling mechanism as an alternative solution for streaming api updates.
 
-2、需要引入[socket-io](https://github.com/socketio)客户端依赖到您的SDK中，并在SDK初始化时与FeatureProbe Server建立长连接。您可以在建立连接时发送一个“register”事件，并携带一个名为key值为${sdk_key}的参数，以便在后续的身份验证过程中进行验证。其中${sdk_key}是客户端应用程序传递给 FeatureProbe配置的Server SDK 密钥。
+2、To implement the streaming api mechanism, you will need to add the [socket-io](https://github.com/socketio) client dependency to your SDK and establish a long connection with the FeatureProbe Server during SDK initialization. You can send a "register" event with a parameter named key and a value of ${sdk_key} to verify the SDK's identity during the authentication process. Here, ${sdk_key} is the Server SDK key passed by the client application to the FeatureProbe configuration.
 
-3、监听名为“update”的事件，以便在开关配置发生更改时立即通知客户端主动通过轮询API拉取最新开关规则。
+3、Listen to the "update" event so that when the feature flags configuration changes, the client is immediately notified to proactively pull the latest switch rule through the polling API.
 
-4、最后需要将长连接的地址（realtimeUri）通过FPConfig暴露给用户，以方便自定义配置。
+4、Finally, the address of the streaming api (realtimeUri) needs to be exposed to users through FPConfig to facilitate custom configuration.
 
-***可供参考的代码[长链接Java实现](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/server/StreamingSynchronizer.java)***
+***Reference [Java code for implementing streaming api](https://github.com/FeatureProbe/server-sdk-java/blob/main/src/main/java/com/featureprobe/sdk/server/StreamingSynchronizer.java)***
 
-### 客户端SDK接收开关变更
+### Client SDK receives feature flags change
 
-当我们通过FeatureProbe 平台或者Open API对开关的配置做出变更或添加新的page_view或Click事件指标时, 客户端SDK需要更新内存中的开关对于的结果和事件集。目前需提供如下两种实现：
+When we make changes to the feature flags configuration or add new page_view or click event metric through the FeatureProbe platform or Open API, the client SDK needs to update the results and event sets of the corresponding  feature flags in memory. Currently, the following two implementations need to be provided:
 
- 1、**通过异步轮询Server获取开关配置API**
-Server获取开关结果API协议：
+ 1、**Getting feature flag result through asynchronous polling**
+Protocol for the API used by the server to retrieve feature flag result:
 ```shell
 curl --location --request GET 'http://featureprobe-df.intra.xiaojukeji.com/server/api/client-sdk/toggles?user=eyJrZXkiOiIxNjc4MjYyODkzODk2IiwiYXR0cnMiOnt9fQ%3D%3D' \
 --header 'Authorization: client-48e0f6f34baef833e1e10df90615b957b1739fb5' 
 ```
-响应协议示例:
+Example response protocol:
 ```json
 {
     "toggle_key": {
@@ -163,58 +162,57 @@ curl --location --request GET 'http://featureprobe-df.intra.xiaojukeji.com/serve
 }
 ```
 
-1、该API需要使用HTTP请求头将Authorization设置为${sdk_key}，以便在轮询API时进行身份验证。其中${sdk_key}是客户端应用程序传递给 FeatureProbe配置的Client SDK 密钥。
+1、This API requires setting the Authorization HTTP request header to ${sdk_key} for authentication during polling API. ${sdk_key} is the Client SDK key passed by the client application to FeatureProbe configuration.
 
-2、还需要使用HTTP请求参数将user设置为${FPUser}，参数值为将FPUser对象Json序列化后进行Base64编码的字符串。
+2、Additionally, the API requires setting the user parameter in the HTTP request as ${FPUser}, with its value being the Base64-encoded string obtained from serializing the FPUser object to a JSON format.
 
-3、实现异步轮询机制，可以使用定时器或轮询库来定期发送HTTP请求以获取最新的开关规则，建议默认频率为5s。
+3、To implement the asynchronous polling mechanism, you can use a timer or a polling library to periodically send HTTP requests to obtain the latest feature flags result. It is recommended to set the default frequency to 5 seconds.
     
-4、将轮询API的请求地址（synchronizerUrl）和轮询频率（refreshInterval）作为配置项通过FPConfig提供给用户，使得用户可以自定义轮询频率和请求地址。
+4、Make the polling API's request address (synchronizerUrl) and polling frequency (refreshInterval) available as configuration options through FPConfig, so that users can customize the polling frequency and request address.
 
-***可供参考的代码[异步轮询Javascript实现](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#)中的fetchToggles()方法***
+***Reference [Javascript code for implementing asynchronous polling](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#) fetchToggles() method***
 
 
-2、**通过长链接获取开关变更事件然后主动触发轮询API**
+2、**Retrieve feature flags change events through streaming api**
 
-当对开关变更的延迟有更高的要求时，可以通过实现长连接更新方式来进行优化。下面是实现步骤：
+Here are the steps to implement streaming api for updating feature flag changes with high latency requirements:
 
-1、首先需要实现异步轮询机制，以便作为长连接更新的备选方案。
+1、First, implement asynchronous polling mechanism as an alternative solution for streaming api updates
 
-2、需要引入[socket-io](https://github.com/socketio)客户端依赖到您的SDK中，并在SDK初始化时与FeatureProbe Server建立长连接。您可以在建立连接时发送一个“register”事件，并携带一个名为key值为${sdk_key}的参数，以便在后续的身份验证过程中进行验证。其中${sdk_key}是客户端应用程序传递给 FeatureProbe配置的Client SDK 密钥。
+2、To implement the streaming api mechanism, you will need to add the [socket-io](https://github.com/socketio) client dependency to your SDK and establish a long connection with the FeatureProbe Server during SDK initialization. You can send a "register" event with a parameter named key and a value of ${sdk_key} to verify the SDK's identity during the authentication process. Here, ${sdk_key} is the Server SDK key passed by the client application to the FeatureProbe configuration.
 
-3、监听名为“update”的事件，以便在开关配置发生更改时立即通知客户端主动通过轮询API拉取最新开关规则。
+3、Listen to the "update" event so that when the feature flags configuration changes, the client is immediately notified to proactively pull the latest switch rule through the polling API.
 
-4、最后需要将长连接的地址（realtimeUri）通过FPConfig暴露给用户，以方便自定义配置。
+4、Finally, the address of the streaming api (realtimeUri) needs to be exposed to users through FPConfig to facilitate custom configuration.
 
-***可供参考的代码[长链接Javascript实现#](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#)中的connectSocket()方法***
+***Reference [Javascript code for implementing streaming api](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#) connectSocket() method***
 
-## 评估开关的结果
+## Evaluating feature flag results
 
-服务端和客户端SDK在开关结果评估的方式上不一致。
+When the server-side and client-side SDKs have inconsistencies in the way they evaluate feature flag results.
 
-### 服务端SDK评估开关结果
+### Evaluating feature flag results for server-side SDK
 
-服务端SDK需要在本地内存实现对开关的规则计算，具体计算方法请阅读[开关规则评估](./evalution_rules)
+The server-side SDK needs to implement rule evaluation for feature flag in local memory. For specific calculation methods, please refer to the [Feature Flag Rule Evaluation](./evalution_rules).
 
-### 客户端SDK评估开关结果
+### Evaluating feature flag results for client-side SDK
 
-客户端SDK不用实现开关规则计算的逻辑，由FeatureProbe服务负责开关规则计算。所以对于客户端SDK在实现上述获取开关结果的
+The client-side SDK does not need to implement the logic of feature flag rule calculation, which is the responsibility of the FeatureProbe service. Therefore, for the client-side SDK, the implementation of obtaining feature flag results described above can be simplified.
 
-## 上报事件
+## Track events
 
-目前FeatureProbe提供4事件类型的上报：
+Currently, FeatureProbe provides 4 types of events for reporting:
 
-- **custom**: 当应用程序调用 SDK 的 track 方法时发送的事件。
-- **event**: 开关评估信息。
-- **page_view**: 对于Javascript SDK端记录页面访问事件。
-- **click**: 对于Javascript SDK端记录页面点击事件。
+- **custom**: Events sent when the application calls the SDK's track method.
+- **event**: Feature flag evaluation information。
+- **page_view**: Records page access events for the JavaScript SDK.
+- **click**: Records page click events for the JavaScript SDK.
 
-以及需要上报一段时间内开关各分组访问统计。
+And it is necessary to report the access statistics of each group's feature flag within a certain period of tim
 
-所有的 SDK 必须以异步的方式将一段时间内的事件批量发送给 FeatureProbe 服务器。SDK 需启用一个定时任务，默认每隔 5 秒执行一次，将这段时间内产生的事件一并发送给服务器。
+All SDKs must send events in batches to the FeatureProbe server asynchronously for a period of time. The SDKs need to enable a timer task, which is executed every 5 seconds by default, to send all events generated during this period to the server.
 
-上报事件API协议
-
+Protocol for the track events
 ```shell
 curl --location --request POST 'https://featureprobe.io/server/api/events' \
 --header 'Authorization: client-48e0f6f34baef833e1e10df90615b957b1739fb5' \
@@ -278,13 +276,13 @@ curl --location --request POST 'https://featureprobe.io/server/api/events' \
 ]'
 ```
 
-此 API 必须包含以下请求头：
+This API must include the following request headers:
 
-***Authorization***：值为 ${sdk_key}，其中 ${sdk_key} 是客户端应用程序传递给 FeatureProbe 配置的 Server(Client) SDK 密钥。
+***Authorization***：The value is ${sdk_key}, where ${sdk_key} is the Server(Client) SDK key passed by the client application to FeatureProbe configuration.
 
-***user-agent***：值为 ${sdk_language_kind}/${sdk_version}，其中 ${sdk_language_kind} 是 SDK 实现的语言名称，${sdk_version} 是当前 SDK 的版本号。
+***user-agent***：The value is ${sdk_language_kind}/${sdk_version}, where ${sdk_language_kind} is the language name of the SDK implementation, and ${sdk_version} is the version number of the current SDK.
 
-## 参考资料
+## Reference Materials.
 
- - 可供参考的服务端SDK实现: [Java SDK](https://github.com/FeatureProbe/server-sdk-java) 和 [接口文档](https://featureprobe.github.io/server-sdk-java/)
- - 可供参考的客户端SDK实现: [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js) 和 [接口文档](https://featureprobe.github.io/client-sdk-js/)
+ - Reference implementation of the server-side SDK: [Java SDK](https://github.com/FeatureProbe/server-sdk-java) and [API Docs](https://featureprobe.github.io/server-sdk-java/)
+ - Reference implementation of the client-side SDK: [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js) and [API Docs](https://featureprobe.github.io/client-sdk-js/)
