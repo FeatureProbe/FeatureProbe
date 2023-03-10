@@ -24,4 +24,7 @@ public class ToggleSegmentResponse {
     @Schema(description = "The description of the toggle.")
     private String description;
 
+    @Schema(description = "Toggle for whether metric analysis is in progress.")
+    private boolean analyzing;
+
 }
