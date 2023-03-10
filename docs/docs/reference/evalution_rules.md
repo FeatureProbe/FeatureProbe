@@ -19,8 +19,8 @@ private <T> T genericEvaluate(String toggleKey, FPUser user, T defaultValue)
 
 Rule calculation consists of the following steps:
 
-- [Pre-check](#Pre-check)：
-- [Rule-check](#Rule-check)：
+- [Pre-check](#pre-check)：
+- [Rule-check](#rule-check)：
 
 ### Pre-check
 
@@ -32,7 +32,7 @@ Rule calculation consists of the following steps:
 
 1、In FeatureProbe feature flag rules, matching rules are matched to any user through multiple conditional clauses. To match the rule, all conditional clauses must be satisfied.
 
-2、The SDK will iterate through the rules until it finds the first rule that matches the given user. If the rule is configured with a group index, it directly returns the corresponding group value, rule index, feature flag version, and hit reason. If the rule is configured to be rolled out by percentage, the hit group is calculated according to the [rollout logic](#Rollout), and the corresponding group value, rule index, feature flag version, and hit reason are returned.
+2、The SDK will iterate through the rules until it finds the first rule that matches the given user. If the rule is configured with a group index, it directly returns the corresponding group value, rule index, feature flag version, and hit reason. If the rule is configured to be rolled out by percentage, the hit group is calculated according to the [rollout logic](#rollout), and the corresponding group value, rule index, feature flag version, and hit reason are returned.
 
 3、If none of the rules are hit, match the default rule.
 

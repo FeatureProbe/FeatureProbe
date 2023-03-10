@@ -12,9 +12,9 @@ This document aims to introduce the workings of the FeatureProbe SDK in order to
 
 All SDKs must include the following components:
 
- - [Receiving changes to feature flags](#Receiving changes to feature flags)
- - [Evaluating feature flag results](#Evaluating feature flag results)
- - [Track events](#Track events)
+ - [Receiving changes to feature flags](#receiving-changes-to-feature-flags)
+ - [Evaluating feature flag results](#evaluating-feature-flag-results)
+ - [Track events](#track-events)
 
 
 
@@ -24,7 +24,7 @@ The FeatureProbe SDK stores all feature flags in memory. Currently, two differen
 
 Regarding feature flag storage, server-side SDKs and client-side SDKs have different implementations. Server-side SDKs store feature flag rules directly in memory. On the other hand, client-side SDKs store the evaluated feature flag results due to data security concerns and the relatively stable nature of users.
 
-### Receiving changes to feature flags in server-side SDKs.
+### Receiving changes to feature flags in server-side SDKs
 
 When we make changes to the configuration of feature flags through the FeatureProbe platform or Open API, server-side SDKs need to update the feature flag rules stored in memory. Currently, the following two implementations need to be provided:
 
