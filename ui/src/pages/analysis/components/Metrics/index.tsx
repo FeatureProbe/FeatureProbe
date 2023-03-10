@@ -589,7 +589,7 @@ const Metrics = (props: IProps) => {
                               />
                               { errors.url && <div className={styles['error-text-url']}>{ errors.url.message }</div> }
                               {
-                                metricUrl && (
+                                metricUrl && metricMatcher && (
                                   <CheckURL 
                                     metricUrl={metricUrl}
                                     popupOpen={popupOpen}
