@@ -22,6 +22,10 @@ This SDK is designed primarily for use in multi-user systems such as web servers
 For users who are using FeatureProbe for the first time, we strongly recommend that you return to this article to continue reading after reading the [Gradual Rollout Tutorial](../../tutorials/rollout_tutorial/).
 :::
 
+:::tip Notice
+For users who needs to use metric analysis, please upgrade JavaScript SDK to version [ 2.0.1 ](https://www.npmjs.com/package/featureprobe-server-sdk-node/v/2.0.1).
+:::
+
 ## Step-by-Step Guide
 
 Backend projects usually only need to instantiate a FeatureProbe SDK (Client).
@@ -81,6 +85,22 @@ Close the client before exiting to ensure accurate data reporting.
 await fp.close();
 ```
 
+## Track Events
+
+:::note
+The Node.js SDK supports event tracking from version 2.0.1.
+:::
+
+
+The event tracking feature can record the actions taken by the user in the application as events.
+
+Events are related to toggle's metrics. For more information about event analysis, please read [Event Analysis](../../tutorials/analysis).
+
+```java
+fp.track("YOUR_CUSTOM_EVENT_NAME", user);
+// Providing a metric value to track
+fp.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
+```
 
 ## Customize SDK
 
