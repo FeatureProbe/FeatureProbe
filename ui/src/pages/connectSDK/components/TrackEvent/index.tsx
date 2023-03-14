@@ -16,6 +16,7 @@ import {
   getObjCTrackCode,
   getJSTrackCode,
   getReactTrackCode,
+  getNodeTrackCode,
 } from '../../constants';
 
 import styles from '../../index.module.scss';
@@ -82,6 +83,15 @@ const SetupCode = (props: IProps) => {
           saveLanguage('rust');
           saveOptions(
             getRustTrackCode({
+              intl, 
+              eventName,
+            })
+          );
+          break;
+        case 'Node.js': 
+          saveLanguage('javascript');
+          saveOptions(
+            getNodeTrackCode({
               intl, 
               eventName,
             })

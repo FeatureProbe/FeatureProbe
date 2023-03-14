@@ -106,6 +106,7 @@ export const AVAILABLE_SDKS = [
   'Objective-C',
   'JavaScript',
   'React',
+  'Node.js',
 ];
 
 interface IOption {
@@ -353,6 +354,20 @@ const toggleValue = fpClient.${returnType}Value('${toggleKey}', user, ${returnTy
 `await fpClient.close();
 `
     }
+  ];
+};
+
+export const getNodeTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fpClient.track("${eventName}", user);
+// Providing a metric value to track
+fpClient.track("${eventName}", user, 5.5);
+`
+    },
   ];
 };
 
