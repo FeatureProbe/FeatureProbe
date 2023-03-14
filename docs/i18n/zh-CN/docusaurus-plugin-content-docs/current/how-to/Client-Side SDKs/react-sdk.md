@@ -299,8 +299,7 @@ const fp = useFPClient();
 
 // 上报自定义事件
 // 第一个参数是自定义事件名
-// 第二个参数是SDK初始化时创建的user对象的唯一key值
-// 第三个可选参数是自定义指标值
+// 第二个可选参数是自定义指标值
 // highlight-start
 fp.track('YOUR_CUSTOM_EVENT_NAME_1');
 fp.track('YOUR_CUSTOM_EVENT_NAME_2', 5.5);

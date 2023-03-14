@@ -11,12 +11,13 @@ import {
   getJavaTrackCode,
   getGoTrackCode,
   getRustTrackCode,
+  getNodeTrackCode,
   getAndroidTrackCode,
   getSwiftTrackCode,
   getObjCTrackCode,
   getJSTrackCode,
+  getMiniProgramTrackCode,
   getReactTrackCode,
-  getNodeTrackCode,
 } from '../../constants';
 
 import styles from '../../index.module.scss';
@@ -128,6 +129,15 @@ const SetupCode = (props: IProps) => {
           saveLanguage('javascript');
           saveOptions(
             getJSTrackCode({
+              intl, 
+              eventName,
+            })
+          );
+          break;
+        case 'Mini Program':
+          saveLanguage('javascript');
+          saveOptions(
+            getMiniProgramTrackCode({
               intl, 
               eventName,
             })
