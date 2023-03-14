@@ -62,7 +62,7 @@ Discover all the amazing things FeatureProbe can accomplish.
 ## 🔎 UI Snapshot
 
 * Toggle Management List
-![FeatureProbe screenshot](./pictures/toggles.png) 
+![FeatureProbe screenshot](./pictures/toggles_en.png) 
 
 * Target Setting
 ![targeting](./pictures/targeting_en.png)
@@ -70,6 +70,9 @@ Discover all the amazing things FeatureProbe can accomplish.
 * Traffic Monitor
 ![traffic](./docs/pictures/evaluations_en.png)
 
+* Metric Analysis
+![metric](./docs/pictures/metric_config_en.png)
+![metric](./docs/pictures/metric_en.png)
 
 # 🧩 Architecture of FeatureProbe
 
