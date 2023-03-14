@@ -9,12 +9,13 @@ import CopyToClipboardPopup from 'components/CopyToClipboard';
 import {
   SdkLanguage,
   getJavaTrackCode,
+  getGoTrackCode,
   getRustTrackCode,
   getAndroidTrackCode,
   getSwiftTrackCode,
   getObjCTrackCode,
   getJSTrackCode,
-  getReactTrackCode
+  getReactTrackCode,
 } from '../../constants';
 
 import styles from '../../index.module.scss';
@@ -63,6 +64,15 @@ const SetupCode = (props: IProps) => {
           saveLanguage('java');
           saveOptions(
             getJavaTrackCode({
+              intl, 
+              eventName,
+            })
+          );
+          break;
+        case 'Go':
+          saveLanguage('go');
+          saveOptions(
+            getGoTrackCode({
               intl, 
               eventName,
             })
