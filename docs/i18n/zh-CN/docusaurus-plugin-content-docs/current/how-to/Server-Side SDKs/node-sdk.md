@@ -6,6 +6,7 @@ sidebar_position: 4
 
 本文介绍如何在一个 Node.js 项目中使用 FeatureProbe SDK。
 
+
 :::note SDK quick links
 除了本参考指南外，我们还提供源代码、API 参考文档和示例应用程序，相关链接如下所示：
 
@@ -18,10 +19,12 @@ sidebar_position: 4
 
 :::
 
-
-
 :::tip
 对于首次使用 FeatureProbe 的用户，我们强烈建议你在阅读过[灰度放量教程](../../tutorials/rollout_tutorial/)之后，再回到这篇文章继续阅读。
+:::
+
+:::tip Notice
+Node.js SDK 从 [ 2.0.1 ](https://www.npmjs.com/package/featureprobe-server-sdk-node/v/2.0.1) 版本开始支持事件上报的能力。
 :::
 
 ## 接入业务代码
@@ -80,6 +83,21 @@ if (boolValue) {
 
 ```java
 await fp.close();
+```
+
+## 事件上报
+
+:::note
+Node.js SDK 从 2.0.1 版本开始支持事件上报的能力。
+:::
+
+事件跟踪功能可以将用户在应用程序中采取的操作记录为事件。
+可以在开关的指标中关联事件。更多指标分析相关的信息，请阅读[指标分析](../../tutorials/analysis)。
+
+```javascript
+fp.track("YOUR_CUSTOM_EVENT_NAME", user);
+// Providing a metric value to track
+fp.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
 ```
 
 ## 定制化开发本SDK

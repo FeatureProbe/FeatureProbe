@@ -1,5 +1,5 @@
 import { FormattedMessage } from 'react-intl';
-import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, COUNT, DURATION, REVENUE, POSITIVE, NEGATIVE, SIMPLE, EXACT, SUBSTRING, REGULAR } from '../constants';
+import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, DURATION, POSITIVE, NEGATIVE, SIMPLE, EXACT, SUBSTRING, REGULAR } from '../constants';
 
 const STYLE = {color: '#74788d', marginLeft: '4px'};
 
@@ -17,18 +17,18 @@ export function getMetricTypeOptions() {
         </span>
       )
     },
-    { 
-      key: COUNT, 
-      value: COUNT, 
-      text: (
-        <span>
-          <FormattedMessage id='analysis.event.count' />
-          <span style={STYLE}>
-            <FormattedMessage id='analysis.event.count.desc' />
-          </span>
-        </span>
-      )
-    },
+    // {
+    //   key: COUNT, 
+    //   value: COUNT, 
+    //   text: (
+    //     <span>
+    //       <FormattedMessage id='analysis.event.count' />
+    //       <span style={STYLE}>
+    //         <FormattedMessage id='analysis.event.count.desc' />
+    //       </span>
+    //     </span>
+    //   )
+    // },
     { 
       key: DURATION, 
       value: DURATION, 
@@ -41,18 +41,18 @@ export function getMetricTypeOptions() {
         </span>
       )
     },
-    { 
-      key: REVENUE, 
-      value: REVENUE, 
-      text: (
-        <span>
-          <FormattedMessage id='analysis.event.revenue' />
-          <span style={STYLE}>
-            <FormattedMessage id='analysis.event.revenue.desc' />
-          </span>
-        </span>
-      )
-    },
+    // { 
+    //   key: REVENUE, 
+    //   value: REVENUE, 
+    //   text: (
+    //     <span>
+    //       <FormattedMessage id='analysis.event.revenue' />
+    //       <span style={STYLE}>
+    //         <FormattedMessage id='analysis.event.revenue.desc' />
+    //       </span>
+    //     </span>
+    //   )
+    // },
   ];
 };
 
