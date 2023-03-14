@@ -9,6 +9,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.sql.PreparedStatement
 import java.text.DecimalFormat
+import kotlin.math.sqrt
 
 fun winningPercentage(
     distributions: Map<String, AbstractRealDistribution>,
@@ -62,6 +63,17 @@ fun binomialVariationStats(
             winningPercentage[it.key]
         )
     }.toMap()
+}
+
+fun posteriorGaussian(v0: GaussianParam, va: GaussianParam): GaussianParam {
+    val invVar0 = v0.sampleSize / (v0.stdDeviation * v0.stdDeviation)
+    val invVarD = va.sampleSize / (va.stdDeviation * va.stdDeviation)
+    val v = 1 / (invVar0 + invVarD)
+
+    val mu = v * (invVar0 * v0.mean + invVarD * va.mean)
+    val stdDeviation = 1 / sqrt (invVar0 + invVarD)
+
+    return GaussianParam(mu, stdDeviation, va.sampleSize)
 }
 
 fun gaussianVariationStats(
