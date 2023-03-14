@@ -85,6 +85,22 @@ if toggle {
 fpClient.Close();
 ```
 
+## 事件上报
+
+:::note
+Go SDK 从 2.0.1 版本开始支持事件上报的能力
+:::
+
+事件跟踪功能可以将用户在应用程序中采取的操作记录为事件。
+可以在开关的指标中关联事件。更多指标分析相关的信息，请阅读[指标分析](../../tutorials/analysis)。
+
+```go
+value := 99.9
+fpClient.track("YOUR_CUSTOM_EVENT_NAME", user, nil)
+// Providing a metric value to track
+fpClient.track("YOUR_CUSTOM_EVENT_NAME", user, &value)
+```
+
 ## 接入业务单元测试
 
 FeatureProbe SDK 提供了一套mock机制，可以在单元测试中指定FeatureProbe SDK的返回值。
