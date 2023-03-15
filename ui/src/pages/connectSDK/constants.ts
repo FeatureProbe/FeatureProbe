@@ -99,6 +99,7 @@ export const SDK_VERSION = new Map([
 
 export const AVAILABLE_SDKS = [
   'Java',
+  'Go',
   'Rust',
   'Android',
   'Swift',
@@ -276,6 +277,21 @@ ${returnType === 'boolean' ? `val := fp.BoolValue("${toggleKey}", user, true)` :
           `fp.Close();
 `
     }
+  ];
+};
+
+export const getGoTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`value := 5.5
+fp.track("${eventName}", user, nil)
+// Providing a metric value to track
+fp.track("${eventName}", user, &value)
+`
+    },
   ];
 };
 

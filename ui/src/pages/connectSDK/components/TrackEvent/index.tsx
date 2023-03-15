@@ -9,6 +9,7 @@ import CopyToClipboardPopup from 'components/CopyToClipboard';
 import {
   SdkLanguage,
   getJavaTrackCode,
+  getGoTrackCode,
   getRustTrackCode,
   getAndroidTrackCode,
   getSwiftTrackCode,
@@ -64,6 +65,15 @@ const SetupCode = (props: IProps) => {
           saveLanguage('java');
           saveOptions(
             getJavaTrackCode({
+              intl, 
+              eventName,
+            })
+          );
+          break;
+        case 'Go':
+          saveLanguage('go');
+          saveOptions(
+            getGoTrackCode({
               intl, 
               eventName,
             })
