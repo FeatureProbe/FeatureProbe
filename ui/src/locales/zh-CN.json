@@ -474,7 +474,7 @@
   "getstarted.react.fourth.step.title": "第四步：在App.js同级目录下创建home.js，并在home.js中引入withFPConsumer",
   "getstarted.track.event": "设置埋点上报",
   "getstarted.track.event.title": "添加以下代码，上报自定义事件",
-  "getstarted.track.event.support.sdk": "目前支持Java、Go、Rust、Node.js、JavaScript、Android、Swift、Objective-C、React SDK的自定义事件上报。",
+  "getstarted.track.event.support.sdk": "目前支持Java、Go、Rust、Node.js、JavaScript、Android、Swift、Objective-C、小程序、React SDK的自定义事件上报。",
   "getstarted.track.pageview": "页面",
   "getstarted.track.click": "点击",
 

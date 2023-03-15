@@ -101,12 +101,13 @@ export const AVAILABLE_SDKS = [
   'Java',
   'Go',
   'Rust',
+  'Node.js',
   'Android',
   'Swift',
   'Objective-C',
   'JavaScript',
+  'Mini Program',
   'React',
-  'Node.js',
 ];
 
 interface IOption {
@@ -632,6 +633,20 @@ const value = app.globalData.toggles[${toggleKey}].value;
 });
 `
     }
+  ];
+};
+
+export const getMiniProgramTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`featureProbeClient.track("${eventName}");
+// Providing a metric value to track
+featureProbeClient.track("${eventName}", 5.5);
+`
+    },
   ];
 };
 
