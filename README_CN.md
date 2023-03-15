@@ -37,13 +37,17 @@ FeatureProbe 是一个开源的 **『特性』管理** 服务。它包含灰度�
 ## 🔎 FeatureProbe功能预览
 
 * 开关管理
-![FeatureProbe screenshot](./pictures/toggles.png) 
+![FeatureProbe screenshot](./pictures/toggles_cn.png) 
 
 * 目标流量设置
 ![targeting](./pictures/targeting_cn.png)
 
 * 流量监测
-![traffic](./docs/pictures/evaluations_zh.png)
+![traffic](./docs/pictures/evaluations_cn.png)
+
+* 指标分析
+![metric](./docs/pictures/metric_config_cn.png)
+![metric](./docs/pictures/metric_cn.png)
 
 
 # 🧩 FeatureProbe的技术架构
