@@ -86,6 +86,24 @@ else:
     ...  # the code to run if the feature is off
 ```
 
+## Track Events
+
+:::note
+The Python SDK supports event tracking from version 2.0.1.
+:::
+
+The event tracking feature can record the actions taken by the user in the application as events.
+
+Events are related to toggle's metrics. For more information about event analysis, please read [Event Analysis](../../tutorials/analysis).
+
+```go
+fp.track("YOUR_CUSTOM_EVENT_NAME", user)
+// Providing a metric value to track
+fp.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5)
+```
+
+
+
 ## Customize SDK
 
 :::tip
