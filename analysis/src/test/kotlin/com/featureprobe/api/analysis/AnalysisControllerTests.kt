@@ -35,24 +35,29 @@ class AnalysisControllerTests {
     }
 
     @Test
-    fun testStoreEventsMysql() {
+    fun testStoreEvents() {
         testStoreEvents(mysql.jdbcUrl)
-        testStoreNullCustomEvents(mysql.jdbcUrl)
+        testStoreEvents(pg.jdbcUrl)
     }
 
     @Test
-    fun testStoreEventsPg() {
-        testStoreEvents(pg.jdbcUrl)
+    fun testStoreNullCustomEvents() {
+        testStoreNullCustomEvents(mysql.jdbcUrl)
         testStoreNullCustomEvents(pg.jdbcUrl)
     }
 
     @Test
-    fun testStoreEventExists() {
-        testStoreEvents(pg.jdbcUrl)
-        val service = AnalysisService(pg.jdbcUrl, "root", "root")
+    fun testEventExists() {
+        testStoreEventExist(mysql.jdbcUrl)
+        testStoreEventExist(pg.jdbcUrl)
+    }
 
-        assert(service.existsEvent("sdk_key", "testStoreClick"));
-        assert(!service.existsEvent("sdk_key", "testStoreClick_not_exists"));
+    fun testStoreEventExist(jdbcUrl: String) {
+        storeEvents(jdbcUrl)
+        val service = AnalysisService(jdbcUrl, "root", "root")
+
+        assert(service.existsEvent("sdk_key", "testStoreClickExist"));
+        assert(!service.existsEvent("sdk_key", "testStoreClickNotExist"));
     }
 
     fun testStoreEvents(jdbcUrl: String) {
@@ -63,8 +68,6 @@ class AnalysisControllerTests {
         val event1 = CustomEvent(1676273668, "user1", "testStoreClick", 1.0)
         val req = EventRequest(arrayListOf(access0, access1, event0, event1))
         val session = sessionOf(service.dataSource)
-
-        session.run(queryOf("BEGIN").asExecute)
 
         service.storeEvents(req, "sdk_key")
         val accessEventCount: List<Int> = session.run(
@@ -78,8 +81,13 @@ class AnalysisControllerTests {
 
         assert(accessEventCount == arrayListOf(2))
         assert(customEventCount == arrayListOf(2))
+    }
 
-        session.run(queryOf("ROLLBACK").asExecute)
+    fun storeEvents(jdbcUrl: String) {
+        val service = AnalysisService(jdbcUrl, "root", "root")
+        val event0 = CustomEvent(1676273668, "user0", "testStoreClickExist", 1.0)
+        val req = EventRequest(arrayListOf(event0))
+        service.storeEvents(req, "sdk_key")
     }
 
     fun testStoreNullCustomEvents(jdbcUrl: String) {
@@ -104,62 +112,38 @@ class AnalysisControllerTests {
     }
 
     @Test
-    fun testBinomialAnalysisMysql() {
+    fun testBinomialAnalysis() {
         testBinomialAnalysis(mysql.jdbcUrl)
-    }
-
-    @Test
-    fun testBinomialAnalysisPg() {
         testBinomialAnalysis(pg.jdbcUrl)
     }
 
     @Test
-    fun testVariationEmptyBinomialAnalysisMysql() {
+    fun testVariationEmptyBinomialAnalysis() {
         testVariationEmptyAnalysis(mysql.jdbcUrl, "binomial")
-    }
-
-    @Test
-    fun testVariationEmptyBinomialAnalysisPg() {
         testVariationEmptyAnalysis(pg.jdbcUrl, "binomial")
     }
 
     @Test
-    fun testEventEmptyBinomialAnalysisMysql() {
+    fun testEventEmptyBinomialAnalysis() {
         testEventEmptyAnalysis(mysql.jdbcUrl, "binomial")
-    }
-
-    @Test
-    fun testEventEmptyBinomialAnalysisPg() {
         testEventEmptyAnalysis(pg.jdbcUrl, "binomial")
     }
 
     @Test
-    fun testGaussianAnalysisMysql() {
-        testGaussianAnalysis(mysql.jdbcUrl)
+    fun testGaussianAnalysis() {
+        doTestGaussianAnalysis(mysql.jdbcUrl)
+        doTestGaussianAnalysis(pg.jdbcUrl)
     }
 
     @Test
-    fun testGaussianAnalysisPg() {
-        testGaussianAnalysis(pg.jdbcUrl)
-    }
-
-    @Test
-    fun testVariationEmptyGaussianAnalysisMysql() {
+    fun testVariationEmptyGaussianAnalysis() {
         testVariationEmptyAnalysis(mysql.jdbcUrl, "gaussian")
-    }
-
-    @Test
-    fun testVariationEmptyGaussianAnalysisPg() {
         testVariationEmptyAnalysis(pg.jdbcUrl, "gaussian")
     }
 
     @Test
-    fun testEventEmptyGaussianAnalysisMysql() {
+    fun testEventEmptyGaussianAnalysis() {
         testEventEmptyAnalysis(mysql.jdbcUrl, "gaussian")
-    }
-
-    @Test
-    fun testEventEmptyGaussianAnalysisPg() {
         testEventEmptyAnalysis(pg.jdbcUrl, "gaussian")
     }
 
@@ -205,24 +189,118 @@ class AnalysisControllerTests {
         Assert.assertTrue(result.get()!!.isEmpty())
     }
 
-    fun testGaussianAnalysis(jdbcUrl: String) {
+    fun doTestGaussianAnalysis(jdbcUrl: String) {
+        testGaussianAnalysisAVG(jdbcUrl)
+        testGaussianAnalysisCOUNT(jdbcUrl)
+        testGaussianAnalysisSUM(jdbcUrl)
+    }
+
+    fun testGaussianAnalysisAVG(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
         val start = 1676273660L
         val end = 1676273678L
 
-        val result =
-            service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian", start, end)
+        var result =
+            service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
+                start, end, true, NumeratorFn.AVG, Join.LEFT)
 
         Assert.assertNotNull(result.get())
-        Assert.assertEquals(4, result.get()!!["1"]?.sampleSize)
-        Assert.assertEquals(45.0, result.get()!!["1"]?.mean!!, 0.1)
-        Assert.assertEquals(44.72, result.get()!!["1"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(5, result.get()!!["1"]?.sampleSize)
+        Assert.assertEquals(37.0, result.get()!!["1"]?.mean!!, 0.1)
+        Assert.assertEquals(51.58, result.get()!!["1"]?.stdDeviation!!, 0.1)
         Assert.assertEquals(0.1, result.get()!!["1"]?.winningPercentage!!, 0.1)
 
         Assert.assertEquals(4, result.get()!!["2"]?.sampleSize)
-        Assert.assertEquals(125.0, result.get()!!["2"]?.mean!!, 0.1)
-        Assert.assertEquals(44.72, result.get()!!["1"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(126.25, result.get()!!["2"]?.mean!!, 0.1)
+        Assert.assertEquals(48.15, result.get()!!["2"]?.stdDeviation!!, 0.1)
         Assert.assertEquals(0.9, result.get()!!["2"]?.winningPercentage!!, 0.1)
+
+        result =
+            service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
+                start, end, true, NumeratorFn.AVG, Join.INNER)
+
+        Assert.assertNotNull(result.get())
+        Assert.assertEquals(4, result.get()!!["1"]?.sampleSize)
+        Assert.assertEquals(46.25, result.get()!!["1"]?.mean!!, 0.1)
+        Assert.assertEquals(48.15, result.get()!!["1"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(0.11, result.get()!!["1"]?.winningPercentage!!, 0.1)
+
+        Assert.assertEquals(4, result.get()!!["2"]?.sampleSize)
+        Assert.assertEquals(126.25, result.get()!!["2"]?.mean!!, 0.1)
+        Assert.assertEquals(48.15, result.get()!!["2"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(0.88, result.get()!!["2"]?.winningPercentage!!, 0.1)
+    }
+
+    fun testGaussianAnalysisCOUNT(jdbcUrl: String) {
+        val service = AnalysisService(jdbcUrl, "root", "root")
+        val start = 1676273660L
+        val end = 1676273678L
+
+        var result =
+            service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
+                start, end, true, NumeratorFn.COUNT, Join.LEFT)
+
+        Assert.assertNotNull(result.get())
+        Assert.assertEquals(5, result.get()!!["1"]?.sampleSize)
+        Assert.assertEquals(1.8, result.get()!!["1"]?.mean!!, 0.1)
+        Assert.assertEquals(1.248, result.get()!!["1"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(0.382, result.get()!!["1"]?.winningPercentage!!, 0.1)
+
+        Assert.assertEquals(4, result.get()!!["2"]?.sampleSize)
+        Assert.assertEquals(2.25, result.get()!!["2"]?.mean!!, 0.1)
+        Assert.assertEquals(0.866, result.get()!!["2"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(0.618, result.get()!!["2"]?.winningPercentage!!, 0.1)
+
+        result =
+            service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
+                start, end, true, NumeratorFn.COUNT, Join.INNER)
+
+        Assert.assertNotNull(result.get())
+        Assert.assertEquals(4, result.get()!!["1"]?.sampleSize)
+        Assert.assertEquals(2.25, result.get()!!["1"]?.mean!!, 0.1)
+        Assert.assertEquals(0.866, result.get()!!["1"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(0.506, result.get()!!["1"]?.winningPercentage!!, 0.1)
+
+        Assert.assertEquals(4, result.get()!!["2"]?.sampleSize)
+        Assert.assertEquals(2.25, result.get()!!["2"]?.mean!!, 0.1)
+        Assert.assertEquals(0.866, result.get()!!["2"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(0.494, result.get()!!["2"]?.winningPercentage!!, 0.1)
+    }
+
+    fun testGaussianAnalysisSUM(jdbcUrl: String) {
+        val service = AnalysisService(jdbcUrl, "root", "root")
+        val start = 1676273660L
+        val end = 1676273678L
+
+        var result =
+            service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
+                start, end, true, NumeratorFn.SUM, Join.LEFT)
+
+        Assert.assertNotNull(result.get())
+        Assert.assertEquals(5, result.get()!!["1"]?.sampleSize)
+        Assert.assertEquals(90.0, result.get()!!["1"]?.mean!!, 0.1)
+        Assert.assertEquals(164.012, result.get()!!["1"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(0.263, result.get()!!["1"]?.winningPercentage!!, 0.1)
+
+        Assert.assertEquals(4, result.get()!!["2"]?.sampleSize)
+        Assert.assertEquals(292.5, result.get()!!["2"]?.mean!!, 0.1)
+        Assert.assertEquals(223.774, result.get()!!["2"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(0.764, result.get()!!["2"]?.winningPercentage!!, 0.1)
+
+        result =
+            service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
+                start, end, true, NumeratorFn.SUM, Join.INNER)
+
+        Assert.assertNotNull(result.get())
+        Assert.assertEquals(4, result.get()!!["1"]?.sampleSize)
+        Assert.assertEquals(112.5, result.get()!!["1"]?.mean!!, 0.1)
+        Assert.assertEquals(157.718, result.get()!!["1"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(0.272, result.get()!!["1"]?.winningPercentage!!, 0.1)
+
+        Assert.assertEquals(4, result.get()!!["2"]?.sampleSize)
+        Assert.assertEquals(292.5, result.get()!!["2"]?.mean!!, 0.1)
+        Assert.assertEquals(223.774, result.get()!!["2"]?.stdDeviation!!, 0.1)
+        Assert.assertEquals(0.728, result.get()!!["2"]?.winningPercentage!!, 0.1)
     }
 
 }
