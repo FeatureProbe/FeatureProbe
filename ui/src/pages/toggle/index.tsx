@@ -13,7 +13,7 @@ import {
   CheckboxProps,
 } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { cloneDeep, debounce } from 'lodash';
+import { cloneDeep } from 'lodash';
 import ToggleItem from './components/ToggleItem';
 import ToggleDrawer from './components/ToggleDrawer';
 import ProjectLayout from 'layout/projectLayout';
