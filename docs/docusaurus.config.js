@@ -6,9 +6,9 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Feature Probe',
+  title: 'FeatureProbe',
   tagline: 'An open source feature management service',
-  url: 'https://featureprobe.github.io',
+  url: 'https://docs.featureprobe.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -49,6 +49,7 @@ const config = {
           showLastUpdateTime: true,
         },
         blog: {
+          blogSidebarCount: 'ALL',
           showReadingTime: true,
           editUrl: 'https://github.com/FeatureProbe/FeatureProbe/blob/main/docs',
           editLocalizedFiles: true,
@@ -111,6 +112,11 @@ const config = {
             label: 'Demo',
             position: 'right',
           },
+          {
+            type: 'search',
+            position: 'right',
+            className: 'abc',
+          },
         ],
       },
       footer: {
@@ -165,6 +171,11 @@ const config = {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
         additionalLanguages: ['java','rust','swift','objectivec','kotlin', 'nginx'],
+      },
+      algolia: {
+        appId: '9IORHFLQAF',
+        apiKey: 'e7716f20a6d9f16f2151380dfdbb33c4',
+        indexName: 'featureprobe',
       },
     }),
   themes: ['@docusaurus/theme-live-codeblock'],
