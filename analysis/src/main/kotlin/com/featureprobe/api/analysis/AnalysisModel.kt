@@ -1,5 +1,6 @@
 package com.featureprobe.api.analysis
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -13,9 +14,9 @@ const val METRIC_TABLE: String = "__metric"
 const val CONVERT_USER_TABLE: String = "__convertUser"
 const val CONVERT_COUNT_TABLE: String = "__convertCount"
 const val VARIATION_COUNT_TABLE: String = "__variationCount"
-const val METRIC_USER_MEAN_TABLE: String = "__metricUserMean"
+const val METRIC_USER_VALUE_TABLE: String = "__metricUserValue"
 const val VARIATION_MEAN_TABLE: String = "__variationMean"
-const val USER_MEAN_VARIATION_TABLE: String = "__userMeanVariation"
+const val USER_VALUE_VARIATION_TABLE: String = "__userValueVariation"
 const val METRIC_USER_TOTAL_MEAN_TABLE: String = "__userTotalMean"
 const val VARIATION_VARIANCE_TABLE: String = "__variationVariance"
 const val VARIATION_STD_DEVIATION_TABLE: String = "__variationStdDeviation"
@@ -29,7 +30,7 @@ const val INSERT_EVENT_SQL =
 VALUES (?, ?, ?, ?, ?);"""
 
 const val EXISTS_EVENT_SQL =
-    """SELECT COUNT(1) FROM EVENTS WHERE sdk_key = ? AND name = ?;"""
+    """SELECT *, 1 as count FROM events WHERE sdk_key = ? AND name = ? LIMIT 1;"""
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -123,3 +124,14 @@ data class ChartProperty(val min: Double, val max: Double, val step: Double)
 
 // Default is no information Prior value
 data class GaussianParam(val mean: Double = 0.0, val stdDeviation: Double = 1.0, val sampleSize: Int = 0)
+
+enum class NumeratorFn {
+    AVG,
+    SUM,
+    COUNT
+}
+
+enum class Join {
+    LEFT,
+    INNER
+}
