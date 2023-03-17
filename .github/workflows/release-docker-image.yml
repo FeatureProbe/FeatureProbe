@@ -273,7 +273,7 @@ jobs:
         working-directory: ./server
 
   release_featureprobe:
-    name: Release API
+    name: Release FeatureProbe
     if: ${{ github.event_name == 'release' || (inputs.build_select == 'featureprobe' || inputs.build_select == 'all') }}
     runs-on: ubuntu-latest
     steps:
