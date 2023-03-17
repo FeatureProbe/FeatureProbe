@@ -286,7 +286,7 @@ jobs:
           override: true
 
       - name: Build Server
-        run: rustup target add x86_64-unknown-linux-musl && cargo build --release --verbose
+        run: rustup target add x86_64-unknown-linux-musl && cargo build --target x86_64-unknown-linux-musl --release
         working-directory: ./server
 
       - name: Set up JDK 11
