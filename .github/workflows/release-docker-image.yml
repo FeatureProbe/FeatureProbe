@@ -327,7 +327,7 @@ jobs:
             --output "type=image,push=true" \
             --tag featureprobe/featureprobe:latest \
             --tag featureprobe/featureprobe:${GITHUB_REF#refs/tags/} \
-            --file server/Dockerfile .
+            --file ./Dockerfile .
         working-directory: ./
     
       - name: Docker Build FeatureProbe (manual)
@@ -338,8 +338,8 @@ jobs:
             --platform linux/amd64 \
             --output "type=image,push=true" \
             --tag featureprobe/featureprobe:latest \
-            --tag featureprobe/featureprobe:${GITHUB_REF#refs/tags/} \
-            --file server/Dockerfile .
+            --tag featureprobe/featureprobe:$DOCKER_TAG \
+            --file ./Dockerfile .
         env:
           DOCKER_TAG: ${{ inputs.tag }}
         working-directory: ./
