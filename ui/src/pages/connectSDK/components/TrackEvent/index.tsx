@@ -18,6 +18,7 @@ import {
   getJSTrackCode,
   getMiniProgramTrackCode,
   getReactTrackCode,
+  getPythonTrackCode,
 } from '../../constants';
 
 import styles from '../../index.module.scss';
@@ -75,6 +76,15 @@ const SetupCode = (props: IProps) => {
           saveLanguage('go');
           saveOptions(
             getGoTrackCode({
+              intl, 
+              eventName,
+            })
+          );
+          break;
+        case 'Python':
+          saveLanguage('python');
+          saveOptions(
+            getPythonTrackCode({
               intl, 
               eventName,
             })
