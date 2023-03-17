@@ -284,11 +284,7 @@ jobs:
         with:
           toolchain: nightly
           override: true
-
-      - name: Build Server
-        run: rustup target add x86_64-unknown-linux-musl && cargo build --target x86_64-unknown-linux-musl --release
-        working-directory: ./server
-
+      
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
