@@ -1,4 +1,4 @@
-# Rust 编译阶段
+# Rust compile
 FROM rust:1.64.0 as rust-builder
 WORKDIR /workspace
 
@@ -10,7 +10,7 @@ WORKDIR /workspace/server
 RUN rustc -V
 RUN cargo build --release --verbose
 
-# Java 编译阶段
+# Java compile
 FROM maven:3.8.3-openjdk-11 AS java-builder
 WORKDIR /workspace
 COPY api ./api
@@ -20,7 +20,7 @@ COPY analysis ./analysis
 RUN mvn -B package --file ./analysis/pom.xml
 
 
-# 最终镜像
+# FeatureProbe All
 FROM debian:buster-slim
 RUN apt-get update && \
     apt-get install -y openjdk-11-jre-headless curl && \
