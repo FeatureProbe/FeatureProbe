@@ -1,10 +1,6 @@
 # Rust compile
 FROM rust:1.64.0 as rust-builder
 WORKDIR /workspace
-
-COPY server/Cargo.toml server/Cargo.lock server/build.rs ./
-RUN mkdir -p src && echo "fn main() {}" > src/main.rs && echo "" > src/lib.rs && cargo build --release
-RUN rm -rf src target/release/.fingerprint/server-*
 COPY ./ ./
 WORKDIR /workspace/server
 RUN rustc -V
