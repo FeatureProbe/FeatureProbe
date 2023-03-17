@@ -87,8 +87,8 @@ The overall architecture of FeatureProbe is shown in the following figure
 * FeatureProbe [Server](https://github.com/FeatureProbe/FeatureProbe/tree/main/server)
 
 * SDKs
-   * Client-Side SDKs
-   * Server-Side SDKs
+   * [Client-Side SDKs](#client-side-sdk)
+   * [Server-Side SDKs](#server-side-sdk)
 
 
 # 🍭 Get Started in 2 Steps
@@ -116,6 +116,8 @@ The overall architecture of FeatureProbe is shown in the following figure
 Import FeatureProbe SDK in your app, and check the Feature Toggle status in your code like the following pseudo-code:
 
 ~~~ java
+FPUser user = new FPUser("user_id", "user_name", "user_email");
+
 if (fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)) {
   // Do some new thing;
 } else {
@@ -125,7 +127,7 @@ if (fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)) {
 
 We have SDKs for the following program languages, choose one for your application.
 
-### 💻 **Server Side SDK**
+### <a name="server-side-sdk"></a> 💻 **Server Side SDK**
 
 * [Java SDK](https://github.com/FeatureProbe/server-sdk-java)
 * [Rust SDK](https://github.com/FeatureProbe/server-sdk-rust)
@@ -133,7 +135,8 @@ We have SDKs for the following program languages, choose one for your applicatio
 * [Python SDK](https://github.com/FeatureProbe/server-sdk-python) by [@HeZean](https://github.com/HeZean)
 * [Node.js SDK](https://github.com/FeatureProbe/server-sdk-node) by [@HeZean](https://github.com/HeZean)
 
-### 📲 **Client Side SDK**
+
+### <a name="client-side-sdk"></a> 📲 **Client Side SDK**
 
 * [Javascript SDK](https://github.com/FeatureProbe/client-sdk-js)
 * [Android SDK](https://github.com/FeatureProbe/client-sdk-mobile)
