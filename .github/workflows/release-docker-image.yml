@@ -284,7 +284,7 @@ jobs:
         with:
           toolchain: nightly
           override: true
-      
+
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
@@ -323,11 +323,11 @@ jobs:
         run: |
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
-            --platform linux/amd64,linux/arm64 \
+            --platform linux/amd64 \
             --output "type=image,push=true" \
-            --tag featureprobe/featureprobe:${GITHUB_REF#refs/tags/} \
             --tag featureprobe/featureprobe:latest \
-            --file ./Dockerfile ./
+            --tag featureprobe/featureprobe:${GITHUB_REF#refs/tags/} \
+            --file server/Dockerfile .
         working-directory: ./
     
       - name: Docker Build FeatureProbe (manual)
@@ -335,11 +335,11 @@ jobs:
         run: |
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
-            --platform linux/amd64,linux/arm64 \
+            --platform linux/amd64 \
             --output "type=image,push=true" \
-            --tag featureprobe/featureprobe:$DOCKER_TAG \
             --tag featureprobe/featureprobe:latest \
-            --file ./Dockerfile ./
+            --tag featureprobe/featureprobe:${GITHUB_REF#refs/tags/} \
+            --file server/Dockerfile .
         env:
           DOCKER_TAG: ${{ inputs.tag }}
         working-directory: ./
