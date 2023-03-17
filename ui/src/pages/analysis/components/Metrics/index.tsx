@@ -47,9 +47,6 @@ const STEPS: Step[] = [
         <div className={styles['joyride-content']}>
           <FormattedMessage id='guide.connect.sdk.content' />
         </div>
-        <div className={styles['joyride-tips']}>
-          <FormattedMessage id="getstarted.track.event.support.sdk" />
-        </div>
       </div>
     ),
     placement: 'bottom',

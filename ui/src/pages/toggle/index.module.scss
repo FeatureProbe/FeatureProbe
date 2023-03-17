@@ -95,12 +95,13 @@
   bottom: 0;
   right: 0;
   z-index: 10;
+  display: inline-flex;
 }
 
 .filter-form {
   flex: 1;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
 
   :global .ui.dropdown > .text {
@@ -119,6 +120,7 @@
 .filter-form-right {
   display: flex;
   align-items: center;
+  margin-top: 20px;
 }
 
 .checkbox {
@@ -197,6 +199,7 @@
   right: 10px;
   color: #74788d;
   top: 8px;
+  appearance: unset !important;
   -webkit-appearance: unset !important;
 }
 
@@ -225,6 +228,7 @@
   padding: 0 1px;
   flex: 1 1;
   overflow-x: auto;
+  z-index: 1;
 }
 
 .archived-img {
@@ -268,7 +272,6 @@
   background: #556ee6;
   border-radius: 6px;
   color: #ffffff;
-  vertical-align: middle;
   text-align: center;
   line-height: 32px;
   margin-left: 4px;

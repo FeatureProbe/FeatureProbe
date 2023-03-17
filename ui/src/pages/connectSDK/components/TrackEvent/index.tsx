@@ -9,13 +9,16 @@ import CopyToClipboardPopup from 'components/CopyToClipboard';
 import {
   SdkLanguage,
   getJavaTrackCode,
+  getGoTrackCode,
   getRustTrackCode,
+  getNodeTrackCode,
   getAndroidTrackCode,
   getSwiftTrackCode,
   getObjCTrackCode,
   getJSTrackCode,
+  getMiniProgramTrackCode,
   getReactTrackCode,
-  getNodeTrackCode,
+  getPythonTrackCode,
 } from '../../constants';
 
 import styles from '../../index.module.scss';
@@ -64,6 +67,24 @@ const SetupCode = (props: IProps) => {
           saveLanguage('java');
           saveOptions(
             getJavaTrackCode({
+              intl, 
+              eventName,
+            })
+          );
+          break;
+        case 'Go':
+          saveLanguage('go');
+          saveOptions(
+            getGoTrackCode({
+              intl, 
+              eventName,
+            })
+          );
+          break;
+        case 'Python':
+          saveLanguage('python');
+          saveOptions(
+            getPythonTrackCode({
               intl, 
               eventName,
             })
@@ -118,6 +139,15 @@ const SetupCode = (props: IProps) => {
           saveLanguage('javascript');
           saveOptions(
             getJSTrackCode({
+              intl, 
+              eventName,
+            })
+          );
+          break;
+        case 'Mini Program':
+          saveLanguage('javascript');
+          saveOptions(
+            getMiniProgramTrackCode({
               intl, 
               eventName,
             })

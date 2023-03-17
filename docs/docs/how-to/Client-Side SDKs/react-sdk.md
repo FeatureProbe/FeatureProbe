@@ -303,8 +303,7 @@ const fp = useFPClient();
 
 // Send a custom event.
 // The first parameter is the event name,
-// the second parameter is the unique user key.
-// the third parameter is optional, it means a metric value to track
+// the second parameter is optional, it means a metric value to track
 // highlight-start
 fp.track('YOUR_CUSTOM_EVENT_NAME_1');
 fp.track('YOUR_CUSTOM_EVENT_NAME_2', 5.5);

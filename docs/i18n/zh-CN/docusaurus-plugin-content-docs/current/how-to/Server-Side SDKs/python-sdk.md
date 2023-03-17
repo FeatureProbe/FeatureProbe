@@ -84,6 +84,25 @@ else:
     ...  # the code to run if the feature is off
 ```
 
+
+
+## 事件上报
+
+:::note
+Python SDK 从 2.0.1 版本开始支持事件上报的能力。
+:::
+
+事件跟踪功能可以将用户在应用程序中采取的操作记录为事件。
+可以在开关的指标中关联事件。更多指标分析相关的信息，请阅读[指标分析](../../tutorials/analysis)。
+
+```java
+fp.track("YOUR_CUSTOM_EVENT_NAME", user);
+// Providing a metric value to track
+fp.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
+```
+
+
+
 ## 定制化开发本SDK
 
 :::tip

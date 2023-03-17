@@ -97,7 +97,7 @@ services:
       - MYSQL_DATABASE=feature_probe
       - MYSQL_TCP_PORT=13306
     volumes:
-      - ./init_scripts/db:/docker-entrypoint-initdb.d
+      - ./scripts/db:/docker-entrypoint-initdb.d
 
   redoc:
     image: redocly/redoc

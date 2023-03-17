@@ -8,6 +8,10 @@ sidebar_position: 4
 This SDK is only applicable to WeChat mini program, other mini programs including Alipay, Baidu, DingDing and TouTiao are preparing, will be released soon. To provide a better integration for use in mini program applications, MiniProgram SDK builds on JavaScript SDK. Much of the JavaScript SDK functionality is also available for the MiniProgram SDK to use. Please reference [JavaScript SDK](./javascript-sdk.md).
 :::
 
+:::tip Notice
+For users who needs to use metric analysis, please upgrade MiniProgram SDK to version [ 2.0.1 ](https://www.npmjs.com/package/featureprobe-client-sdk-miniprogram/v/2.0.1). From this version, we support sending custom events.
+:::
+
 :::note SDK quick links
 In addition to this reference guide, we provide source code, API reference documentation, and sample applications at the following links:
 
@@ -104,6 +108,28 @@ featureProbeClient.on("ready", function() {
   }
   const reason = featureProbeClient.boolDetail(/* toggleKey */, false);
   console.log(reason);
+})
+```
+
+## Track events
+
+:::note
+Mini Program SDK supports event tracking from version 2.0.1.
+:::
+
+### Track custom events
+After the SDK is ready, call the `track` api.
+
+
+```js
+featureProbeClient.on('ready', function() {
+  // Send a custom event.
+  // The first parameter is the event name,
+  // the second parameter is optional, it means a metric value to track
+  // highlight-start
+  featureProbeClient.track('YOUR_CUSTOM_EVENT_NAME_1');
+  featureProbeClient.track('YOUR_CUSTOM_EVENT_NAME_2', 5.5);
+  // highlight-end
 })
 ```
 

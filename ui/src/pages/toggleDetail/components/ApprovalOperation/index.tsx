@@ -59,7 +59,7 @@ const ApprovalOperation = (props: IProps) => {
 
   useEffect(() => {
     register('reason', { 
-      required: status !== 'PASS' && status !== 'CANCEL' && status !== 'PUBLISH', 
+      required: status === 'JUMP' || status === 'REJECT', 
     });
     register('isTrackEvent', {
       required: (status === 'JUMP' || status === 'PUBLISH') && allowEnableTrackEvents,
@@ -467,11 +467,11 @@ const ApprovalOperation = (props: IProps) => {
                 )
               }
               {
-                status !== 'PUBLISH' && (
+                status !== 'PUBLISH' && status !== 'REVOKE' && status !== 'CANCEL' && (
                   <>
                     <Form.Field>
                       <label>
-                        { (status !== 'PASS' && status !== 'CANCEL') && <span className={styles['label-required']}>*</span> }
+                        { (status !== 'PASS') && <span className={styles['label-required']}>*</span> }
                         { renderPlaceHolder() }:
                       </label>
                       

@@ -7,7 +7,7 @@ import SelectSDK from './components/SelectSDK';
 import SetupCode from './components/SetupCode';
 import TrackEvent from './components/TrackEvent';
 import TestConnection from './components/TestConnection';
-import { ToggleReturnType, SdkLanguage, SDK_VERSION, AVAILABLE_SDKS } from './constants';
+import { ToggleReturnType, SdkLanguage, SDK_VERSION } from './constants';
 import { saveDictionary, getFromDictionary } from 'services/dictionary';
 import { getSdkVersion } from 'services/misc';
 import { getToggleAccess, getToggleInfo, getToggleAttributes, getToggleTrackEvent } from 'services/toggle';
@@ -162,7 +162,7 @@ const ConnectSDK = () => {
   }, [currentSDK]);
 
   useEffect(() => {
-    if (AVAILABLE_SDKS.includes(currentSDK) && eventInfo?.eventType == CUSTOM) {
+    if (eventInfo?.eventType == CUSTOM) {
       saveTrackEvent(true);
     } else {
       saveTrackEvent(false);

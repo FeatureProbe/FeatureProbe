@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState, useCallback, useMemo } from 'react';
+import { SyntheticEvent, useEffect, useState, useCallback } from 'react';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 import { 
   Table, 
@@ -13,7 +13,7 @@ import {
   CheckboxProps,
 } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { cloneDeep, debounce } from 'lodash';
+import { cloneDeep } from 'lodash';
 import ToggleItem from './components/ToggleItem';
 import ToggleDrawer from './components/ToggleDrawer';
 import ProjectLayout from 'layout/projectLayout';
@@ -34,6 +34,7 @@ import { IToggle, IToggleList,  } from 'interfaces/toggle';
 import { IEnvironment, ITag, ITagOption } from 'interfaces/project';
 import { NOT_FOUND } from 'constants/httpCode';
 import { LAST_SEEN } from 'constants/dictionary_keys';
+import { evaluationOptions, permanentOptions, statusOptions } from './options';
 
 import styles from './index.module.scss';
 
@@ -48,7 +49,7 @@ interface ISearchParams {
   sortBy?: string;
   environmentKey: string;
   visitFilter?: string;
-  disabled?: number;
+  disabled?: boolean;
   tags?: string[];
   keyword?: string;
   archived?: boolean;
@@ -58,7 +59,8 @@ interface ISearchParams {
 }
 
 const Toggle = () => {
-  const { search } = useLocation();
+  const location = useLocation();
+  const search = new URLSearchParams(location.search);
   const { projectKey, environmentKey } = useParams<IParams>();
   const [ toggleList, setToggleList ] = useState<IToggle[]>([]);
   const [ pagination, setPagination ] = useState({
@@ -70,13 +72,20 @@ const Toggle = () => {
   const [ total, setTotal ] = useState<number>(0);
   const [ tagOptions, setTagsOptions ] = useState<ITagOption[]>([]);
   const [ searchParams, setSearchParams ] = useState<ISearchParams>({
-    pageIndex: 0,
+    pageIndex: Number(search.get('pageIndex')) ?? 0,
     pageSize: 10,
     environmentKey,
-    archived: search.indexOf('isArchived=true') > -1,
+    visitFilter: search.get('visitFilter') ?? '',
+    archived: search.get('archived') === 'true',
+    disabled: search.get('disabled') ? search.get('disabled') === 'true' : undefined,
+    permanent: search.get('permanent') ? search.get('permanent') === 'true' : undefined,
+    keyword: search.get('keyword') ?? '',
+    related: search.get('related') ? search.get('related') === 'true' : undefined,
+    tags: search.get('tags') ? search.get('tags')?.split(',') : undefined,
   });
+
   const [ archiveOpen, setArchiveOpen ] = useState<boolean>(false);
-  const [ isArchived, setArchived ] = useState<boolean>(search.indexOf('isArchived=true') > -1);
+  const [ isArchived, setArchived ] = useState<boolean>(search.get('archived') === 'true');
   const [ isLoading, saveIsLoading ] = useState<boolean>(true);
   const [ popupOpen, savePopupOpen ] = useState<boolean>(false);
   const [ releaseStatusList, saveReleaseStatusList ] = useState<string[]>([]);
@@ -181,56 +190,6 @@ const Toggle = () => {
     setIsAdd(true);
   }, []);
 
-  const evaluationOptions = useMemo(() => {
-    return [
-      { 
-        key: 'in last 7 days', 
-        value: 'IN_WEEK_VISITED', 
-        text: intl.formatMessage({id: 'toggles.filter.evaluated.last.seven.days'}) 
-      },
-      { 
-        key: 'not in last 7 days', 
-        value: 'OUT_WEEK_VISITED', 
-        text: intl.formatMessage({id: 'toggles.filter.evaluated.not.last.seven.days'}) 
-      },
-      { 
-        key: 'none', 
-        value: 'NOT_VISITED', 
-        text: intl.formatMessage({id: 'toggles.filter.evaluated.never'}) 
-      },
-    ];
-  }, [intl]);
-
-  const statusOptions = useMemo(() => {
-    return [
-      { 
-        key: 'enabled', 
-        value: false, 
-        text: intl.formatMessage({id: 'common.enabled.text'}) 
-      },
-      { 
-        key: 'disabled', 
-        value: true, 
-        text: intl.formatMessage({id: 'common.disabled.text'}) 
-      },
-    ];
-  }, [intl]);
-
-  const permanentOptions = useMemo(() => {
-    return [
-      { 
-        key: 'yes', 
-        value: true, 
-        text: intl.formatMessage({id: 'common.yes.text'}) 
-      },
-      { 
-        key: 'no', 
-        value: false, 
-        text: intl.formatMessage({id: 'common.no.text'}) 
-      },
-    ];
-  }, [intl]);
-
   const renderLabel = useCallback((label: DropdownItemProps) => {
     return ({
       content: label.text,
@@ -238,63 +197,81 @@ const Toggle = () => {
     });
   }, []);
 
+  const pushToHistory = useCallback((key: string, value: string) => {
+    const existSearchParams = new URLSearchParams(location.search);
+    if (value !== '') {
+      existSearchParams.set(key, value);
+    } else {
+      existSearchParams.delete(key);
+    }
+    history.push({ search: existSearchParams.toString() });
+  }, [history, location.search]);
+
+  // Change evaluated
   const handleEvaluationChange = useCallback((e: SyntheticEvent, data: DropdownProps) => {
     setSearchParams({
       ...searchParams,
       visitFilter: data.value as string
     });
-  }, [searchParams]);
+    pushToHistory('visitFilter', data.value as string);
+  }, [pushToHistory, searchParams]);
 
+  // Change status
   const handleStatusChange = useCallback((e: SyntheticEvent, data: DropdownProps) => {
     setSearchParams({
       ...searchParams,
-      disabled: data.value as number
+      disabled: data.value as boolean
     });
-  }, [searchParams]);
+    pushToHistory('disabled', data.value as string);
+  }, [pushToHistory, searchParams]);
 
+  // Change permanent
   const handlePermanentChange = useCallback((e: SyntheticEvent, data: DropdownProps) => {
     setSearchParams({
       ...searchParams,
       permanent: data.value as boolean
     });
-  }, [searchParams]);
+    pushToHistory('permanent', data.value as string);
+  }, [pushToHistory, searchParams]);
 
+  // Change pageIndex
   const handlePageChange = useCallback((e: SyntheticEvent, data: PaginationProps) => {
     setSearchParams({
       ...searchParams,
       pageIndex: Number(data.activePage) - 1
     });
-  }, [searchParams]);
+    pushToHistory('pageIndex', (Number(data.activePage) - 1) > 0 ? (Number(data.activePage) - 1).toString() : '');
+  }, [pushToHistory, searchParams]);
 
+  // Change tags
   const handleTagsChange = useCallback((e: SyntheticEvent, data: DropdownProps) => {
     setSearchParams({
       ...searchParams,
       tags: data.value as string[]
     });
-  }, [searchParams]);
+    pushToHistory('tags', (data.value as string[]).join(','));
+  }, [pushToHistory, searchParams]);
 
-  const handleSearch = debounce(useCallback((e: SyntheticEvent, data: InputOnChangeData) => {
+  // Change keyword
+  const handleSearch = useCallback((e: SyntheticEvent, data: InputOnChangeData) => {
     setSearchParams({
       ...searchParams,
       keyword: data.value as string
     });
-  }, [searchParams]), 300);
+    pushToHistory('keyword', data.value.toString());
+  }, [pushToHistory, searchParams]);
 
-  const refreshToggleList = useCallback(() => {
-    setSearchParams({
-      ...searchParams,
-      pageIndex: 0,
-    });
-  }, [searchParams]);
-
+  // Change archived toggles
   const handleSearchArchivedList = useCallback((archived: boolean) => {
     setSearchParams({
       ...searchParams,
       pageIndex: 0,
       archived,
     });
-  }, [searchParams]);
+    pushToHistory('archived', archived ? 'true' : '');
+  }, [pushToHistory, searchParams]);
 
+  // Change publishing status
   const handleChange = useCallback((status) => {
     if (releaseStatusList.includes(status)) {
       const index = releaseStatusList.indexOf(status);
@@ -306,6 +283,23 @@ const Toggle = () => {
     saveReleaseStatusList(cloneDeep(releaseStatusList));
   }, [releaseStatusList, saveReleaseStatusList]);
 
+  // Change related to me
+  const handleRelated = useCallback((detail: CheckboxProps) => {
+    setSearchParams((param) => {
+      return {
+        ...param,
+        related: detail.checked ?? false
+      };
+    });
+    pushToHistory('related', detail.checked ? 'true' : '');
+  }, [pushToHistory]);
+
+  const refreshToggleList = useCallback(() => {
+    setSearchParams({
+      ...searchParams,
+      pageIndex: 0,
+    });
+  }, [searchParams]);
 
 	return (
     <ProjectLayout>
@@ -313,11 +307,15 @@ const Toggle = () => {
         {
           isArchived && (
             <div className={styles.archive}>
-              {
-                i18n === 'en-US' 
-                  ? <img className={styles['archived-img']} src={require('images/archived-en.png')} alt='archived' />
-                  : <img className={styles['archived-img']} src={require('images/archived-zh.png')} alt='archived' />
-              }
+              <img 
+                alt='archived' 
+                className={styles['archived-img']} 
+                src={ 
+                  i18n === 'en-US' 
+                    ? require('images/archived-en.png') 
+                    : require('images/archived-zh.png')
+                } 
+              />
             </div>
           )
         }
@@ -385,7 +383,6 @@ const Toggle = () => {
                           <div className={styles['menu-item']} onClick={() => { 
                             document.body.click();
                             setArchived(false); 
-                            history.push(`/${projectKey}/${environmentKey}/toggles`);
                             handleSearchArchivedList(false);
                           }}>
                             <FormattedMessage id='toggles.menu.view.active.toggle' />
@@ -394,7 +391,6 @@ const Toggle = () => {
                           <div className={styles['menu-item']} onClick={() => { 
                             document.body.click();
                             setArchived(true); 
-                            history.push(`/${projectKey}/${environmentKey}/toggles?isArchived=true`);
                             handleSearchArchivedList(true);
                           }}>
                             <FormattedMessage id='toggles.menu.view.archive.toggle' />
@@ -418,14 +414,11 @@ const Toggle = () => {
                         floating
                         clearable
                         selectOnBlur={false}
+                        value={search.get('visitFilter') ?? ''}
                         className={styles['dropdown']}
                         placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
-                        options={evaluationOptions} 
-                        icon={
-                          searchParams.visitFilter
-                            ? <Icon customclass={styles['angle-down']} type='remove-circle' />
-                            : <Icon customclass={styles['angle-down']} type='angle-down' />
-                        }
+                        options={evaluationOptions()} 
+                        icon={<Icon customclass={styles['angle-down']} type={searchParams.visitFilter ? 'remove-circle' : 'angle-down'} />}
                         onChange={handleEvaluationChange}
                       />
                     </Form.Field>
@@ -439,14 +432,11 @@ const Toggle = () => {
                         floating
                         clearable
                         className={styles['status-dropdown']}
+                        value={search.get('disabled') ? search.get('disabled') === 'true' : ''}
                         selectOnBlur={false}
                         placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
-                        options={statusOptions} 
-                        icon={
-                          typeof searchParams.disabled === 'boolean'
-                            ? <Icon customclass={styles['angle-down']} type='remove-circle' />
-                            : <Icon customclass={styles['angle-down']} type='angle-down' />
-                        }
+                        options={statusOptions()}
+                        icon={<Icon customclass={styles['angle-down']} type={search.get('disabled') ? 'remove-circle' : 'angle-down'} />}
                         onChange={handleStatusChange}
                       />
                     </Form.Field>
@@ -463,14 +453,11 @@ const Toggle = () => {
                         selectOnBlur={false}
                         className={styles['dropdown']}
                         placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
-                        options={tagOptions} 
+                        options={tagOptions}
+                        value={search.get('tags') ? search.get('tags')?.split(',') : []}
                         renderLabel={renderLabel}
                         onChange={handleTagsChange}
-                        icon={
-                          searchParams.tags && searchParams.tags.length > 0
-                            ? <Icon customclass={styles['angle-down']} type='remove-circle' />
-                            : <Icon customclass={styles['angle-down']} type='angle-down' />
-                        }
+                        icon={<Icon customclass={styles['angle-down']} type={searchParams.tags && searchParams.tags.length > 0 ? 'remove-circle' : 'angle-down'} />}
                       />
                     </Form.Field>
                     <Form.Field className={styles['permanent-field']}>
@@ -485,12 +472,9 @@ const Toggle = () => {
                         className={styles['permanent-dropdown']}
                         selectOnBlur={false}
                         placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
-                        options={permanentOptions} 
-                        icon={
-                          typeof searchParams.permanent === 'boolean'
-                            ? <Icon customclass={styles['angle-down']} type='remove-circle' />
-                            : <Icon customclass={styles['angle-down']} type='angle-down' />
-                        }
+                        value={search.get('permanent') ? search.get('permanent') === 'true' : ''}
+                        options={permanentOptions()}
+                        icon={<Icon customclass={styles['angle-down']} type={typeof searchParams.permanent === 'boolean' ? 'remove-circle' : 'angle-down'} />}
                         onChange={handlePermanentChange}
                       />
                     </Form.Field>
@@ -500,6 +484,7 @@ const Toggle = () => {
                       <Form.Input 
                         placeholder={intl.formatMessage({id: 'toggles.filter.search.placeholder'})} 
                         icon={<Icon customclass={styles['icon-search']} type='search' />}
+                        value={search.get('keyword') ?? ''}
                         onChange={handleSearch}
                       />
                     </Form.Field>
@@ -507,13 +492,9 @@ const Toggle = () => {
                       <Checkbox
                         className={styles.checkbox}
                         onChange={(e, detail: CheckboxProps) => {
-                          setSearchParams((param) => {
-                            return {
-                              ...param,
-                              related: detail.checked ?? false
-                            };
-                          });
-                        }} 
+                          handleRelated(detail);
+                        }}
+                        checked={search.get('related') ? search.get('related') === 'true' : false}
                         label={intl.formatMessage({id: 'toggles.filter.related.me'})} 
                       />
                       <Popup

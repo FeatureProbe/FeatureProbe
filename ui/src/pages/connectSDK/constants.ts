@@ -97,17 +97,6 @@ export const SDK_VERSION = new Map([
   ['Android', 'android_sdk_version'],
 ]);
 
-export const AVAILABLE_SDKS = [
-  'Java',
-  'Rust',
-  'Android',
-  'Swift',
-  'Objective-C',
-  'JavaScript',
-  'React',
-  'Node.js',
-];
-
 interface IOption {
   intl: IntlShape;
   returnType: ToggleReturnType;
@@ -279,6 +268,21 @@ ${returnType === 'boolean' ? `val := fp.BoolValue("${toggleKey}", user, true)` :
   ];
 };
 
+export const getGoTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`value := 5.5
+fp.track("${eventName}", user, nil)
+// Providing a metric value to track
+fp.track("${eventName}", user, &value)
+`
+    },
+  ];
+};
+
 export const getPythonCode = (options: IOption) => {
   const { intl, serverSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
 
@@ -301,6 +305,20 @@ if __name__ == '__main__':
     val = client.value('${toggleKey}', user, default=${returnType === 'boolean' ? 'False' : ''}${returnType === 'string' ? '\'not connected\'' : ''}${returnType === 'number' ? '-1' : ''}${returnType === 'json' ? '{}' : ''})  
 `
     }
+  ];
+};
+
+export const getPythonTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fp.track("${eventName}", user)
+// Providing a metric value to track
+fp.track("${eventName}", user, 5.5)
+`
+    },
   ];
 };
 
@@ -616,6 +634,20 @@ const value = app.globalData.toggles[${toggleKey}].value;
 });
 `
     }
+  ];
+};
+
+export const getMiniProgramTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`featureProbeClient.track("${eventName}");
+// Providing a metric value to track
+featureProbeClient.track("${eventName}", 5.5);
+`
+    },
   ];
 };
 

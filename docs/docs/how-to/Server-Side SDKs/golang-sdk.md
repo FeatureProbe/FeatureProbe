@@ -89,6 +89,24 @@ fpClient.Close();
 ```
 
 
+## Track Events
+
+:::note
+The Go SDK supports event tracking from version 2.0.1.
+:::
+
+The event tracking feature can record the actions taken by the user in the application as events.
+
+Events are related to toggle's metrics. For more information about event analysis, please read [Event Analysis](../../tutorials/analysis).
+
+```go
+value := 99.9
+fpClient.track("YOUR_CUSTOM_EVENT_NAME", user, nil)
+// Providing a metric value to track
+fpClient.track("YOUR_CUSTOM_EVENT_NAME", user, &value)
+```
+
+
 ## Unit Testing
 
 FeatureProbe SDK provides a set of mock mechanism, which can specify the return value of FeatureProbe SDK in unit test.
