@@ -97,19 +97,6 @@ export const SDK_VERSION = new Map([
   ['Android', 'android_sdk_version'],
 ]);
 
-export const AVAILABLE_SDKS = [
-  'Java',
-  'Go',
-  'Rust',
-  'Node.js',
-  'Android',
-  'Swift',
-  'Objective-C',
-  'JavaScript',
-  'Mini Program',
-  'React',
-];
-
 interface IOption {
   intl: IntlShape;
   returnType: ToggleReturnType;
@@ -318,6 +305,20 @@ if __name__ == '__main__':
     val = client.value('${toggleKey}', user, default=${returnType === 'boolean' ? 'False' : ''}${returnType === 'string' ? '\'not connected\'' : ''}${returnType === 'number' ? '-1' : ''}${returnType === 'json' ? '{}' : ''})  
 `
     }
+  ];
+};
+
+export const getPythonTrackCode = (options: ITrackOption) => {
+  const { intl, eventName } = options;
+  return [
+    {
+      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
+      code:
+`fp.track("${eventName}", user)
+// Providing a metric value to track
+fp.track("${eventName}", user, 5.5)
+`
+    },
   ];
 };
 
