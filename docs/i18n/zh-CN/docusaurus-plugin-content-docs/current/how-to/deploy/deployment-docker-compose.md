@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-# All-in-One 部署
+# Docker Compose 部署
 
-> 本文档介绍如何 All-in-One 部署 FeatureProbe 服务。
+> 本文档介绍如何Docker Compose部署 FeatureProbe 服务。
 
 ## 环境准备
 
@@ -13,7 +13,7 @@ sidebar_position: 1
 
 ## 部署
 
-使用 docker-compose快速在 Linux/Unix/Mac 上运行。
+使用 docker-compose 快速在 Linux/Unix/Mac 上运行。
 
 **操作步骤：**
 
