@@ -13,6 +13,15 @@ import kotlin.math.sqrt
 
 // rename type String to VariationName
 typealias VariationName = String
+
+/**
+ * Calculate the winning probability of each variation.
+ *
+ * @param variations a map of variation name to distribution
+ * @param sampleSize the number of samples to take
+ * @param positiveWin whether the higher value is the winning value
+ * @return a map of variation name to winning probability
+ */
 fun calculateWinningProbability(
     variations: Map<VariationName, AbstractRealDistribution>,
     sampleSize: Int,
