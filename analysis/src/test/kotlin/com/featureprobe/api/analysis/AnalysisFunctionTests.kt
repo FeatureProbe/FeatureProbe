@@ -51,6 +51,20 @@ class AnalysisFunctionKtTests{
         assertEquals(0.0, wp["v1"]!!, 0.001)
     }
 
+    // test calculateWinningProbability with positiveWin = false
+    @Test
+    fun testWinningProbabilityWithPositiveWinFalse() {
+        val d1 = ConstantRealDistribution(0.0)
+        val d2 = ConstantRealDistribution(1.0)
+        val wp = calculateWinningProbability(
+            mapOf("v1" to d1, "v2" to d2),
+            1000,
+            false
+        )
+
+        assertTrue(wp["v1"]!! > wp["v2"]!!)
+    }
+
     @Test
     fun testWinningProbabilityWithLessThan2Variations() {
         val wp0 = calculateWinningProbability(
