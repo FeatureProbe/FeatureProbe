@@ -86,10 +86,10 @@ fun posteriorGaussian(v0: GaussianParam, va: GaussianParam): GaussianParam {
 }
 
 fun gaussianVariationStats(
-    distributionInfos: Map<String, GaussianDistributionInfo>,
+    distributionInfos: Map<VariationName, GaussianDistributionInfo>,
     iterationCount: Int,
     positiveWin: Boolean
-): Map<String, VariationProperty> {
+): Map<VariationName, VariationProperty> {
     val distributions = distributionInfos.map { it.key to it.value.distribution }.toMap()
     val chartProperty = chartProperty(distributions, false)
     val winningProbability = calculateWinningProbability(distributions, iterationCount, positiveWin)
