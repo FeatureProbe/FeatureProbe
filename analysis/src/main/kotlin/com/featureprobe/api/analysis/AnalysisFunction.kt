@@ -11,44 +11,53 @@ import java.sql.PreparedStatement
 import java.text.DecimalFormat
 import kotlin.math.sqrt
 
-fun winningPercentage(
-    distributions: Map<String, AbstractRealDistribution>,
-    iteration: Int,
+// rename type String to VariationName
+typealias VariationName = String
+
+/**
+ * Calculate the winning probability of each variation.
+ *
+ * @param variations a map of variation name to distribution
+ * @param sampleSize the number of samples to take
+ * @param positiveWin whether the higher value is the winning value
+ * @return a map of variation name to winning probability
+ */
+fun calculateWinningProbability(
+    variations: Map<VariationName, AbstractRealDistribution>,
+    sampleSize: Int,
     positiveWin: Boolean = true
-): Map<String, Double> {
-    if (distributions.isEmpty()) {
-        return mapOf()
-    }
+): Map<VariationName, Double> {
 
-    val variationWins = distributions.keys.associateWith { 0.0 }.toMutableMap()
+    // must have at least 2 variations
+    if (variations.size < 2) return mapOf()
 
-    for (i in 0 until iteration) {
-        var winSample: Double? = null
-        var winVariation: String? = null
-        for (entry in distributions) {
+    val variationScore = variations.keys.associateWith { 0 }.toMutableMap()
 
-            val sample = entry.value.sample()
-            if (winSample == null || (winSample < sample && positiveWin) || (winSample > sample && !positiveWin)) {
-                winSample = sample
-                winVariation = entry.key
-            }
+    for (i in 0 until sampleSize) {
+
+        val thisRound = variations.map { it.key to it.value.sample() }
+
+        val winner = if (positiveWin) {
+            thisRound.maxByOrNull { it.second }
+        } else {
+            thisRound.minByOrNull { it.second }
         }
 
-        val w = variationWins[winVariation] ?: 0.0
-        variationWins[winVariation!!] = w + 1.0
+        variationScore[winner!!.first] = variationScore[winner.first]!! + 1
+
     }
 
-    return variationWins.map { it.key to it.value / iteration }.toMap()
+    return variationScore.map { it.key to it.value / sampleSize.toDouble() }.toMap()
 }
 
 fun binomialVariationStats(
-    distributionInfos: Map<String, BetaDistributionInfo>,
+    distributionInfos: Map<VariationName, BetaDistributionInfo>,
     iterationCount: Int,
     positiveWin: Boolean
-): Map<String, VariationProperty> {
+): Map<VariationName, VariationProperty> {
     val distributions = distributionInfos.map { it.key to it.value.distribution }.toMap()
     val chartProperty = chartProperty(distributions, true)
-    val winningPercentage = winningPercentage(distributions, iterationCount, positiveWin)
+    val winningProbability = calculateWinningProbability(distributions, iterationCount, positiveWin)
 
     return distributionInfos.map {
         it.key to VariationProperty(
@@ -60,7 +69,7 @@ fun binomialVariationStats(
                 it.value.distribution.inverseCumulativeProbability(0.95),
             ),
             distributionChart(chartProperty!!, it.value.distribution, true),
-            winningPercentage[it.key]
+            winningProbability[it.key]
         )
     }.toMap()
 }
@@ -77,13 +86,13 @@ fun posteriorGaussian(v0: GaussianParam, va: GaussianParam): GaussianParam {
 }
 
 fun gaussianVariationStats(
-    distributionInfos: Map<String, GaussianDistributionInfo>,
+    distributionInfos: Map<VariationName, GaussianDistributionInfo>,
     iterationCount: Int,
     positiveWin: Boolean
-): Map<String, VariationProperty> {
+): Map<VariationName, VariationProperty> {
     val distributions = distributionInfos.map { it.key to it.value.distribution }.toMap()
     val chartProperty = chartProperty(distributions, false)
-    val winningPercentage = winningPercentage(distributions, iterationCount, positiveWin)
+    val winningProbability = calculateWinningProbability(distributions, iterationCount, positiveWin)
 
     return distributionInfos.map {
         it.key to VariationProperty(
@@ -95,7 +104,7 @@ fun gaussianVariationStats(
                 it.value.distribution.inverseCumulativeProbability(0.95),
             ),
             distributionChart(chartProperty!!, it.value.distribution, false),
-            winningPercentage[it.key]
+            winningProbability[it.key]
         )
     }.toMap()
 }
@@ -218,7 +227,7 @@ WHERE
     v.time > '$start' and v.time < '$end'
 GROUP BY user_key"""
 
-fun numeratorMetricSql( start: Long, end: Long, fn: NumeratorFn,): String {
+fun numeratorMetricSql( start: Long, end: Long, fn: NumeratorFn): String {
     val value = when (fn) {
         NumeratorFn.AVG -> "AVG(COALESCE(value, 0))"
         NumeratorFn.COUNT -> "COUNT(*)"
