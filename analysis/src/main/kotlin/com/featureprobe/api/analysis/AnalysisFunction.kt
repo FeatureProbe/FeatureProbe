@@ -42,13 +42,13 @@ fun calculateWinningProbability(
 }
 
 fun binomialVariationStats(
-    distributionInfos: Map<String, BetaDistributionInfo>,
+    distributionInfos: Map<VariationName, BetaDistributionInfo>,
     iterationCount: Int,
     positiveWin: Boolean
-): Map<String, VariationProperty> {
+): Map<VariationName, VariationProperty> {
     val distributions = distributionInfos.map { it.key to it.value.distribution }.toMap()
     val chartProperty = chartProperty(distributions, true)
-    val winningPercentage = calculateWinningProbability(distributions, iterationCount, positiveWin)
+    val winningProbability = calculateWinningProbability(distributions, iterationCount, positiveWin)
 
     return distributionInfos.map {
         it.key to VariationProperty(
@@ -60,7 +60,7 @@ fun binomialVariationStats(
                 it.value.distribution.inverseCumulativeProbability(0.95),
             ),
             distributionChart(chartProperty!!, it.value.distribution, true),
-            winningPercentage[it.key]
+            winningProbability[it.key]
         )
     }.toMap()
 }
@@ -83,7 +83,7 @@ fun gaussianVariationStats(
 ): Map<String, VariationProperty> {
     val distributions = distributionInfos.map { it.key to it.value.distribution }.toMap()
     val chartProperty = chartProperty(distributions, false)
-    val winningPercentage = calculateWinningProbability(distributions, iterationCount, positiveWin)
+    val winningProbability = calculateWinningProbability(distributions, iterationCount, positiveWin)
 
     return distributionInfos.map {
         it.key to VariationProperty(
@@ -95,7 +95,7 @@ fun gaussianVariationStats(
                 it.value.distribution.inverseCumulativeProbability(0.95),
             ),
             distributionChart(chartProperty!!, it.value.distribution, false),
-            winningPercentage[it.key]
+            winningProbability[it.key]
         )
     }.toMap()
 }
