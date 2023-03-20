@@ -3,15 +3,16 @@ package com.featureprobe.api.analysis
 import org.apache.commons.math3.distribution.BetaDistribution
 import org.apache.commons.math3.distribution.NormalDistribution
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class AnalysisFunctionTestClass {
+class AnalysisFunctionKtTests{
 
     @Test
-    fun testWinningPercentage() {
+    fun testWinningProbability() {
         val d1 = BetaDistribution(150.0, 300.0)
         val d2 = BetaDistribution(120.0, 300.0)
-        val wp = winningPercentage(
+        val wp = calculateWinningProbability(
             mapOf("v1" to d1, "v2" to d2),
             1000
         )
@@ -21,16 +22,30 @@ class AnalysisFunctionTestClass {
     }
 
     @Test
-    fun testWinningPercentage2() {
+    fun testWinningProbability2() {
         val d1 = BetaDistribution(150.0, 300.0)
         val d2 = BetaDistribution(50.0, 300.0)
-        val wp = winningPercentage(
+        val wp = calculateWinningProbability(
             mapOf("v1" to d1, "v2" to d2),
             1000
         )
 
         assertEquals(wp["v1"]!!, 0.999, 0.1)
         assertEquals(wp["v2"]!!, 0.001, 0.1)
+    }
+
+    @Test
+    fun testWinningProbability3variations() {
+        val d1 = BetaDistribution(75.0, 300.0)
+        val d2 = BetaDistribution(50.0, 300.0)
+        val d3 = BetaDistribution(25.0, 300.0)
+        val wp = calculateWinningProbability(
+            mapOf("v1" to d1, "v2" to d2, "v3" to d3),
+            1000
+        )
+
+        assertTrue(wp["v1"]!! > wp["v2"]!!)
+        assertTrue(wp["v2"]!! > wp["v3"]!!)
     }
 
     @Test
