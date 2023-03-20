@@ -17,12 +17,12 @@ fun calculateWinningProbability(
     variations: Map<VariationName, AbstractRealDistribution>,
     sampleSize: Int,
     positiveWin: Boolean = true
-): Map<String, Double> {
-    if (variations.isEmpty()) {
-        return mapOf()
-    }
+): Map<VariationName, Double> {
 
-    val variationWins = variations.keys.associateWith { 0 }.toMutableMap()
+    // must have at least 2 variations
+    if (variations.size < 2) return mapOf()
+
+    val variationScore = variations.keys.associateWith { 0 }.toMutableMap()
 
     for (i in 0 until sampleSize) {
 
@@ -34,14 +34,11 @@ fun calculateWinningProbability(
             thisRound.minByOrNull { it.second }
         }
 
-        if (variationWins[winner!!.first] == null) {
-            variationWins[winner.first] = 1
-        } else {
-            variationWins[winner.first] = variationWins[winner.first]!! + 1
-        }
+        variationScore[winner!!.first] = variationScore[winner.first]!! + 1
+
     }
 
-    return variationWins.map { it.key to it.value / sampleSize.toDouble() }.toMap()
+    return variationScore.map { it.key to it.value / sampleSize.toDouble() }.toMap()
 }
 
 fun binomialVariationStats(

@@ -1,9 +1,9 @@
 package com.featureprobe.api.analysis
 
 import org.apache.commons.math3.distribution.BetaDistribution
+import org.apache.commons.math3.distribution.ConstantRealDistribution
 import org.apache.commons.math3.distribution.NormalDistribution
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 
 class AnalysisFunctionKtTests{
@@ -17,8 +17,8 @@ class AnalysisFunctionKtTests{
             1000
         )
 
-        assertEquals(wp["v1"]!!, 0.93, 0.1)
-        assertEquals(wp["v2"]!!, 0.07, 0.1)
+        assertEquals(0.93, wp["v1"]!!, 0.1)
+        assertEquals(0.07, wp["v2"]!!, 0.1)
     }
 
     @Test
@@ -30,22 +30,42 @@ class AnalysisFunctionKtTests{
             1000
         )
 
-        assertEquals(wp["v1"]!!, 0.999, 0.1)
-        assertEquals(wp["v2"]!!, 0.001, 0.1)
+        assertEquals(0.999, wp["v1"]!!, 0.1)
+        assertEquals(0.001, wp["v2"]!!, 0.1)
     }
 
     @Test
     fun testWinningProbability3variations() {
-        val d1 = BetaDistribution(75.0, 300.0)
-        val d2 = BetaDistribution(50.0, 300.0)
-        val d3 = BetaDistribution(25.0, 300.0)
+        val d1 = ConstantRealDistribution(0.0)
+        val d2 = ConstantRealDistribution(0.0)
+        val d3 = ConstantRealDistribution(1.0)
         val wp = calculateWinningProbability(
             mapOf("v1" to d1, "v2" to d2, "v3" to d3),
-            1000
+            3
         )
 
-        assertTrue(wp["v1"]!! > wp["v2"]!!)
-        assertTrue(wp["v2"]!! > wp["v3"]!!)
+        assertTrue(wp["v1"]!! < wp["v3"]!!)
+        assertTrue(wp["v2"]!! < wp["v3"]!!)
+        assertEquals(1.0, wp["v3"]!!, 0.001)
+        assertEquals(0.0, wp["v2"]!!, 0.001)
+        assertEquals(0.0, wp["v1"]!!, 0.001)
+    }
+
+    @Test
+    fun testWinningProbabilityWithLessThan2Variations() {
+        val wp0 = calculateWinningProbability(
+            mapOf(),
+            3
+        )
+
+        assertTrue(wp0.isEmpty())
+
+        val wp1 = calculateWinningProbability(
+            mapOf("one" to ConstantRealDistribution(1.0)),
+            3
+        )
+
+        assertTrue(wp1.isEmpty())
     }
 
     @Test
