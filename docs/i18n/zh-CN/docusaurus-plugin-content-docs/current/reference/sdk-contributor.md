@@ -194,7 +194,7 @@ curl --location --request GET 'https://featureprobe.io/server/api/client-sdk/tog
 
 ### 服务端SDK评估开关结果
 
-服务端SDK 需要在本地内存实现对开关的规则计算，具体计算方法请阅读[开关规则评估](./evalution_rules)
+服务端SDK 需要在本地内存实现对开关的规则计算，具体计算方法请阅读[开关规则评估](./evaluation-rules)
 
 ### 客户端SDK评估开关结果
 

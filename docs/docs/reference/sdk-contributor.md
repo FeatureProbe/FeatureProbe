@@ -193,7 +193,7 @@ When the server-side and client-side SDKs have inconsistencies in the way they e
 
 ### Evaluating feature flag results for server-side SDK
 
-The server-side SDK needs to implement rule evaluation for feature flag in local memory. For specific calculation methods, please refer to the [Feature Flag Rule Evaluation](./evalution_rules).
+The server-side SDK needs to implement rule evaluation for feature flag in local memory. For specific calculation methods, please refer to the [Feature Flag Rule Evaluation](./evaluation-rules).
 
 ### Evaluating feature flag results for client-side SDK
 
