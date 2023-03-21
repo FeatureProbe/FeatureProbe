@@ -49,14 +49,17 @@ class AnalysisController(val service: AnalysisService) {
         @RequestParam type: String,
         @RequestParam start: Long,
         @RequestParam end: Long,
-        @RequestParam positiveWin: Boolean = true
+        @RequestParam(value = "positiveWin", defaultValue = "true" ) positiveWin: Boolean,
+        @RequestParam(value = "numeratorFn", defaultValue = "AVG") numeratorFn: NumeratorFn,
+        @RequestParam(value = "join", defaultValue = "INNER") join: Join,
     ): AnalysisResponse {
-        return when (val result = service.doAnalysis(sdkKey, metric, toggle, type, start, end, positiveWin)) {
+        val result = service.doAnalysis(sdkKey, metric, toggle, type, start,
+            end, positiveWin, numeratorFn, join)
+        return when (result) {
             Err(NotSupportAnalysisType) -> AnalysisResponse(500, mapOf())
             else -> AnalysisResponse(200, result.get())
         }
     }
-
 }
 
 @Service
@@ -122,19 +125,20 @@ class AnalysisService(
         session.use {
             return (session.run(
                     queryOf(EXISTS_EVENT_SQL, sdkKey, metric)
-                            .map { row -> row.int("count") > 0 }.asList)[0]
-            )
+                            .map { row -> row.int("count") }.asList)).isNotEmpty()
         }
     }
 
     fun doAnalysis(
         sdkKey: String, metric: String, toggle: String,
         type: String, start: Long, end: Long,
-        positiveWin: Boolean = true
+        positiveWin: Boolean = true,
+        numeratorFn: NumeratorFn = NumeratorFn.AVG,
+        join: Join = Join.INNER
     ): Result<Map<String, VariationProperty>, AnalysisFailure> {
         return when (type) {
             "binomial" -> doAnalysisBinomial(sdkKey, metric, toggle, start, end, positiveWin)
-            "gaussian" -> doAnalysisGaussian(sdkKey, metric, toggle, start, end, positiveWin)
+            "gaussian" -> doAnalysisGaussian(sdkKey, metric, toggle, start, end, positiveWin, numeratorFn, join)
             else -> Err(NotSupportAnalysisType)
         }
     }
@@ -157,9 +161,10 @@ class AnalysisService(
     }
 
     fun doAnalysisGaussian(
-        sdkKey: String, metric: String, toggle: String, start: Long, end: Long, positiveWin: Boolean
+        sdkKey: String, metric: String, toggle: String, start: Long, end: Long,
+        positiveWin: Boolean, numeratorFn: NumeratorFn, join: Join
     ): Result<Map<String, VariationProperty>, AnalysisFailure> {
-        val variationGaussian = gaussianSqlExecute(sdkKey, metric, toggle, start, end)
+        val variationGaussian = gaussianSqlExecute(sdkKey, metric, toggle, start, end, numeratorFn, join)
 
         val distributions = variationGaussian.associate {
             val posterior = posteriorGaussian(GaussianParam(), GaussianParam(it.mean, it.stdDeviation, it.sampleSize))
@@ -199,9 +204,11 @@ class AnalysisService(
         metric: String,
         toggle: String,
         start: Long,
-        end: Long
+        end: Long,
+        numeratorFn: NumeratorFn,
+        join: Join,
     ): List<VariationGaussian> {
-        val sql = gaussianStatsSql(sdkKey, metric, toggle, start, end)
+        val sql = gaussianStatsSql(sdkKey, metric, toggle, start, end, numeratorFn, join)
         log.info(sql)
         val session = sessionOf(dataSource)
         session.use {

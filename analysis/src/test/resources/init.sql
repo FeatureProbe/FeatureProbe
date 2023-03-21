@@ -52,6 +52,10 @@ values (1676273668, 'user5', 'click_1', 1, 'sdk_key');
 
 insert into access
 (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key)
+values (1676273668, 'user0', 'toggle_2', 1, 1, 1, 'sdk_key2');
+
+insert into access
+(time, user_key, toggle_key, variation_index, rule_index, version, sdk_key)
 values (1676273668, 'user1', 'toggle_2', 1, 1, 1, 'sdk_key2');
 
 insert into access
@@ -116,6 +120,10 @@ values (1676273668, 'user4', 'purchase', 80.0, 'sdk_key2');
 
 insert into events
 (time, user_key, name, value, sdk_key)
+values (1676273668, 'user4', 'purchase', 90.0, 'sdk_key2');
+
+insert into events
+(time, user_key, name, value, sdk_key)
 values (1676273668, 'user5', 'purchase', 90.0, 'sdk_key2');
 
 insert into events
@@ -138,7 +146,6 @@ insert into events
 (time, user_key, name, value, sdk_key)
 values (1676273668, 'user7', 'purchase', 140.0, 'sdk_key2');
 
-
 insert into events
 (time, user_key, name, value, sdk_key)
 values (1676273668, 'user8', 'purchase', 150.0, 'sdk_key2');
@@ -146,3 +153,7 @@ values (1676273668, 'user8', 'purchase', 150.0, 'sdk_key2');
 insert into events
 (time, user_key, name, value, sdk_key)
 values (1676273668, 'user8', 'purchase', 160.0, 'sdk_key2');
+
+insert into events
+(time, user_key, name, value, sdk_key)
+values (1676273668, 'user8', 'purchase', 170.0, 'sdk_key2');

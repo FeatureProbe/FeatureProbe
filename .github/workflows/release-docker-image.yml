@@ -21,6 +21,7 @@ on:
         - ui
         - server
         - analysis
+        - featureprobe
 
 permissions:
   contents: read
@@ -271,6 +272,81 @@ jobs:
           docker buildx imagetools inspect featureprobe/server
         working-directory: ./server
 
+  release_featureprobe:
+    name: Release FeatureProbe
+    if: ${{ github.event_name == 'release' || (inputs.build_select == 'featureprobe' || inputs.build_select == 'all') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: 'maven'
+      
+      - name: Build Api
+        run: mvn -B verify --file ./pom.xml
+        working-directory: ./api
+
+      - name: Build Analysis
+        run: mvn -B verify --file ./pom.xml
+        working-directory: ./analysis  
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2.2.1
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+            
+      - name: Login to DockerHub
+        uses: docker/login-action@v2.1.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          
+      - name: Docker Build FeatureProbe (by release)
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          docker buildx build \
+            --cache-from "type=local,src=/tmp/.buildx-cache" \
+            --platform linux/amd64 \
+            --output "type=image,push=true" \
+            --tag featureprobe/featureprobe:latest \
+            --tag featureprobe/featureprobe:${GITHUB_REF#refs/tags/} \
+            --file ./Dockerfile .
+        working-directory: ./
+    
+      - name: Docker Build FeatureProbe (manual)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          docker buildx build \
+            --cache-from "type=local,src=/tmp/.buildx-cache" \
+            --platform linux/amd64 \
+            --output "type=image,push=true" \
+            --tag featureprobe/featureprobe:latest \
+            --tag featureprobe/featureprobe:$DOCKER_TAG \
+            --file ./Dockerfile .
+        env:
+          DOCKER_TAG: ${{ inputs.tag }}
+        working-directory: ./
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect featureprobe/featureprobe
+        working-directory: ./
 
   deployment:
     name: Deploy to Google Cloud
