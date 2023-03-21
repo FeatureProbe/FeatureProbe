@@ -98,9 +98,7 @@ data class CredibleInterval(
 )
 
 data class DistributionDot(
-    @JsonSerialize(using = CustomDoubleSerialize::class)
     val x: Double,
-    @JsonSerialize(using = CustomDoubleSerialize::class)
     val y: Double
 )
 
