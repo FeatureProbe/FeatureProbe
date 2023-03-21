@@ -20,7 +20,7 @@ import { getEventAnalysis, operateCollection, getMetricIterations } from 'servic
 import { IChartData, IEvent, IEventAnalysis, IDistribution, ITableData, IAnalysisItem, IMetricIteration } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
 import { ITarget } from 'interfaces/targeting';
-import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, REVENUE, DURATION, COUNT } from '../../constants';
+import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, SUM, AVERAGE, COUNT } from '../../constants';
 import { useQuery } from 'hooks';
 
 import styles from './index.module.scss';
@@ -63,8 +63,8 @@ const Results = (props: IProps) => {
     return new Map([
       [CONVERSION, intl.formatMessage({id: 'analysis.event.conversion'})],
       [COUNT, intl.formatMessage({id: 'analysis.event.count'})],
-      [REVENUE, intl.formatMessage({id: 'analysis.event.revenue'})],
-      [DURATION, intl.formatMessage({id: 'analysis.event.duration'})],
+      [SUM, intl.formatMessage({id: 'analysis.event.sum'})],
+      [AVERAGE, intl.formatMessage({id: 'analysis.event.average'})],
     ]);
   }, [intl]);
 
@@ -210,13 +210,7 @@ const Results = (props: IProps) => {
         )
       }
 
-      {
-        iterations.length > 0 && (
-          <TimeLine 
-            iterations={iterations}
-          />
-        )
-      }
+      { iterations.length > 0 && <TimeLine iterations={iterations} /> }
 
       <div className={styles['result-content']}>
         {

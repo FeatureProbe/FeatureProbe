@@ -4,8 +4,8 @@ export const CLICK = 'CLICK';
 
 export const CONVERSION = 'CONVERSION';
 export const COUNT = 'COUNT';
-export const DURATION = 'DURATION';
-export const REVENUE = 'REVENUE';
+export const AVERAGE = 'AVERAGE';
+export const SUM = 'SUM';
 
 export const NEGATIVE = 'NEGATIVE';
 export const POSITIVE = 'POSITIVE';

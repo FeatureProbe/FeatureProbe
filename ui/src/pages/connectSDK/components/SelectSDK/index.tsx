@@ -4,7 +4,9 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import { CLIENT_SIDE_SDKS, SdkLanguage, SDK_LOGOS, SERVER_SIDE_SDKS } from '../../constants';
+import { CLIENT_SIDE_SDKS, SdkLanguage, SDK_LOGOS, SERVER_SIDE_SDKS, CLIENT_SIDE_AUTO_REPORT_SDKS } from '../../constants';
+import { IEvent } from 'interfaces/analysis';
+import { CLICK, PAGE_VIEW } from 'pages/analysis/constants';
 
 import styles from '../../index.module.scss';
 
@@ -17,6 +19,7 @@ interface IProps {
   currentStep: number;
   currentSDK: SdkLanguage;
   clientAvailability: boolean;
+  eventInfo?: IEvent;
   saveStep(sdk: string): void;
   goBackToStep(step: number): void;
   saveCurrentSDK(sdk: SdkLanguage): void;
@@ -25,7 +28,7 @@ interface IProps {
 const CURRENT = 1;
 
 const SelectSDK = (props: IProps) => {
-  const { currentStep, currentSDK, clientAvailability, saveStep, goBackToStep, saveCurrentSDK } = props;
+  const { currentStep, currentSDK, clientAvailability, eventInfo, saveStep, goBackToStep, saveCurrentSDK } = props;
   const [ selectedSDKLogo, saveSelectedSDKLogo ] = useState<string>('');
   const intl = useIntl();
 
@@ -109,29 +112,39 @@ const SelectSDK = (props: IProps) => {
                     }
                   >
                     <Dropdown.Menu className={styles['dropdown-menu']}>
-                      <Dropdown.Header content={intl.formatMessage({id: 'connect.second.server.sdks'})} />
-                      <Dropdown.Divider />
                       {
-                        SERVER_SIDE_SDKS.map((sdk: IOption) => {
-                          return (
-                            <Dropdown.Item
-                              key={sdk.name}
-                              onClick={() => {
-                                saveCurrentSDK(sdk.name as SdkLanguage);
-                              }}
-                            >
-                              <div className={styles['sdk-item']}>
-                                <img className={styles['sdk-logo']} src={sdk.logo} alt='logo' />
-                                { sdk.name }
-                              </div>
-                            </Dropdown.Item>
-                          );
-                        })
+                        (eventInfo?.eventType !== PAGE_VIEW && eventInfo?.eventType !== CLICK) && (
+                          <>
+                            <Dropdown.Header content={intl.formatMessage({id: 'connect.second.server.sdks'})} />
+                            <Dropdown.Divider />
+                            {
+                              SERVER_SIDE_SDKS.map((sdk: IOption) => {
+                                return (
+                                  <Dropdown.Item
+                                    key={sdk.name}
+                                    onClick={() => {
+                                      saveCurrentSDK(sdk.name as SdkLanguage);
+                                    }}
+                                  >
+                                    <div className={styles['sdk-item']}>
+                                      <img className={styles['sdk-logo']} src={sdk.logo} alt='logo' />
+                                      { sdk.name }
+                                    </div>
+                                  </Dropdown.Item>
+                                );
+                              })
+                            }
+                          </>
+                        )
                       }
                       <Dropdown.Header content={intl.formatMessage({id: 'connect.second.client.sdks'})} />
                         <Dropdown.Divider />
                         {
-                          clientAvailability && CLIENT_SIDE_SDKS.map((sdk: IOption) => {
+                          clientAvailability && (
+                            (eventInfo?.eventType === PAGE_VIEW || eventInfo?.eventType === CLICK) 
+                            ? CLIENT_SIDE_AUTO_REPORT_SDKS 
+                            : CLIENT_SIDE_SDKS
+                          ).map((sdk: IOption) => {
                             return (
                               <Dropdown.Item
                                 key={sdk.name}

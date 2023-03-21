@@ -6,46 +6,30 @@ import classNames from 'classnames';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { IRouterParams } from 'interfaces/project';
-import { IEvent } from 'interfaces/analysis';
-import { CLICK, CUSTOM, PAGE_VIEW } from 'pages/analysis/constants';
 import styles from '../../index.module.scss';
+import { CLICK, CUSTOM, PAGE_VIEW } from 'pages/analysis/constants';
+import { IEvent } from 'interfaces/analysis';
 
 interface IProps {
-  isAccessLoading: boolean;
-  isTrackLoading: boolean;
+  isLoading: boolean;
   currentStep: number;
-  isAccess: boolean;
-  isReport: boolean;
+  isConnected?: boolean;
   projectKey: string;
   environmentKey: string;
   toggleKey: string;
-  totalStep: number;
+  isTrackEvent?: boolean;
   eventInfo?: IEvent;
-  checkToggleStatus(): void;
-  checkEventTrack(): void;
-  saveAccessLoading(loading: boolean): void;
-  saveTrackLoading(loading: boolean): void;
+  checkStatus(): void;
+  saveIsLoading(loading: boolean): void;
 }
 
+const CURRENT = 3;
 const INTERVAL = 30;
 
 const TestConnection = (props: IProps) => {
-  const {
-    currentStep,
-    isAccess,
-    isReport,
-    isAccessLoading,
-    isTrackLoading,
-    totalStep,
-    eventInfo,
-    checkToggleStatus,
-    checkEventTrack,
-    saveAccessLoading,
-    saveTrackLoading,
-  } = props;
+  const { currentStep, isConnected, isLoading, isTrackEvent, eventInfo, checkStatus, saveIsLoading } = props;
   const { toggleKey, environmentKey } = useParams<IRouterParams>();
   const [ count, saveCount ] = useState<number>(1);
-  const [ trackCount, saveTrackCount ] = useState<number>(1);
   const [ displayName, saveDisplayName ] = useState<string>('');
   const intl = useIntl();
   const faqUrl = useRef('');
@@ -54,20 +38,20 @@ const TestConnection = (props: IProps) => {
   const stepTitleCls = classNames(
     styles['step-title'],
     {
-      [styles['step-title-selected']]: currentStep === totalStep
+      [styles['step-title-selected']]: currentStep === CURRENT
     }
   );
 
   useEffect(() => {
-    if (isAccessLoading && !isAccess) {
+    if (isLoading) {
       const timer = setInterval(() => {
         saveCount(count + 1);
-        checkToggleStatus();
+        checkStatus();
       }, 1000);
 
       if (count >= INTERVAL) {
         clearInterval(timer);
-        saveAccessLoading(false);
+        saveIsLoading(false);
         saveCount(1);
       }
   
@@ -75,26 +59,7 @@ const TestConnection = (props: IProps) => {
         clearInterval(timer);
       });
     }
-  }, [count, isAccessLoading, checkToggleStatus, saveAccessLoading, isAccess]);
-
-  useEffect(() => {
-    if (isTrackLoading && !isReport) {
-      const timer = setInterval(() => {
-        saveTrackCount(trackCount + 1);
-        checkEventTrack();
-      }, 1000);
-
-      if (trackCount >= INTERVAL) {
-        clearInterval(timer);
-        saveTrackLoading(false);
-        saveTrackCount(1);
-      }
-  
-      return (() => {
-        clearInterval(timer);
-      });
-    }
-  }, [trackCount, isTrackLoading, saveTrackLoading, checkEventTrack, isReport]);
+  }, [count, isLoading, checkStatus, saveIsLoading]);
 
   useEffect(() => {
     if (intl.locale === 'zh-CN') {
@@ -122,10 +87,14 @@ const TestConnection = (props: IProps) => {
     <div className={styles.step}>
       <div className={styles['step-left']}>
         {
-          currentStep === totalStep ? (
-            <div className={styles.circleCurrent}>{ totalStep }</div>
+          currentStep === CURRENT ? (
+            <div className={styles.circleCurrent}>
+              { CURRENT }
+            </div>
           ) : (
-            <div className={styles.circle}>{ totalStep }</div>
+            <div className={styles.circle}>
+              { CURRENT }
+            </div>
           )
         }
       </div>
@@ -135,26 +104,46 @@ const TestConnection = (props: IProps) => {
         </div>
         <div className={styles['step-detail']}>
           {
-            currentStep === totalStep && (
+            currentStep === CURRENT && (
               <>
                 {
-                  isAccess ? (
+                  isConnected ? (
                     <div className={styles['connect-success']}>
                       <Icon type='success-circle' customclass={styles['success-circle']} />
-                      <FormattedMessage id='connect.fourth.success' />
+                      {
+                        isTrackEvent 
+                          ? <FormattedMessage id='connect.fourth.event.success' /> 
+                          : <FormattedMessage id='connect.fourth.success' />
+                      }
                     </div>
                   ) : (
-                    isAccessLoading ? (
+                    isLoading ? (
                       <div className={styles['connect-retrying']}>
-                        <Loader size='small' active inline='centered' />
+                        <Loader  size='small' active inline='centered' />
                         <div className={styles['connect-retrying-text']}>
                           {
-                            intl.formatMessage({
-                              id: 'connect.fourth.running'
-                            }, {
-                              environment: environmentKey,
-                              toggle: toggleKey,
-                            })
+                            isTrackEvent ? (
+                              <>
+                                {
+                                  intl.formatMessage({
+                                    id: 'connect.fourth.event.running'
+                                  }, {
+                                    eventName: displayName,
+                                    environment: environmentKey,
+                                    toggle: toggleKey,
+                                  })
+                                }
+                              </>
+                            ) : <>
+                              {
+                                intl.formatMessage({
+                                  id: 'connect.fourth.running'
+                                }, {
+                                  environment: environmentKey,
+                                  toggle: toggleKey,
+                                })
+                              }
+                            </>
                           }
                         </div>
                       </div>
@@ -162,90 +151,44 @@ const TestConnection = (props: IProps) => {
                       <div className={styles['connect-failed']}>
                         <div>
                           <Icon type='error-circle' customclass={styles['error-circle']} />
-                          <FormattedMessage id='connect.fourth.failed' />
+                          {
+                            isTrackEvent ? (
+                              <>
+                                {
+                                  intl.formatMessage({
+                                    id: 'connect.fourth.event.failed'
+                                  }, {
+                                    eventName: displayName,
+                                    environment: environmentKey,
+                                    toggle: toggleKey,
+                                  })
+                                }
+                                
+                              </>
+                            ) : <FormattedMessage id='connect.fourth.failed' />
+                          }
                           <a 
                             className={styles['error-link']}
                             target='_blank'
                             rel='noreferrer'
-                            href={faqUrl.current}
+                            href={isTrackEvent ? metricFaqUrl.current : faqUrl.current}
                           >
                             <FormattedMessage id='connect.fourth.failed.link' />
                           </a>
+                         
                         </div>
                         <div className={styles['retry-connection']}>
                           <Button 
                             primary 
                             className={styles['retry-connection-btn']} 
                             onClick={() => {
-                              saveAccessLoading(true);
+                              saveIsLoading(true);
                             }}
                           >
                             <FormattedMessage id='connect.fourth.failed.button' />
                           </Button>
                         </div>
                       </div>
-                    )
-                  )
-                }
-
-                {
-                  eventInfo && (
-                    isReport ? (
-                      <div className={styles['connect-success']}>
-                        <Icon type='success-circle' customclass={styles['success-circle']} />
-                        <FormattedMessage id='connect.fourth.event.success' />
-                      </div>
-                    ) : (
-                      isTrackLoading ? (
-                        <div className={styles['connect-retrying']}>
-                          <Loader size='small' active inline='centered' />
-                          <div className={styles['connect-retrying-text']}>
-                            {
-                              intl.formatMessage({
-                                id: 'connect.fourth.event.running'
-                              }, {
-                                eventName: displayName,
-                                environment: environmentKey,
-                                toggle: toggleKey,
-                              })
-                            }
-                          </div>
-                        </div>
-                      ) : (
-                        <div className={styles['connect-failed']}>
-                          <div>
-                            <Icon type='error-circle' customclass={styles['error-circle']} />
-                            {
-                              intl.formatMessage({
-                                id: 'connect.fourth.event.failed'
-                              }, {
-                                eventName: displayName,
-                                environment: environmentKey,
-                                toggle: toggleKey,
-                              })
-                            }
-                            {<a 
-                              className={styles['error-link']}
-                              target='_blank'
-                              rel='noreferrer'
-                              href={metricFaqUrl.current}
-                            >
-                              <FormattedMessage id='connect.fourth.failed.link' />
-                            </a> }
-                          </div>
-                          <div className={styles['retry-connection']}>
-                            <Button 
-                              primary 
-                              className={styles['retry-connection-btn']} 
-                              onClick={() => {
-                                saveTrackLoading(true);
-                              }}
-                            >
-                              <FormattedMessage id='connect.fourth.failed.button' />
-                            </Button>
-                          </div>
-                        </div>
-                      )
                     )
                   )
                 }

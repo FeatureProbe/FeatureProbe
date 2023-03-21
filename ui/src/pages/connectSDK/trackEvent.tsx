@@ -4,19 +4,18 @@ import { useParams } from 'react-router-dom';
 import ProjectLayout from 'layout/projectLayout';
 import Loading from 'components/Loading';
 import SelectSDK from './components/SelectSDK';
-import SetupCode from './components/SetupCode';
 import TrackEvent from './components/TrackEvent';
 import TestConnection from './components/TestConnection';
 import { ToggleReturnType, SdkLanguage, SDK_VERSION } from './constants';
 import { saveDictionary, getFromDictionary } from 'services/dictionary';
-import { getSdkVersion } from 'services/misc';
-import { getToggleAccess, getToggleInfo, getToggleAttributes, getToggleTrackEvent } from 'services/toggle';
+import { getToggleInfo, getToggleAttributes, getToggleTrackEvent } from 'services/toggle';
 import { getProjectInfo, getEnvironment } from 'services/project';
 import { getEventDetail } from 'services/analysis';
+import { getSdkVersion } from 'services/misc';
 import { IDictionary, IToggleInfo } from 'interfaces/targeting';
 import { IProject, IEnvironment, IRouterParams } from 'interfaces/project';
 import { IEvent } from 'interfaces/analysis';
-import { CUSTOM } from 'pages/analysis/constants';
+import { CLICK, CUSTOM, PAGE_VIEW } from 'pages/analysis/constants';
 
 import styles from './index.module.scss';
 
@@ -30,9 +29,6 @@ interface IStep {
   };
 }
 
-interface IAccess {
-  isAccess: boolean;
-}
 
 interface IReport {
   isReport: boolean;
@@ -54,39 +50,34 @@ const step: IStep = {
   }
 };
 
-const PREFIX = 'get_started_';
+const PREFIX = 'access_event_';
 const FIRST = 1;
 const SECOND = 2;
 const THIRD = 3;
-const FOURTH = 4;
 
-const ConnectSDK = () => {
+const AccessEvent = () => {
   const [ currentStep, saveCurrentStep ] = useState<number>(SECOND);
   const [ currentSDK, saveCurrentSDK ] = useState<SdkLanguage>('Java');
   const [ serverSdkKey, saveServerSDKKey ] = useState<string>('');
   const [ clientSdkKey, saveClientSdkKey ] = useState<string>('');
   const [ sdkVersion, saveSDKVersion ] = useState<string>('');
   const [ returnType, saveReturnType ] = useState<ToggleReturnType>('');
-  const [ isAccess, saveIsAccess ] = useState<boolean>(false);
   const [ isReport, saveIsReport ] = useState<boolean>(false);
   const [ projectName, saveProjectName ] = useState<string>('');
   const [ environmentName, saveEnvironmentName ] = useState<string>('');
-  const [ toggleName, saveToggleName ] = useState<string>('');
-  const [ isAccessLoading, saveAccessLoading ] = useState<boolean>(false);
   const [ isTrackLoading, saveTrackLoading ] = useState<boolean>(false);
   const [ isInfoLoading, saveIsInfoLoading ] = useState<boolean>(true);
   const [ isStepLoading, saveIsStepLoading ] = useState<boolean>(true);
   const [ clientAvailability, saveClientAvailability ] = useState<boolean>(false);
   const [ attributes, saveAttributes ] = useState<string[]>([]);
   const [ eventInfo, saveEventInfo ] = useState<IEvent>();
-  const [ isTrackEvent, saveTrackEvent ] = useState<boolean>(false);
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
 
-  const init = useCallback(async() => {
-    const key = PREFIX + projectKey + '_' + environmentKey + '_' + toggleKey;
+  const KEY = PREFIX + projectKey + '_' + environmentKey + '_' + toggleKey;
 
+  const init = useCallback(async() => {
     Promise.all([
-      getFromDictionary<IDictionary>(key), 
+      getFromDictionary<IDictionary>(KEY), 
       getToggleAttributes<string[]>(projectKey, environmentKey, toggleKey),
       getEventDetail<IEvent>(projectKey, environmentKey, toggleKey)
     ]).then(res => {
@@ -95,7 +86,7 @@ const ConnectSDK = () => {
         const savedData = JSON.parse(res[0].data.value);
 
         if (savedData.step3.done) {
-          saveCurrentStep(FOURTH);
+          saveCurrentStep(THIRD);
           saveCurrentSDK(savedData.step1.sdk);
         } else if (savedData.step2.done) {
           saveCurrentStep(THIRD);
@@ -137,14 +128,22 @@ const ConnectSDK = () => {
       if (res[2].success && res[2].data) {
         saveReturnType(res[2].data.returnType as ToggleReturnType);
         saveClientAvailability(res[2].data.clientAvailability);
-        saveToggleName(res[2].data.name);
       }
     });
-  }, [projectKey, environmentKey, toggleKey]);
+  }, [KEY, environmentKey, projectKey, toggleKey]);
 
   useEffect(() => {
     init();
   }, [init]);
+
+  useEffect(() => {
+    if (eventInfo?.eventType === PAGE_VIEW || eventInfo?.eventName === CLICK) {
+      if (currentSDK !== 'JavaScript' && currentSDK !== 'React') {
+        saveCurrentSDK('JavaScript');
+        saveCurrentStep(FIRST);
+      }
+    }
+  }, [eventInfo, currentSDK]);
 
   useEffect(() => {
     if (currentSDK) {
@@ -161,24 +160,7 @@ const ConnectSDK = () => {
     }
   }, [currentSDK]);
 
-  useEffect(() => {
-    if (eventInfo?.eventType == CUSTOM) {
-      saveTrackEvent(true);
-    } else {
-      saveTrackEvent(false);
-    }
-  }, [currentSDK, eventInfo]);
-
-  const checkToggleStatus = useCallback(() => {
-    getToggleAccess<IAccess>(projectKey, environmentKey, toggleKey).then(res => {
-      const { data, success } = res;
-      if (success && data) {
-        saveIsAccess(data.isAccess);
-      }
-    });
-  }, [projectKey, environmentKey, toggleKey]);
-
-  const checkEventTrack = useCallback(() => {
+  const checkStatus = useCallback(() => {
     getToggleTrackEvent<IReport>(projectKey, environmentKey, toggleKey).then(res => {
       const { data, success } = res;
       if (success && data) {
@@ -188,60 +170,31 @@ const ConnectSDK = () => {
   }, [projectKey, environmentKey, toggleKey]);
 
   useEffect(() => {
-    // Go to the last step, check access events
-    if ((isTrackEvent && currentStep === FOURTH) || (!isTrackEvent && currentStep === THIRD)) {
-      saveAccessLoading(true);
-      checkToggleStatus();
-
-      // If event exists, check track events 
-      if (eventInfo) {
-        saveTrackLoading(true);
-        checkEventTrack();
-      }
+    if(currentStep === THIRD) {
+      saveTrackLoading(true);
+      checkStatus();
     }
-  }, [isTrackEvent, currentStep, checkToggleStatus, checkEventTrack, eventInfo]);
-
-  // Go back to the third step if not tracking custom event
-  useEffect(() => {
-    if (!isTrackEvent && currentStep === FOURTH) {
-      saveCurrentStep(THIRD);
-    }
-  }, [isTrackEvent, currentStep]);
+  }, [currentStep, checkStatus]);
 
   const saveFirstStep = useCallback((sdk: string) => {
     step.step1.done = true;
     step.step1.sdk = sdk;
-    saveDictionary(PREFIX + projectKey + '_' + environmentKey + '_' + toggleKey, step).then((res) => {
+    saveDictionary(KEY, step).then(res => {
       if (res.success) {
         saveCurrentStep(currentStep + 1);
       }
     });
-  }, [projectKey, environmentKey, toggleKey, currentStep]);
+  }, [KEY, currentStep]);
 
   const saveSecondStep = useCallback(() => {
     step.step2.done = true;
     step.step1.sdk = currentSDK;
-    saveDictionary(PREFIX + projectKey + '_' + environmentKey + '_' + toggleKey, step).then((res) => {
+    saveDictionary(KEY, step).then(res => {
       if (res.success) {
         saveCurrentStep(currentStep + 1);
-        if (!isTrackEvent) {
-          saveAccessLoading(true);
-        }
       }
     });
-  }, [currentSDK, projectKey, environmentKey, toggleKey, currentStep, isTrackEvent]);
-
-  const saveThirdStep = useCallback(() => {
-    step.step3.done = true;
-    step.step1.sdk = currentSDK;
-    saveDictionary(PREFIX + projectKey + '_' + environmentKey + '_' + toggleKey, step).then((res) => {
-      if (res.success) {
-        saveCurrentStep(currentStep + 1);
-        saveAccessLoading(true);
-        saveTrackLoading(true);
-      }
-    });
-  }, [currentSDK, projectKey, environmentKey, toggleKey, currentStep]);
+  }, [currentSDK, KEY, currentStep]);
 
   const goBackToStep = useCallback((currentStep: number) => {
     saveCurrentStep(currentStep);
@@ -261,10 +214,10 @@ const ConnectSDK = () => {
         <div className={styles.intro}>
           {
             isInfoLoading ? <Loading /> : (
-              <>
+              <div>
                 <div className={styles['intro-header']}>
                   <span className={styles['intro-title']}>
-                    <FormattedMessage id='common.get.started.text' />
+                    <FormattedMessage id='common.event.track.text' />
                   </span>
                 </div>
                 <div className={styles['intro-desc']}>
@@ -289,17 +242,24 @@ const ConnectSDK = () => {
                   </div>
                   <div className={styles['card-item']}>
                     <div className={styles['card-title']}>
-                      <FormattedMessage id='common.toggle.text' /> :
+                      <FormattedMessage id='common.event.uppercase.text' /> :
                     </div>
                     <div className={styles['card-value']}>
-                      <FormattedMessage id='connect.first.toggle.view.left' />
-                      <span className={styles['toggle-name']}>{ toggleName }</span>
-                      <FormattedMessage id='connect.first.toggle.view.right' />
-                      <span className={styles['toggle-key']}>{ toggleKey }</span>
+                      {
+                        eventInfo?.eventType == CUSTOM && (
+                          <span>
+                            <FormattedMessage id='analysis.event.custom' />
+                            -
+                            { eventInfo?.eventName }
+                          </span>
+                        )
+                      }
+                      { eventInfo?.eventType == PAGE_VIEW && <FormattedMessage id='analysis.event.pageview' /> }
+                      { eventInfo?.eventType == CLICK && <FormattedMessage id='analysis.event.click' /> }
                     </div>
                   </div>
                 </div>
-              </>
+              </div>
             )
           }
         </div>
@@ -314,9 +274,10 @@ const ConnectSDK = () => {
                   saveStep={saveFirstStep}
                   saveCurrentSDK={saveCurrentSDK}
                   goBackToStep={goBackToStep}
+                  eventInfo={eventInfo}
                 />
 
-                <SetupCode 
+                <TrackEvent 
                   attributes={attributes}
                   currentStep={currentStep}
                   currentSDK={currentSDK}
@@ -324,38 +285,22 @@ const ConnectSDK = () => {
                   serverSdkKey={serverSdkKey}
                   clientSdkKey={clientSdkKey}
                   sdkVersion={sdkVersion}
+                  eventInfo={eventInfo}
                   saveStep={saveSecondStep}
                   goBackToStep={goBackToStep}
                 />
-
-                {
-                  isTrackEvent && (
-                    <TrackEvent 
-                      attributes={attributes}
-                      currentStep={currentStep}
-                      currentSDK={currentSDK}
-                      eventName={eventInfo?.eventName ?? ''}
-                      saveStep={saveThirdStep}
-                      goBackToStep={goBackToStep}
-                    />
-                  )
-                }
-
+                  
                 <TestConnection 
-                  isTrackLoading={isTrackLoading}
-                  isAccessLoading={isAccessLoading}
-                  projectKey={projectKey}
-                  environmentKey={environmentKey}
-                  toggleKey={toggleKey}
-                  currentStep={currentStep}
-                  isAccess={isAccess}
-                  isReport={isReport}
-                  totalStep={isTrackEvent ? FOURTH : THIRD}
-                  eventInfo={eventInfo}
-                  saveAccessLoading={saveAccessLoading}
-                  saveTrackLoading={saveTrackLoading}
-                  checkToggleStatus={checkToggleStatus}
-                  checkEventTrack={checkEventTrack}
+                 isLoading={isTrackLoading}
+                 projectKey={projectKey}
+                 environmentKey={environmentKey}
+                 toggleKey={toggleKey}
+                 currentStep={currentStep}
+                 isConnected={isReport}
+                 isTrackEvent={true}
+                 eventInfo={eventInfo}
+                 saveIsLoading={saveTrackLoading}
+                 checkStatus={checkStatus}
                 />
               </>
             )
@@ -366,4 +311,4 @@ const ConnectSDK = () => {
   );
 };
 
-export default ConnectSDK;
+export default AccessEvent;

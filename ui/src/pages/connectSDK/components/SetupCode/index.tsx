@@ -107,7 +107,7 @@ const SetupCode = (props: IProps) => {
         case 'Python':
           saveLanguage('python');
           attributes.forEach(item => {
-            userWithCode += `user['${item}'] = 'value for ${item}'  # or use 'user.with_attr(key, value)'\n    `;
+            userWithCode += `user['${item}'] = 'value for ${item}'  # or use 'user.with_attr(key, value)'\n`;
           });
           saveOptions(
             getPythonCode({
@@ -207,56 +207,64 @@ const SetupCode = (props: IProps) => {
           attributes.forEach(item => {
             userWithCode += `[user withKey:@"${item}" value:/* ${item} */];\n`;
           });
-          saveOptions(getObjCCode({
-            clientSdkKey,
-            toggleKey,
-            returnType,
-            intl,
-            userWithCode,
-            remoteUrl,
-          }));
+          saveOptions(
+            getObjCCode({
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }
+          ));
           break;
         case 'JavaScript':
           saveLanguage('javascript');
           attributes.forEach(item => {
             userWithCode += `user.with("${item}", /* ${item} */);\n`;
           });
-          saveOptions(getJSCode({
-            clientSdkKey,
-            toggleKey,
-            returnType,
-            intl,
-            userWithCode,
-            remoteUrl,
-          }));
+          saveOptions(
+            getJSCode({
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }
+          ));
           break;
         case 'Mini Program':
           saveLanguage('javascript');
           attributes.forEach(item => {
             userWithCode += `user.with("${item}", /* ${item} */);\n`;
           });
-          saveOptions(getMiniProgramCode({
-            clientSdkKey,
-            toggleKey,
-            returnType,
-            intl,
-            userWithCode,
-            remoteUrl,
-          }));
+          saveOptions(
+            getMiniProgramCode({
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }
+          ));
           break;
         case 'React':
           saveLanguage('javascript');
           attributes.forEach(item => {
             userWithCode += `user.with("${item}", /* ${item} */);\n  `;
           });
-          saveOptions(getReactCode({
-            clientSdkKey,
-            toggleKey,
-            returnType,
-            intl,
-            userWithCode,
-            remoteUrl,
-          }));
+          saveOptions(
+            getReactCode({
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }
+          ));
           break;
       }
     }

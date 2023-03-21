@@ -91,6 +91,17 @@ export const CLIENT_SIDE_SDKS = [
   }
 ];
 
+export const CLIENT_SIDE_AUTO_REPORT_SDKS = [
+  {
+    name: 'JavaScript',
+    logo: javascript,
+  },
+  {
+    name: 'React',
+    logo: reactLogo,
+  }
+];
+
 export const SDK_VERSION = new Map([
   ['Java', 'java_sdk_version'],
   ['Rust', 'rust_sdk_version'],
@@ -108,13 +119,9 @@ interface IOption {
   clientSdkKey?: string;
 }
 
-interface ITrackOption {
-  intl: IntlShape;
-  eventName: string;
-}
-
-export const getJavaCode = (options: IOption) => {
+export const getJavaCode = (options: IOption, eventName?: string, isTrackValue?: boolean) => {
   const { intl, sdkVersion, serverSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
+
   return [
     {
       title: intl.formatMessage({id: 'getstarted.java.first.step'}),
@@ -132,46 +139,34 @@ export const getJavaCode = (options: IOption) => {
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.java.second.step'}),
+      title: intl.formatMessage({id: 'getstarted.common.second.step'}),
       code:
 `private static final FPConfig config = FPConfig.builder()
         .remoteUri("${remoteUrl}")
         .build();
-
 private static final FeatureProbe fpClient = new FeatureProbe("${serverSdkKey}", config);
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.java.third.step'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.common.third.step'}),
       code:
 `FPUser user = new FPUser()${userWithCode};
-${returnType === 'boolean' ? `boolean boolValue = fpClient.boolValue("${toggleKey}", user, false);` : ''}${returnType === 'string' ? `String stringValue = fpClient.stringValue("${toggleKey}", user, "Test");` : ''}${returnType === 'number' ? `double numberValue = fpClient.numberValue("${toggleKey}", user, 500);` : ''}${returnType === 'json' ? `Map jsonValue = fpClient.jsonValue("${toggleKey}", user, new HashMap(), Map.class);` : ''}
+
+${eventName ? (
+  `${isTrackValue ? `fpClient.track("${eventName}", user, /* value */);` : `fpClient.track("${eventName}", user);`}`
+) : 
+`${returnType === 'boolean' ? `boolean boolValue = fpClient.boolValue("${toggleKey}", user, false);` : ''}${returnType === 'string' ? `String stringValue = fpClient.stringValue("${toggleKey}", user, "Test");` : ''}${returnType === 'number' ? `double numberValue = fpClient.numberValue("${toggleKey}", user, 500);` : ''}${returnType === 'json' ? `Map jsonValue = fpClient.jsonValue("${toggleKey}", user, new HashMap(), Map.class);` : ''}`
+} 
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.fourth.step'}),
-      code:
-`fpClient.close();
-`
+      title: intl.formatMessage({id: 'getstarted.common.fourth.step'}),
+      code: 'fpClient.close();'
     }
   ];
 };
 
-export const getJavaTrackCode = (options: ITrackOption) => {
-  const { intl, eventName } = options;
-  return [
-    {
-      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
-      code:
-`fpClient.track("${eventName}", user);
-// Providing a metric value to track
-fpClient.track("${eventName}", user, 5.5);
-`
-    },
-  ];
-};
-
-export const getRustCode = (options: IOption) => {
+export const getRustCode = (options: IOption, eventName?: string, isTrackValue?: boolean) => {
   const { intl, sdkVersion, serverSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
 
   return [
@@ -180,7 +175,7 @@ export const getRustCode = (options: IOption) => {
       code: `feature-probe-server-sdk = ${sdkVersion}`
     },
     {
-      title: intl.formatMessage({id: 'getstarted.rust.second.step'}),
+      title: intl.formatMessage({id: 'getstarted.common.second.step'}),
       code:
 `use feature_probe_server_sdk::{FPConfig, FPUser, FeatureProbe};
 let config = FPConfig {
@@ -194,38 +189,26 @@ let fp = match FeatureProbe::new(config).unwrap(); //should check result in prod
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.rust.third.step'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.common.third.step'}),
       code:
 `let user = FPUser::new();
 ${userWithCode}
-${returnType === 'boolean' ? `let value = fp.bool_value("${toggleKey}", &user, false);` : ''}${returnType === 'number' ? `let value = fp.number_value("${toggleKey}", &user, 20.0), 12.5);` : ''}${returnType === 'string' ? `let value = fp.string_value("${toggleKey}", &user, "val".to_owned()), "value");` : ''}${returnType === 'json' ? `let value = fp.json_value("${toggleKey}", &user, json!("v"));` : ''}
+${eventName ? (
+  `${isTrackValue ? `fp.track("${eventName}", &user, Some(/* value */));` : `fp.track("${eventName}", &user);`}`
+) :
+`${returnType === 'boolean' ? `let value = fp.bool_value("${toggleKey}", &user, false);` : ''}${returnType === 'number' ? `let value = fp.number_value("${toggleKey}", &user, 20.0), 12.5);` : ''}${returnType === 'string' ? `let value = fp.string_value("${toggleKey}", &user, "val".to_owned()), "value");` : ''}${returnType === 'json' ? `let value = fp.json_value("${toggleKey}", &user, json!("v"));` : ''}`}
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.fourth.step'}),
-      code:
-          `fp.close();
-`
+      title: intl.formatMessage({id: 'getstarted.common.fourth.step'}),
+      code: 'fp.close();'
     }
   ];
 };
 
-export const getRustTrackCode = (options: ITrackOption) => {
-  const { intl, eventName } = options;
-  return [
-    {
-      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
-      code:
-`fp.track("${eventName}", &user, None);
-// Providing a metric value to track
-fp.track("${eventName}", &user, Some(5.5));
-`
-    },
-  ];
-};
-
-export const getGoCode = (options: IOption) => {
+export const getGoCode = (options: IOption, eventName?: string, isTrackValue?: boolean) => {
   const { intl, serverSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
+
   return [
     {
       title: intl.formatMessage({id: 'getstarted.go.first.step.title'}),
@@ -237,8 +220,7 @@ export const getGoCode = (options: IOption) => {
       code: 'go get github.com/featureprobe/server-sdk-go'
     },
     {
-      title: intl.formatMessage({id: 'getstarted.go.second.step.title'}),
-      name: intl.formatMessage({id: 'getstarted.go.second.step.name.one'}),
+      title: intl.formatMessage({id: 'getstarted.common.second.step'}),
       code:
 `config := featureprobe.FPConfig{
     RemoteUrl:       "${remoteUrl}",
@@ -251,39 +233,25 @@ fp, err := featureprobe.NewFeatureProbe(config)
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.go.third.step.title'}),
-      name: intl.formatMessage({id: 'getstarted.go.third.step.name.one'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.common.third.step'}),
       code:
 `user := featureprobe.NewUser()
 ${userWithCode}
-${returnType === 'boolean' ? `val := fp.BoolValue("${toggleKey}", user, true)` : ''}${returnType === 'string' ? `val := fp.StrValue("${toggleKey}", user, "1")` : ''}${returnType === 'number' ? `val := fp.NumberValue("${toggleKey}", user, 1.0)` : ''}${returnType === 'json' ? `val := fp.JsonValue("${toggleKey}", user, nil)` : ''}
+${eventName ? (
+  `${isTrackValue ? `fp.track("${eventName}", user, /* value */);` : `fp.track("${eventName}", user, nil);`}`
+) :
+`${returnType === 'boolean' ? `val := fp.BoolValue("${toggleKey}", user, true)` : ''}${returnType === 'string' ? `val := fp.StrValue("${toggleKey}", user, "1")` : ''}${returnType === 'number' ? `val := fp.NumberValue("${toggleKey}", user, 1.0)` : ''}${returnType === 'json' ? `val := fp.JsonValue("${toggleKey}", user, nil)` : ''}`
+}
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.fourth.step'}),
-      code:
-          `fp.Close();
-`
+      title: intl.formatMessage({id: 'getstarted.common.fourth.step'}),
+      code: 'fp.Close();'
     }
   ];
 };
 
-export const getGoTrackCode = (options: ITrackOption) => {
-  const { intl, eventName } = options;
-  return [
-    {
-      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
-      code:
-`value := 5.5
-fp.track("${eventName}", user, nil)
-// Providing a metric value to track
-fp.track("${eventName}", user, &value)
-`
-    },
-  ];
-};
-
-export const getPythonCode = (options: IOption) => {
+export const getPythonCode = (options: IOption, eventName?: string, isTrackValue?: boolean) => {
   const { intl, serverSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
 
   return [
@@ -292,37 +260,33 @@ export const getPythonCode = (options: IOption) => {
       code: 'pip3 install featureprobe-server-sdk-python'
     },
     {
-      title: intl.formatMessage({id: 'getstarted.python.second.step'}),
+      title: intl.formatMessage({id: 'getstarted.common.second.step'}),
       code:
-`import time
-import featureprobe as fp
+`import featureprobe as fp
 
-if __name__ == '__main__':
-  config = fp.Config(remote_uri='${remoteUrl}', sync_mode='pooling', refresh_interval=3)
-  with fp.Client('${serverSdkKey}', config) as client:
-    user = fp.User()
-    ${userWithCode}
-    val = client.value('${toggleKey}', user, default=${returnType === 'boolean' ? 'False' : ''}${returnType === 'string' ? '\'not connected\'' : ''}${returnType === 'number' ? '-1' : ''}${returnType === 'json' ? '{}' : ''})  
+config = fp.Config(remote_uri='${remoteUrl}', sync_mode='pooling', refresh_interval=3)
+client = fp.Client('${serverSdkKey}', config)
 `
+    },
+    {
+      title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.common.third.step'}),
+      code: 
+`user = fp.User()
+${userWithCode}
+${eventName ? (
+  `${isTrackValue ? `fp.track("${eventName}", user, 'value')` : `fp.track("${eventName}", user)`}`
+): 
+`val = client.value('${toggleKey}', user, default=${returnType === 'boolean' ? 'False' : ''}${returnType === 'string' ? '\'not connected\'' : ''}${returnType === 'number' ? '-1' : ''}${returnType === 'json' ? '{}' : ''})`}
+`
+    },
+    {
+      title: intl.formatMessage({id: 'getstarted.common.fourth.step'}),
+      code: 'client.close()'
     }
   ];
 };
 
-export const getPythonTrackCode = (options: ITrackOption) => {
-  const { intl, eventName } = options;
-  return [
-    {
-      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
-      code:
-`fp.track("${eventName}", user)
-// Providing a metric value to track
-fp.track("${eventName}", user, 5.5)
-`
-    },
-  ];
-};
-
-export const getNodeCode = (options: IOption) => {
+export const getNodeCode = (options: IOption, eventName?: string, isTrackValue?: boolean) => {
   const { intl, serverSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
 
   return [
@@ -331,7 +295,7 @@ export const getNodeCode = (options: IOption) => {
       code: 'npm install featureprobe-server-sdk-node --save'
     },
     {
-      title: intl.formatMessage({id: 'getstarted.node.second.step'}),
+      title: intl.formatMessage({id: 'getstarted.common.second.step'}),
       code:
 `import { FeatureProbe, FPUser } from 'featureprobe-server-sdk-node'
 
@@ -344,48 +308,36 @@ await fpClient.start();  // if you want a time limit for the initialization proc
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.node.third.step'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.common.third.step'}),
       code:
 `const user = new FPUser()${userWithCode};
-const toggleValue = fpClient.${returnType}Value('${toggleKey}', user, ${returnType === 'boolean' ? 'false' : ''}${returnType === 'string' ? '\'not connected\'' : ''}${returnType === 'number' ? '-1' : ''}${returnType === 'json' ? '{}' : ''});
+
+${eventName ? (
+  `${isTrackValue ? `fpClient.track("${eventName}", user, /* value */);` : `fpClient.track("${eventName}", user);`}`
+) : 
+`const toggleValue = fpClient.${returnType}Value('${toggleKey}', user, ${returnType === 'boolean' ? 'false' : ''}${returnType === 'string' ? '\'not connected\'' : ''}${returnType === 'number' ? '-1' : ''}${returnType === 'json' ? '{}' : ''});`}
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.fourth.step'}),
-      code:
-`await fpClient.close();
-`
+      title: intl.formatMessage({id: 'getstarted.common.fourth.step'}),
+      code: 'await fpClient.close();'
     }
   ];
 };
 
-export const getNodeTrackCode = (options: ITrackOption) => {
-  const { intl, eventName } = options;
-  return [
-    {
-      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
-      code:
-`fpClient.track("${eventName}", user);
-// Providing a metric value to track
-fpClient.track("${eventName}", user, 5.5);
-`
-    },
-  ];
-};
-
-export const getAndroidCode = (options: IOption) => {
+export const getAndroidCode = (options: IOption, eventName?: string, isTrackValue?: boolean) => {
   const { intl, clientSdkKey, userWithCode, returnType, toggleKey, remoteUrl, sdkVersion } = options;
 
   return [
     {
-      title: intl.formatMessage({id: 'getstarted.android.first.step'}),
+      title: intl.formatMessage({id: 'getstarted.mobile.first.step'}),
       code:
 `implementation 'com.featureprobe:client-sdk-android:${sdkVersion}@aar'
 implementation "net.java.dev.jna:jna:5.7.0@aar"
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.android.second.step'}),
+      title: intl.formatMessage({id: 'getstarted.mobile.second.step'}),
       code:
 `import com.featureprobe.mobile.*
 
@@ -397,33 +349,22 @@ val fp = FeatureProbe(config, user)
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.android.third.step'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.mobile.third.step'}),
       code:
-`${returnType === 'boolean' ? `val value = fp.boolValue("${toggleKey}", false)` : ''}${returnType === 'number' ? `val value = fp.numberValue("${toggleKey}", 1.0)` : ''}${returnType === 'string' ? `val value = fp.stringValue("${toggleKey}", "s")` : ''}${returnType === 'json' ? `val value = fp.jsonValue("${toggleKey}", "{}")` : ''}`
-    }
-  ];
-};
-
-export const getAndroidTrackCode = (options: ITrackOption) => {
-  const { intl, eventName } = options;
-  return [
-    {
-      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
-      code:
-`fp.track("${eventName}");
-// Providing a metric value to track
-fp.track("${eventName}", 5.5);
-`
+      `${eventName ? (
+        `${isTrackValue ? `fp.track("${eventName}", /* value */);` : `fp.track("${eventName}");`}`
+      ) : 
+      `${returnType === 'boolean' ? `val value = fp.boolValue("${toggleKey}", false)` : ''}${returnType === 'number' ? `val value = fp.numberValue("${toggleKey}", 1.0)` : ''}${returnType === 'string' ? `val value = fp.stringValue("${toggleKey}", "s")` : ''}${returnType === 'json' ? `val value = fp.jsonValue("${toggleKey}", "{}")` : ''}`}`
     },
   ];
 };
 
-export const getSwiftCode = (options: IOption) => {
+export const getSwiftCode = (options: IOption, eventName?: string, isTrackValue?: boolean) => {
   const { intl, clientSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
 
   return [
     {
-      title: intl.formatMessage({id: 'getstarted.swift.first.step'}),
+      title: intl.formatMessage({id: 'getstarted.mobile.first.step'}),
       name: 'Swift Package Manager:',
       code:
 `1. XCode -> File -> Add Packages -> input \`https://github.com/FeatureProbe/client-sdk-ios.git\`
@@ -438,7 +379,7 @@ export const getSwiftCode = (options: IOption) => {
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.swift.second.step'}),
+      title: intl.formatMessage({id: 'getstarted.mobile.second.step'}),
       name: '',
       code:
 `import featureprobe
@@ -453,34 +394,25 @@ let config = FpConfig(
 )
 let fp = FeatureProbe(config: config, user: user)
 `
-    }, {
-      title: intl.formatMessage({id: 'getstarted.swift.third.step'}),
+    },
+    {
+      title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.mobile.third.step'}),
       name: '',
-      code: `${returnType === 'boolean' ? `let value = fp.boolValue("${toggleKey}", false)` : ''}${returnType === 'number' ? `let value = fp.numberValue("${toggleKey}", 1.0)` : ''}${returnType === 'string' ? `let value = fp.stringValue("${toggleKey}", "s")` : ''}${returnType === 'json' ? `let value = fp.jsonValue("${toggleKey}", "{}")` : ''}`
+      code: 
+        `${eventName 
+          ? `${isTrackValue ? `fp.track("${eventName}", /* value */);` : `fp.track("${eventName}");`}`
+          : `${returnType === 'boolean' ? `let value = fp.boolValue("${toggleKey}", false)` : ''}${returnType === 'number' ? `let value = fp.numberValue("${toggleKey}", 1.0)` : ''}${returnType === 'string' ? `let value = fp.stringValue("${toggleKey}", "s")` : ''}${returnType === 'json' ? `let value = fp.jsonValue("${toggleKey}", "{}")` : ''}`
+        }`
     }
   ];
 };
 
-export const getSwiftTrackCode = (options: ITrackOption) => {
-  const { intl, eventName } = options;
-  return [
-    {
-      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
-      code:
-`fp.track(event: "${eventName}");
-// Providing a metric value to track
-fp.track(event: "${eventName}", value: 5.5);
-`
-    },
-  ];
-};
-
-export const getObjCCode = (options: IOption) => {
+export const getObjCCode = (options: IOption, eventName?: string, isTrackValue?: boolean) => {
   const { intl, clientSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
 
   return [
     {
-      title: intl.formatMessage({id: 'getstarted.objc.first.step'}),
+      title: intl.formatMessage({id: 'getstarted.mobile.first.step'}),
       name: 'Cocoapods:',
       code:
 `1. add \`pod 'FeatureProbe', :git => 'git@github.com:FeatureProbe/client-sdk-ios.git'\` to Podfile
@@ -488,7 +420,7 @@ export const getObjCCode = (options: IOption) => {
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.objc.second.step'}),
+      title: intl.formatMessage({id: 'getstarted.mobile.second.step'}),
       name: '',
       code:
 `#import "FeatureProbe-Swift.h"
@@ -505,30 +437,21 @@ FpConfig *config = [[FpConfig alloc] initWithRemoteUrl: url
 FeatureProbe *fp = [[FeatureProbe alloc] initWithConfig:config user:user];`
     },
     {
-      title: intl.formatMessage({id: 'getstarted.objc.third.step'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.mobile.third.step'}),
       name: '',
-      code: `${returnType === 'boolean' ? `bool value = [fp boolValueWithKey: @"${toggleKey}" defaultValue: false];` : ''}${returnType === 'number' ? `double value = [fp numberValueWithKey: @"${toggleKey}" defaultValue: 1.0];` : ''}${returnType === 'string' ? `NSString* value = [fp stringValueWithKey: @"${toggleKey}" defaultValue: @"s"];` : ''}${returnType === 'json' ? `NSString* value = [fp jsonValueWithKey: @"${toggleKey}" defaultValue: @"{}"];` : ''}`
+      code: 
+        `${eventName 
+          ? `${isTrackValue ? `[fp trackWithEvent:@"${eventName}" value:/* value */];` : `[fp trackWithEvent:@"${eventName}"];`}`
+          : `${returnType === 'boolean' ? `bool value = [fp boolValueWithKey: @"${toggleKey}" defaultValue: false];` : ''}${returnType === 'number' ? `double value = [fp numberValueWithKey: @"${toggleKey}" defaultValue: 1.0];` : ''}${returnType === 'string' ? `NSString* value = [fp stringValueWithKey: @"${toggleKey}" defaultValue: @"s"];` : ''}${returnType === 'json' ? `NSString* value = [fp jsonValueWithKey: @"${toggleKey}" defaultValue: @"{}"];` : ''}`
+        }`
     }
   ];
 };
 
-export const getObjCTrackCode = (options: ITrackOption) => {
-  const { intl, eventName } = options;
-  return [
-    {
-      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
-      code:
-`[fp trackWithEvent:@"${eventName}"];
-// Providing a metric value to track
-[fp trackWithEvent:@"${eventName}" value:5.5];
-`
-    },
-  ];
-};
-
-export const getJSCode = (options: IOption) => {
+export const getJSCode = (options: IOption, eventName?: string, isTrackValue?: boolean, isTrackEvent?: boolean) => {
   const { intl, clientSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
-  return [
+
+  const result = [
     {
       title: intl.formatMessage({id: 'getstarted.js.first.step.title'}),
       name: 'NPM',
@@ -570,34 +493,29 @@ fp.start();
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.js.third.step.title'}),
-      name: intl.formatMessage({id: 'getstarted.js.third.step.name.one'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.js.third.step.title'}),
+      name: eventName ? '' : intl.formatMessage({id: 'getstarted.js.third.step.name.one'}),
       code:
 `fp.on("ready", function() {
-    ${returnType === 'boolean' ? `const value = fp.boolValue("${toggleKey}", false);` : ''}${returnType === 'number' ? `const value = fp.numberValue("${toggleKey}", 1.0);` : ''}${returnType === 'string' ? `const value = fp.stringValue("${toggleKey}", "s");` : ''}${returnType === 'json' ? `const value = fp.jsonValue("${toggleKey}", {});` : ''}
-});
+  ${eventName 
+    ? `${isTrackValue ? `fp.track("${eventName}", /* value */);` : `fp.track("${eventName}");`}`
+    : `${returnType === 'boolean' ? `const value = fp.boolValue("${toggleKey}", false);` : ''}${returnType === 'number' ? `const value = fp.numberValue("${toggleKey}", 1.0);` : ''}${returnType === 'string' ? `const value = fp.stringValue("${toggleKey}", "s");` : ''}${returnType === 'json' ? `const value = fp.jsonValue("${toggleKey}", {});` : ''}`
+  }
+})
 `
     }
   ];
+
+  if (eventName && !isTrackEvent) {
+    result.splice(4, 1);
+  }
+
+  return result;
 };
 
-export const getJSTrackCode = (options: ITrackOption) => {
-  const { intl, eventName } = options;
-  return [
-    {
-      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
-      code:
-`fp.track("${eventName}");
-// Providing a metric value to track
-fp.track("${eventName}", 5.5);
-`
-    },
-  ];
-};
-
-export const getMiniProgramCode = (options: IOption) => {
+export const getMiniProgramCode = (options: IOption, eventName?: string, isTrackValue?: boolean) => {
   const { intl, clientSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
-  return [
+  const result = [
     {
       title: intl.formatMessage({id: 'getstarted.miniprogram.first.step.title'}),
       code: 'npm install featureprobe-client-sdk-miniprogram --save'
@@ -619,41 +537,37 @@ featureProbeClient.start();
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.miniprogram.third.step.title'}),
-      name: intl.formatMessage({id: 'getstarted.miniprogram.third.step.name.one'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.miniprogram.third.step.title'}),
+      name: eventName? '' : intl.formatMessage({id: 'getstarted.miniprogram.third.step.name.one'}),
       code:
-`const app = getApp();
-const value = app.globalData.toggles[${toggleKey}].value;
+`${eventName 
+  ? `${isTrackValue ? `featureProbeClient.on("ready", function() {
+  featureProbeClient.track("${eventName}", /* value */);` : `featureProbeClient.track("${eventName}")`}
+});`
+  : `const app = getApp();
+const value = app.globalData.toggles[${toggleKey}].value;`
+}
 `
     },
     {
       name: intl.formatMessage({id: 'getstarted.miniprogram.third.step.name.second'}),
       code:
 `featureProbeClient.on("ready", function() {
-    ${returnType === 'boolean' ? `const value = fp.boolValue("${toggleKey}", false);` : ''}${returnType === 'number' ? `const value = fp.numberValue("${toggleKey}", 1.0);` : ''}${returnType === 'string' ? `const value = fp.stringValue("${toggleKey}", "s");` : ''}${returnType === 'json' ? `const value = fp.jsonValue("${toggleKey}", {});` : ''}
+  ${returnType === 'boolean' ? `const value = fp.boolValue("${toggleKey}", false);` : ''}${returnType === 'number' ? `const value = fp.numberValue("${toggleKey}", 1.0);` : ''}${returnType === 'string' ? `const value = fp.stringValue("${toggleKey}", "s");` : ''}${returnType === 'json' ? `const value = fp.jsonValue("${toggleKey}", {});` : ''}
 });
 `
     }
   ];
+
+  if (eventName) {
+    result.splice(3, 1);
+  }
+  return result;
 };
 
-export const getMiniProgramTrackCode = (options: ITrackOption) => {
-  const { intl, eventName } = options;
-  return [
-    {
-      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
-      code:
-`featureProbeClient.track("${eventName}");
-// Providing a metric value to track
-featureProbeClient.track("${eventName}", 5.5);
-`
-    },
-  ];
-};
-
-export const getReactCode = (options: IOption) => {
+export const getReactCode = (options: IOption, eventName?: string, isTrackValue?: boolean, isTrackEvent?: boolean) => {
   const { intl, clientSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
-  return [
+  const result = [
     {
       title: intl.formatMessage({id: 'getstarted.react.first.step.title'}),
       code: 'npx create-react-app react-demo && cd react-demo'
@@ -706,21 +620,33 @@ export default withFPConsumer(Home);
 `
     },
   ];
-};
 
-export const getReactTrackCode = (options: ITrackOption) => {
-  const { intl, eventName } = options;
-  return [
-    {
-      title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.track.event.title'})}),
-      code:
-`import { useFPClient } from 'featureprobe-client-sdk-client';
+  if (eventName) {
+    if (isTrackEvent) {
+      result.splice(3, 1, {
+        title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.react.track.event.title'})}),
+        code:
+  `import { useFPClient } from 'featureprobe-client-sdk-client';
+  
+  const Home = ({ toggles, client }) => {
+    const fp = useFPClient();
+    ${isTrackValue ? `fp.track("${eventName}", /* value */);` : `fp.track("${eventName}");`}
+  
+    return (
+      <>
+        You can use track custom event in this page
+      </div>
+    )
+  };
+  
+  export default withFPConsumer(Home);
+  `
+      });
+    } else {
+      result.splice(3, 1);
+    }
+  }
 
-const fp = useFPClient();
-fp.track("${eventName}");
-// Providing a metric value to track
-fp.track("${eventName}", 5.5);
-`
-    },
-  ];
+  return result;
+
 };

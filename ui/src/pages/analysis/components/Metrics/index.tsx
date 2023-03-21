@@ -1,9 +1,9 @@
-import { useCallback, useState, SyntheticEvent, useEffect, useRef, useMemo } from 'react';
+import { useCallback, useState, SyntheticEvent, useEffect, useRef } from 'react';
 import { Dropdown, DropdownProps, Form, Grid, InputOnChangeData, Popup } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Joyride, { CallBackProps, EVENTS, Step, ACTIONS } from 'react-joyride';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import isEqual from 'lodash/isEqual';
 import Icon from 'components/Icon';
 import SectionTitle from 'components/SectionTitle';
@@ -16,7 +16,7 @@ import { IRouterParams } from 'interfaces/project';
 import { IDictionary } from 'interfaces/targeting';
 import { createEvent } from 'services/analysis';
 import { getFromDictionary, saveDictionary } from 'services/dictionary';
-import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, COUNT, REVENUE, DURATION } from '../../constants';
+import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, COUNT, SUM, AVERAGE } from '../../constants';
 import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
 import { USER_TRACK_EVENT } from 'constants/dictionary_keys';
 
@@ -50,7 +50,7 @@ const STEPS: Step[] = [
       </div>
     ),
     placement: 'bottom',
-    target: '.connect-sdk',
+    target: '.event-track',
     spotlightPadding: 10,
     ...commonConfig
   },
@@ -78,6 +78,7 @@ const Metrics = (props: IProps) => {
   const selectorUrl = useRef('');
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
+  const history = useHistory();
 
   const {
     formState: { errors },
@@ -150,7 +151,7 @@ const Metrics = (props: IProps) => {
       eventInfo.eventName && saveEventName(eventInfo.eventName);
     }
 
-    if (eventInfo?.metricType === DURATION || eventInfo?.metricType === REVENUE) {
+    if (eventInfo?.metricType === AVERAGE || eventInfo?.metricType === SUM) {
       setValue('unit', eventInfo?.unit);
       eventInfo?.unit && saveUnit(eventInfo.unit);
     }
@@ -262,7 +263,7 @@ const Metrics = (props: IProps) => {
 
     register('unit', { 
       required: {
-        value: metricType === REVENUE || metricType === DURATION,
+        value: metricType === SUM || metricType === AVERAGE,
         message: intl.formatMessage({id: 'analysis.metric.unit.tips'})
       },
     });
@@ -301,7 +302,7 @@ const Metrics = (props: IProps) => {
       param.eventName = data.eventName;
     }
 
-    if (data.metricType === DURATION || data.metricType === REVENUE) {
+    if (data.metricType === AVERAGE || data.metricType === SUM) {
       param.unit = data.unit;
     }
 
@@ -328,7 +329,7 @@ const Metrics = (props: IProps) => {
   const handleMetricTypeChange = useCallback((e: SyntheticEvent, data: DropdownProps) => {
     saveMetricType(data.value as string);
 
-    if (data.value === DURATION || data.value === REVENUE) {
+    if (data.value === AVERAGE || data.value === SUM) {
       saveEventType(CUSTOM);
       setValue('eventType', CUSTOM);
     }
@@ -341,14 +342,14 @@ const Metrics = (props: IProps) => {
     setValue('eventName', eventName);
   }, [eventName, setValue]);
 
-  const geMolecularText = useMemo(() => {
-    return new Map([
-      [CONVERSION, intl.formatMessage({id: 'analysis.event.conversions'})],
-      [COUNT, intl.formatMessage({id: 'analysis.event.count'})],
-      [REVENUE, intl.formatMessage({id: 'analysis.event.revenue'})],
-      [DURATION, intl.formatMessage({id: 'analysis.event.duration'})],
-    ]);
-  }, [intl]);
+  // const geMolecularText = useMemo(() => {
+  //   return new Map([
+  //     [CONVERSION, intl.formatMessage({id: 'analysis.event.conversions'})],
+  //     [COUNT, intl.formatMessage({id: 'analysis.event.count'})],
+  //     [SUM, intl.formatMessage({id: 'analysis.event.sum'})],
+  //     [AVERAGE, intl.formatMessage({id: 'analysis.event.average'})],
+  //   ]);
+  // }, [intl]);
 
   const handleJoyrideCallback = useCallback((data: CallBackProps) => {
     const { action, index, type } = data;
@@ -359,6 +360,10 @@ const Metrics = (props: IProps) => {
       saveDictionary(USER_TRACK_EVENT, nextStepIndex);
     }
   }, []);
+
+  const handleGotoEventTrack = useCallback(() => {
+    history.push(`/${projectKey}/${environmentKey}/${toggleKey}/track-event`);
+  }, [environmentKey, history, projectKey, toggleKey]);
 
   return (
     <div className={styles.metrics}>
@@ -373,10 +378,13 @@ const Metrics = (props: IProps) => {
             <Loading /> 
           </div>
         ): (
-          <div className={styles['metrics-content']}>
+          <div>
             <Form autoComplete='off'onSubmit={handleSubmit(onSubmit)}>
               <Grid>
                 <Grid.Row className={styles.row}>
+                  <div className={styles['title']}>
+                    <FormattedMessage id='analysis.metric.detail' />
+                  </div>
                   {/* Metric name */}
                   <Grid.Column width={8} className={styles.column}>
                     <Form.Field>
@@ -450,12 +458,27 @@ const Metrics = (props: IProps) => {
                     </Form.Field>
                     { errors.metricType && <div className={styles['error-text']}>{ errors.metricType.message }</div> }
                   </Grid.Column>
+                </Grid.Row>
+                {
+                  metricType && (
+                    <Grid.Row className={styles.row}>
+                      <div className={styles.title}>
+                        <div className={styles['event-title']}>
+                          <span><FormattedMessage id='analysis.event.detail' /></span>
+                          {
+                            eventInfo && (
+                              <span className={`${styles['event-track']} event-track`} onClick={handleGotoEventTrack}>
+                                <Icon type='connect-sdk' customclass={styles['icon-connect-sdk']} />
+                                <FormattedMessage id='common.event.track.text' />
+                              </span>
+                            )
+                          }
+                        </div>
+                      </div>
 
-                  {/* Event type and formula */}
-                  <Grid.Column width={8} className={styles.column}>
-                    <Form.Field>
-                      <div className={styles.field}>
-                        <div className={styles['field-middle']}>
+                      {/* Event type */}
+                      <Grid.Column width={8} className={styles.column}>
+                        <Form.Field>
                           <div className={styles.label}>
                             <span className={styles['label-required']}>*</span>
                             <FormattedMessage id='analysis.event.type' />
@@ -481,233 +504,233 @@ const Metrics = (props: IProps) => {
                             }}
                           />
                           { errors.eventType && <div className={styles['error-text-url']}>{ errors.eventType.message }</div> }
-                        </div>
-                        <div className={styles.formula}>
-                          <label className={styles['formula-label']}>
-                            <span className={styles['label-required']}>*</span>
-                            <FormattedMessage id='analysis.event.formula' />
-                          </label>
-                          <div>
-                            <div className={styles.molecular}>{geMolecularText.get(metricType ?? '') || ''}</div>
-                            <div className={styles.divider}></div>
-                            <div className={styles.denominator}>
-                              <FormattedMessage id='analysis.result.table.samplesize' />
+                          {/* <div className={styles.formula}>
+                            <label className={styles['formula-label']}>
+                              <span className={styles['label-required']}>*</span>
+                              <FormattedMessage id='analysis.event.formula' />
+                            </label>
+                            <div>
+                              <div className={styles.molecular}>{geMolecularText.get(metricType ?? '') || ''}</div>
+                              <div className={styles.divider}></div>
+                              <div className={styles.denominator}>
+                                <FormattedMessage id='analysis.result.table.samplesize' />
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      </div>
-                      {
-                        (eventType === PAGE_VIEW || eventType === CLICK) && (
-                          <div className={styles['available-sdk']}>
-                            <Icon type='warning-circle' customclass={styles['warning-circle']} />
-                            <FormattedMessage id='analysis.event.available.sdk' />
-                          </div>
-                        )
-                      }
-                    </Form.Field>
-                  </Grid.Column>
-
-                  {/* Event name */}
-                  {
-                    eventType === CUSTOM && (
-                      <Grid.Column width={8} className={styles.column}>
-                        <Form.Field>
-                          <label className={styles.label}>
-                            <span className={styles['label-required']}>*</span>
-                            <FormattedMessage id='analysis.event.name' />
-                          </label>
-                          <Form.Input
-                            fluid
-                            name='eventName'
-                            value={eventName}
-                            error={ errors.eventName ? true : false }
-                            placeholder={
-                              intl.formatMessage({id: 'analysis.event.name.placeholder'})
-                            }
-                            onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
-                              setValue(detail.name, detail.value);
-                              saveEventName(detail.value);
-                              await trigger('eventName');
-                            }}
-                          />
+                          </div> */}
+                          {
+                            (eventType === PAGE_VIEW || eventType === CLICK) && (
+                              <div className={styles['available-sdk']}>
+                                <Icon type='warning-circle' customclass={styles['warning-circle']} />
+                                <FormattedMessage id='analysis.event.available.sdk' />
+                              </div>
+                            )
+                          }
                         </Form.Field>
-                        <div className={styles['tip-text']}>
-                          <FormattedMessage id="analysis.event.name.tip" />
-                        </div>
-                        { errors.eventName && <div className={styles['error-text']}>{ errors.eventName.message }</div> }
                       </Grid.Column>
-                    )
-                  }
 
-                  {/* Event matcher and url */}
-                  {
-                    (eventType === PAGE_VIEW || eventType === CLICK) && (
-                      <Grid.Column width={8} className={styles.column}>
-                        <Form.Field>
-                          <label className={styles.label}>
-                            <span className={styles['label-required']}>*</span>
-                            <FormattedMessage id='analysis.event.target.url' />
-                          </label>
-                          <div className={styles.field}>
-                            <div className={styles['field-middle']}>
-                              <Dropdown
-                                selection
-                                floating
-                                name='matcher'
-                                value={metricMatcher}
-                                error={ errors.matcher ? true : false }
-                                placeholder={
-                                  intl.formatMessage({id: 'analysis.event.target.url.matching'})
-                                } 
-                                options={getUrlMatchOptions()} 
-                                icon={<Icon customclass={styles['angle-down']} type='angle-down' />}
-                                onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
-                                  setValue(detail.name, detail.value);
-                                  saveMetricMatcher(detail.value as string);
-                                  setPopupOpen(false);
-                                  await trigger('matcher');
-                                }}
-                              />
-                              { errors.matcher && <div className={styles['error-text-url']}>{ errors.matcher.message }</div> }
-                            </div>
-                            <div className={styles['field-right']}>
+                      {/* Event name */}
+                      {
+                        eventType === CUSTOM && (
+                          <Grid.Column width={8} className={styles.column}>
+                            <Form.Field>
+                              <label className={styles.label}>
+                                <span className={styles['label-required']}>*</span>
+                                <FormattedMessage id='analysis.event.name' />
+                              </label>
                               <Form.Input
-                                name='url'
-                                error={ errors.url ? true : false }
-                                value={metricUrl}
+                                fluid
+                                name='eventName'
+                                value={eventName}
+                                error={ errors.eventName ? true : false }
                                 placeholder={
-                                  intl.formatMessage({id: 'analysis.event.target.url.placeholder'})
+                                  intl.formatMessage({id: 'analysis.event.name.placeholder'})
                                 }
                                 onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
                                   setValue(detail.name, detail.value);
-                                  saveMetricUrl(detail.value);
-                                  await trigger('url');
+                                  saveEventName(detail.value);
+                                  await trigger('eventName');
                                 }}
                               />
-                              { errors.url && <div className={styles['error-text-url']}>{ errors.url.message }</div> }
-                              {
-                                metricUrl && metricMatcher && (
-                                  <CheckURL 
-                                    metricUrl={metricUrl}
-                                    popupOpen={popupOpen}
-                                    metricMatcher={metricMatcher}
-                                    setPopupOpen={setPopupOpen}
-                                  />
-                                )
-                              }
+                            </Form.Field>
+                            <div className={styles['tip-text']}>
+                              <FormattedMessage id="analysis.event.name.tip" />
                             </div>
-                          </div>
-                        </Form.Field>
-                      </Grid.Column>
-                    )
-                  }
+                            { errors.eventName && <div className={styles['error-text']}>{ errors.eventName.message }</div> }
+                          </Grid.Column>
+                        )
+                      }
 
-                  {/* Event target selector */}
-                  {
-                    eventType === CLICK && (
+                      {/* Event matcher and url */}
+                      {
+                        (eventType === PAGE_VIEW || eventType === CLICK) && (
+                          <Grid.Column width={8} className={styles.column}>
+                            <Form.Field>
+                              <label className={styles.label}>
+                                <span className={styles['label-required']}>*</span>
+                                <FormattedMessage id='analysis.event.target.url' />
+                              </label>
+                              <div className={styles.field}>
+                                <div className={styles['field-middle']}>
+                                  <Dropdown
+                                    selection
+                                    floating
+                                    name='matcher'
+                                    value={metricMatcher}
+                                    error={ errors.matcher ? true : false }
+                                    placeholder={
+                                      intl.formatMessage({id: 'analysis.event.target.url.matching'})
+                                    } 
+                                    options={getUrlMatchOptions()} 
+                                    icon={<Icon customclass={styles['angle-down']} type='angle-down' />}
+                                    onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
+                                      setValue(detail.name, detail.value);
+                                      saveMetricMatcher(detail.value as string);
+                                      setPopupOpen(false);
+                                      await trigger('matcher');
+                                    }}
+                                  />
+                                  { errors.matcher && <div className={styles['error-text-url']}>{ errors.matcher.message }</div> }
+                                </div>
+                                <div className={styles['field-right']}>
+                                  <Form.Input
+                                    name='url'
+                                    error={ errors.url ? true : false }
+                                    value={metricUrl}
+                                    placeholder={
+                                      intl.formatMessage({id: 'analysis.event.target.url.placeholder'})
+                                    }
+                                    onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
+                                      setValue(detail.name, detail.value);
+                                      saveMetricUrl(detail.value);
+                                      await trigger('url');
+                                    }}
+                                  />
+                                  { errors.url && <div className={styles['error-text-url']}>{ errors.url.message }</div> }
+                                  {
+                                    metricUrl && metricMatcher && (
+                                      <CheckURL 
+                                        metricUrl={metricUrl}
+                                        popupOpen={popupOpen}
+                                        metricMatcher={metricMatcher}
+                                        setPopupOpen={setPopupOpen}
+                                      />
+                                    )
+                                  }
+                                </div>
+                              </div>
+                            </Form.Field>
+                          </Grid.Column>
+                        )
+                      }
+
+                      {/* Event target selector */}
+                      {
+                        eventType === CLICK && (
+                          <Grid.Column width={8} className={styles.column}>
+                            <Form.Field>
+                              <label className={styles.label}>
+                                <span className={styles['label-required']}>*</span>
+                                <FormattedMessage id='analysis.event.click.target' />
+                                <Popup
+                                  inverted
+                                  on='click'
+                                  trigger={<Icon customclass={styles['icon-question']} type='question' />}
+                                  content={
+                                    <span>
+                                      <FormattedMessage id='analysis.event.click.target.tips' />
+                                      <a href={selectorUrl.current} target='_blank'>
+                                        <FormattedMessage id='targeting.semver.more' />
+                                      </a>
+                                    </span>
+                                  }
+                                  position='top center'
+                                  className='popup-override'
+                                  wide={true}
+                                />
+                              </label>
+                              <Form.Input
+                                name='selector'
+                                value={metricSelector}
+                                error={ errors.selector ? true : false }
+                                placeholder={intl.formatMessage({id: 'analysis.event.click.target.placeholder'})} 
+                                onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
+                                  setValue(detail.name, detail.value);
+                                  saveMetricSelector(detail.value);
+                                  await trigger('selector');
+                                }}
+                              />
+                            </Form.Field>
+                            { errors.selector && <div className={styles['error-text']}>{ errors.selector.message }</div> }
+                          </Grid.Column>
+                        )
+                      }
+
+                      {/* Event unit */}
+                      {
+                        (metricType === SUM || metricType === AVERAGE) && (
+                          <Grid.Column width={8} className={styles.column}>
+                            <Form.Field inline={true}>
+                              <label className={styles.label}>
+                                <span className={styles['label-required']}>*</span>
+                                <FormattedMessage id='analysis.metric.unit.text' />
+                              </label>
+                              <Form.Input
+                                fluid
+                                name='unit'
+                                error={ errors.unit ? true : false }
+                                value={unit}
+                                placeholder={
+                                  intl.formatMessage({id: 'analysis.metric.unit.placeholder'})
+                                }
+                                onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
+                                  setValue(detail.name, detail.value);
+                                  saveUnit(detail.value);
+                                  await trigger('unit');
+                                }}
+                              />
+                            </Form.Field>
+                            { errors.unit && <div className={styles['error-text']}>{ errors.unit.message }</div> }
+                          </Grid.Column>
+                        )
+                      }
+
+                      {/* Event win criteria */}
                       <Grid.Column width={8} className={styles.column}>
                         <Form.Field>
                           <label className={styles.label}>
                             <span className={styles['label-required']}>*</span>
-                            <FormattedMessage id='analysis.event.click.target' />
-                            <Popup
-                              inverted
-                              on='click'
-                              trigger={<Icon customclass={styles['icon-question']} type='question' />}
-                              content={
-                                <span>
-                                  <FormattedMessage id='analysis.event.click.target.tips' />
-                                  <a href={selectorUrl.current} target='_blank'>
-                                    <FormattedMessage id='targeting.semver.more' />
-                                  </a>
-                                </span>
-                              }
-                              position='top center'
-                              className='popup-override'
-                              wide={true}
+                            <FormattedMessage id='analysis.metric.win.criteria.text' />
+                          </label>
+                          <div className={styles.field}>
+                            <Dropdown
+                              fluid 
+                              selection
+                              floating
+                              clearable
+                              selectOnBlur={false}
+                              name='winCriteria'
+                              value={winCriteria}
+                              placeholder={
+                                intl.formatMessage({id: 'analysis.metric.win.criteria.placeholder'})
+                              } 
+                              options={getWinCriteriaOptions()} 
+                              icon={<Icon customclass={styles['angle-down']} type='angle-down' />}
+                              error={ errors.winCriteria ? true : false }
+                              onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
+                                setValue(detail.name, detail.value);
+                                saveWinCriteria(detail.value as string);
+                                await trigger('winCriteria');
+                              }}
                             />
-                          </label>
-                          <Form.Input
-                            name='selector'
-                            value={metricSelector}
-                            error={ errors.selector ? true : false }
-                            placeholder={intl.formatMessage({id: 'analysis.event.click.target.placeholder'})} 
-                            onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
-                              setValue(detail.name, detail.value);
-                              saveMetricSelector(detail.value);
-                              await trigger('selector');
-                            }}
-                          />
+                          </div>
                         </Form.Field>
-                        { errors.selector && <div className={styles['error-text']}>{ errors.selector.message }</div> }
+                        { errors.winCriteria && <div className={styles['error-text-url']}>{ errors.winCriteria.message }</div> }
                       </Grid.Column>
-                    )
-                  }
-
-                  {/* Event unit */}
-                  {
-                    (metricType === REVENUE || metricType === DURATION) && (
-                      <Grid.Column width={8} className={styles.column}>
-                        <Form.Field inline={true}>
-                          <label className={styles.label}>
-                            <span className={styles['label-required']}>*</span>
-                            <FormattedMessage id='analysis.metric.unit.text' />
-                          </label>
-                          <Form.Input
-                            fluid
-                            name='unit'
-                            error={ errors.unit ? true : false }
-                            value={unit}
-                            placeholder={
-                              intl.formatMessage({id: 'analysis.metric.unit.placeholder'})
-                            }
-                            onChange={async (e: SyntheticEvent, detail: InputOnChangeData) => {
-                              setValue(detail.name, detail.value);
-                              saveUnit(detail.value);
-                              await trigger('unit');
-                            }}
-                          />
-                        </Form.Field>
-                        { errors.unit && <div className={styles['error-text']}>{ errors.unit.message }</div> }
-                      </Grid.Column>
-                    )
-                  }
-
-                  {/* Event win criteria */}
-                  <Grid.Column width={8} className={styles.column}>
-                    <Form.Field>
-                      <label className={styles.label}>
-                        <span className={styles['label-required']}>*</span>
-                        <FormattedMessage id='analysis.metric.win.criteria.text' />
-                      </label>
-                      <div className={styles.field}>
-                        <Dropdown
-                          fluid 
-                          selection
-                          floating
-                          clearable
-                          selectOnBlur={false}
-                          name='winCriteria'
-                          value={winCriteria}
-                          placeholder={
-                            intl.formatMessage({id: 'analysis.metric.win.criteria.placeholder'})
-                          } 
-                          options={getWinCriteriaOptions()} 
-                          icon={<Icon customclass={styles['angle-down']} type='angle-down' />}
-                          error={ errors.winCriteria ? true : false }
-                          onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
-                            setValue(detail.name, detail.value);
-                            saveWinCriteria(detail.value as string);
-                            await trigger('winCriteria');
-                          }}
-                        />
-                      </div>
-                    </Form.Field>
-                    { errors.winCriteria && <div className={styles['error-text-url']}>{ errors.winCriteria.message }</div> }
-                  </Grid.Column>
-                </Grid.Row>
+                    </Grid.Row>
+                  )
+                }
               </Grid>
-              <div className={styles['metrics-save']}>
+              <div className={styles['save']}>
                 <Button className={styles['btn']} secondary type='submit' disabled={!canSave} loading={saveLoading}>
                   <FormattedMessage id='common.save.text' />
                 </Button>

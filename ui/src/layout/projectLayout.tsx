@@ -28,6 +28,7 @@ import {
   CONNECT_SDK_PATH,
   SEGMENT_EDIT_PATH,
   SETTING_PATH,
+  TRACK_EVENT_PATH
 } from 'router/routes';
 
 import styles from './layout.module.scss';
@@ -294,7 +295,7 @@ const ProjectLayout = (props: IProps) => {
             )
           }
           {
-            match.path === CONNECT_SDK_PATH && (
+            (match.path === CONNECT_SDK_PATH || match.path === TRACK_EVENT_PATH) && (
               <>
                 <Breadcrumb.Section link onClick={gotoToggle}>
                   <TextLimit text={projectInfo.name} maxWidth={190} popupProps={{ offset: [0, -12] }}  />
@@ -305,7 +306,11 @@ const ProjectLayout = (props: IProps) => {
                 </Breadcrumb.Section>
                 <Breadcrumb.Divider icon={<Icon customclass={styles['breadcrumb-icon']} type='angle-right' />} />
                 <Breadcrumb.Section active>
-                  <FormattedMessage id='common.connect.sdk.text' />
+                  {
+                    match.path === CONNECT_SDK_PATH 
+                      ? <FormattedMessage id='common.connect.sdk.text' />
+                      : <FormattedMessage id='common.event.track.text' />
+                  }
                 </Breadcrumb.Section>
               </>
             )
