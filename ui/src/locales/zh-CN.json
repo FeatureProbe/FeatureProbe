@@ -427,7 +427,7 @@
   "connect.fourth.failed.button": "重试连接",
   "connect.fourth.failed.link": "常见失败原因",
   "connect.fourth.event.running": "正在{environment}环境中监听{toggle}开关的{eventName}事件。",
-  "connect.fourth.event.failed": "您没有应用程序正在{environment}环境中监听{toggle}开关的{eventName}事件。",
+  "connect.fourth.event.failed": "您没有应用程序正在{environment}环境中监听{eventName}事件。",
   "connect.fourth.event.success": "事件上报成功！",
 
   "getstarted.common.second.step": "第二步：创建一个FeatureProbe Client的唯一实例",
@@ -630,6 +630,7 @@
   "analysis.metric.detail": "指标信息",
   "analysis.event.detail": "事件信息",
   "analysis.event.track.success": "事件上报成功",
+  "analysis.metric.explanation": "指标类型说明",
 
   "analysis.result.tip": "请先保存“指标信息”，并点击【收集数据】。",
   "analysis.result.collect.time": "数据统计周期：",

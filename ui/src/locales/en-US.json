@@ -427,7 +427,7 @@
   "connect.fourth.failed.button": "Retry Connection",
   "connect.fourth.failed.link": "Common reasons for failed",
   "connect.fourth.event.running": "Listening for {eventName} event for {toggle} in the {environment} environment.",
-  "connect.fourth.event.failed": "You have no applications listening for {eventName} event for {toggle} in the {environment} environment.",
+  "connect.fourth.event.failed": "You have no applications listening for {eventName} event in the {environment} environment.",
   "connect.fourth.event.success": "Event tracked successfully",
   
   "getstarted.java.first.step": "Step 1: Install the Java SDK to your project",
@@ -630,6 +630,7 @@
   "analysis.metric.detail": "Metric details",
   "analysis.event.detail": "Event details",
   "analysis.event.track.success": "Event tracked successfully",
+  "analysis.metric.explanation": "Metric type explanation",
 
   "analysis.result.tip": "Create a metric to use analysis.",
   "analysis.result.collect.time": "Time frame: ",

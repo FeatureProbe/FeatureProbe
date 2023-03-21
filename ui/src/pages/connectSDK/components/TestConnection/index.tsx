@@ -160,7 +160,6 @@ const TestConnection = (props: IProps) => {
                                   }, {
                                     eventName: displayName,
                                     environment: environmentKey,
-                                    toggle: toggleKey,
                                   })
                                 }
                                 

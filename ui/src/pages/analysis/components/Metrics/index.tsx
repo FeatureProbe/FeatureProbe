@@ -342,6 +342,34 @@ const Metrics = (props: IProps) => {
     setValue('eventName', eventName);
   }, [eventName, setValue]);
 
+  const handleGotoMetricExplain = useCallback(() => {
+    if (metricType === CONVERSION) {
+      if (intl.locale === 'zh-CN') {
+        window.open('https://docs.featureprobe.io/zh-CN/reference/metric-explanation/#%E8%BD%AC%E5%8C%96%E7%B1%BB');
+      } else {
+        window.open('https://docs.featureprobe.io/reference/metric-explanation#conversion');
+      }
+    } else if (metricType === COUNT) {
+      if (intl.locale === 'zh-CN') {
+        window.open('https://docs.featureprobe.io/zh-CN/reference/metric-explanation/#%E8%AE%A1%E6%95%B0%E7%B1%BB');
+      } else {
+        window.open('https://docs.featureprobe.io/reference/metric-explanation#count');
+      }
+    } else if (metricType === SUM) {
+      if (intl.locale === 'zh-CN') {
+        window.open('https://docs.featureprobe.io/zh-CN/reference/metric-explanation/#%E5%8A%A0%E5%92%8C%E7%B1%BB');
+      } else {
+        window.open('https://docs.featureprobe.io/reference/metric-explanation/#sum');
+      }
+    } else if (metricType === AVERAGE) {
+      if (intl.locale === 'zh-CN') {
+        window.open('https://docs.featureprobe.io/zh-CN/reference/metric-explanation/#%E5%B9%B3%E5%9D%87%E7%B1%BB');
+      } else {
+        window.open('https://docs.featureprobe.io/reference/metric-explanation/#average');
+      }
+    }
+  }, [intl, metricType]);
+
   // const geMolecularText = useMemo(() => {
   //   return new Map([
   //     [CONVERSION, intl.formatMessage({id: 'analysis.event.conversions'})],
@@ -456,6 +484,13 @@ const Metrics = (props: IProps) => {
                         }}
                       />
                     </Form.Field>
+                    {
+                      metricType && (
+                        <div className={styles['metric-explanation']} onClick={handleGotoMetricExplain}>
+                          <FormattedMessage id='analysis.metric.explanation' />
+                        </div>
+                      )
+                    }
                     { errors.metricType && <div className={styles['error-text']}>{ errors.metricType.message }</div> }
                   </Grid.Column>
                 </Grid.Row>
@@ -464,7 +499,9 @@ const Metrics = (props: IProps) => {
                     <Grid.Row className={styles.row}>
                       <div className={styles.title}>
                         <div className={styles['event-title']}>
-                          <span><FormattedMessage id='analysis.event.detail' /></span>
+                          <span>
+                            <FormattedMessage id='analysis.event.detail' />
+                          </span>
                           {
                             eventInfo && (
                               <span className={`${styles['event-track']} event-track`} onClick={handleGotoEventTrack}>
