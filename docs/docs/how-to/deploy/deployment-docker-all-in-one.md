@@ -57,11 +57,36 @@ Running with Docker on Linux/Unix/Mac
    --name featureProbeAll -d featureprobe/featureprobe 
    ```
 
-   :::info
-   The "spring.datasource.jdbc-url" parameter is for the API service database. Please replace it with your own prepared database address.
-   
-   The "app.datasource.jdbcUrl" parameter is for the Analysis service database. Please replace it with your own prepared database address.
-   :::
+- ***Service Configuration Details***
+
+| Configuration   | Module            | Description              |
+| ---------- | ------------------- |-----------------|
+| api_server_port                  | FeatureProbe API    | The port on which the API server will be started |
+| api_spring_profiles_active      | FeatureProbe API    | The active profile(s) to be loaded after the configuration file is read |
+| API_JVM_ARGS                    | FeatureProbe API    | JVM arguments for the API server |
+| spring.datasource.jdbc-url      | FeatureProbe API    | The URL of the database to be used by the API server |
+| spring.datasource.username      | FeatureProbe API    | The username to be used to connect to the database for the API server
+spring.datasource.password		|
+| spring.datasource.password      | FeatureProbe API    | The password to be used to connect to the database for the API server |
+| app.server-base-urls            | FeatureProbe API    | The address(es) of the server(s) on which the API will be deployed. Multiple addresses can be separated by commas. (For multi-instance deployment, it is recommended to configure the gateway address)            |
+| app.analysis-base-url           | FeatureProbe API    | The address of the analysis service, currently only supports a single address. (For multi-instance deployment, it is recommended to configure the gateway address)           |
+|      |    |          |
+| analysis_server_port            | FeatureProbe Analysis         | The port on which the analysis server will be started             |
+| app.datasource.jdbcUrl          | FeatureProbe Analysis         | The URL of the database to be used by the analysis server             |
+| app.datasource.username         | FeatureProbe Analysis         | The username to be used to connect to the database for the analysis server           |
+| app.datasource.password         | FeatureProbe Analysis         | The password to be used to connect to the database for the analysis server            |
+| analysis_spring_profiles_active | FeatureProbe Analysis         | The active profile(s) to be loaded after the configuration file is read        |
+| ANALYSIS_JVM_ARGS               | FeatureProbe Analysis         | JVM arguments for the analysis server               |
+|      |    |          |
+| RUST_LOG                        | FeatureProbe Server         | Log level             |
+| FP_SERVER_PORT                  | FeatureProbe Server         | The port on which the Server will be started             |
+| FP_TOGGLES_URL                  | FeatureProbe Server         | toggle configuration acquisition url (API) |
+| FP_EVENTS_URL                   | FeatureProbe Server         | Event reporting url (API)     |
+| FP_KEYS_URL                     | FeatureProbe Server         | Key acquisition url (API)    |
+| FP_ANALYSIS_URL                 | FeatureProbe Server         | Metric events reporting url (Analysis)             |
+| FP_REFRESH_SECONDS              | FeatureProbe Server         | toggle refresh time             |
+| FP_REALTIME_PORT                | FeatureProbe Server         | Long connection server port            |
+| TZ                              | All                         | Container time zone            |
 
 
 3. Go to UI/Portal at `http://localhost:4008` and use the default credentials to log in.

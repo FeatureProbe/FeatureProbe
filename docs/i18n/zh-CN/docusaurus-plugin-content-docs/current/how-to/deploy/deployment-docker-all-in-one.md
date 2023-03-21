@@ -57,11 +57,36 @@ sidebar_position: 3
    --name featureProbeAll -d featureprobe/featureprobe 
    ```
 
-   :::info
-   spring.datasource.jdbc-url 为API服务数据库，需替换为自己准备好的数据库地址。
+- ***服务配置详情***
 
-   app.datasource.jdbcUrl     为Analysis服务数据库，需替换为自己准备好的数据库地址。
-   :::
+| 配置   | 模块            | 描述              |
+| ---------- | ------------------- |-----------------|
+| api_server_port                 | FeatureProbe API    | 启动端口              |
+| api_spring_profiles_active      | FeatureProbe API    | 加载配置文件后缀       |
+| API_JVM_ARGS                    | FeatureProbe API    | JVM参数              |
+| spring.datasource.jdbc-url      | FeatureProbe API    | 数据库URL             |
+| spring.datasource.username      | FeatureProbe API    | 数据库用户名           |
+| spring.datasource.password      | FeatureProbe API    | 数据库密码             |
+| app.server-base-urls            | FeatureProbe API    | Server服务地址, 多个地址用“,”分割。（多实例部署建议配配置网关地址）            |
+| app.analysis-base-url           | FeatureProbe API    | Analysis服务地址，目前只支持配置单个。（多实例部署建议配配置网关地址）           |
+|      |    |          |
+| analysis_server_port            | FeatureProbe Analysis         | 启动端口             |
+| app.datasource.jdbcUrl          | FeatureProbe Analysis         | 数据库URL             |
+| app.datasource.username         | FeatureProbe Analysis         | 数据库用户名           |
+| app.datasource.password         | FeatureProbe Analysis         | 数据库密码             |
+| analysis_spring_profiles_active | FeatureProbe Analysis         | 加载配置文件后缀        |
+| ANALYSIS_JVM_ARGS               | FeatureProbe Analysis         | JVM参数               |
+|      |    |          |
+| RUST_LOG                        | FeatureProbe Server         | 日志级别             |
+| FP_SERVER_PORT                  | FeatureProbe Server         | 启动端口             |
+| FP_TOGGLES_URL                  | FeatureProbe Server         | 开关配置获取接口 (API) |
+| FP_EVENTS_URL                   | FeatureProbe Server         | 事件上报接口 (API)     |
+| FP_KEYS_URL                     | FeatureProbe Server         | 密钥获取接口 (API)    |
+| FP_ANALYSIS_URL                 | FeatureProbe Server         | 指标时间上报接口 (Analysis)             |
+| FP_REFRESH_SECONDS              | FeatureProbe Server         | 配置刷新时间             |
+| FP_REALTIME_PORT                | FeatureProbe Server         | 长链接服务端口            |
+| TZ                              | All                         | 容器时区            |
+
 
 
 3. docker启动成功后，打开浏览器，访问：`http://localhost:4008`，并用以下默认帐号登录试用：
