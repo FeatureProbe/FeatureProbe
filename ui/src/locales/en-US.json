@@ -407,6 +407,7 @@
 
   "toggle.connect": "Connect SDK",
   "connect.description": "Connect your application to FeatureProbe!",
+  "connect.track.description": "Track event with FeatureProbe",
   "connect.save.continue.button": "Save and continue",
   "connect.continue.button": "Continue",
 

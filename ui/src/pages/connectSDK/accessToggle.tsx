@@ -6,7 +6,7 @@ import Loading from 'components/Loading';
 import SelectSDK from './components/SelectSDK';
 import SetupCode from './components/SetupCode';
 import TestConnection from './components/TestConnection';
-import { ToggleReturnType, SdkLanguage, SDK_VERSION } from './constants';
+import { ToggleReturnType, SdkLanguage, SDK_VERSION, SDK_TYPES } from './constants';
 import { saveDictionary, getFromDictionary } from 'services/dictionary';
 import { getSdkVersion } from 'services/misc';
 import { getToggleAccess, getToggleInfo, getToggleAttributes } from 'services/toggle';
@@ -144,13 +144,13 @@ const AccessToggle = () => {
   }, [currentSDK]);
 
   const checkStatus = useCallback(() => {
-    getToggleAccess<IAccess>(projectKey, environmentKey, toggleKey).then(res => {
+    getToggleAccess<IAccess>(projectKey, environmentKey, toggleKey, SDK_TYPES.get(currentSDK)).then(res => {
       const { data, success } = res;
       if (success && data) {
         saveIsAccess(data.isAccess);
       }
     });
-  }, [projectKey, environmentKey, toggleKey]);
+  }, [projectKey, environmentKey, toggleKey, currentSDK]);
 
   useEffect(() => {
     if(currentStep === THIRD) {

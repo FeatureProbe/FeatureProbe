@@ -6,7 +6,7 @@ import Loading from 'components/Loading';
 import SelectSDK from './components/SelectSDK';
 import TrackEvent from './components/TrackEvent';
 import TestConnection from './components/TestConnection';
-import { ToggleReturnType, SdkLanguage, SDK_VERSION } from './constants';
+import { ToggleReturnType, SdkLanguage, SDK_VERSION, SDK_TYPES } from './constants';
 import { saveDictionary, getFromDictionary } from 'services/dictionary';
 import { getToggleInfo, getToggleAttributes, getToggleTrackEvent } from 'services/toggle';
 import { getProjectInfo, getEnvironment } from 'services/project';
@@ -161,13 +161,13 @@ const AccessEvent = () => {
   }, [currentSDK]);
 
   const checkStatus = useCallback(() => {
-    getToggleTrackEvent<IReport>(projectKey, environmentKey, toggleKey).then(res => {
+    getToggleTrackEvent<IReport>(projectKey, environmentKey, toggleKey, SDK_TYPES.get(currentSDK)).then(res => {
       const { data, success } = res;
       if (success && data) {
         saveIsReport(data.isReport);
       }
     });
-  }, [projectKey, environmentKey, toggleKey]);
+  }, [projectKey, environmentKey, toggleKey, currentSDK]);
 
   useEffect(() => {
     if(currentStep === THIRD) {
@@ -221,7 +221,7 @@ const AccessEvent = () => {
                   </span>
                 </div>
                 <div className={styles['intro-desc']}>
-                  <FormattedMessage id='connect.description' />
+                  <FormattedMessage id='connect.track.description' />
                 </div>
                 <div className={styles['intro-info']}>
                   <div className={styles['card-item']}>

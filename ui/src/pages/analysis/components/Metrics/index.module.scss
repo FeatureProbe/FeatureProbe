@@ -48,7 +48,6 @@
 .row {
   background: #fafafa;
   border-radius: 12px;
-  padding: 24px 16px;
   margin-top: 8px;
   margin-bottom: 8px;
   padding: 24px 12px 12px !important;
@@ -89,24 +88,6 @@
   position: absolute;
   right: 24px;
   cursor: pointer;
-}
-
-.event-track-status {
-  background: #effcf2;
-  border-radius: 6px;
-  font-size: 12px;
-  color: #005238;
-  padding: 0 10px;
-  height: 26px;
-  display: inline-flex;
-  align-items: center;
-  margin-left: 12px;
-}
-
-.icon-success-circle {
-  font-size: 12px !important;
-  color: #00B365;
-  margin-right: 4px;
 }
 
 .save {

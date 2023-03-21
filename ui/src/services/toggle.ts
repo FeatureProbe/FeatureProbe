@@ -253,13 +253,13 @@ export const getTargetingVersionsByVersion = async<T> (projectKey: string, envir
   });
 };
 
-export const getToggleAccess = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
+export const getToggleAccess = async<T> (projectKey: string, environmentKey: string, toggleKey: string, sdkType?: string) => {
   const url = `${
     API.toggleAccessURI
       .replace(':projectKey', projectKey)
       .replace(':environmentKey', environmentKey)
       .replace(':toggleKey', toggleKey)
-  }`;
+  }?sdkType=${sdkType}`;
   
   return request<T>(url, {
     method: 'GET',
@@ -269,13 +269,13 @@ export const getToggleAccess = async<T> (projectKey: string, environmentKey: str
   });
 };
 
-export const getToggleTrackEvent = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
+export const getToggleTrackEvent = async<T> (projectKey: string, environmentKey: string, toggleKey: string, sdkType?: string) => {
   const url = `${
     API.toggleTrackEventURI
       .replace(':projectKey', projectKey)
       .replace(':environmentKey', environmentKey)
       .replace(':toggleKey', toggleKey)
-  }`;
+  }?sdkType=${sdkType}`;
   
   return request<T>(url, {
     method: 'GET',

@@ -26,7 +26,6 @@ export type SdkLanguage =
   | 'Mini Program'
   | 'React';
 
-
 export const SDK_LOGOS: {[key in SdkLanguage]: string} = {
   'Java': java,
   'Rust': rust,
@@ -40,6 +39,19 @@ export const SDK_LOGOS: {[key in SdkLanguage]: string} = {
   'Mini Program': miniprogram,
   'React': reactLogo,
 };
+
+export const SDK_TYPES = new Map([
+  ['Java', 'Java'],
+  ['Rust', 'Rust'],
+  ['Go', 'Go'],
+  ['Python', 'Python'],
+  ['Node.js', 'NodeJS'],
+  ['JavaScript', 'JavaScript'],
+  ['Android', 'Android'],
+  ['Swift', 'Swift'],
+  ['Objective-C', 'ObjectiveC'],
+  ['Mini Program', 'MiniProgram'],
+]);
 
 export const SERVER_SIDE_SDKS = [
   {
