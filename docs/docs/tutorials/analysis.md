@@ -26,7 +26,7 @@ Change the return variation of the default rule to `a percentage rollout`. Set 5
 
 
 ## Save metrics and start iteration
-1. Open the `Analysis` Tab, select the `Conversion` under `Custom` event type, configure the event name as `test_event`, and click `Save`.
+1. Open the `Analysis` Tab, Add a metric named `Button Click Conversion`, select the metric type as `Conversion` then select `Custom` event type, configure the event name as `test_event`, and click `Save`.
 ![list](/tutorial_metric_analysis_save_en.png)
 
 2. After the metric is saved successfully, click the `Start iteration` button to start collecting data.
@@ -49,8 +49,6 @@ cd server-sdk-java
 Open `src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java` file with an editor.
 
 </TabItem>
-
-<!-- 
 
 <TabItem value="golang" label="Go">
 
@@ -85,8 +83,6 @@ cd server-sdk-node
 Open the `examples/demo.js` file with an editor.
 </TabItem>
 
--->
-
 </Tabs>
 
 2. Open the FeatureProbe platform [project list page](https://featureprobe.io/projects), you can click `Projects` on the toggle details page to open: 
@@ -106,7 +102,6 @@ Open the `examples/demo.js` file with an editor.
 ~~~
 </TabItem>
 
-<!-- 
 
 <TabItem value="golang" label="Go">
 
@@ -142,8 +137,6 @@ const FEATURE_PROBE_SERVER_URL = 'https://featureprobe.io/server';
 const FEATURE_PROBE_SERVER_SDK_KEY = // Fill in the server SDK key
 ~~~
 </TabItem>
-
--->
 
 </Tabs>
 
@@ -192,8 +185,6 @@ const FEATURE_PROBE_SERVER_SDK_KEY = // Fill in the server SDK key
 ~~~
 
 </TabItem>
-
-<!-- 
 
 <TabItem value="golang" label="Go">
 
@@ -273,8 +264,6 @@ const fpClient = new featureProbe.FeatureProbe({
 ~~~
 </TabItem>
 
--->
-
 </Tabs>
 
 6. Run the program.
@@ -288,7 +277,6 @@ const fpClient = new featureProbe.FeatureProbe({
   ~~~
   </TabItem>
 
-<!-- 
   <TabItem value="golang" label="Go">
 
   ~~~bash
@@ -314,7 +302,7 @@ const fpClient = new featureProbe.FeatureProbe({
   node demo.js
   ~~~
   </TabItem>
- -->
+
 </Tabs>
 
 
@@ -376,11 +364,11 @@ Simulate a lot of users are accessing the toggle. Among the users whose toggle r
 
     if (boolValue) {
       if (random <= 55) {
-        fpClient.track(YOUR_EVENT_NAME, user.getKey());
+        fpClient.track(YOUR_EVENT_NAME);
       }
     } else {
       if (random > 55) {
-        fpClient.track(YOUR_EVENT_NAME, user.getKey());
+        fpClient.track(YOUR_EVENT_NAME);
       }
     }
 
