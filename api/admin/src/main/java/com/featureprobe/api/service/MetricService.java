@@ -5,6 +5,7 @@ import com.featureprobe.api.base.enums.EventTypeEnum;
 import com.featureprobe.api.base.enums.MatcherTypeEnum;
 import com.featureprobe.api.base.enums.MetricTypeEnum;
 import com.featureprobe.api.base.enums.ResourceType;
+import com.featureprobe.api.base.enums.SDKType;
 import com.featureprobe.api.base.enums.WinCriteria;
 import com.featureprobe.api.base.util.JsonMapper;
 import com.featureprobe.api.base.util.RegexValidator;
@@ -328,7 +329,7 @@ public class MetricService {
                 .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey).isPresent();
     }
 
-    public boolean isReport(String projectKey, String environmentKey, String toggleKey) {
+    public boolean existsEvent(String projectKey, String environmentKey, String toggleKey, SDKType sdkType) {
         String sdkServerKey = querySdkServerKey(projectKey, environmentKey);
         Optional<Metric> metric = metricRepository
                 .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey);
@@ -336,9 +337,21 @@ public class MetricService {
             return false;
         }
         String metricName = metric.get().getName();
-        String query = "metric=" + metricName;
-        String response = callAnalysisServer("/exists_event", query, sdkServerKey);
+        String response = callAnalysisServer("/exists_event",
+                buildExistsEventURLQuery(sdkType, metricName), sdkServerKey);
 
+        return parseExistsEventResponse(response);
+    }
+
+    protected boolean parseExistsEventResponse(String response) {
         return BooleanUtils.toBoolean(String.valueOf(JsonMapper.toObject(response, Map.class).get("exists")));
+    }
+
+    protected String buildExistsEventURLQuery(SDKType sdkType, String metricName) {
+        StringBuffer query = new StringBuffer("metric=").append(metricName);
+        if (sdkType != null) {
+            query.append("&sdkType=").append(sdkType.getValue());
+        }
+        return query.toString();
     }
 }

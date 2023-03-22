@@ -1,5 +1,6 @@
 package com.featureprobe.api.service
 
+import com.featureprobe.api.base.enums.SDKType
 import com.featureprobe.api.base.enums.TrafficType
 import com.featureprobe.api.base.enums.OrganizationRoleEnum
 import com.featureprobe.api.base.model.OrganizationMemberModel
@@ -199,14 +200,25 @@ class TrafficChartServiceSpec extends Specification {
         }
     }
 
-    def "query access status"() {
+    def "query access status without sdk type"() {
         when:
-        def isAccess = trafficService.isAccess("projectKey", "dev", "toggleKey")
+        def isAccess = trafficService.isAccess("projectKey", "dev", "toggleKey", null)
         then:
         1 * environmentRepository.findByProjectKeyAndKey("projectKey", "dev") >> Optional.of(new Environment(serverSdkKey: "123"))
         1 * trafficRepository.existsBySdkKeyAndToggleKey("123", "toggleKey") >> true
         isAccess
     }
+
+    def "query access status by sdk type"() {
+        when:
+        def isAccess = trafficService.isAccess("projectKey", "dev", "toggleKey", SDKType.Java)
+        then:
+        1 * environmentRepository.findByProjectKeyAndKey("projectKey", "dev") >> Optional.of(new Environment(serverSdkKey: "123"))
+        1 * trafficRepository.existsBySdkKeyAndToggleKeyAndSdkType("123", "toggleKey", "JAVA") >> true
+        isAccess
+    }
+
+
 
     private setAuthContext(String account, String role) {
         SecurityContextHolder.setContext(new SecurityContextImpl(
