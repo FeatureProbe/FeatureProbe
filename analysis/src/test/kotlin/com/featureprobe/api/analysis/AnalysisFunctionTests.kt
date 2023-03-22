@@ -153,4 +153,19 @@ class AnalysisFunctionKtTests{
         assertEquals(14.7, property2!!.step, 0.1)
     }
 
+    @Test
+    fun testGetSdkType() {
+        assertEquals("", getSdkType(null))
+        assertEquals("", getSdkType(""))
+        assertEquals("JAVA", getSdkType("JAVA/1.0.1"))
+        assertEquals("RUST", getSdkType("RUST/1.0.5"))
+    }
+
+    @Test
+    fun testGetSdkVersion() {
+        assertEquals("", getSdkVersion(null))
+        assertEquals("", getSdkVersion(""))
+        assertEquals("1.0.1", getSdkVersion("JAVA/1.0.1"))
+        assertEquals("1.0.5", getSdkVersion("RUST/1.0.5"))
+    }
 }

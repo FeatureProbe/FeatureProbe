@@ -295,7 +295,8 @@ fun batchAddVariation(
 fun batchAddEvent(
     ps: PreparedStatement,
     it: CustomEvent,
-    sdkKey: String
+    sdkKey: String,
+    userAgent: String
 ) {
     ps.setLong(1, it.time)
     ps.setString(2, it.user)
@@ -306,8 +307,23 @@ fun batchAddEvent(
         ps.setNull(4, java.sql.Types.DOUBLE)
     }
     ps.setString(5, sdkKey)
+    ps.setString(6, getSdkType(userAgent))
+    ps.setString(7, getSdkVersion(userAgent))
 
     ps.addBatch()
+}
+
+
+fun getStringAtIndex(userAgent: String?, index: Int): String? {
+    return userAgent?.split('/')?.getOrNull(index) ?: ""
+}
+
+fun getSdkType(userAgent: String?): String? {
+    return getStringAtIndex(userAgent, 0)
+}
+
+fun getSdkVersion(userAgent: String?): String? {
+    return getStringAtIndex(userAgent, 1)
 }
 
 class CustomDoubleSerialize : JsonSerializer<Double>() {

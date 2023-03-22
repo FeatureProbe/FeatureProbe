@@ -1,6 +1,5 @@
 package com.featureprobe.api.analysis
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -26,11 +25,11 @@ const val INSERT_VARIATION_SQL =
 VALUES (?, ?, ?, ?, ?, ?, ?);"""
 
 const val INSERT_EVENT_SQL =
-    """INSERT INTO events (time, user_key, name, value, sdk_key)
-VALUES (?, ?, ?, ?, ?);"""
+    """INSERT INTO events (time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+VALUES (?, ?, ?, ?, ?, ?, ?);"""
 
 const val EXISTS_EVENT_SQL =
-    """SELECT *, 1 as count FROM events WHERE sdk_key = ? AND name = ? LIMIT 1;"""
+    """SELECT 1 as count FROM events WHERE sdk_key = ? AND name = ? LIMIT 1;"""
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
