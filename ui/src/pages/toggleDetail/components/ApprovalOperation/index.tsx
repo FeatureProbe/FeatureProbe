@@ -401,7 +401,10 @@ const ApprovalOperation = (props: IProps) => {
               {
                 (status === 'REVOKE' || status === 'CANCEL') && (
                   <div className={styles['modal-continue-edit']}>
-                    <FormattedMessage id='targeting.approval.modal.modify.text' />
+                    <div>
+                      <span className={styles['title-label-required']}>*</span>
+                      <FormattedMessage id='targeting.approval.modal.modify.text' />
+                    </div>
                     <div className={styles['radio-group']}>
                       <Form.Radio
                         name='yes'
@@ -418,6 +421,13 @@ const ApprovalOperation = (props: IProps) => {
                         onChange={() => { saveIsREdit(!isReEdit); }}
                       />
                     </div>
+                    {
+                      isReEdit && (
+                        <div className={styles['modal-tips']}>
+                          <FormattedMessage id='targeting.approval.modal.modify.description' />
+                        </div>
+                      )
+                    }
                   </div>
                 )
               }

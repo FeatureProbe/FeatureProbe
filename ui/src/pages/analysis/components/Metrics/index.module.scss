@@ -18,8 +18,8 @@
 }
 
 .label {
-  font-size: 13px;
-  color: #212529;
+  font-size: 13px !important;
+  color: #212529 !important;
 }
 
 .label-required {
@@ -50,7 +50,7 @@
   border-radius: 12px;
   margin-top: 8px;
   margin-bottom: 8px;
-  padding: 24px 12px 12px !important;
+  padding: 12px !important;
   display: block !important;
 
   :global {
@@ -69,7 +69,9 @@
   color: #212529;
   font-weight: 500;
   font-family: PingFangSC-Medium;
-  margin-left: 16px;
+  line-height: 26px;
+  margin-left: 12px;
+  margin-top: 12px;
 }
 
 .event-title {
@@ -84,7 +86,7 @@
 }
 
 .event-track {
-  color: #5664ff;
+  color: #556ee6;
   position: absolute;
   right: 24px;
   cursor: pointer;
@@ -162,7 +164,7 @@
 
 .metric-explanation {
   font-size: 12px;
-  color: #5664ff;
+  color: #556ee6;
   text-align: right;
   margin-top: 2px;
   cursor: pointer;
@@ -229,7 +231,7 @@
 
 .test-url-text {
   font-size: 12px;
-  color: #5664ff;
+  color: #556ee6;
   text-align: right;
   cursor: pointer;
 }

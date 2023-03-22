@@ -163,6 +163,10 @@ const Results = (props: IProps) => {
     });
   }, [saveSubmitLoading, projectKey, environmentKey, toggleKey, initTargeting, getEventResult, start, end, getIteration, intl]);
 
+  // const handleViewReason = useCallback(() => {
+  //   window.open('https://docs.featureprobe.io/');
+  // }, []);
+  
   return (
     <div className={`result ${styles.result}`}>
       <SectionTitle title={intl.formatMessage({ id: 'common.data.text' })} showTooltip={false} />
@@ -296,6 +300,20 @@ const Results = (props: IProps) => {
           ) : (
             <div className={styles['no-data']}>
               <NoData />
+              {/* <div className={styles.diagnose}>
+                <div>
+                  <Button type='button' secondary>
+                    <FormattedMessage id='analysis.result.diagnose' />
+                  </Button>
+                </div>
+                <div className={styles['diagnose-result']}>
+                  <FormattedMessage id='analysis.result.diagnose.result' />
+                  <FormattedMessage id='analysis.result.diagnose.reason1' />
+                  <span className={styles['diagnose-reason']} onClick={handleViewReason}>
+                    <FormattedMessage id='analysis.result.diagnose.reason.view' />
+                  </span>
+                </div>
+              </div> */}
             </div>
           )
         }

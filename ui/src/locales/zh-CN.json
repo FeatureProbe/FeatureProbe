@@ -362,7 +362,8 @@
   "targeting.approval.modal.accept": "通过审批",
   "targeting.approval.modal.withdraw": "撤回审批",
   "targeting.approval.modal.reject": "拒绝审批",
-  "targeting.approval.modal.modify.text": "是否继续编辑",
+  "targeting.approval.modal.modify.text": "是否基于本次申请继续编辑?",
+  "targeting.approval.modal.modify.description": "点击确认后，将进入编辑页面，若直接离开，内容将不被保存。",
   "targeting.approval.modal.reason": "原因",
   "targeting.approval.skip.reason": "跳过原因",
   "targeting.approval.withdraw.reason": "撤回原因",
@@ -631,7 +632,7 @@
   "analysis.metric.detail": "指标信息",
   "analysis.event.detail": "事件信息",
   "analysis.event.track.success": "事件上报成功",
-  "analysis.metric.explanation": "指标类型说明",
+  "analysis.metric.explanation": "指标说明",
 
   "analysis.result.tip": "请先保存“指标信息”，并点击【收集数据】。",
   "analysis.result.collect.time": "数据统计周期：",
@@ -650,5 +651,11 @@
   "anylysis.result.start.time": "开始时间",
   "anylysis.result.end.time": "结束时间",
   "analysis.timeline.toggle.changed": "开关变更",
-  "analysis.result.timeline": "观测窗口"
+  "analysis.result.timeline": "观测窗口",
+  "analysis.result.diagnose": "立即诊断",
+  "analysis.result.diagnose.result": "诊断结果：",
+  "analysis.result.diagnose.reason1": "无样本量",
+  "analysis.result.diagnose.reason2": "无事件上报",
+  "analysis.result.diagnose.reason3": "样本和事件上报的userId不匹配",
+  "analysis.result.diagnose.reason.view": "查看常见原因"
 }

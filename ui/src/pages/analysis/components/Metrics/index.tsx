@@ -18,7 +18,7 @@ import { createEvent } from 'services/analysis';
 import { getFromDictionary, saveDictionary } from 'services/dictionary';
 import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, COUNT, SUM, AVERAGE } from '../../constants';
 import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
-import { USER_TRACK_EVENT } from 'constants/dictionary_keys';
+import { USER_GUIDE_TRACK_EVENT } from 'constants/dictionary_keys';
 
 import { 
   getEventTypeOptions,
@@ -101,7 +101,7 @@ const Metrics = (props: IProps) => {
   }, [popupOpen]);
 
   const getUserGuide = useCallback(() => {
-    getFromDictionary<IDictionary>(USER_TRACK_EVENT).then(res => {
+    getFromDictionary<IDictionary>(USER_GUIDE_TRACK_EVENT).then(res => {
       const { success, data } = res;
       if (success && data) {
         const savedData = JSON.parse(data.value);
@@ -385,7 +385,7 @@ const Metrics = (props: IProps) => {
     if (([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND] as string[]).includes(type)) {
       const nextStepIndex = index + (action === ACTIONS.PREV ? -1 : 1);
       saveStepIndex(nextStepIndex);
-      saveDictionary(USER_TRACK_EVENT, nextStepIndex);
+      saveDictionary(USER_GUIDE_TRACK_EVENT, nextStepIndex);
     }
   }, []);
 
@@ -467,7 +467,6 @@ const Metrics = (props: IProps) => {
                         fluid 
                         selection
                         floating
-                        clearable
                         selectOnBlur={false}
                         name='metricType'
                         value={metricType}
@@ -743,7 +742,6 @@ const Metrics = (props: IProps) => {
                               fluid 
                               selection
                               floating
-                              clearable
                               selectOnBlur={false}
                               name='winCriteria'
                               value={winCriteria}
