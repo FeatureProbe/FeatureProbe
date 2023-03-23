@@ -156,14 +156,23 @@ public class MetricService {
         }
         String type = ALGORITHM_BINOMIAL;
         String name = getMetricName(metric);
+        String aggregationMethod = AggregationMethod.AVG.name();
+        String joinType = JoinType.LEFT.name();
         boolean positiveWin = true;
         if (!MetricTypeEnum.CONVERSION.equals(metric.getType())) {
             type = ALGORITHM_GAUSSIAN;
             positiveWin = WinCriteria.POSITIVE.equals(metric.getWinCriteria()) ? true : false;
         }
-
-        String callRes = callAnalysisServer(querySdkServerKey(projectKey, environmentKey), name, toggleKey, type,
-                positiveWin, start, end);
+        if (MetricTypeEnum.SUM.equals(metric.getType())) {
+            aggregationMethod = AggregationMethod.SUM.name();
+        } if (MetricTypeEnum.COUNT.equals(metric.getType())) {
+            aggregationMethod = AggregationMethod.COUNT.name();
+        }
+        if (MetricTypeEnum.AVERAGE.equals(metric.getType())) {
+            joinType = JoinType.INNER.name();
+        }
+        String callRes = callAnalysis(querySdkServerKey(projectKey, environmentKey), name, toggleKey, type,
+                aggregationMethod, joinType, positiveWin, start, end);
         return new AnalysisResultResponse(start, end, MetricMapper.INSTANCE.entityToConfigResponse(metric),
                 JsonMapper.toObject(callRes, Map.class).get("data"));
     }
@@ -251,16 +260,19 @@ public class MetricService {
         return DigestUtils.md2Hex(encodeStr.getBytes(StandardCharsets.UTF_8));
     }
 
-    private String callAnalysisServer(String sdkKey,
+    private String callAnalysis(String sdkKey,
                                       String metric,
                                       String toggleKey,
                                       String type,
+                                      String aggregateFn,
+                                      String join,
                                       boolean positiveWin,
                                       Date start,
                                       Date end) {
 
         String query = "metric=" + metric +
                 "&toggle=" + toggleKey + "&type=" + type + "&positiveWin=" + positiveWin +
+                "&aggregateFn=" + aggregateFn + "&join=" + join +
                 "&start=" + start.getTime() + "&end=" + end.getTime();
         return this.callAnalysisServer("/analysis", query, sdkKey);
     }
@@ -341,4 +353,13 @@ public class MetricService {
 
         return BooleanUtils.toBoolean(String.valueOf(JsonMapper.toObject(response, Map.class).get("exists")));
     }
+
+    public enum AggregationMethod {
+        AVG, SUM, COUNT
+    }
+
+    public enum  JoinType {
+        INNER, LEFT
+    }
+
 }
