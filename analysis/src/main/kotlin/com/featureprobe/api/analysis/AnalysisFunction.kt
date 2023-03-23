@@ -263,7 +263,7 @@ fun userValueVariationSql(join: Join) : String {
         Join.INNER -> "INNER JOIN"
         Join.LEFT -> "LEFT JOIN"
     }
-    return "SELECT m.value, v.variation, m.user_key FROM $UNIQ_VARIATION_TABLE v $joinType $METRIC_USER_VALUE_TABLE m ON m.user_key = v.user_key"
+    return "SELECT v.user_key, v.variation, m.value FROM $UNIQ_VARIATION_TABLE v $joinType $METRIC_USER_VALUE_TABLE m ON m.user_key = v.user_key"
 }
 
 fun metricUserTotalMeanSql() =
