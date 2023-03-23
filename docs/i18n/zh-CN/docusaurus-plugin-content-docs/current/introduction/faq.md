@@ -94,7 +94,6 @@ import TabItem from '@theme/TabItem';
     // highlight-start
       refresh_interval: Duration::from_secs(5),
     // highlight-end
-      wait_first_resp: true,
   };
   ~~~
   

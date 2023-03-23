@@ -23,7 +23,7 @@ import TabItem from '@theme/TabItem';
 
 
 ## 配置指标并开始收集数据
-1. 打开`指标分析`板块，选择`自定义事件`下的`转化率`指标，指标名配置为`test_event`，点击`保存`
+1. 打开`指标分析`板块，输入指标名称为`Click Button Conversion`，选择指标类型为`转化类`， 在事件模块选择事件类型为`自定义`，输入事件名为`test_event`，胜出标准为`越高越好`，最后点击`保存`
 ![list](/tutorial_metric_analysis_save_cn.png)
 
 2. 指标保存成功后，点击`收集数据`按钮，开始收集数据
@@ -46,8 +46,6 @@ cd server-sdk-java
 用编辑器打开`src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java`文件。
 
 </TabItem>
-
-<!-- 
 
 <TabItem value="golang" label="Go">
 
@@ -82,8 +80,6 @@ cd server-sdk-node
 Open the `examples/demo.js` file with an editor.
 </TabItem>
 
--->
-
 </Tabs>
 
 2. 打开FeatureProbe平台[项目列表页面](https://featureprobe.io/projects)， 可以在开关详情页点击`项目`来打开
@@ -102,8 +98,6 @@ Open the `examples/demo.js` file with an editor.
     private static final String FEATURE_PROBE_SERVER_SDK_KEY = // 填入 服务端SDK密钥SDK key
 ~~~
 </TabItem>
-
-<!-- 
 
 <TabItem value="golang" label="Go">
 
@@ -139,8 +133,6 @@ const FEATURE_PROBE_SERVER_URL = 'https://featureprobe.io/server';
 const FEATURE_PROBE_SERVER_SDK_KEY = // Fill in the server SDK key
 ~~~
 </TabItem>
-
--->
 
 </Tabs>
 
@@ -190,24 +182,50 @@ const FEATURE_PROBE_SERVER_SDK_KEY = // Fill in the server SDK key
 
 </TabItem>
 
-<!-- 
-
 <TabItem value="golang" label="Go">
 
 ~~~go title="example/main.go"
+package main
+
+import (
+	"fmt"
+	featureprobe "github.com/featureprobe/server-sdk-go/v2"
+	"math/rand"
+	"time"
+)
+
 func main() {
+
 	config := featureprobe.FPConfig{
-		RemoteUrl: "https://featureprobe.io/server",
-		ServerSdkKey:    // Fill in the server SDK key
-		RefreshInterval: 5000, // ms
-		WaitFirstResp:   true,
+		RemoteUrl: FEATURE_PROBE_SERVER_URL,
+		ServerSdkKey:    FEATURE_PROBE_SERVER_SDK_KEY,
+		RefreshInterval: 2 * time.Second,
+		StartWait:       5 * time.Second,
 	}
-	fp, err := featureprobe.NewFeatureProbe(config)
-	if err != nil {
-		fmt.Println(err)
-		return
+	fp := featureprobe.NewFeatureProbe(config)
+	if !fp.Initialized() {
+		fmt.Println("SDK failed to initialize!")
 	}
-  
+
+
+  // highlight-start
+	for i := 1; i <= 1000; i++ {
+		user := featureprobe.NewUser().StableRollout(fmt.Sprintf("%d", time.Now().UnixNano()/1000000))
+		newFeature := fp.BoolValue(YOUR_TOGGLE_KEY, user, false)
+		rand.Seed(time.Now().UnixNano())
+		randomNum := rand.Intn(101)
+		if newFeature {
+			if randomNum <= 55 {
+				fp.Track(YOUR_EVENT_NAME, user, nil)
+			}
+		} else {
+			if randomNum > 55 {
+				fp.Track(YOUR_EVENT_NAME, user, nil)
+			}
+		}
+	}
+  // highlight-end
+
 	fp.Close()
 }
 ~~~
@@ -217,15 +235,12 @@ func main() {
 ~~~rust title="examples/demo.rs"
 #[tokio::main]
 async fn main() {
-    let remote_url = "https://featureprobe.io/server";
-    let server_sdk_key = // Fill in the server SDK key
+    let remote_url = FEATURE_PROBE_SERVER_URL;
+    let server_sdk_key = FEATURE_PROBE_SERVER_SDK_KEY;
     let config = FPConfig {
         remote_url: remote_url.to_owned(),
         server_sdk_key: server_sdk_key.to_owned(),
         refresh_interval: Duration::from_millis(2000),
-        #[cfg(feature = "use_tokio")]
-        http_client: None,
-        wait_first_resp: true,
         ..Default::default()
     };
 
@@ -236,7 +251,25 @@ async fn main() {
             return;
         }
     };
-  
+
+    // highlight-start
+    for i in 0..1000 {
+        let mut rng = rand::thread_rng();
+        let random_number = rng.gen_range(0..=100);
+        let mut user = FPUser::new().stable_rollout(Utc::now().timestamp_millis().to_string());
+        let new_feature = fp.bool_value(YOUR_TOGGLE_KEY, &user, false);
+        if new_feature {
+            if random_number <= 55 {
+                fp.track(YOUR_EVENT_NAME, &user, None);
+            }
+        } else {
+            if random_number > 55 {
+                fp.track(YOUR_EVENT_NAME, &user, None);
+            }
+        }
+    }
+    // highlight-end
+
     fp.close();
 }
 ~~~
@@ -247,15 +280,29 @@ async fn main() {
 logging.basicConfig(level=logging.WARNING)
 
 if __name__ == '__main__':
-    FEATURE_PROBE_SERVER_URL = 'https://featureprobe.io/server'
-    FEATURE_PROBE_SERVER_SDK_KEY = # Fill in the server SDK key
+    FEATURE_PROBE_SERVER_URL = FEATURE_PROBE_SERVER_URL
+    FEATURE_PROBE_SERVER_SDK_KEY = FEATURE_PROBE_SERVER_SDK_KEY # Fill in the server SDK key
 
     config = fp.Config(remote_uri=FEATURE_PROBE_SERVER_URL,  # FeatureProbe server URL
                        sync_mode='pooling',
                        refresh_interval=3)
 
     with fp.Client(FEATURE_PROBE_SERVER_SDK_KEY, config) as client:
-     
+    
+# highlight-start
+    for i in range(1000):
+      random_number = random.randint(0, 100)
+      user = fp.User().stable_rollout(str(time.time()))
+      new_feature = client.value(YOUR_TOGGLE_KEY, user, default=False)
+      if new_feature:
+        if random_number <= 55:
+          client.track(YOUR_EVENT_NAME, user, None)
+      else:
+        if random_number5> 55
+          client.track(YOUR_EVENT_NAME, user, None)
+# highlight-end
+
+    client.close()
 ~~~
 </TabItem>
 <TabItem value="nodejs" label="Node.js">
@@ -267,10 +314,30 @@ const fpClient = new featureProbe.FeatureProbe({
   refreshInterval: 5000,
 });
 
+const YOUR_TOGGLE_KEY = "custom_event";
+const YOUR_EVENT_NAME = "test_event";
+    
+// highlight-start
+for(let i = 0; i < 1000; i++) {
+  const user = new featureProbe.FPUser(Date.now());
+  const boolValue = fpClient. boolValue(YOUR_TOGGLE_KEY, user, false);
+  const random = Math.floor(Math.random() * (100 - 1) + 1);
+
+  if (boolValue) {
+    if (random <= 55) {
+      fpClient.track(YOUR_EVENT_NAME, user);
+    }
+  } else {
+    if (random > 55) {
+      fpClient.track(YOUR_EVENT_NAME, user);
+    }
+  }
+}
+// highlight-end
+
+fpClient.close();
 ~~~
 </TabItem>
-
--->
 
 </Tabs>
 
@@ -285,7 +352,6 @@ const fpClient = new featureProbe.FeatureProbe({
   ~~~
   </TabItem>
 
-<!-- 
   <TabItem value="golang" label="Go">
 
   ~~~bash
@@ -311,7 +377,6 @@ const fpClient = new featureProbe.FeatureProbe({
   node demo.js
   ~~~
   </TabItem>
- -->
 </Tabs>
 
 
