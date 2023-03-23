@@ -1,6 +1,5 @@
 package com.featureprobe.api.analysis
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -79,12 +78,21 @@ data class EventExistsResponse(
 
 data class AnalysisResponse(
     val status: Int,
-    val data: Map<String, VariationProperty>?
+    val data: Map<String, VariationProperty>?,
+    val errMsg: String?,
 )
 
 sealed class AnalysisFailure
 
 object NotSupportAnalysisType : AnalysisFailure()
+
+object NoVariationRecords : AnalysisFailure()
+
+object NoEventRecords : AnalysisFailure()
+
+object NoJoinRecords: AnalysisFailure()
+
+object AnalysisSuccess
 
 data class VariationConvert(val variation: String, val convert: Int, val sampleSize: Int)
 
@@ -98,6 +106,7 @@ data class CredibleInterval(
 )
 
 data class DistributionDot(
+    @JsonSerialize(using = CustomDoubleSerialize::class)
     val x: Double,
     val y: Double
 )
