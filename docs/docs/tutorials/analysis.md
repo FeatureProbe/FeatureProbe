@@ -261,6 +261,28 @@ const fpClient = new featureProbe.FeatureProbe({
   refreshInterval: 5000,
 });
 
+const YOUR_TOGGLE_KEY = "custom_event";
+const YOUR_EVENT_NAME = "test_event";
+    
+// highlight-start
+for(let i = 0; i < 1000; i++) {
+  const user = new featureProbe.FPUser(Date.now());
+  const boolValue = fpClient. boolValue(YOUR_TOGGLE_KEY, user, false);
+  const random = Math.floor(Math.random() * (100 - 1) + 1);
+
+  if (boolValue) {
+    if (random <= 55) {
+      fpClient.track(YOUR_EVENT_NAME, user);
+    }
+  } else {
+    if (random > 55) {
+      fpClient.track(YOUR_EVENT_NAME, user);
+    }
+  }
+}
+// highlight-end
+
+fpClient.close();
 ~~~
 </TabItem>
 

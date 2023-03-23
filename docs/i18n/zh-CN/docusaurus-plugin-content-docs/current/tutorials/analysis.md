@@ -23,7 +23,7 @@ import TabItem from '@theme/TabItem';
 
 
 ## 配置指标并开始收集数据
-1. 打开`指标分析`板块，选择`自定义事件`下的`转化率`指标，指标名配置为`test_event`，点击`保存`
+1. 打开`指标分析`板块，输入指标名称为`Click Button Conversion`，选择指标类型为`转化类`， 在事件模块选择事件类型为`自定义`，输入事件名为`test_event`，胜出标准为`越高越好`，最后点击`保存`
 ![list](/tutorial_metric_analysis_save_cn.png)
 
 2. 指标保存成功后，点击`收集数据`按钮，开始收集数据
@@ -46,8 +46,6 @@ cd server-sdk-java
 用编辑器打开`src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java`文件。
 
 </TabItem>
-
-<!-- 
 
 <TabItem value="golang" label="Go">
 
@@ -82,8 +80,6 @@ cd server-sdk-node
 Open the `examples/demo.js` file with an editor.
 </TabItem>
 
--->
-
 </Tabs>
 
 2. 打开FeatureProbe平台[项目列表页面](https://featureprobe.io/projects)， 可以在开关详情页点击`项目`来打开
@@ -102,8 +98,6 @@ Open the `examples/demo.js` file with an editor.
     private static final String FEATURE_PROBE_SERVER_SDK_KEY = // 填入 服务端SDK密钥SDK key
 ~~~
 </TabItem>
-
-<!-- 
 
 <TabItem value="golang" label="Go">
 
@@ -139,8 +133,6 @@ const FEATURE_PROBE_SERVER_URL = 'https://featureprobe.io/server';
 const FEATURE_PROBE_SERVER_SDK_KEY = // Fill in the server SDK key
 ~~~
 </TabItem>
-
--->
 
 </Tabs>
 
@@ -189,8 +181,6 @@ const FEATURE_PROBE_SERVER_SDK_KEY = // Fill in the server SDK key
 ~~~
 
 </TabItem>
-
-<!-- 
 
 <TabItem value="golang" label="Go">
 
@@ -267,10 +257,30 @@ const fpClient = new featureProbe.FeatureProbe({
   refreshInterval: 5000,
 });
 
+const YOUR_TOGGLE_KEY = "custom_event";
+const YOUR_EVENT_NAME = "test_event";
+    
+// highlight-start
+for(let i = 0; i < 1000; i++) {
+  const user = new featureProbe.FPUser(Date.now());
+  const boolValue = fpClient. boolValue(YOUR_TOGGLE_KEY, user, false);
+  const random = Math.floor(Math.random() * (100 - 1) + 1);
+
+  if (boolValue) {
+    if (random <= 55) {
+      fpClient.track(YOUR_EVENT_NAME, user);
+    }
+  } else {
+    if (random > 55) {
+      fpClient.track(YOUR_EVENT_NAME, user);
+    }
+  }
+}
+// highlight-end
+
+fpClient.close();
 ~~~
 </TabItem>
-
--->
 
 </Tabs>
 
@@ -285,7 +295,6 @@ const fpClient = new featureProbe.FeatureProbe({
   ~~~
   </TabItem>
 
-<!-- 
   <TabItem value="golang" label="Go">
 
   ~~~bash
@@ -311,7 +320,6 @@ const fpClient = new featureProbe.FeatureProbe({
   node demo.js
   ~~~
   </TabItem>
- -->
 </Tabs>
 
 
