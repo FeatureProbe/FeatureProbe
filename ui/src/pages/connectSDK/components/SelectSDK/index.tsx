@@ -20,6 +20,7 @@ interface IProps {
   currentSDK: SdkLanguage;
   clientAvailability: boolean;
   eventInfo?: IEvent;
+  isTrackEvent?: boolean;
   saveStep(sdk: string): void;
   goBackToStep(step: number): void;
   saveCurrentSDK(sdk: SdkLanguage): void;
@@ -28,7 +29,7 @@ interface IProps {
 const CURRENT = 1;
 
 const SelectSDK = (props: IProps) => {
-  const { currentStep, currentSDK, clientAvailability, eventInfo, saveStep, goBackToStep, saveCurrentSDK } = props;
+  const { currentStep, currentSDK, clientAvailability, eventInfo, isTrackEvent, saveStep, goBackToStep, saveCurrentSDK } = props;
   const [ selectedSDKLogo, saveSelectedSDKLogo ] = useState<string>('');
   const intl = useIntl();
 
@@ -140,10 +141,12 @@ const SelectSDK = (props: IProps) => {
                       <Dropdown.Header content={intl.formatMessage({id: 'connect.second.client.sdks'})} />
                         <Dropdown.Divider />
                         {
-                          clientAvailability && (
-                            (eventInfo?.eventType === PAGE_VIEW || eventInfo?.eventType === CLICK) 
-                            ? CLIENT_SIDE_AUTO_REPORT_SDKS 
-                            : CLIENT_SIDE_SDKS
+                          (
+                            isTrackEvent 
+                              ? ((eventInfo?.eventType === PAGE_VIEW || eventInfo?.eventType === CLICK) 
+                                ? CLIENT_SIDE_AUTO_REPORT_SDKS 
+                                : CLIENT_SIDE_SDKS) 
+                              : (clientAvailability ? CLIENT_SIDE_SDKS : [])
                           ).map((sdk: IOption) => {
                             return (
                               <Dropdown.Item
@@ -161,7 +164,7 @@ const SelectSDK = (props: IProps) => {
                           })
                         }
                         {
-                          !clientAvailability && (
+                          !isTrackEvent && !clientAvailability && (
                             <div className={styles['client-sdk-usage']}>
                               <Icon type='warning-circle' customclass={styles['warning-circle']}></Icon>
                               <FormattedMessage id='connect.first.client.sdk.tip' />

@@ -271,10 +271,11 @@ const AccessEvent = () => {
                   currentStep={currentStep}
                   currentSDK={currentSDK}
                   clientAvailability={clientAvailability}
+                  isTrackEvent={true}
+                  eventInfo={eventInfo}
                   saveStep={saveFirstStep}
                   saveCurrentSDK={saveCurrentSDK}
                   goBackToStep={goBackToStep}
-                  eventInfo={eventInfo}
                 />
 
                 <TrackEvent 

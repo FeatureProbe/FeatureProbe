@@ -347,32 +347,32 @@ const Metrics = (props: IProps) => {
       if (intl.locale === 'zh-CN') {
         window.open('https://docs.featureprobe.io/zh-CN/reference/metric-explanation/#%E8%BD%AC%E5%8C%96%E7%B1%BB');
       } else {
-        window.open('https://docs.featureprobe.io/reference/metric-explanation#conversion');
+        window.open('https://docs.featureprobe.io/reference/metric-explanation#conversion-metrics');
       }
     } else if (metricType === COUNT) {
       if (intl.locale === 'zh-CN') {
         window.open('https://docs.featureprobe.io/zh-CN/reference/metric-explanation/#%E8%AE%A1%E6%95%B0%E7%B1%BB');
       } else {
-        window.open('https://docs.featureprobe.io/reference/metric-explanation#count');
+        window.open('https://docs.featureprobe.io/reference/metric-explanation#count-metrics');
       }
     } else if (metricType === SUM) {
       if (intl.locale === 'zh-CN') {
         window.open('https://docs.featureprobe.io/zh-CN/reference/metric-explanation/#%E5%8A%A0%E5%92%8C%E7%B1%BB');
       } else {
-        window.open('https://docs.featureprobe.io/reference/metric-explanation/#sum');
+        window.open('https://docs.featureprobe.io/reference/metric-explanation/#sum-metrics');
       }
     } else if (metricType === AVERAGE) {
       if (intl.locale === 'zh-CN') {
         window.open('https://docs.featureprobe.io/zh-CN/reference/metric-explanation/#%E5%B9%B3%E5%9D%87%E7%B1%BB');
       } else {
-        window.open('https://docs.featureprobe.io/reference/metric-explanation/#average');
+        window.open('https://docs.featureprobe.io/reference/metric-explanation/#average-metrics');
       }
     }
   }, [intl, metricType]);
 
   // const geMolecularText = useMemo(() => {
   //   return new Map([
-  //     [CONVERSION, intl.formatMessage({id: 'analysis.event.conversions'})],
+  //     [CONVERSION, intl.formatMessage({id: 'analysis.event.conversion'})],
   //     [COUNT, intl.formatMessage({id: 'analysis.event.count'})],
   //     [SUM, intl.formatMessage({id: 'analysis.event.sum'})],
   //     [AVERAGE, intl.formatMessage({id: 'analysis.event.average'})],
