@@ -264,7 +264,7 @@ public class MetricService {
                                       String metric,
                                       String toggleKey,
                                       String type,
-                                      String numeratorFn,
+                                      String aggregateFn,
                                       String join,
                                       boolean positiveWin,
                                       Date start,
@@ -272,7 +272,7 @@ public class MetricService {
 
         String query = "metric=" + metric +
                 "&toggle=" + toggleKey + "&type=" + type + "&positiveWin=" + positiveWin +
-                "&numeratorFn=" + numeratorFn + "&join=" + join +
+                "&aggregateFn=" + aggregateFn + "&join=" + join +
                 "&start=" + start.getTime() + "&end=" + end.getTime();
         return this.callAnalysisServer("/analysis", query, sdkKey);
     }
