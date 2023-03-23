@@ -85,7 +85,6 @@ Here are some common problems and solutions during the use of FeatureProbe.
     // highlight-start
       refresh_interval: Duration::from_secs(5),
     // highlight-end
-      wait_first_resp: true,
   };
   ~~~
   
