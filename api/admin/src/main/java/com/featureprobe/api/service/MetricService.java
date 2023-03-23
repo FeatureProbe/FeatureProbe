@@ -83,13 +83,6 @@ public class MetricService {
 
     private static String ALGORITHM_GAUSSIAN = "gaussian";
 
-    private static String NUMERATOR_AVG = "AVG";
-    private static String NUMERATOR_SUM = "SUM";
-    private static String NUMERATOR_COUNT = "COUNT";
-
-    private static String JOIN_TYPE_INNER = "INNER";
-    private static String JOIN_TYPE_LEFT = "LEFT";
-
     private final OkHttpClient httpClient = new OkHttpClient.Builder()
             .connectionPool(new ConnectionPool(5, 5, TimeUnit.SECONDS))
             .connectTimeout(Duration.ofSeconds(3))
@@ -163,23 +156,23 @@ public class MetricService {
         }
         String type = ALGORITHM_BINOMIAL;
         String name = getMetricName(metric);
-        String numeratorFn = NUMERATOR_AVG;
-        String join = JOIN_TYPE_LEFT;
+        String aggregationMethod = AggregationMethod.AVG.name();
+        String joinType = JoinType.LEFT.name();
         boolean positiveWin = true;
         if (!MetricTypeEnum.CONVERSION.equals(metric.getType())) {
             type = ALGORITHM_GAUSSIAN;
             positiveWin = WinCriteria.POSITIVE.equals(metric.getWinCriteria()) ? true : false;
         }
         if (MetricTypeEnum.SUM.equals(metric.getType())) {
-            numeratorFn = NUMERATOR_SUM;
+            aggregationMethod = AggregationMethod.SUM.name();
         } if (MetricTypeEnum.COUNT.equals(metric.getType())) {
-            numeratorFn = NUMERATOR_COUNT;
+            aggregationMethod = AggregationMethod.COUNT.name();
         }
         if (MetricTypeEnum.AVERAGE.equals(metric.getType())) {
-            join = JOIN_TYPE_INNER;
+            joinType = JoinType.INNER.name();
         }
         String callRes = callAnalysis(querySdkServerKey(projectKey, environmentKey), name, toggleKey, type,
-                numeratorFn, join, positiveWin, start, end);
+                aggregationMethod, joinType, positiveWin, start, end);
         return new AnalysisResultResponse(start, end, MetricMapper.INSTANCE.entityToConfigResponse(metric),
                 JsonMapper.toObject(callRes, Map.class).get("data"));
     }
@@ -360,4 +353,13 @@ public class MetricService {
 
         return BooleanUtils.toBoolean(String.valueOf(JsonMapper.toObject(response, Map.class).get("exists")));
     }
+
+    public enum AggregationMethod {
+        AVG, SUM, COUNT
+    }
+
+    public enum  JoinType {
+        INNER, LEFT
+    }
+
 }
