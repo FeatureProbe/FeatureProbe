@@ -208,7 +208,7 @@ class AnalysisControllerTests {
 
         var result =
             service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
-                start, end, true, NumeratorFn.AVG, Join.LEFT)
+                start, end, true, AggregateFn.AVG, Join.LEFT)
 
         Assert.assertNotNull(result.get())
         Assert.assertEquals(5, result.get()!!["1"]?.sampleSize)
@@ -223,7 +223,7 @@ class AnalysisControllerTests {
 
         result =
             service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
-                start, end, true, NumeratorFn.AVG, Join.INNER)
+                start, end, true, AggregateFn.AVG, Join.INNER)
 
         Assert.assertNotNull(result.get())
         Assert.assertEquals(4, result.get()!!["1"]?.sampleSize)
@@ -244,7 +244,7 @@ class AnalysisControllerTests {
 
         var result =
             service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
-                start, end, true, NumeratorFn.COUNT, Join.LEFT)
+                start, end, true, AggregateFn.COUNT, Join.LEFT)
 
         Assert.assertNotNull(result.get())
         Assert.assertEquals(5, result.get()!!["1"]?.sampleSize)
@@ -259,7 +259,7 @@ class AnalysisControllerTests {
 
         result =
             service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
-                start, end, true, NumeratorFn.COUNT, Join.INNER)
+                start, end, true, AggregateFn.COUNT, Join.INNER)
 
         Assert.assertNotNull(result.get())
         Assert.assertEquals(4, result.get()!!["1"]?.sampleSize)
@@ -280,7 +280,7 @@ class AnalysisControllerTests {
 
         var result =
             service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
-                start, end, true, NumeratorFn.SUM, Join.LEFT)
+                start, end, true, AggregateFn.SUM, Join.LEFT)
 
         Assert.assertNotNull(result.get())
         Assert.assertEquals(5, result.get()!!["1"]?.sampleSize)
@@ -295,7 +295,7 @@ class AnalysisControllerTests {
 
         result =
             service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
-                start, end, true, NumeratorFn.SUM, Join.INNER)
+                start, end, true, AggregateFn.SUM, Join.INNER)
 
         Assert.assertNotNull(result.get())
         Assert.assertEquals(4, result.get()!!["1"]?.sampleSize)
@@ -315,44 +315,32 @@ class AnalysisControllerTests {
         val end = 1676273678L
 
         var result =
-            service.doDiagnose("sdk_key2", "purchase", "toggle_not_exist", "type_not_exist",
-                start, end, true, NumeratorFn.COUNT, Join.LEFT)
+            service.doDiagnose( "sdk_key2", "purchase", "toggle_2", "not_exist_type",
+                start, end, AggregateFn.COUNT, Join.LEFT)
 
         Assert.assertEquals(Err(NotSupportAnalysisType), result)
 
         result =
             service.doDiagnose("sdk_key2", "purchase", "toggle_not_exist", "gaussian",
-                start, end, true, NumeratorFn.COUNT, Join.LEFT)
-
-        Assert.assertEquals(Err(NoVariationRecords), result)
-
-        result =
-            service.doDiagnose("sdk_key2", "purchase", "toggle_not_exist", "binomial",
-                start, end, true, NumeratorFn.COUNT, Join.LEFT)
+                start, end, AggregateFn.COUNT, Join.LEFT)
 
         Assert.assertEquals(Err(NoVariationRecords), result)
 
         result =
             service.doDiagnose("sdk_key2", "not_exist_metric", "toggle_3", "binomial",
-                start, end, true, NumeratorFn.COUNT, Join.LEFT)
-
-        Assert.assertEquals(Err(NoEventRecords), result)
-
-        result =
-            service.doDiagnose("sdk_key2", "not_exist_metric", "toggle_3", "gaussian",
-                start, end, true, NumeratorFn.COUNT, Join.LEFT)
+                start, end, AggregateFn.COUNT, Join.LEFT)
 
         Assert.assertEquals(Err(NoEventRecords), result)
 
         result =
             service.doDiagnose("sdk_key2", "can_not_join", "toggle_3", "binomial",
-                start, end, true, NumeratorFn.COUNT, Join.LEFT)
+                start, end, AggregateFn.COUNT, Join.LEFT)
 
         Assert.assertEquals(Err(NoJoinRecords), result)
 
         result =
             service.doDiagnose("sdk_key2", "can_not_join", "toggle_3", "gaussian",
-                start, end, true, NumeratorFn.COUNT, Join.LEFT)
+                start, end, AggregateFn.COUNT, Join.LEFT)
 
         Assert.assertEquals(Err(NoJoinRecords), result)
 

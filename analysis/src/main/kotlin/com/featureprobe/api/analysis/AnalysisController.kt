@@ -50,11 +50,11 @@ class AnalysisController(val service: AnalysisService) {
         @RequestParam start: Long,
         @RequestParam end: Long,
         @RequestParam(value = "positiveWin", defaultValue = "true" ) positiveWin: Boolean,
-        @RequestParam(value = "numeratorFn", defaultValue = "AVG") numeratorFn: NumeratorFn,
+        @RequestParam(value = "aggregateFn", defaultValue = "AVG") aggregateFn: AggregateFn,
         @RequestParam(value = "join", defaultValue = "INNER") join: Join,
     ): AnalysisResponse {
         val result = service.doAnalysis(sdkKey, metric, toggle, type, start,
-            end, positiveWin, numeratorFn, join)
+            end, positiveWin, aggregateFn, join)
         return when (result) {
             Err(NotSupportAnalysisType) -> AnalysisResponse(400, mapOf(), "Not Support Analysis Type")
             else -> AnalysisResponse(200, result.get(), null)
@@ -69,17 +69,17 @@ class AnalysisController(val service: AnalysisService) {
         @RequestParam type: String,
         @RequestParam start: Long,
         @RequestParam end: Long,
-        @RequestParam(value = "positiveWin", defaultValue = "true" ) positiveWin: Boolean,
-        @RequestParam(value = "numeratorFn", defaultValue = "AVG") numeratorFn: NumeratorFn,
+        @RequestParam(value = "aggregateFn", defaultValue = "AVG") aggregateFn: AggregateFn,
         @RequestParam(value = "join", defaultValue = "INNER") join: Join,
     ): AnalysisResponse {
         val result = service.doDiagnose(sdkKey, metric, toggle, type, start,
-            end, positiveWin, numeratorFn, join)
+            end, aggregateFn, join)
         return when (result) {
             Err(NotSupportAnalysisType) -> AnalysisResponse(400, mapOf(), "Not Support Analysis Type")
             Err(NoVariationRecords) -> AnalysisResponse(460, mapOf(), "No Variation Records")
             Err(NoEventRecords) -> AnalysisResponse(461, mapOf(), "No Event Records")
-            Err(NoJoinRecords) -> AnalysisResponse(462, mapOf(), "No Join Records")
+            Err(NoVariationAndEventRecords) -> AnalysisResponse(462, mapOf(), "No Variation Records, No Event Records")
+            Err(NoJoinRecords) -> AnalysisResponse(463, mapOf(), "No Join Records")
             else -> AnalysisResponse(200, mapOf(), "Analysis Records Exists")
         }
     }
@@ -156,12 +156,12 @@ class AnalysisService(
         sdkKey: String, metric: String, toggle: String,
         type: String, start: Long, end: Long,
         positiveWin: Boolean = true,
-        numeratorFn: NumeratorFn = NumeratorFn.AVG,
+        aggregateFn: AggregateFn = AggregateFn.AVG,
         join: Join = Join.INNER
     ): Result<Map<String, VariationProperty>, AnalysisFailure> {
         return when (type) {
             "binomial" -> doAnalysisBinomial(sdkKey, metric, toggle, start, end, positiveWin)
-            "gaussian" -> doAnalysisGaussian(sdkKey, metric, toggle, start, end, positiveWin, numeratorFn, join)
+            "gaussian" -> doAnalysisGaussian(sdkKey, metric, toggle, start, end, positiveWin, aggregateFn, join)
             else -> Err(NotSupportAnalysisType)
         }
     }
@@ -185,9 +185,9 @@ class AnalysisService(
 
     fun doAnalysisGaussian(
         sdkKey: String, metric: String, toggle: String, start: Long, end: Long,
-        positiveWin: Boolean, numeratorFn: NumeratorFn, join: Join
+        positiveWin: Boolean, aggregateFn: AggregateFn, join: Join
     ): Result<Map<String, VariationProperty>, AnalysisFailure> {
-        val variationGaussian = gaussianSqlExecute(sdkKey, metric, toggle, start, end, numeratorFn, join)
+        val variationGaussian = gaussianSqlExecute(sdkKey, metric, toggle, start, end, aggregateFn, join)
 
         val distributions = variationGaussian.associate {
             val posterior = posteriorGaussian(GaussianParam(), GaussianParam(it.mean, it.stdDeviation, it.sampleSize))
@@ -228,10 +228,10 @@ class AnalysisService(
         toggle: String,
         start: Long,
         end: Long,
-        numeratorFn: NumeratorFn,
+        aggregateFn: AggregateFn,
         join: Join,
     ): List<VariationGaussian> {
-        val sql = gaussianStatsSql(sdkKey, metric, toggle, start, end, numeratorFn, join)
+        val sql = gaussianStatsSql(sdkKey, metric, toggle, start, end, aggregateFn, join)
         log.info(sql)
         val session = sessionOf(dataSource)
         session.use {
@@ -250,88 +250,43 @@ class AnalysisService(
     }
 
     fun doDiagnose(
-        sdkKey: String, metric: String, toggle: String,
-        type: String, start: Long, end: Long,
-        positiveWin: Boolean = true,
-        numeratorFn: NumeratorFn = NumeratorFn.AVG,
-        join: Join = Join.INNER
+        sdkKey: String, metric: String, toggle: String, type: String,
+        start: Long, end: Long, aggregateFn: AggregateFn, join: Join,
     ): Result<AnalysisSuccess, AnalysisFailure> {
-        return when (type) {
-            "binomial" -> doDiagnoseBinomial(sdkKey, metric, toggle, start, end, positiveWin)
-            "gaussian" -> doDiagnoseGaussian(sdkKey, metric, toggle, start, end, positiveWin, numeratorFn, join)
-            else -> Err(NotSupportAnalysisType)
-        }
-    }
-
-    fun doDiagnoseBinomial(
-        sdkKey: String, metric: String, toggle: String,
-        start: Long, end: Long, positiveWin: Boolean
-    ): Result<AnalysisSuccess, AnalysisFailure> {
-        return binomialSqlExecuteDiagnose(sdkKey, metric, toggle, start, end)
-    }
-
-    fun doDiagnoseGaussian(
-        sdkKey: String, metric: String, toggle: String, start: Long, end: Long,
-        positiveWin: Boolean, numeratorFn: NumeratorFn, join: Join
-    ): Result<AnalysisSuccess, AnalysisFailure> {
-       return gaussianSqlDiagnoseExecute(sdkKey, metric, toggle, start, end, numeratorFn, join)
-    }
-
-    fun binomialSqlExecuteDiagnose(
-        sdkKey: String,
-        metric: String,
-        toggle: String,
-        start: Long,
-        end: Long
-    ): Result<AnalysisSuccess, AnalysisFailure> {
-        var sql = binomialVariationDiagnoseSql(sdkKey, toggle, start, end)
+        // step1: diagnose variation
+        var sql = variationDiagnoseSql(sdkKey, toggle, start, end)
         var count = executeCountSql(sql)
+        var checkVariation: Result<AnalysisSuccess, AnalysisFailure> = Ok(AnalysisSuccess)
 
         if (count.isEmpty() || count[0] == 0) {
+            checkVariation = Err(NoVariationRecords)
+        }
+
+        // step2: diagnose event
+        sql = eventDiagnoseSql(sdkKey, metric, start, end)
+        count = executeCountSql(sql)
+        var checkEvent: Result<AnalysisSuccess, AnalysisFailure> = Ok(AnalysisSuccess)
+
+        if (count.isEmpty() || count[0] == 0) {
+            checkEvent = Err(NoEventRecords)
+        }
+
+        if (checkVariation == Err(NoVariationRecords) && checkEvent == Ok(AnalysisSuccess)) {
             return Err(NoVariationRecords)
         }
-
-        sql = binomialMetricDiagnoseSql(sdkKey, metric, start, end)
-        count = executeCountSql(sql)
-
-        if (count.isEmpty() || count[0] == 0) {
+        if (checkVariation == Ok(AnalysisSuccess) && checkEvent == Err(NoEventRecords)) {
             return Err(NoEventRecords)
         }
-
-        sql = binomialStatsSql(sdkKey, metric, toggle, start, end)
-        count = executeCountSql(sql, "cvt")
-
-        if (count.isEmpty() || count[0] == 0) {
-            return Err(NoJoinRecords)
+        if (checkVariation == Err(NoVariationRecords) && checkEvent == Err(NoEventRecords)) {
+            return Err(NoVariationAndEventRecords)
         }
 
-        return Ok(AnalysisSuccess)
-    }
-
-    fun gaussianSqlDiagnoseExecute(
-        sdkKey: String,
-        metric: String,
-        toggle: String,
-        start: Long,
-        end: Long,
-        numeratorFn: NumeratorFn,
-        join: Join,
-    ): Result<AnalysisSuccess, AnalysisFailure> {
-        var sql = gaussianVariationDiagnoseSql(sdkKey, toggle, start, end)
-        var count = executeCountSql(sql)
-
-        if (count.isEmpty() || count[0] == 0) {
-            return Err(NoVariationRecords)
+        // step3: diagnose join
+        sql = when (type) {
+            "binomial" -> binomialStatsSql(sdkKey, metric, toggle, start, end)
+            "gaussian" -> gaussianStatsSql(sdkKey, metric, toggle, start, end, aggregateFn, join)
+            else -> return Err(NotSupportAnalysisType)
         }
-
-        sql = gaussianMetricDiagnoseSql(sdkKey, metric, start, end, numeratorFn)
-        count = executeCountSql(sql)
-
-        if (count.isEmpty() || count[0] == 0) {
-            return Err(NoEventRecords)
-        }
-
-        sql = gaussianStatsSql(sdkKey, metric, toggle, start, end, numeratorFn, join)
         count = executeCountSql(sql)
 
         if (count.isEmpty() || count[0] == 0) {

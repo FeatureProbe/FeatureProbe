@@ -92,6 +92,8 @@ object NoEventRecords : AnalysisFailure()
 
 object NoJoinRecords: AnalysisFailure()
 
+object NoVariationAndEventRecords: AnalysisFailure()
+
 object AnalysisSuccess
 
 data class VariationConvert(val variation: String, val convert: Int, val sampleSize: Int)
@@ -132,7 +134,7 @@ data class ChartProperty(val min: Double, val max: Double, val step: Double)
 // Default is no information Prior value
 data class GaussianParam(val mean: Double = 0.0, val stdDeviation: Double = 1.0, val sampleSize: Int = 0)
 
-enum class NumeratorFn {
+enum class AggregateFn {
     AVG,
     SUM,
     COUNT
