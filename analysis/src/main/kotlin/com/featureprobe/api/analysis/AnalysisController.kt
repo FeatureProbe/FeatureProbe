@@ -25,10 +25,11 @@ class AnalysisController(val service: AnalysisService) {
     @PostMapping("/events")
     fun storeEvents(
         @RequestHeader(value = "Authorization") sdkKey: String,
+        @RequestHeader(value = "user-agent", required = false) userAgent: String,
         @RequestBody body: List<EventRequest>
     ): EventResponse {
         body.forEach {
-            service.storeEvents(it, sdkKey)
+            service.storeEvents(it, sdkKey, userAgent)
         }
         return EventResponse(200)
     }
@@ -36,6 +37,7 @@ class AnalysisController(val service: AnalysisService) {
     @GetMapping("/exists_event")
     fun existEvents(
         @RequestParam metric: String,
+        @RequestParam(value = "sdkType", required = false) sdkType: String,
         @RequestHeader(value = "Authorization") sdkKey: String) : EventExistsResponse  {
 
         return EventExistsResponse(200, service.existsEvent(sdkKey, metric))
@@ -99,7 +101,7 @@ class AnalysisService(
         }
     }
 
-    fun storeEvents(request: EventRequest, sdkKey: String) {
+    fun storeEvents(request: EventRequest, sdkKey: String, userAgent: String) {
         log.debug("storeEvents $sdkKey $request")
         val session = sessionOf(dataSource)
         session.use {
@@ -111,7 +113,7 @@ class AnalysisService(
             request.events.forEach {
                 when (it) {
                     is AccessEvent -> batchAddVariation(variationPrepStmt, it, sdkKey)
-                    is CustomEvent -> batchAddEvent(eventPrepStmt, it, sdkKey)
+                    is CustomEvent -> batchAddEvent(eventPrepStmt, it, sdkKey, userAgent)
                 }
             }
 
@@ -119,6 +121,7 @@ class AnalysisService(
             eventPrepStmt.executeLargeBatch()
         }
     }
+
 
     fun existsEvent(sdkKey: String, metric: String): Boolean {
         val session = sessionOf(dataSource)

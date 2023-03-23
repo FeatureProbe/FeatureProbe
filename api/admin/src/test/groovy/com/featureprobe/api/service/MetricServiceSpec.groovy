@@ -4,6 +4,7 @@ import com.featureprobe.api.base.enums.AlgorithmDenominatorEnum
 import com.featureprobe.api.base.enums.EventTypeEnum
 import com.featureprobe.api.base.enums.MetricTypeEnum
 import com.featureprobe.api.base.enums.MatcherTypeEnum
+import com.featureprobe.api.base.enums.SDKType
 import com.featureprobe.api.config.AppConfig
 import com.featureprobe.api.dao.entity.Environment
 import com.featureprobe.api.dao.entity.Event
@@ -22,6 +23,8 @@ import com.featureprobe.api.dao.repository.ToggleControlConfRepository
 import com.featureprobe.api.dto.MetricCreateRequest
 import org.hibernate.internal.SessionImpl
 import spock.lang.Specification
+import spock.lang.Unroll
+
 import javax.persistence.EntityManager
 
 class MetricServiceSpec extends Specification {
@@ -150,5 +153,37 @@ class MetricServiceSpec extends Specification {
                         projectKey, environmentKey, toggleKey, _) >> [new TargetingVersion(version: 1, createdTime: new Date(), comment: "Release 1")]
         1 == iteration.size()
         1 == iteration.get(0).records.size()
+    }
+
+
+    @Unroll
+    def "buildExistsEventURLQuery should return correct query #sdkType"() {
+        given:
+        def metricName = "myMetric"
+
+        when:
+        def result = metricService.buildExistsEventURLQuery(sdkType, metricName)
+
+        then:
+        result == expectedQuery
+
+        where:
+        sdkType       | expectedQuery
+        null          | "metric=myMetric"
+        SDKType.Java  | "metric=myMetric&sdkType=JAVA"
+        SDKType.React | "metric=myMetric&sdkType=REACT"
+    }
+
+    def "parseExistsEventResponse returns expected result for given response"() {
+        expect:
+        metricService.parseExistsEventResponse(response) == expected
+
+        where:
+        response                                || expected
+        '{"exists": true}'                      || true
+        '{"exists": false}'                     || false
+        '{"exists": "invalid_value"}'           || false
+        '{"invalid_property": "invalid_value"}' || false
+        '{}'                                    || false
     }
 }

@@ -69,7 +69,7 @@ class AnalysisControllerTests {
         val req = EventRequest(arrayListOf(access0, access1, event0, event1))
         val session = sessionOf(service.dataSource)
 
-        service.storeEvents(req, "sdk_key")
+        service.storeEvents(req, "sdk_key", "JAVA/1.0.0")
         val accessEventCount: List<Int> = session.run(
             queryOf("SELECT count(*) as c FROM access WHERE toggle_key = 'testStoreEventsToggle'")
                 .map { row -> row.int("c") }.asList
@@ -81,13 +81,14 @@ class AnalysisControllerTests {
 
         assert(accessEventCount == arrayListOf(2))
         assert(customEventCount == arrayListOf(2))
+
     }
 
     fun storeEvents(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
         val event0 = CustomEvent(1676273668, "user0", "testStoreClickExist", 1.0)
         val req = EventRequest(arrayListOf(event0))
-        service.storeEvents(req, "sdk_key")
+        service.storeEvents(req, "sdk_key", "JAVA/1.0.0")
     }
 
     fun testStoreNullCustomEvents(jdbcUrl: String) {
@@ -99,7 +100,7 @@ class AnalysisControllerTests {
 
         session.run(queryOf("BEGIN").asExecute)
 
-        service.storeEvents(req, "sdk_key")
+        service.storeEvents(req, "sdk_key", "JAVA/1.0.0")
 
         val customEventCount: List<Int> = session.run(
             queryOf("SELECT count(*) as c FROM events WHERE name = 'testStoreClickNoValue'")
