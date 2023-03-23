@@ -3,6 +3,8 @@
 
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const math = require('remark-math');
+const katex = require('rehype-katex');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -47,6 +49,8 @@ const config = {
           editUrl: 'https://github.com/FeatureProbe/FeatureProbe/blob/main/docs',
           editLocalizedFiles: true,
           showLastUpdateTime: true,
+          remarkPlugins: [math],
+          rehypePlugins: [katex],
         },
         blog: {
           blogSidebarCount: 'ALL',
@@ -59,6 +63,13 @@ const config = {
         },
       })
     ],
+  ],
+
+  stylesheets: [
+    {
+      href: '/katex.min.css',
+      type: 'text/css',
+    },
   ],
 
   plugins: [
