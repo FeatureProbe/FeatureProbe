@@ -15,7 +15,9 @@ create table events
     user_key varchar(256)     not null,
     name     varchar(256)     not null,
     value    double precision null,
-    sdk_key  varchar(256)     not null
+    sdk_key  varchar(256)     not null,
+    sdk_type  varchar(64)     not null default  '',
+    sdk_version  varchar(64)     not null default  '',
 );
 
 insert into access
@@ -85,6 +87,10 @@ values (1676273668, 'user7', 'toggle_2', 2, 1, 1, 'sdk_key2');
 insert into access
 (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key)
 values (1676273668, 'user8', 'toggle_2', 2, 1, 1, 'sdk_key2');
+
+insert into access
+(time, user_key, toggle_key, variation_index, rule_index, version, sdk_key)
+values (1676273668, 'user0', 'toggle_3', 2, 1, 1, 'sdk_key2');
 
 insert into events
 (time, user_key, name, value, sdk_key)
@@ -157,3 +163,7 @@ values (1676273668, 'user8', 'purchase', 160.0, 'sdk_key2');
 insert into events
 (time, user_key, name, value, sdk_key)
 values (1676273668, 'user8', 'purchase', 170.0, 'sdk_key2');
+
+insert into events
+(time, user_key, name, value, sdk_key)
+values (1676273668, 'user1', 'can_not_join', 170.0, 'sdk_key2');

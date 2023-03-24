@@ -20,6 +20,8 @@ public interface TrafficRepository extends JpaRepository<Traffic, Long>, JpaSpec
 
     boolean existsBySdkKeyAndToggleKey(String sdkKey, String toggleKey);
 
+    boolean existsBySdkKeyAndToggleKeyAndSdkType(String sdkKey, String toggleKey, String sdkType);
+
     @Query(value = "SELECT toggle_key from traffic WHERE sdk_key = ?1 OR sdk_key = ?2 GROUP BY toggle_key",
             nativeQuery = true)
     Set<String> findAllAccessedToggleKey(String serverSdkKey, String clientSdkKey);

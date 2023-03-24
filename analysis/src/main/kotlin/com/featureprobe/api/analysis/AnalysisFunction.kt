@@ -186,8 +186,21 @@ WITH $RAW_VARIATION_TABLE AS (${userProvideVariationSql(sdkKey)}),
 SELECT v.variation, c.cvt, v.total FROM $CONVERT_COUNT_TABLE c, $VARIATION_COUNT_TABLE v
 WHERE c.variation = v.variation;"""
 
+fun variationDiagnoseSql(sdkKey: String, toggle: String, start: Long, end: Long) =
+    """
+WITH $RAW_VARIATION_TABLE AS (${userProvideVariationSql(sdkKey)}),
+    $UNIQ_VARIATION_TABLE AS (${uniqVariationSql(toggle, start, end)})
+SELECT COUNT(*) as count FROM $UNIQ_VARIATION_TABLE;"""
+
+fun eventDiagnoseSql(sdkKey: String, metric: String, start: Long, end: Long) =
+    """
+WITH 
+    $RAW_METRIC_TABLE AS (${userProvideMetricSql(sdkKey, metric)}),
+    $METRIC_TABLE AS (${uniqMetricSql(start, end)})
+SELECT COUNT(*) as count FROM $METRIC_TABLE; """
+
 fun gaussianStatsSql(sdkKey: String, metric: String, toggle: String,
-                     start: Long, end: Long, fn: NumeratorFn, join: Join) =
+                     start: Long, end: Long, fn: AggregateFn, join: Join) =
     """
 WITH $RAW_VARIATION_TABLE AS (${userProvideVariationSql(sdkKey)}),
     $UNIQ_VARIATION_TABLE AS (${uniqVariationSql(toggle, start, end)}),
@@ -208,7 +221,6 @@ SELECT
 FROM access
 WHERE sdk_key = '$sdkKey'"""
 
-
 fun uniqVariationSql(toggle: String, start: Long, end: Long) =
     """
 SELECT 
@@ -227,11 +239,11 @@ WHERE
     v.time > '$start' and v.time < '$end'
 GROUP BY user_key"""
 
-fun numeratorMetricSql( start: Long, end: Long, fn: NumeratorFn): String {
+fun numeratorMetricSql( start: Long, end: Long, fn: AggregateFn): String {
     val value = when (fn) {
-        NumeratorFn.AVG -> "AVG(COALESCE(value, 0))"
-        NumeratorFn.COUNT -> "COUNT(*)"
-        NumeratorFn.SUM -> "SUM(value)"
+        AggregateFn.AVG -> "AVG(COALESCE(value, 0))"
+        AggregateFn.COUNT -> "COUNT(*)"
+        AggregateFn.SUM -> "SUM(value)"
     }
 
     return """
@@ -263,7 +275,7 @@ fun userValueVariationSql(join: Join) : String {
         Join.INNER -> "INNER JOIN"
         Join.LEFT -> "LEFT JOIN"
     }
-    return "SELECT m.value, v.variation, m.user_key FROM $UNIQ_VARIATION_TABLE v $joinType $METRIC_USER_VALUE_TABLE m ON m.user_key = v.user_key"
+    return "SELECT v.user_key, v.variation, m.value FROM $UNIQ_VARIATION_TABLE v $joinType $METRIC_USER_VALUE_TABLE m ON m.user_key = v.user_key"
 }
 
 fun metricUserTotalMeanSql() =
@@ -295,7 +307,8 @@ fun batchAddVariation(
 fun batchAddEvent(
     ps: PreparedStatement,
     it: CustomEvent,
-    sdkKey: String
+    sdkKey: String,
+    userAgent: String
 ) {
     ps.setLong(1, it.time)
     ps.setString(2, it.user)
@@ -306,8 +319,23 @@ fun batchAddEvent(
         ps.setNull(4, java.sql.Types.DOUBLE)
     }
     ps.setString(5, sdkKey)
+    ps.setString(6, getSdkType(userAgent))
+    ps.setString(7, getSdkVersion(userAgent))
 
     ps.addBatch()
+}
+
+
+fun getStringAtIndex(userAgent: String?, index: Int): String? {
+    return userAgent?.split('/')?.getOrNull(index) ?: ""
+}
+
+fun getSdkType(userAgent: String?): String? {
+    return getStringAtIndex(userAgent, 0)
+}
+
+fun getSdkVersion(userAgent: String?): String? {
+    return getStringAtIndex(userAgent, 1)
 }
 
 class CustomDoubleSerialize : JsonSerializer<Double>() {

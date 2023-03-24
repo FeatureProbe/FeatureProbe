@@ -5,7 +5,9 @@ import com.featureprobe.api.base.enums.EventTypeEnum;
 import com.featureprobe.api.base.enums.MatcherTypeEnum;
 import com.featureprobe.api.base.enums.MetricTypeEnum;
 import com.featureprobe.api.base.enums.ResourceType;
+import com.featureprobe.api.base.enums.SDKType;
 import com.featureprobe.api.base.enums.WinCriteria;
+import com.featureprobe.api.base.model.BaseResponse;
 import com.featureprobe.api.base.util.JsonMapper;
 import com.featureprobe.api.base.util.RegexValidator;
 import com.featureprobe.api.config.AppConfig;
@@ -50,6 +52,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -136,7 +139,7 @@ public class MetricService {
     }
 
     public AnalysisResultResponse analysis(String projectKey, String environmentKey, String toggleKey,
-                                           AnalysisRequest params) {
+                                           AnalysisRequest request) {
         Metric metric = metricRepository
                 .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceType.METRIC, projectKey + "-"
@@ -145,27 +148,77 @@ public class MetricService {
                 .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceType.TOGGLE_CONTROL_CONF,
                         projectKey + "-" + environmentKey + "-" + toggleKey));
+        Map<String, Object> paramMap = buildAnalysisQueryParam(metric, toggleControlConf, request);
+        String callRes = callAnalysisServer("/analysis", formatHttpQuery(paramMap),
+                querySdkServerKey(projectKey, environmentKey));
+        return new AnalysisResultResponse(new Date((Long) paramMap.get("start")), new Date((Long) paramMap.get("end")),
+                MetricMapper.INSTANCE.entityToConfigResponse(metric),
+                JsonMapper.toObject(callRes, Map.class).get("data"));
+    }
+    public BaseResponse diagnosis(String projectKey, String environmentKey, String toggleKey, AnalysisRequest request) {
+        Metric metric = metricRepository
+                .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey)
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceType.METRIC, projectKey + "-"
+                        + environmentKey + "-" + toggleKey));
+        ToggleControlConf toggleControlConf = toggleControlConfRepository
+                .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey)
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceType.TOGGLE_CONTROL_CONF,
+                        projectKey + "-" + environmentKey + "-" + toggleKey));
+        Map<String, Object> paramMap = buildAnalysisQueryParam(metric, toggleControlConf, request);
+        String callRes = callAnalysisServer("/diagnose", formatHttpQuery(paramMap),
+                querySdkServerKey(projectKey, environmentKey));
+        return new BaseResponse(String.valueOf(JsonMapper.toObject(callRes, Map.class).get("status")),
+                String.valueOf(JsonMapper.toObject(callRes, Map.class).get("errMsg")));
+    }
+
+    private String formatHttpQuery(Map<String, Object> paramMap) {
+        String param = "";
+        for (String key : paramMap.keySet()) {
+            if (Objects.nonNull(paramMap.get(key))) {
+                param += key + "=" + paramMap.get(key) + "&";
+            }
+        }
+        return param;
+    }
+
+    private Map<String, Object> buildAnalysisQueryParam(Metric metric, ToggleControlConf toggleControlConf,
+                                                        AnalysisRequest request) {
+        Map<String, Object> params = new HashMap<>();
         Date start = toggleControlConf.getTrackStartTime();
         Date end = toggleControlConf.getTrackEndTime();
         if (Objects.isNull(end)) {
             end = new Date();
         }
-        if (Objects.nonNull(params.getStart()) && Objects.nonNull(params.getEnd())) {
-            start = params.getStart();
-            end = params.getEnd();
+        if (Objects.nonNull(request.getStart()) && Objects.nonNull(request.getEnd())) {
+            start = request.getStart();
+            end = request.getEnd();
         }
         String type = ALGORITHM_BINOMIAL;
         String name = getMetricName(metric);
+        String aggregationMethod = AggregationMethod.AVG.name();
+        String joinType = JoinType.LEFT.name();
         boolean positiveWin = true;
         if (!MetricTypeEnum.CONVERSION.equals(metric.getType())) {
             type = ALGORITHM_GAUSSIAN;
             positiveWin = WinCriteria.POSITIVE.equals(metric.getWinCriteria()) ? true : false;
         }
-
-        String callRes = callAnalysisServer(querySdkServerKey(projectKey, environmentKey), name, toggleKey, type,
-                positiveWin, start, end);
-        return new AnalysisResultResponse(start, end, MetricMapper.INSTANCE.entityToConfigResponse(metric),
-                JsonMapper.toObject(callRes, Map.class).get("data"));
+        if (MetricTypeEnum.SUM.equals(metric.getType())) {
+            aggregationMethod = AggregationMethod.SUM.name();
+        } if (MetricTypeEnum.COUNT.equals(metric.getType())) {
+            aggregationMethod = AggregationMethod.COUNT.name();
+        }
+        if (MetricTypeEnum.AVERAGE.equals(metric.getType())) {
+            joinType = JoinType.INNER.name();
+        }
+        params.put("metric", name);
+        params.put("toggle", metric.getToggleKey());
+        params.put("type", type);
+        params.put("positiveWin", positiveWin);
+        params.put("aggregateFn", aggregationMethod);
+        params.put("join", joinType);
+        params.put("start", start.getTime());
+        params.put("end", end.getTime());
+        return params;
     }
 
     public List<MetricIterationResponse> iteration(String projectKey, String environmentKey, String toggleKey) {
@@ -251,19 +304,6 @@ public class MetricService {
         return DigestUtils.md2Hex(encodeStr.getBytes(StandardCharsets.UTF_8));
     }
 
-    private String callAnalysisServer(String sdkKey,
-                                      String metric,
-                                      String toggleKey,
-                                      String type,
-                                      boolean positiveWin,
-                                      Date start,
-                                      Date end) {
-
-        String query = "metric=" + metric +
-                "&toggle=" + toggleKey + "&type=" + type + "&positiveWin=" + positiveWin +
-                "&start=" + start.getTime() + "&end=" + end.getTime();
-        return this.callAnalysisServer("/analysis", query, sdkKey);
-    }
 
     private String callAnalysisServer(String path, String query, String sdkKey) {
         String res = "{}";
@@ -328,7 +368,7 @@ public class MetricService {
                 .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey).isPresent();
     }
 
-    public boolean isReport(String projectKey, String environmentKey, String toggleKey) {
+    public boolean existsEvent(String projectKey, String environmentKey, String toggleKey, SDKType sdkType) {
         String sdkServerKey = querySdkServerKey(projectKey, environmentKey);
         Optional<Metric> metric = metricRepository
                 .findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey);
@@ -336,9 +376,30 @@ public class MetricService {
             return false;
         }
         String metricName = metric.get().getName();
-        String query = "metric=" + metricName;
-        String response = callAnalysisServer("/exists_event", query, sdkServerKey);
+        String response = callAnalysisServer("/exists_event",
+                buildExistsEventURLQuery(sdkType, metricName), sdkServerKey);
 
+        return parseExistsEventResponse(response);
+    }
+
+    protected boolean parseExistsEventResponse(String response) {
         return BooleanUtils.toBoolean(String.valueOf(JsonMapper.toObject(response, Map.class).get("exists")));
     }
+
+    protected String buildExistsEventURLQuery(SDKType sdkType, String metricName) {
+        StringBuffer query = new StringBuffer("metric=").append(metricName);
+        if (sdkType != null) {
+            query.append("&sdkType=").append(sdkType.getValue());
+        }
+        return query.toString();
+    }
+
+    public enum AggregationMethod {
+        AVG, SUM, COUNT
+    }
+
+    public enum  JoinType {
+        INNER, LEFT
+    }
+
 }

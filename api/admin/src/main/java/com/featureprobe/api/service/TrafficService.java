@@ -119,19 +119,19 @@ public class TrafficService {
     }
 
     private String getSdkType(String userAgent) {
-        if (StringUtils.isNotBlank(userAgent) && userAgent.contains("/")) {
-            return userAgent.split("/")[0];
-        }
-        log.error("[Event] SDK user-agent format error. {} ", userAgent);
-        return "";
+        return extractSdkField(userAgent, 0);
     }
 
     private String getSdkVersion(String userAgent) {
-        if (StringUtils.isNotBlank(userAgent) && userAgent.contains("/")) {
-            return userAgent.split("/").length > 1 ? userAgent.split("/")[1] : null;
-        }
-        log.error("[Event] SDK user-agent format error. {} ", userAgent);
-        return "";
+        return extractSdkField(userAgent, 1);
     }
 
+    private String extractSdkField(String userAgent, int index) {
+        if (StringUtils.isBlank(userAgent) || !userAgent.contains("/")) {
+            log.error("[Event] SDK user-agent format error. {} ", userAgent);
+            return "";
+        }
+        String[] parts = userAgent.split("/");
+        return parts.length > index ? parts[index] : null;
+    }
 }

@@ -6,6 +6,8 @@ import com.featureprobe.api.base.doc.EnvironmentKeyParameter;
 import com.featureprobe.api.base.doc.GetApiResponse;
 import com.featureprobe.api.base.doc.ProjectKeyParameter;
 import com.featureprobe.api.base.doc.ToggleKeyParameter;
+import com.featureprobe.api.base.enums.SDKType;
+import com.featureprobe.api.base.model.BaseResponse;
 import com.featureprobe.api.dto.AnalysisRequest;
 import com.featureprobe.api.dto.AnalysisResultResponse;
 import com.featureprobe.api.dto.MetricConfigResponse;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -90,7 +93,20 @@ public class MetricController {
             description = "Get whether the specified environment toggle is report metric data.")
     public MetricStatusResponse status(@PathVariable("projectKey") String projectKey,
                                        @PathVariable("environmentKey") String environmentKey,
-                                       @PathVariable("toggleKey") String toggleKey) {
-        return new MetricStatusResponse(metricService.isReport(projectKey, environmentKey, toggleKey));
+                                       @PathVariable("toggleKey") String toggleKey,
+                                       @RequestParam(value = "sdkType", required = false) SDKType sdkType) {
+        return new MetricStatusResponse(metricService.existsEvent(projectKey, environmentKey, toggleKey, sdkType));
     }
+
+    @GetApiResponse
+    @GetMapping("/diagnosis")
+    @Operation(summary = "Get metric diagnosis info",
+            description = "Diagnosis of abnormal analysis results for diagnostic metric.")
+    public BaseResponse diagnosis(@PathVariable("projectKey") String projectKey,
+                                  @PathVariable("environmentKey") String environmentKey,
+                                  @PathVariable("toggleKey") String toggleKey,
+                                  AnalysisRequest params) {
+        return metricService.diagnosis(projectKey, environmentKey, toggleKey, params);
+    }
+
 }

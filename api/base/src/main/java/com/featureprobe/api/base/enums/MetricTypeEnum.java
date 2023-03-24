@@ -2,7 +2,7 @@ package com.featureprobe.api.base.enums;
 
 public enum MetricTypeEnum {
 
-    CONVERSION, COUNT, DURATION, REVENUE;
+    CONVERSION, COUNT, AVERAGE, SUM;
 
     public boolean equals(MetricTypeEnum type) {
         return this.name().equals(type.name());

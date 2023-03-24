@@ -1,6 +1,5 @@
 package com.featureprobe.api.analysis
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -26,11 +25,11 @@ const val INSERT_VARIATION_SQL =
 VALUES (?, ?, ?, ?, ?, ?, ?);"""
 
 const val INSERT_EVENT_SQL =
-    """INSERT INTO events (time, user_key, name, value, sdk_key)
-VALUES (?, ?, ?, ?, ?);"""
+    """INSERT INTO events (time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+VALUES (?, ?, ?, ?, ?, ?, ?);"""
 
 const val EXISTS_EVENT_SQL =
-    """SELECT *, 1 as count FROM events WHERE sdk_key = ? AND name = ? LIMIT 1;"""
+    """SELECT 1 as count FROM events WHERE sdk_key = ? AND name = ? LIMIT 1;"""
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -79,12 +78,23 @@ data class EventExistsResponse(
 
 data class AnalysisResponse(
     val status: Int,
-    val data: Map<String, VariationProperty>?
+    val data: Map<String, VariationProperty>?,
+    val errMsg: String?,
 )
 
 sealed class AnalysisFailure
 
 object NotSupportAnalysisType : AnalysisFailure()
+
+object NoVariationRecords : AnalysisFailure()
+
+object NoEventRecords : AnalysisFailure()
+
+object NoJoinRecords: AnalysisFailure()
+
+object NoVariationAndEventRecords: AnalysisFailure()
+
+object AnalysisSuccess
 
 data class VariationConvert(val variation: String, val convert: Int, val sampleSize: Int)
 
@@ -100,7 +110,6 @@ data class CredibleInterval(
 data class DistributionDot(
     @JsonSerialize(using = CustomDoubleSerialize::class)
     val x: Double,
-    @JsonSerialize(using = CustomDoubleSerialize::class)
     val y: Double
 )
 
@@ -125,7 +134,7 @@ data class ChartProperty(val min: Double, val max: Double, val step: Double)
 // Default is no information Prior value
 data class GaussianParam(val mean: Double = 0.0, val stdDeviation: Double = 1.0, val sampleSize: Int = 0)
 
-enum class NumeratorFn {
+enum class AggregateFn {
     AVG,
     SUM,
     COUNT

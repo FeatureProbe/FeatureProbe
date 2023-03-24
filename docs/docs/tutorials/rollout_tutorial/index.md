@@ -210,9 +210,6 @@ async fn main() {
         remote_url: remote_url.to_owned(),
         server_sdk_key: server_sdk_key.to_owned(),
         refresh_interval: Duration::from_millis(2000),
-        #[cfg(feature = "use_tokio")]
-        http_client: None,
-        wait_first_resp: true,
         ..Default::default()
     };
 

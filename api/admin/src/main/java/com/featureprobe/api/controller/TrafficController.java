@@ -1,5 +1,6 @@
 package com.featureprobe.api.controller;
 
+import com.featureprobe.api.base.enums.SDKType;
 import com.featureprobe.api.base.doc.DefaultApiResponses;
 import com.featureprobe.api.base.doc.EnvironmentKeyParameter;
 import com.featureprobe.api.base.doc.GetApiResponse;
@@ -56,8 +57,9 @@ public class TrafficController {
     @Operation(summary = "Get access status", description = "Get whether the specified environment toggle is accessed.")
     public AccessStatusResponse query(@PathVariable("projectKey") String projectKey,
                                       @PathVariable("environmentKey") String environmentKey,
-                                      @PathVariable("toggleKey") String toggleKey) {
-        return new AccessStatusResponse(trafficChartService.isAccess(projectKey, environmentKey, toggleKey));
+                                      @PathVariable("toggleKey") String toggleKey,
+                                      @RequestParam(value = "sdkType", required = false) SDKType sdkType) {
+        return new AccessStatusResponse(trafficChartService.isAccess(projectKey, environmentKey, toggleKey, sdkType));
     }
 
 }

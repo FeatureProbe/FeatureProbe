@@ -1,5 +1,6 @@
 package com.featureprobe.api.service;
 
+import com.featureprobe.api.base.enums.SDKType;
 import com.featureprobe.api.base.model.TargetingContent;
 import com.featureprobe.api.base.model.Variation;
 import com.featureprobe.api.dto.TrafficPoint;
@@ -68,10 +69,12 @@ public class TrafficChartService {
     private static final int MAX_QUERY_POINT_COUNT = 12;
     private static final int GROUP_BY_DAY_HOURS = 24;
 
-    public boolean isAccess(String projectKey, String environmentKey, String toggleKey) {
+    public boolean isAccess(String projectKey, String environmentKey, String toggleKey, SDKType sdkType) {
         String serverSdkKey = queryEnvironmentServerSdkKey(projectKey, environmentKey);
-        boolean isAccess = trafficRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey);
-        return isAccess;
+        if (sdkType == null) {
+            return trafficRepository.existsBySdkKeyAndToggleKey(serverSdkKey, toggleKey);
+        }
+        return trafficRepository.existsBySdkKeyAndToggleKeyAndSdkType(serverSdkKey, toggleKey, sdkType.getValue());
     }
 
     public TrafficResponse query(String projectKey, String environmentKey, String toggleKey, TrafficType trafficType,
