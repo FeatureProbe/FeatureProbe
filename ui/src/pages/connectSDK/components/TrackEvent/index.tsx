@@ -173,7 +173,7 @@ const SetupCode = (props: IProps) => {
               intl,
               userWithCode,
               remoteUrl,
-            })
+            }, eventInfo?.eventName, isTrackValue)
           );
           break;
 
@@ -215,14 +215,16 @@ const SetupCode = (props: IProps) => {
           attributes.forEach(item => {
             userWithCode += `[user withKey:@"${item}" value:/* ${item} */];\n`;
           });
-          saveOptions(getObjCCode({
-            clientSdkKey,
-            toggleKey,
-            returnType,
-            intl,
-            userWithCode,
-            remoteUrl,
-          }));
+          saveOptions(
+            getObjCCode({
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }, eventInfo?.eventName, isTrackValue)
+          );
           break;
         case 'JavaScript':
           saveLanguage('javascript');
