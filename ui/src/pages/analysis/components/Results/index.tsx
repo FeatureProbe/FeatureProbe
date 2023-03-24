@@ -166,8 +166,7 @@ const Results = (props: IProps) => {
   }, [saveSubmitLoading, projectKey, environmentKey, toggleKey, initTargeting, getEventResult, start, end, getIteration, intl]);
 
   const handleViewReason = useCallback(() => {
-    window.open('https://docs.featureprobe.io/');
-    if (errCode === '460') {
+    if (errCode === '460' || errCode === '462') {
       if (intl.locale === 'en-US') {
         window.open('https://docs.featureprobe.io/introduction/faq/#31-no-variation-records');
       } else {
@@ -199,7 +198,7 @@ const Results = (props: IProps) => {
       saveErrCode(code);
     });
   }, [end, environmentKey, projectKey, start, toggleKey]);
-  
+
   return (
     <div className={`result ${styles.result}`}>
       <SectionTitle title={intl.formatMessage({ id: 'common.data.text' })} showTooltip={false} />
@@ -347,7 +346,7 @@ const Results = (props: IProps) => {
                   errCode && (
                     <div className={styles['diagnose-result']}>
                       <FormattedMessage id='analysis.result.diagnose.result' />
-                      { errCode === '460' && <FormattedMessage id='analysis.result.diagnose.reason1' /> }
+                      { (errCode === '460' || errCode === '462') && <FormattedMessage id='analysis.result.diagnose.reason1' /> }
                       { errCode === '461' && <FormattedMessage id='analysis.result.diagnose.reason2' /> }
                       { errCode === '463' && <FormattedMessage id='analysis.result.diagnose.reason4' /> }
                       <span className={styles['diagnose-reason']} onClick={handleViewReason}>
