@@ -92,3 +92,22 @@ export const getMetricIterations = async<T> (projectKey: string, environmentKey:
     },
   });
 };
+
+export const diagnoseResult = async<T> (projectKey: string, environmentKey: string, toggleKey: string, params: {
+  start: string,
+  end: string
+}) => {
+  const url = `${
+    API.diagnose
+      .replace(':projectKey', projectKey)
+      .replace(':environmentKey', environmentKey)
+      .replace(':toggleKey', toggleKey)
+  }?${qs.stringify(params)}`;
+  
+  return request<T>(url, {
+    method: 'GET',
+    headers: {
+      ...ApplicationJson()
+    },
+  });
+};

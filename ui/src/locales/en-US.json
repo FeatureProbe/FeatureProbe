@@ -631,7 +631,7 @@
   "analysis.metric.detail": "Metric details",
   "analysis.event.detail": "Event details",
   "analysis.event.track.success": "Event tracked successfully",
-  "analysis.metric.explanation": "Metric explanation",
+  "analysis.metric.explanation": "Explanation of metric type",
 
   "analysis.result.tip": "Create a metric to use analysis.",
   "analysis.result.collect.time": "Time frame: ",
@@ -653,8 +653,8 @@
   "analysis.result.timeline": "Observation period",
   "analysis.result.diagnose": "Diagnose",
   "analysis.result.diagnose.result": "Diagnose result: ",
-  "analysis.result.diagnose.reason1": "No sample data",
-  "analysis.result.diagnose.reason2": "No event tracking",
-  "analysis.result.diagnose.reason3": "The sample and the userId tracked by the event do not match",
+  "analysis.result.diagnose.reason1": "No variation records",
+  "analysis.result.diagnose.reason2": "No event records",
+  "analysis.result.diagnose.reason3": "No join records",
   "analysis.result.diagnose.reason.view": "View common reasons"
 }

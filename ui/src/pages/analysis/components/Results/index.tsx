@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useParams, useHistory } from 'react-router-dom';
 import Datetime from 'react-datetime';
-import { Form } from 'semantic-ui-react';
+import { Form, Loader } from 'semantic-ui-react';
 import moment from 'moment';
 import dayjs from 'dayjs';
 import SectionTitle from 'components/SectionTitle';
@@ -16,7 +16,7 @@ import ResultTable from './components/table';
 import { IChart } from './components/chart';
 import TimeLine from './components/timeline';
 import canlendar from 'images/calendar.svg';
-import { getEventAnalysis, operateCollection, getMetricIterations } from 'services/analysis';
+import { getEventAnalysis, operateCollection, getMetricIterations, diagnoseResult } from 'services/analysis';
 import { IChartData, IEvent, IEventAnalysis, IDistribution, ITableData, IAnalysisItem, IMetricIteration } from 'interfaces/analysis';
 import { IRouterParams } from 'interfaces/project';
 import { ITarget } from 'interfaces/targeting';
@@ -47,6 +47,8 @@ const Results = (props: IProps) => {
   const [ chartData, saveChartData ] = useState<IChartData[]>();
   const [ tableData, saveTableData ] = useState<ITableData[]>();
   const [ iterations, saveIterations ] = useState<IMetricIteration[]>([]);
+  const [ isLoading, saveLoading ] = useState<boolean>(false);
+  const [ errCode, saveErrCode ] = useState<string>();
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
   const history = useHistory();
@@ -163,9 +165,40 @@ const Results = (props: IProps) => {
     });
   }, [saveSubmitLoading, projectKey, environmentKey, toggleKey, initTargeting, getEventResult, start, end, getIteration, intl]);
 
-  // const handleViewReason = useCallback(() => {
-  //   window.open('https://docs.featureprobe.io/');
-  // }, []);
+  const handleViewReason = useCallback(() => {
+    window.open('https://docs.featureprobe.io/');
+    if (errCode === '460') {
+      if (intl.locale === 'en-US') {
+        window.open('https://docs.featureprobe.io/introduction/faq/#31-no-variation-records');
+      } else {
+        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq#31-%E6%97%A0%E5%88%86%E6%B5%81%E6%95%B0%E6%8D%AE');
+      }
+    } else if (errCode === '461') {
+      if (intl.locale === 'en-US') {
+        window.open('https://docs.featureprobe.io/introduction/faq/#32-no-event-records');
+      } else {
+        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq#32-%E6%97%A0%E4%BA%8B%E4%BB%B6%E6%95%B0%E6%8D%AE');
+      }
+    } else if (errCode === '463') {
+      if (intl.locale === 'en-US') {
+        window.open('https://docs.featureprobe.io/introduction/faq/#33-no-join-records');
+      } else {
+        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq#33%E6%97%A0Join%E6%95%B0%E6%8D%AE');
+      }
+    }
+  }, [errCode, intl.locale]);
+
+  const handleDiagnose = useCallback(() => {
+    saveLoading(true);
+    diagnoseResult(projectKey, environmentKey, toggleKey, {
+      start,
+      end
+    }).then(res => {
+      saveLoading(false);
+      const { code } = res;
+      saveErrCode(code);
+    });
+  }, [end, environmentKey, projectKey, start, toggleKey]);
   
   return (
     <div className={`result ${styles.result}`}>
@@ -300,20 +333,30 @@ const Results = (props: IProps) => {
           ) : (
             <div className={styles['no-data']}>
               <NoData />
-              {/* <div className={styles.diagnose}>
+
+              <div className={styles.diagnose}>
                 <div>
-                  <Button type='button' secondary>
-                    <FormattedMessage id='analysis.result.diagnose' />
+                  <Button type='button' secondary onClick={handleDiagnose}>
+                    {isLoading && <Loader active inline size="tiny" className={styles['btn-loader']} />}
+                    <span className={styles['btn-text']}>
+                      <FormattedMessage id='analysis.result.diagnose' />
+                    </span>
                   </Button>
                 </div>
-                <div className={styles['diagnose-result']}>
-                  <FormattedMessage id='analysis.result.diagnose.result' />
-                  <FormattedMessage id='analysis.result.diagnose.reason1' />
-                  <span className={styles['diagnose-reason']} onClick={handleViewReason}>
-                    <FormattedMessage id='analysis.result.diagnose.reason.view' />
-                  </span>
-                </div>
-              </div> */}
+                {
+                  errCode && (
+                    <div className={styles['diagnose-result']}>
+                      <FormattedMessage id='analysis.result.diagnose.result' />
+                      { errCode === '460' && <FormattedMessage id='analysis.result.diagnose.reason1' /> }
+                      { errCode === '461' && <FormattedMessage id='analysis.result.diagnose.reason2' /> }
+                      { errCode === '463' && <FormattedMessage id='analysis.result.diagnose.reason4' /> }
+                      <span className={styles['diagnose-reason']} onClick={handleViewReason}>
+                        <FormattedMessage id='analysis.result.diagnose.reason.view' />
+                      </span>
+                    </div>
+                  )
+                }
+              </div>
             </div>
           )
         }
