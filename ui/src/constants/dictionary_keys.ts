@@ -5,4 +5,4 @@ export const USER_GUIDE_LAYOUT = 'user_guide_layout';
 export const USER_GUIDE_TOGGLE = 'user_guide_toggle';
 export const USER_GUIDE_TARGETING = 'user_guide_targeting';
 export const USER_GUIDE_PROJECT = 'user_guide_project';
-export const USER_TRACK_EVENT = 'user_track_event';
+export const USER_GUIDE_TRACK_EVENT = 'user_guide_track_event';

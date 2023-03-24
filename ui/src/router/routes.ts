@@ -10,7 +10,8 @@ const Login = lazy(() => import('../pages/login'));
 const DemoLogin = lazy(() => import('../pages/login/demoLogin'));
 const Segment = lazy(() => import('../pages/segment'));
 const SegmentEdit = lazy(() => import('../pages/segmentEdit'));
-const GetStarted = lazy(() => import('../pages/connectSDK'));
+const ConnectSDK = lazy(() => import('../pages/connectSDK/accessToggle'));
+const TrackEvent = lazy(() => import('../pages/connectSDK/trackEvent'));
 const Approvals = lazy(() => import('../pages/approval'));
 const ProjectSetting = lazy(() => import('../pages/projectSetting'));
 const ApiToken = lazy(() => import('../pages/apiToken'));
@@ -25,6 +26,7 @@ export const SEGMENT_ADD_PATH = '/:projectKey/:environmentKey/segments/new';
 export const SEGMENT_EDIT_PATH = '/:projectKey/:environmentKey/segments/:segmentKey/:navigation';
 export const TARGETING_PATH = '/:projectKey/:environmentKey/:toggleKey/:navigation';
 export const CONNECT_SDK_PATH = '/:projectKey/:environmentKey/:toggleKey/connect-sdk';
+export const TRACK_EVENT_PATH = '/:projectKey/:environmentKey/:toggleKey/track-event';
 export const MEMBER_PATH = '/settings/members';
 export const PROFILE_PATH = '/user/profile';
 export const PERSONAL_APITOKEN_PATH = '/user/tokens';
@@ -68,7 +70,12 @@ export const headerRoutes = [
   {
     path: CONNECT_SDK_PATH,
     exact: true,
-    component: GetStarted
+    component: ConnectSDK
+  },
+  {
+    path: TRACK_EVENT_PATH,
+    exact: true,
+    component: TrackEvent
   },
   {
     path: TARGETING_PATH,

@@ -120,3 +120,28 @@
   color: #adb5bc;
   font-size: 20px;
 }
+
+.diagnose {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.diagnose-result {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #353a40;
+}
+
+.diagnose-reason {
+  color: #556ee6;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.btn-loader {
+  margin-right: 5px !important;
+}
+
+.btn-text {
+  vertical-align: middle;
+}

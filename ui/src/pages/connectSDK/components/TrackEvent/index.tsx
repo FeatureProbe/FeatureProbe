@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import classNames from 'classnames';
@@ -7,27 +8,37 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
 import {
+  ToggleReturnType,
+  getAndroidCode,
+  getGoCode,
+  getJavaCode,
+  getJSCode,
+  getNodeCode,
+  getObjCCode,
+  getPythonCode,
+  getRustCode,
+  getSwiftCode,
+  getMiniProgramCode,
+  getReactCode,
   SdkLanguage,
-  getJavaTrackCode,
-  getGoTrackCode,
-  getRustTrackCode,
-  getNodeTrackCode,
-  getAndroidTrackCode,
-  getSwiftTrackCode,
-  getObjCTrackCode,
-  getJSTrackCode,
-  getMiniProgramTrackCode,
-  getReactTrackCode,
-  getPythonTrackCode,
 } from '../../constants';
+import { IRouterParams } from 'interfaces/project';
+import { getApplicationSettings } from 'services/application';
+import { IApplicationSetting } from 'interfaces/applicationSetting';
+import { IEvent } from 'interfaces/analysis';
+import { AVERAGE, CUSTOM, SUM } from 'pages/analysis/constants';
 
 import styles from '../../index.module.scss';
 
 interface IProps {
   attributes: string[];
-  eventName: string;
+  eventInfo?: IEvent;
   currentStep: number;
   currentSDK: SdkLanguage;
+  returnType: ToggleReturnType;
+  sdkVersion: string;
+  serverSdkKey: string;
+  clientSdkKey: string;
   saveStep(): void;
   goBackToStep(step: number): void;
 }
@@ -38,19 +49,26 @@ interface ICodeOption {
   code: string;
 }
 
-const CURRENT = 3;
+const CURRENT = 2;
 
 const SetupCode = (props: IProps) => {
   const {
     currentStep,
     currentSDK,
-    eventName,
+    eventInfo,
+    sdkVersion,
+    serverSdkKey,
+    clientSdkKey,
+    returnType,
+    attributes,
     saveStep, 
     goBackToStep 
   } = props;
 
   const [ options, saveOptions ] = useState<ICodeOption[]>([]);
+  const [ remoteUrl, saveRemoteUrl ] = useState<string>('http://127.0.0.1:4007');
   const [ language, saveLanguage ] = useState<string>('java');
+  const { toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
 
   const stepTitleCls = classNames(
@@ -61,110 +79,202 @@ const SetupCode = (props: IProps) => {
   );
 
   useEffect(() => {
+    getApplicationSettings<IApplicationSetting>().then(res => {
+      if (res.success && res.data) {
+        saveRemoteUrl(res.data.serverURI);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     if (currentSDK) {
+      let userWithCode = '';
+      const isTrackEvent = eventInfo?.eventType === CUSTOM;
+      const isTrackValue = eventInfo?.metricType === SUM || eventInfo?.metricType === AVERAGE;
+
       switch (currentSDK) {
         case 'Java':
           saveLanguage('java');
+          attributes.forEach(item => {
+            userWithCode += `.with("${item}", /* ${item} */)`;
+          });
           saveOptions(
-            getJavaTrackCode({
+            getJavaCode({
+              sdkVersion, 
+              serverSdkKey, 
+              toggleKey, 
+              returnType, 
               intl, 
-              eventName,
-            })
-          );
-          break;
-        case 'Go':
-          saveLanguage('go');
-          saveOptions(
-            getGoTrackCode({
-              intl, 
-              eventName,
-            })
+              userWithCode,
+              remoteUrl,
+            }, eventInfo?.eventName, isTrackValue)
           );
           break;
         case 'Python':
           saveLanguage('python');
+          attributes.forEach(item => {
+            userWithCode += `user['${item}'] = 'value for ${item}'  # or use 'user.with_attr(key, value)'\n    `;
+          });
           saveOptions(
-            getPythonTrackCode({
-              intl, 
-              eventName,
-            })
+            getPythonCode({
+              sdkVersion,
+              serverSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }, eventInfo?.eventName, isTrackValue)
           );
           break;
         case 'Rust': 
           saveLanguage('rust');
+          attributes.forEach(item => {
+            userWithCode += `let user = user.with("${item}", /* ${item} */);\n`;
+          });
           saveOptions(
-            getRustTrackCode({
-              intl, 
-              eventName,
-            })
+            getRustCode({
+              sdkVersion,
+              serverSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }, eventInfo?.eventName, isTrackValue)
           );
           break;
-        case 'Node.js': 
+        case 'Go': 
+          saveLanguage('go');
+          attributes.forEach(item => {
+            userWithCode += `user.With("${item}", /* ${item} */)\n`;
+          });
+          saveOptions(
+            getGoCode({
+              serverSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }, eventInfo?.eventName, isTrackValue)
+          );
+          break;
+        case 'Node.js':
           saveLanguage('javascript');
+          attributes.forEach(item => {
+            userWithCode += `.with('${item}', /* ${item} */)`;
+          });
           saveOptions(
-            getNodeTrackCode({
-              intl, 
-              eventName,
+            getNodeCode({
+              serverSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
             })
           );
           break;
+
         case 'Android': 
           saveLanguage('java');
+          attributes.forEach(item => {
+            userWithCode += `user.with("${item}", /* ${item} */)\n`;
+          });
           saveOptions(
-            getAndroidTrackCode({
+            getAndroidCode({
+              sdkVersion, 
+              clientSdkKey, 
+              toggleKey, 
+              returnType, 
               intl, 
-              eventName,
-            })
+              userWithCode,
+              remoteUrl,
+            }, eventInfo?.eventName, isTrackValue)
           );
           break;
         case 'Swift': 
           saveLanguage('swift');
+          attributes.forEach(item => {
+            userWithCode += `user.with("${item}", /* ${item} */)\n`;
+          });
           saveOptions(
-            getSwiftTrackCode({
-              intl, 
-              eventName,
-            })
+            getSwiftCode({
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }, eventInfo?.eventName, isTrackValue)
           );
           break;
         case 'Objective-C':
           saveLanguage('objectivec');
-          saveOptions(
-            getObjCTrackCode({
-              intl, 
-              eventName,
-            })
-          );
+          attributes.forEach(item => {
+            userWithCode += `[user withKey:@"${item}" value:/* ${item} */];\n`;
+          });
+          saveOptions(getObjCCode({
+            clientSdkKey,
+            toggleKey,
+            returnType,
+            intl,
+            userWithCode,
+            remoteUrl,
+          }));
           break;
         case 'JavaScript':
           saveLanguage('javascript');
+          attributes.forEach(item => {
+            userWithCode += `user.with("${item}", /* ${item} */);\n`;
+          });
           saveOptions(
-            getJSTrackCode({
-              intl, 
-              eventName,
-            })
+            getJSCode({
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }, eventInfo?.eventName, isTrackValue, isTrackEvent)
           );
           break;
         case 'Mini Program':
           saveLanguage('javascript');
+          attributes.forEach(item => {
+            userWithCode += `user.with("${item}", /* ${item} */);\n`;
+          });
           saveOptions(
-            getMiniProgramTrackCode({
-              intl, 
-              eventName,
-            })
+            getMiniProgramCode({
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }, eventInfo?.eventName, isTrackValue)
           );
           break;
         case 'React':
           saveLanguage('javascript');
+          attributes.forEach(item => {
+            userWithCode += `user.with("${item}", /* ${item} */);\n  `;
+          });
           saveOptions(
-            getReactTrackCode({
-              intl, 
-              eventName,
-            })
+            getReactCode({
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }, eventInfo?.eventName, isTrackValue, isTrackEvent)
           );
           break;
       }
     }
-  }, [currentSDK, eventName, intl]);
+  }, [attributes, sdkVersion, currentSDK, clientSdkKey, serverSdkKey, toggleKey, returnType, intl, remoteUrl, eventInfo?.eventName, eventInfo?.eventType, eventInfo]);
 
   return (
     <div className={styles.step}>

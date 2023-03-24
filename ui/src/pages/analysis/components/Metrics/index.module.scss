@@ -10,19 +10,6 @@
   position: relative;
 }
 
-.metrics-content {
-  background: #fafafa;
-  border-radius: 12px;
-  padding: 24px 16px;
-  margin-top: 8px;
-
-  :global {
-    .ui.form .field {
-      margin-bottom: 0 !important;
-    }
-  }
-}
-
 .angle-down {
   position: absolute;
   right: 10px;
@@ -31,8 +18,8 @@
 }
 
 .label {
-  font-size: 13px;
-  color: #212529;
+  font-size: 13px !important;
+  color: #212529 !important;
 }
 
 .label-required {
@@ -56,25 +43,69 @@
 
 .field-right {
   flex: 1;
-
-  :global {
-    .field {
-      margin-bottom: 0 !important;
-    }
-  }
 }
 
 .row {
-  margin-bottom: 24px;
+  background: #fafafa;
+  border-radius: 12px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 12px !important;
+  display: block !important;
+
+  :global {
+    .ui.form .field {
+      margin-bottom: 0 !important;
+    }
+  }
 }
 
 .row:last-child {
   margin-bottom: 0;
 }
 
+.title {
+  font-size: 12px;
+  color: #212529;
+  font-weight: 500;
+  font-family: PingFangSC-Medium;
+  line-height: 26px;
+  margin-left: 12px;
+  margin-top: 12px;
+}
+
+.event-title {
+  display: inline-flex;
+  font-size: 12px;
+  line-height: 26px;
+}
+
+.icon-connect-sdk {
+  font-size: 14px !important;
+  margin-right: 4px;
+}
+
+.event-track {
+  color: #556ee6;
+  position: absolute;
+  right: 24px;
+  cursor: pointer;
+}
+
+.save {
+  margin-top: 16px;
+  margin-left: 24px;
+}
+
 .column {
   position: relative;
-  margin-bottom: 16px !important;
+  padding: 12px !important;
+
+  :global {
+    .field {
+      margin-bottom: 0 !important;
+    }
+  }
 }
 
 .btn {
@@ -129,6 +160,14 @@
 .available-sdk {
   font-size: 12px;
   color: #d48806;
+}
+
+.metric-explanation {
+  font-size: 12px;
+  color: #556ee6;
+  text-align: right;
+  margin-top: 2px;
+  cursor: pointer;
 }
 
 .formula {
@@ -192,7 +231,7 @@
 
 .test-url-text {
   font-size: 12px;
-  color: #5664ff;
+  color: #556ee6;
   text-align: right;
   cursor: pointer;
 }

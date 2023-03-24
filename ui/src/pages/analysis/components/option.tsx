@@ -1,5 +1,5 @@
 import { FormattedMessage } from 'react-intl';
-import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, DURATION, POSITIVE, NEGATIVE, SIMPLE, EXACT, SUBSTRING, REGULAR } from '../constants';
+import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, AVERAGE, POSITIVE, NEGATIVE, SIMPLE, EXACT, SUBSTRING, REGULAR, COUNT, SUM } from '../constants';
 
 const STYLE = {color: '#74788d', marginLeft: '4px'};
 
@@ -17,42 +17,42 @@ export function getMetricTypeOptions() {
         </span>
       )
     },
-    // {
-    //   key: COUNT, 
-    //   value: COUNT, 
-    //   text: (
-    //     <span>
-    //       <FormattedMessage id='analysis.event.count' />
-    //       <span style={STYLE}>
-    //         <FormattedMessage id='analysis.event.count.desc' />
-    //       </span>
-    //     </span>
-    //   )
-    // },
-    { 
-      key: DURATION, 
-      value: DURATION, 
+    {
+      key: COUNT, 
+      value: COUNT, 
       text: (
         <span>
-          <FormattedMessage id='analysis.event.duration' />
+          <FormattedMessage id='analysis.event.count' />
           <span style={STYLE}>
-            <FormattedMessage id='analysis.event.duration.desc' />
+            <FormattedMessage id='analysis.event.count.desc' />
           </span>
         </span>
       )
     },
-    // { 
-    //   key: REVENUE, 
-    //   value: REVENUE, 
-    //   text: (
-    //     <span>
-    //       <FormattedMessage id='analysis.event.revenue' />
-    //       <span style={STYLE}>
-    //         <FormattedMessage id='analysis.event.revenue.desc' />
-    //       </span>
-    //     </span>
-    //   )
-    // },
+    { 
+      key: AVERAGE, 
+      value: AVERAGE, 
+      text: (
+        <span>
+          <FormattedMessage id='analysis.event.average' />
+          <span style={STYLE}>
+            <FormattedMessage id='analysis.event.average.desc' />
+          </span>
+        </span>
+      )
+    },
+    { 
+      key: SUM, 
+      value: SUM, 
+      text: (
+        <span>
+          <FormattedMessage id='analysis.event.sum' />
+          <span style={STYLE}>
+            <FormattedMessage id='analysis.event.sum.desc' />
+          </span>
+        </span>
+      )
+    },
   ];
 };
 
