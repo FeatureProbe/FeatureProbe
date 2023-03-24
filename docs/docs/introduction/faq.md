@@ -196,7 +196,7 @@ Here are some common problems and solutions during the use of FeatureProbe.
 
 Writing, coming soon.
 
-## 三. Analysis Diagnose
+## 3. Analysis Diagnose
 
 ### 3.1 No variation records
 Variation records is upload automatically when SDK value evaluation. There are some reasons when this error messaege show：

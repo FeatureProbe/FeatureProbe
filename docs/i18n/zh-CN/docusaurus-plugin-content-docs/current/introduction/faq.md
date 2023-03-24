@@ -223,6 +223,6 @@ import TabItem from '@theme/TabItem';
 
 
 
-### 3.3无Join数据
+### 3.3 无Join数据
 Join数据是分流数据和事件数据通过相同的 user_id 进行关联，如果没有Join数据，可能的原始为：
  - 分流的数据和事件数据的 user_id 无法对应
