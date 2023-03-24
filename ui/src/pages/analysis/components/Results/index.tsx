@@ -132,6 +132,7 @@ const Results = (props: IProps) => {
         saveEnd(dayjs(data.end).format('YYYY-MM-DD HH:mm:ss'));
       }
     });
+    saveErrCode(undefined);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environmentKey, projectKey, toggleKey]);
 
@@ -170,19 +171,19 @@ const Results = (props: IProps) => {
       if (intl.locale === 'en-US') {
         window.open('https://docs.featureprobe.io/introduction/faq/#31-no-variation-records');
       } else {
-        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq#31-%E6%97%A0%E5%88%86%E6%B5%81%E6%95%B0%E6%8D%AE');
+        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq/#31-%E6%97%A0%E5%88%86%E6%B5%81%E6%95%B0%E6%8D%AE');
       }
     } else if (errCode === '461') {
       if (intl.locale === 'en-US') {
         window.open('https://docs.featureprobe.io/introduction/faq/#32-no-event-records');
       } else {
-        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq#32-%E6%97%A0%E4%BA%8B%E4%BB%B6%E6%95%B0%E6%8D%AE');
+        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq/#32-%E6%97%A0%E4%BA%8B%E4%BB%B6%E6%95%B0%E6%8D%AE');
       }
     } else if (errCode === '463') {
       if (intl.locale === 'en-US') {
         window.open('https://docs.featureprobe.io/introduction/faq/#33-no-join-records');
       } else {
-        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq#33%E6%97%A0Join%E6%95%B0%E6%8D%AE');
+        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq/#33%E6%97%A0join%E6%95%B0%E6%8D%AE');
       }
     }
   }, [errCode, intl.locale]);
