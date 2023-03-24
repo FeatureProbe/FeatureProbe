@@ -7,6 +7,7 @@ import com.featureprobe.api.base.doc.GetApiResponse;
 import com.featureprobe.api.base.doc.ProjectKeyParameter;
 import com.featureprobe.api.base.doc.ToggleKeyParameter;
 import com.featureprobe.api.base.enums.SDKType;
+import com.featureprobe.api.base.model.BaseResponse;
 import com.featureprobe.api.dto.AnalysisRequest;
 import com.featureprobe.api.dto.AnalysisResultResponse;
 import com.featureprobe.api.dto.MetricConfigResponse;
@@ -96,4 +97,16 @@ public class MetricController {
                                        @RequestParam(value = "sdkType", required = false) SDKType sdkType) {
         return new MetricStatusResponse(metricService.existsEvent(projectKey, environmentKey, toggleKey, sdkType));
     }
+
+    @GetApiResponse
+    @GetMapping("/diagnosis")
+    @Operation(summary = "Get metric diagnosis info",
+            description = "Diagnosis of abnormal analysis results for diagnostic metric.")
+    public BaseResponse diagnosis(@PathVariable("projectKey") String projectKey,
+                                  @PathVariable("environmentKey") String environmentKey,
+                                  @PathVariable("toggleKey") String toggleKey,
+                                  AnalysisRequest params) {
+        return metricService.diagnosis(projectKey, environmentKey, toggleKey, params);
+    }
+
 }
