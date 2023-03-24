@@ -186,8 +186,21 @@ WITH $RAW_VARIATION_TABLE AS (${userProvideVariationSql(sdkKey)}),
 SELECT v.variation, c.cvt, v.total FROM $CONVERT_COUNT_TABLE c, $VARIATION_COUNT_TABLE v
 WHERE c.variation = v.variation;"""
 
+fun variationDiagnoseSql(sdkKey: String, toggle: String, start: Long, end: Long) =
+    """
+WITH $RAW_VARIATION_TABLE AS (${userProvideVariationSql(sdkKey)}),
+    $UNIQ_VARIATION_TABLE AS (${uniqVariationSql(toggle, start, end)})
+SELECT COUNT(*) as count FROM $UNIQ_VARIATION_TABLE;"""
+
+fun eventDiagnoseSql(sdkKey: String, metric: String, start: Long, end: Long) =
+    """
+WITH 
+    $RAW_METRIC_TABLE AS (${userProvideMetricSql(sdkKey, metric)}),
+    $METRIC_TABLE AS (${uniqMetricSql(start, end)})
+SELECT COUNT(*) as count FROM $METRIC_TABLE; """
+
 fun gaussianStatsSql(sdkKey: String, metric: String, toggle: String,
-                     start: Long, end: Long, fn: NumeratorFn, join: Join) =
+                     start: Long, end: Long, fn: AggregateFn, join: Join) =
     """
 WITH $RAW_VARIATION_TABLE AS (${userProvideVariationSql(sdkKey)}),
     $UNIQ_VARIATION_TABLE AS (${uniqVariationSql(toggle, start, end)}),
@@ -208,7 +221,6 @@ SELECT
 FROM access
 WHERE sdk_key = '$sdkKey'"""
 
-
 fun uniqVariationSql(toggle: String, start: Long, end: Long) =
     """
 SELECT 
@@ -227,11 +239,11 @@ WHERE
     v.time > '$start' and v.time < '$end'
 GROUP BY user_key"""
 
-fun numeratorMetricSql( start: Long, end: Long, fn: NumeratorFn): String {
+fun numeratorMetricSql( start: Long, end: Long, fn: AggregateFn): String {
     val value = when (fn) {
-        NumeratorFn.AVG -> "AVG(COALESCE(value, 0))"
-        NumeratorFn.COUNT -> "COUNT(*)"
-        NumeratorFn.SUM -> "SUM(value)"
+        AggregateFn.AVG -> "AVG(COALESCE(value, 0))"
+        AggregateFn.COUNT -> "COUNT(*)"
+        AggregateFn.SUM -> "SUM(value)"
     }
 
     return """

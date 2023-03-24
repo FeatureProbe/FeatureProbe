@@ -56,8 +56,8 @@ class AnalysisControllerTests {
         storeEvents(jdbcUrl)
         val service = AnalysisService(jdbcUrl, "root", "root")
 
-        assert(service.existsEvent("sdk_key", "testStoreClickExist"));
-        assert(!service.existsEvent("sdk_key", "testStoreClickNotExist"));
+        assert(service.existsEvent("sdk_key", "testStoreClickExist"))
+        assert(!service.existsEvent("sdk_key", "testStoreClickNotExist"))
     }
 
     fun testStoreEvents(jdbcUrl: String) {
@@ -148,6 +148,12 @@ class AnalysisControllerTests {
         testEventEmptyAnalysis(pg.jdbcUrl, "gaussian")
     }
 
+    @Test
+    fun testDiagnose() {
+        doTestDiagnose(mysql.jdbcUrl)
+        doTestDiagnose(pg.jdbcUrl)
+    }
+
     fun testBinomialAnalysis(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
         val start = 1676273660L
@@ -203,7 +209,7 @@ class AnalysisControllerTests {
 
         var result =
             service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
-                start, end, true, NumeratorFn.AVG, Join.LEFT)
+                start, end, true, AggregateFn.AVG, Join.LEFT)
 
         Assert.assertNotNull(result.get())
         Assert.assertEquals(5, result.get()!!["1"]?.sampleSize)
@@ -218,7 +224,7 @@ class AnalysisControllerTests {
 
         result =
             service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
-                start, end, true, NumeratorFn.AVG, Join.INNER)
+                start, end, true, AggregateFn.AVG, Join.INNER)
 
         Assert.assertNotNull(result.get())
         Assert.assertEquals(4, result.get()!!["1"]?.sampleSize)
@@ -239,7 +245,7 @@ class AnalysisControllerTests {
 
         var result =
             service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
-                start, end, true, NumeratorFn.COUNT, Join.LEFT)
+                start, end, true, AggregateFn.COUNT, Join.LEFT)
 
         Assert.assertNotNull(result.get())
         Assert.assertEquals(5, result.get()!!["1"]?.sampleSize)
@@ -254,7 +260,7 @@ class AnalysisControllerTests {
 
         result =
             service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
-                start, end, true, NumeratorFn.COUNT, Join.INNER)
+                start, end, true, AggregateFn.COUNT, Join.INNER)
 
         Assert.assertNotNull(result.get())
         Assert.assertEquals(4, result.get()!!["1"]?.sampleSize)
@@ -275,7 +281,7 @@ class AnalysisControllerTests {
 
         var result =
             service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
-                start, end, true, NumeratorFn.SUM, Join.LEFT)
+                start, end, true, AggregateFn.SUM, Join.LEFT)
 
         Assert.assertNotNull(result.get())
         Assert.assertEquals(5, result.get()!!["1"]?.sampleSize)
@@ -290,7 +296,7 @@ class AnalysisControllerTests {
 
         result =
             service.doAnalysis("sdk_key2", "purchase", "toggle_2", "gaussian",
-                start, end, true, NumeratorFn.SUM, Join.INNER)
+                start, end, true, AggregateFn.SUM, Join.INNER)
 
         Assert.assertNotNull(result.get())
         Assert.assertEquals(4, result.get()!!["1"]?.sampleSize)
@@ -302,6 +308,43 @@ class AnalysisControllerTests {
         Assert.assertEquals(292.5, result.get()!!["2"]?.mean!!, 0.1)
         Assert.assertEquals(223.774, result.get()!!["2"]?.stdDeviation!!, 0.1)
         Assert.assertEquals(0.728, result.get()!!["2"]?.winningPercentage!!, 0.1)
+    }
+
+    fun doTestDiagnose(jdbcUrl: String) {
+        val service = AnalysisService(jdbcUrl, "root", "root")
+        val start = 1676273660L
+        val end = 1676273678L
+
+        var result =
+            service.doDiagnose( "sdk_key2", "purchase", "toggle_2", "not_exist_type",
+                start, end, AggregateFn.COUNT, Join.LEFT)
+
+        Assert.assertEquals(Err(NotSupportAnalysisType), result)
+
+        result =
+            service.doDiagnose("sdk_key2", "purchase", "toggle_not_exist", "gaussian",
+                start, end, AggregateFn.COUNT, Join.LEFT)
+
+        Assert.assertEquals(Err(NoVariationRecords), result)
+
+        result =
+            service.doDiagnose("sdk_key2", "not_exist_metric", "toggle_3", "binomial",
+                start, end, AggregateFn.COUNT, Join.LEFT)
+
+        Assert.assertEquals(Err(NoEventRecords), result)
+
+        result =
+            service.doDiagnose("sdk_key2", "can_not_join", "toggle_3", "binomial",
+                start, end, AggregateFn.COUNT, Join.LEFT)
+
+        Assert.assertEquals(Err(NoJoinRecords), result)
+
+        result =
+            service.doDiagnose("sdk_key2", "can_not_join", "toggle_3", "gaussian",
+                start, end, AggregateFn.COUNT, Join.LEFT)
+
+        Assert.assertEquals(Err(NoJoinRecords), result)
+
     }
 
 }
