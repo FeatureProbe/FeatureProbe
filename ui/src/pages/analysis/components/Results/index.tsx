@@ -353,7 +353,7 @@ const Results = (props: IProps) => {
                           <FormattedMessage id='analysis.result.diagnose.result' />
                           { (errCode === '460' || errCode === '462') && <FormattedMessage id='analysis.result.diagnose.reason1' /> }
                           { errCode === '461' && <FormattedMessage id='analysis.result.diagnose.reason2' /> }
-                          { errCode === '463' && <FormattedMessage id='analysis.result.diagnose.reason4' /> }
+                          { errCode === '463' && <FormattedMessage id='analysis.result.diagnose.reason3' /> }
                           <span className={styles['diagnose-reason']} onClick={handleViewReason}>
                             <FormattedMessage id='analysis.result.diagnose.reason.view' />
                           </span>
