@@ -156,7 +156,7 @@ export const getJavaCode = (options: IOption, eventName?: string, isTrackValue?:
 `private static final FPConfig config = FPConfig.builder()
         .remoteUri("${remoteUrl}")
         .build();
-private static final FeatureProbe fpClient = new FeatureProbe("${serverSdkKey}", config);
+private static final FeatureProbe fp = new FeatureProbe("${serverSdkKey}", config);
 `
     },
     {
@@ -165,15 +165,15 @@ private static final FeatureProbe fpClient = new FeatureProbe("${serverSdkKey}",
 `FPUser user = new FPUser()${userWithCode};
 
 ${eventName ? (
-  `${isTrackValue ? `fpClient.track("${eventName}", user, /* value */);` : `fpClient.track("${eventName}", user);`}`
+  `${isTrackValue ? `fp.track("${eventName}", user, /* value */);` : `fp.track("${eventName}", user);`}`
 ) : 
-`${returnType === 'boolean' ? `boolean boolValue = fpClient.boolValue("${toggleKey}", user, false);` : ''}${returnType === 'string' ? `String stringValue = fpClient.stringValue("${toggleKey}", user, "Test");` : ''}${returnType === 'number' ? `double numberValue = fpClient.numberValue("${toggleKey}", user, 500);` : ''}${returnType === 'json' ? `Map jsonValue = fpClient.jsonValue("${toggleKey}", user, new HashMap(), Map.class);` : ''}`
+`${returnType === 'boolean' ? `boolean boolValue = fp.boolValue("${toggleKey}", user, false);` : ''}${returnType === 'string' ? `String stringValue = fp.stringValue("${toggleKey}", user, "Test");` : ''}${returnType === 'number' ? `double numberValue = fp.numberValue("${toggleKey}", user, 500);` : ''}${returnType === 'json' ? `Map jsonValue = fp.jsonValue("${toggleKey}", user, new HashMap(), Map.class);` : ''}`
 } 
 `
     },
     {
       title: intl.formatMessage({id: 'getstarted.common.fourth.step'}),
-      code: 'fpClient.close();'
+      code: 'fp.close();'
     }
   ];
 };
@@ -194,7 +194,8 @@ let config = FPConfig {
     remote_url: "${remoteUrl}".to_owned(),
     server_sdk_key: "${serverSdkKey}".to_owned(),
     refresh_interval: Duration::from_secs(1),
-    wait_first_resp: true,
+    start_wait: Some(Duration::from_secs(1))
+    ..Default::default()
 };
 
 let fp = match FeatureProbe::new(config).unwrap(); //should check result in production
@@ -206,7 +207,7 @@ let fp = match FeatureProbe::new(config).unwrap(); //should check result in prod
 `let user = FPUser::new();
 ${userWithCode}
 ${eventName ? (
-  `${isTrackValue ? `fp.track("${eventName}", &user, Some(/* value */));` : `fp.track("${eventName}", &user);`}`
+  `${isTrackValue ? `fp.track("${eventName}", &user, Some(/* value */));` : `fp.track("${eventName}", &user, None);`}`
 ) :
 `${returnType === 'boolean' ? `let value = fp.bool_value("${toggleKey}", &user, false);` : ''}${returnType === 'number' ? `let value = fp.number_value("${toggleKey}", &user, 20.0), 12.5);` : ''}${returnType === 'string' ? `let value = fp.string_value("${toggleKey}", &user, "val".to_owned()), "value");` : ''}${returnType === 'json' ? `let value = fp.json_value("${toggleKey}", &user, json!("v"));` : ''}`}
 `
@@ -311,12 +312,12 @@ export const getNodeCode = (options: IOption, eventName?: string, isTrackValue?:
       code:
 `import { FeatureProbe, FPUser } from 'featureprobe-server-sdk-node'
 
-const fpClient = new FeatureProbe({
+const fp = new FeatureProbe({
     serverSdkKey: '${serverSdkKey}',
     remoteUrl: '${remoteUrl}',
     refreshInterval: 2000,
 })
-await fpClient.start();  // if you want a time limit for the initialization process, set 'startWait' as the timeout milliseconds
+await fp.start();  // if you want a time limit for the initialization process, set 'startWait' as the timeout milliseconds
 `
     },
     {
@@ -325,14 +326,14 @@ await fpClient.start();  // if you want a time limit for the initialization proc
 `const user = new FPUser()${userWithCode};
 
 ${eventName ? (
-  `${isTrackValue ? `fpClient.track("${eventName}", user, /* value */);` : `fpClient.track("${eventName}", user);`}`
+  `${isTrackValue ? `fp.track("${eventName}", user, /* value */);` : `fp.track("${eventName}", user);`}`
 ) : 
-`const toggleValue = fpClient.${returnType}Value('${toggleKey}', user, ${returnType === 'boolean' ? 'false' : ''}${returnType === 'string' ? '\'not connected\'' : ''}${returnType === 'number' ? '-1' : ''}${returnType === 'json' ? '{}' : ''});`}
+`const toggleValue = fp.${returnType}Value('${toggleKey}', user, ${returnType === 'boolean' ? 'false' : ''}${returnType === 'string' ? '\'not connected\'' : ''}${returnType === 'number' ? '-1' : ''}${returnType === 'json' ? '{}' : ''});`}
 `
     },
     {
       title: intl.formatMessage({id: 'getstarted.common.fourth.step'}),
-      code: 'await fpClient.close();'
+      code: 'await fp.close();'
     }
   ];
 };
@@ -364,7 +365,7 @@ val fp = FeatureProbe(config, user)
       title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.mobile.third.step'}),
       code:
       `${eventName ? (
-        `${isTrackValue ? `fp.track("${eventName}", /* value */);` : `fp.track("${eventName}");`}`
+        `${isTrackValue ? `fp.track("${eventName}", /* value */)` : `fp.track("${eventName}")`}`
       ) : 
       `${returnType === 'boolean' ? `val value = fp.boolValue("${toggleKey}", false)` : ''}${returnType === 'number' ? `val value = fp.numberValue("${toggleKey}", 1.0)` : ''}${returnType === 'string' ? `val value = fp.stringValue("${toggleKey}", "s")` : ''}${returnType === 'json' ? `val value = fp.jsonValue("${toggleKey}", "{}")` : ''}`}`
     },
@@ -402,7 +403,7 @@ let config = FpConfig(
     remoteUrl: url!,
     clientSdkKey: "${clientSdkKey}",
     refreshInterval: 10,
-    waitFirstResp: true
+    startWait: 2
 )
 let fp = FeatureProbe(config: config, user: user)
 `
@@ -412,7 +413,7 @@ let fp = FeatureProbe(config: config, user: user)
       name: '',
       code: 
         `${eventName 
-          ? `${isTrackValue ? `fp.track("${eventName}", /* value */);` : `fp.track("${eventName}");`}`
+          ? `${isTrackValue ? `fp.track("${eventName}", /* value */)` : `fp.track("${eventName}")`}`
           : `${returnType === 'boolean' ? `let value = fp.boolValue("${toggleKey}", false)` : ''}${returnType === 'number' ? `let value = fp.numberValue("${toggleKey}", 1.0)` : ''}${returnType === 'string' ? `let value = fp.stringValue("${toggleKey}", "s")` : ''}${returnType === 'json' ? `let value = fp.jsonValue("${toggleKey}", "{}")` : ''}`
         }`
     }
@@ -444,8 +445,8 @@ FpUser *user = [[FpUser alloc] init];
 ${userWithCode}
 FpConfig *config = [[FpConfig alloc] initWithRemoteUrl: url
                                           clientSdkKey:@"${clientSdkKey}"
-                                      refreshInterval: 10
-                                        waitFirstResp: true];
+                                       refreshInterval: 10
+                                             startWait: 2];
 FeatureProbe *fp = [[FeatureProbe alloc] initWithConfig:config user:user];`
     },
     {
