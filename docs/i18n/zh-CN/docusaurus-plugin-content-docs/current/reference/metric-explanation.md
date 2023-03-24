@@ -22,7 +22,7 @@ sidebar_position: 11
 | B      | A      |        |
 | C      | B      | time3  |
 | C      | B      | time4  |
-| C      | B      |        |
+| C      | B      | time5  |
 | D      | B      | time6  |
 | E      | A      | time7  |
 | F      | A      |        |
@@ -53,7 +53,7 @@ sidebar_position: 11
 | B      | A      |        |
 | C      | B      | time3  |
 | C      | B      | time4  |
-| C      | B      |        |
+| C      | B      | time5  |
 | D      | B      | time6  |
 | E      | A      | time7  |
 | F      | A      |        |

@@ -217,12 +217,12 @@ import TabItem from '@theme/TabItem';
   - 上报URL错误，如 SDK 接入 URL 配置错误，无法上报数据
 
 ### 3.2 无事件数据
-事件数据需要主动调用track方法，如果没有时间数据，可能的原始为：
+事件数据需要主动调用track方法，如果没有时间数据，可能的原因为：
   - 没有调用类似 `fpClient.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);` 的代码追踪事件
   - 上报URL错误，如 SDK 接入 URL 配置错误，无法上报数据
 
 
 
 ### 3.3 无Join数据
-Join数据是分流数据和事件数据通过相同的 user_id 进行关联，如果没有Join数据，可能的原始为：
+Join数据是分流数据和事件数据通过相同的 user_id 进行关联，如果没有Join数据，可能的原因为：
  - 分流的数据和事件数据的 user_id 无法对应
