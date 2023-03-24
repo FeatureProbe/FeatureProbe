@@ -428,7 +428,7 @@
   "connect.fourth.success": "SDK connected successfully",
   "connect.fourth.failed.button": "Retry Connection",
   "connect.fourth.failed.link": "Common reasons for failed",
-  "connect.fourth.event.running": "Listening for {eventName} event for {toggle} in the {environment} environment.",
+  "connect.fourth.event.running": "Listening for {eventName} event in the {environment} environment.",
   "connect.fourth.event.failed": "You have no applications listening for {eventName} event in the {environment} environment.",
   "connect.fourth.event.success": "Event tracked successfully",
   
@@ -438,7 +438,7 @@
   "getstarted.common.second.step": "Step 2: Create a single FeatureProbe Client instance for project",
   "getstarted.common.third.step": "Step 3: Add following code to get the return value of toggle, use the toggle value afterward",
   "getstarted.common.third.step.track": "Step 3: Add following code to track event",
-  "getstarted.common.fourth.step": "Step 4: Close the FeatureProbe Client before your program exist，otherwise, status check may be incorrect",
+  "getstarted.common.fourth.step": "Step 4: Close the FeatureProbe Client before your program exist, otherwise, status check may be incorrect",
   "getstarted.rust.first.step": "Step 1: Add the following code to your Cargo.toml dependency section",
   "getstarted.go.first.step.title": "Step 1: Install the Golang SDK",
   "getstarted.go.first.step.name.one": "Import the FeatureProbe SDK in your application code",
@@ -465,6 +465,7 @@
   "getstarted.react.track.event.title": "Step4: Create a new file home.js in the same directory as App.js, import withFPClient in home.js and track custom event",
   "getstarted.track.event": "Set up event track",
   "getstarted.track.event.title": "Add the following code and track custom event",
+  "getstarted.track.event.close.title": "Step 4: Close the FeatureProbe Client before your program exist, otherwise, events may be lost",
   "getstarted.track.pageview": "page view",
   "getstarted.track.click": "click",
 

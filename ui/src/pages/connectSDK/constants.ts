@@ -172,7 +172,7 @@ ${eventName ? (
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.common.fourth.step'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.track.event.close.title'}) : intl.formatMessage({id: 'getstarted.common.fourth.step'}),
       code: 'fpClient.close();'
     }
   ];
@@ -212,7 +212,7 @@ ${eventName ? (
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.common.fourth.step'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.track.event.close.title'}) : intl.formatMessage({id: 'getstarted.common.fourth.step'}),
       code: 'fp.close();'
     }
   ];
@@ -257,7 +257,7 @@ ${eventName ? (
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.common.fourth.step'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.track.event.close.title'}) : intl.formatMessage({id: 'getstarted.common.fourth.step'}),
       code: 'fp.Close();'
     }
   ];
@@ -292,7 +292,7 @@ ${eventName ? (
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.common.fourth.step'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.track.event.close.title'}) : intl.formatMessage({id: 'getstarted.common.fourth.step'}),
       code: 'client.close()'
     }
   ];
@@ -331,7 +331,7 @@ ${eventName ? (
 `
     },
     {
-      title: intl.formatMessage({id: 'getstarted.common.fourth.step'}),
+      title: eventName ? intl.formatMessage({id: 'getstarted.track.event.close.title'}) : intl.formatMessage({id: 'getstarted.common.fourth.step'}),
       code: 'await fpClient.close();'
     }
   ];
