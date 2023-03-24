@@ -16,16 +16,16 @@ Such as "Click-through Rate" and "Order Conversion Rate"
 
 
 | User ID | Experimental Group | Event Reporting Time |
-|--------|--------|--------|
-| A      | A      | time1  |
-| A      | A      | time2  |
-| B      | A      |        |
-| C      | B      | time3  |
-| C      | B      | time4  |
-| C      | B      |        |
-| D      | B      | time6  |
-| E      | A      | time7  |
-| F      | A      |        |
+|--------|--------|----------------------|
+| A      | A      | time1                |
+| A      | A      | time2                |
+| B      | A      |                      |
+| C      | B      | time3                |
+| C      | B      | time4                |
+| C      | B      | time5                |
+| D      | B      | time6                |
+| E      | A      | time7                |
+| F      | A      |                      |
 
 ## Count Metrics
 Such as "Average Visits per Person" and "Average Orders per Person"
@@ -47,16 +47,16 @@ Such as "Average Visits per Person" and "Average Orders per Person"
 
 
 | User ID | Experimental Group	 | Event Reporting Time |
-|--------|--------|--------|
-| A      | A      | time1  |
-| A      | A      | time2  |
-| B      | A      |        |
-| C      | B      | time3  |
-| C      | B      | time4  |
-| C      | B      |        |
-| D      | B      | time6  |
-| E      | A      | time7  |
-| F      | A      |        |
+|--------|--------|----------------------|
+| A      | A      | time1                |
+| A      | A      | time2                |
+| B      | A      |                      |
+| C      | B      | time3                |
+| C      | B      | time4                |
+| C      | B      | time5                |
+| D      | B      | time6                |
+| E      | A      | time7                |
+| F      | A      |                      |
 
 
 ## Average Metrics
