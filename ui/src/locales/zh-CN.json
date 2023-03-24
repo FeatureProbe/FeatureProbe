@@ -428,7 +428,7 @@
   "connect.fourth.success": "SDK连接成功！",
   "connect.fourth.failed.button": "重试连接",
   "connect.fourth.failed.link": "常见失败原因",
-  "connect.fourth.event.running": "正在{environment}环境中监听{toggle}开关的{eventName}事件。",
+  "connect.fourth.event.running": "正在{environment}环境中监听{eventName}事件。",
   "connect.fourth.event.failed": "您没有应用程序正在{environment}环境中监听{eventName}事件。",
   "connect.fourth.event.success": "事件上报成功！",
 
@@ -465,6 +465,7 @@
   "getstarted.react.track.event.title": "第四步：在App.js同级目录下创建home.js，并在home.js中引入withFPClient，上报自定义事件",
   "getstarted.track.event": "设置事件上报",
   "getstarted.track.event.title": "添加以下代码，上报自定义事件",
+  "getstarted.track.event.close.title": "第四步：在程序退出前关闭FeatureProbe Client实例，忘记关闭可能导致事件丢失",
   "getstarted.track.pageview": "页面",
   "getstarted.track.click": "点击",
 

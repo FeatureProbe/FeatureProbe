@@ -5,6 +5,7 @@ import Datetime from 'react-datetime';
 import { Form, Loader } from 'semantic-ui-react';
 import moment from 'moment';
 import dayjs from 'dayjs';
+import { NOT_FOUND } from 'constants/httpCode';
 import SectionTitle from 'components/SectionTitle';
 import NoData from 'components/NoData';
 import Button from 'components/Button';
@@ -183,7 +184,7 @@ const Results = (props: IProps) => {
       if (intl.locale === 'en-US') {
         window.open('https://docs.featureprobe.io/introduction/faq/#33-no-join-records');
       } else {
-        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq/#33%E6%97%A0join%E6%95%B0%E6%8D%AE');
+        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq/#33-%E6%97%A0join%E6%95%B0%E6%8D%AE');
       }
     }
   }, [errCode, intl.locale]);
@@ -196,7 +197,9 @@ const Results = (props: IProps) => {
     }).then(res => {
       saveLoading(false);
       const { code } = res;
-      saveErrCode(code);
+      if (code !== NOT_FOUND) {
+        saveErrCode(code);
+      }
     });
   }, [end, environmentKey, projectKey, start, toggleKey]);
 
@@ -334,7 +337,7 @@ const Results = (props: IProps) => {
             <div className={styles['no-data']}>
               <NoData />
               {
-                eventInfo && (
+                (eventInfo && iterations.length > 0) && (
                   <div className={styles.diagnose}>
                     <div>
                       <Button type='button' secondary onClick={handleDiagnose}>
@@ -350,7 +353,7 @@ const Results = (props: IProps) => {
                           <FormattedMessage id='analysis.result.diagnose.result' />
                           { (errCode === '460' || errCode === '462') && <FormattedMessage id='analysis.result.diagnose.reason1' /> }
                           { errCode === '461' && <FormattedMessage id='analysis.result.diagnose.reason2' /> }
-                          { errCode === '463' && <FormattedMessage id='analysis.result.diagnose.reason4' /> }
+                          { errCode === '463' && <FormattedMessage id='analysis.result.diagnose.reason3' /> }
                           <span className={styles['diagnose-reason']} onClick={handleViewReason}>
                             <FormattedMessage id='analysis.result.diagnose.reason.view' />
                           </span>
