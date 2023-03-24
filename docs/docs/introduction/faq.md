@@ -196,3 +196,19 @@ Here are some common problems and solutions during the use of FeatureProbe.
 
 Writing, coming soon.
 
+## 三. Analysis Diagnose
+
+### 3.1 No variation records
+Variation records is upload automatically when SDK value evaluation. There are some reasons when this error messaege show：
+  - No SDK value evaluation ，like  `fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)` is not called
+  - URL is wrong when init SDK. SDK can not upload varation data to backend
+
+### 3.2 No event records
+Event records is generated when user call `track` api. There are some reasons when this error message show:
+  - No track api called, like  `fpClient.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);` is not called
+  - URL is wrong when init SDK. SDK can not upload varation data to backend
+
+
+### 3.3 No join records
+Join records is varitiation records join on event records on same user_id. There are some reasons when this error message show:
+ - No same user_id on both variation records and event records
