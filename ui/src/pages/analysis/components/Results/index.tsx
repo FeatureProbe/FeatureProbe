@@ -332,30 +332,33 @@ const Results = (props: IProps) => {
           ) : (
             <div className={styles['no-data']}>
               <NoData />
-
-              <div className={styles.diagnose}>
-                <div>
-                  <Button type='button' secondary onClick={handleDiagnose}>
-                    {isLoading && <Loader active inline size="tiny" className={styles['btn-loader']} />}
-                    <span className={styles['btn-text']}>
-                      <FormattedMessage id='analysis.result.diagnose' />
-                    </span>
-                  </Button>
-                </div>
-                {
-                  errCode && (
-                    <div className={styles['diagnose-result']}>
-                      <FormattedMessage id='analysis.result.diagnose.result' />
-                      { (errCode === '460' || errCode === '462') && <FormattedMessage id='analysis.result.diagnose.reason1' /> }
-                      { errCode === '461' && <FormattedMessage id='analysis.result.diagnose.reason2' /> }
-                      { errCode === '463' && <FormattedMessage id='analysis.result.diagnose.reason4' /> }
-                      <span className={styles['diagnose-reason']} onClick={handleViewReason}>
-                        <FormattedMessage id='analysis.result.diagnose.reason.view' />
-                      </span>
+              {
+                eventInfo && (
+                  <div className={styles.diagnose}>
+                    <div>
+                      <Button type='button' secondary onClick={handleDiagnose}>
+                        {isLoading && <Loader active inline size="tiny" className={styles['btn-loader']} />}
+                        <span className={styles['btn-text']}>
+                          <FormattedMessage id='analysis.result.diagnose' />
+                        </span>
+                      </Button>
                     </div>
-                  )
-                }
-              </div>
+                    {
+                      errCode && (
+                        <div className={styles['diagnose-result']}>
+                          <FormattedMessage id='analysis.result.diagnose.result' />
+                          { (errCode === '460' || errCode === '462') && <FormattedMessage id='analysis.result.diagnose.reason1' /> }
+                          { errCode === '461' && <FormattedMessage id='analysis.result.diagnose.reason2' /> }
+                          { errCode === '463' && <FormattedMessage id='analysis.result.diagnose.reason4' /> }
+                          <span className={styles['diagnose-reason']} onClick={handleViewReason}>
+                            <FormattedMessage id='analysis.result.diagnose.reason.view' />
+                          </span>
+                        </div>
+                      )
+                    }
+                  </div>
+                )
+              }
             </div>
           )
         }
