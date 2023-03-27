@@ -142,4 +142,4 @@ featureProbeClient.on('ready', function() {
 | clientSdkKey      | yes            | n/a     | SDK Key用来验证权限   |
 | user              | yes            | n/a     | User 对象可以通过With方法设置属性，用来根据属性判断开关规则 |
 | refreshInterval   | no            | 1000    | 设置 SDK 的开关和事件刷新时间   |
-| timeoutInterval   | no            | 1000    | 设置 SDK 初始化等待的超时时间，超时后SDK将发布`error`事件   |
+| timeoutInterval   | no            | 10000    | 设置 SDK 初始化等待的超时时间，超时后SDK将发布`error`事件   |
