@@ -109,9 +109,21 @@ import TabItem from '@theme/TabItem';
   ~~~
   
   </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+  ~~~js title="example/demo.js"
+  const fp = new featureProbe.FeatureProbe({
+    remoteUrl: FEATURE_PROBE_SERVER_URL,
+    serverSdkKey: FEATURE_PROBE_SERVER_SDK_KEY,
+    // highlight-start
+    timeoutInterval: 5000,
+    // highlight-end
+  });
+  ~~~
+  </TabItem>
   <TabItem value="JavaScript" label="JavaScript">
   
-  ~~~js title="demo.js"
+  ~~~js title="example/index.html"
   const fp = new FeatureProbe({
     remoteUrl: /* remoteUrl */,
     clientSdkKey: /* clientSdkKey */
@@ -124,17 +136,37 @@ import TabItem from '@theme/TabItem';
   
   </TabItem>
 
-   <TabItem value="MiniProgram" label="MiniProgram">
+  <TabItem value="MiniProgram" label="MiniProgram">
   
-  ~~~js title="demo.js"
-  fpClient.init({
+  ~~~js title="example/app.js"
+  import { initialize } from "featureprobe-client-sdk-miniprogram";
+
+  const fp = initialize({
     remoteUrl: /* remoteUrl */,
-    clientSdkKey: /* clientSdkKey */
-    user: /* user */
+    clientSdkKey: /* clientSdkKey */,
+    user: /* user */,
     // highlight-start
     timeoutInterval: 5000, // 5 seconds
     // highlight-end
   })
+  ~~~
+  
+  </TabItem>
+  <TabItem value="React" label="React">
+  
+  ~~~js title="demo.tsx"
+  <FPProvider 
+    config={{
+      remoteUrl: /* remoteUrl */,
+      clientSdkKey: /* clientSdkKey */,
+      user:  /* user */,
+      // highlight-start
+      timeoutInterval: 5000, // 5 seconds
+      // highlight-end
+    }}
+  >
+    <div className="App"></div>
+  </FPProvider>
   ~~~
   
   </TabItem>
@@ -147,7 +179,7 @@ import TabItem from '@theme/TabItem';
   <Tabs groupId="language">
   <TabItem value="JavaScript" label="JavaScript">
   
-  ~~~js title="demo.js"
+  ~~~js title="example/app.js"
   fp.on("error", function() {
     console.log("JavaScript SDK初始化报错了！")
   })
@@ -155,14 +187,27 @@ import TabItem from '@theme/TabItem';
   
   </TabItem>
 
-   <TabItem value="MiniProgram" label="MiniProgram">
-  
-  ~~~js title="demo.js"
-  fpClient.on("error", function() {
-    console.log("MiniProgram SDK初始化报错了！")
+  <TabItem value="MiniProgram" label="MiniProgram">
+
+  ~~~js title="example/app.js"
+  fp.on("error", function() {
+    console.log("Error initing MiniProgram SDK!")
   })
   ~~~
-  
+
+  </TabItem>
+  <TabItem value="React" label="React">
+
+  ~~~js title="example/provider/src/components/HookComponent.tsx"
+  import { useFPClient } from 'featureprobe-client-sdk-react';
+
+  const fp = useFPClient();
+
+  fp.on("error", function() {
+    console.log("Error initing React SDK!")
+  })
+  ~~~
+
   </TabItem>
 
   </Tabs>
@@ -175,30 +220,110 @@ import TabItem from '@theme/TabItem';
 
 - 如指标的事件类型是“自定义事件”，需要通过 SDK 提供的 `track` 函数上报事件数据，调用函数如下所示：
 
+  服务端SDK：
+
   <Tabs groupId="language">
      <TabItem value="java" label="Java" default>
 
-  ~~~java  title="src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java"
-  fpClient.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
-  ~~~
+    ~~~java  title="src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java"
+    fpClient.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
+    ~~~
+
+    </TabItem>
+
+    <TabItem value="golang" label="Go">
+  
+    ~~~go title="example/main.go"
+    value := 99.9
+    fp.track("YOUR_CUSTOM_EVENT_NAME", user, &value);
+    ~~~
 
     </TabItem>
 
      <TabItem value="rust" label="Rust">
 
-  ~~~rust title="examples/demo.rs"
-  fpClient.track("YOUR_CUSTOM_EVENT_NAME", &user, Some(5.5));
-  ~~~
+    ~~~rust title="examples/demo.rs"
+    fpClient.track("YOUR_CUSTOM_EVENT_NAME", &user, Some(5.5));
+    ~~~
 
+    </TabItem>
+    <TabItem value="python" label="Python">
+  
+    ~~~python title="demo.py"
+    fp.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
+    ~~~
+    
+    </TabItem>
+    <TabItem value="nodejs" label="Node.js">
+
+    ~~~js title="example/demo.js"
+    fp.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
+    ~~~
+    
+    </TabItem>
+
+  </Tabs>
+
+  客户端SDK：
+
+  <Tabs groupId="language">
+
+    <TabItem value="JavaScript" label="JavaScript">
+
+    ~~~js title="example/index.html"
+    fp.track('YOUR_CUSTOM_EVENT_NAME', 5.5);
+    ~~~
+    
+    </TabItem>
+
+    <TabItem value="Android" label="Android">
+
+    ~~~bash
+    fp.track("YOUR_CUSTOM_EVENT_NAME", 5.5)
+    ~~~
+    
+    </TabItem>
+
+    <TabItem value="Swift" label="Swift">
+
+    ~~~bash
+    fp.track(event: "YOUR_CUSTOM_EVENT_NAME", value: 5.5)
+    ~~~
+    
+    </TabItem>
+
+    <TabItem value="Objective-C" label="Objective-C">
+
+    ~~~bash
+    [fp trackWithEvent:@"YOUR_CUSTOM_EVENT_NAME" value:5.5];
+    ~~~
+    
+    </TabItem>
+
+    <TabItem value="MiniProgram" label="MiniProgram">
+
+    ~~~js title="example/app.js"
+    featureProbeClient.track('YOUR_CUSTOM_EVENT_NAME', 5.5);
+    ~~~
+    
+    </TabItem>
+
+    <TabItem value="React" label="React">
+
+    ~~~js title="example/provider/src/components/HookComponent.tsx"
+    import { useFPClient } from 'featureprobe-client-sdk-react';
+
+    const fp = useFPClient();
+
+    fp.track('YOUR_CUSTOM_EVENT_NAME', 5.5);
+    ~~~
+    
     </TabItem>
 
   </Tabs>
 
   需要注意的是 `YOUR_CUSTOM_EVENT_NAME` 必须和指标中的 “事件名称” 保持一致。 
 
-  *目前仅 Java/Rust SDK 支持自定义事件的数据上报。*
-
-  
 
 - 如指标的事件类型是 “页面事件” 或 “点击事件”，请使用 JavaScript 和 React SDK 接入*（无须手工上报事件）*，并且检查指标中所设置 “目标页面URL” 和需要上报事件的页面 URL 是否匹配。其中 “点击事件” 还需要保证所设置“点击元素” 的 CSS 选择器和实际访问页面的元素的 path 是否匹配。
 
