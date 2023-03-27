@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
 import Icon from 'components/Icon';
+import PopupConfirm from 'components/PopupConfirm';
 import { HeaderContainer } from 'layout/hooks';
 import { updateApprovalStatus, publishTargetingDraft, cancelTargetingDraft, IApprovalStatus } from 'services/approval';
 import { getTargeting } from 'services/toggle';
@@ -40,6 +41,7 @@ const ApprovalOperation = (props: IProps) => {
 
   const [ approvePublishLoading, setApprovePublishLoading ] = useState<boolean>(false);
   const [ open, saveOpen ] = useState<boolean>(false);
+  const [ popupOpen, savePopupOpen ] = useState<boolean>(false);
   const [ status, saveStatus ] = useState<string>('');
   const [ isReEdit, saveIsREdit ] = useState<boolean>(true);
   const [ isCollect, saveIsCollect ] = useState<string>('');
@@ -377,9 +379,30 @@ const ApprovalOperation = (props: IProps) => {
             <Button secondary className={styles['dangerous-btn']} onClick={() => { handleAbandon(); }}>
               <FormattedMessage id='targeting.approval.operation.abandon' />
             </Button>
-            <Button primary className={styles.btn} onClick={() => { handleReEdit(); }}>
-              <FormattedMessage id='targeting.approval.operation.modify' />
-            </Button>
+            <PopupConfirm
+              open={popupOpen}
+              icon={<Icon type='warning-circle' customclass={styles.warning} />}
+              handleConfirm={(e: SyntheticEvent) => {
+                e.stopPropagation();
+                savePopupOpen(false);
+                handleReEdit();
+              }}
+              handleCancel={(e: SyntheticEvent) => {
+                e.stopPropagation();
+                savePopupOpen(false);
+              }}
+              text={intl.formatMessage({id: 'targeting.approval.modal.modify.description'})}
+            >
+              <Button 
+                primary
+                className={styles.btn}
+                onClick={() => { 
+                  savePopupOpen(true);
+                }}
+              >
+                <FormattedMessage id='targeting.approval.operation.modify' />
+              </Button>
+            </PopupConfirm>
           </>
         )
       }
