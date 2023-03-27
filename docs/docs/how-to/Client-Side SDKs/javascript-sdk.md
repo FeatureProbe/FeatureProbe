@@ -203,7 +203,7 @@ This SDK takes the following options:
 | clientSdkKey      | yes            | n/a     | The Client SDK Key is used to authentification   |
 | user              | yes            | n/a     | The User with attributes like name, age is used when toggle evaluation |
 | refreshInterval   | no            | 1000    | The SDK check for updated in millisecond   |
-| timeoutInterval   | no            | 1000    | Timeout for SDK initialization, SDK will emit an `error` event when timeout is reaching  |
+| timeoutInterval   | no            | 10000    | Timeout for SDK initialization, SDK will emit an `error` event when timeout is reaching  |
 
 
 ## SDK Events
