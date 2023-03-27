@@ -100,9 +100,21 @@ Here are some common problems and solutions during the use of FeatureProbe.
   ~~~
   
   </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+  ~~~js title="example/demo.js"
+  const fp = new featureProbe.FeatureProbe({
+    remoteUrl: FEATURE_PROBE_SERVER_URL,
+    serverSdkKey: FEATURE_PROBE_SERVER_SDK_KEY,
+    // highlight-start
+    timeoutInterval: 5000,
+    // highlight-end
+  });
+  ~~~
+  </TabItem>
   <TabItem value="JavaScript" label="JavaScript">
   
-  ~~~js title="demo.js"
+  ~~~js title="example/index.html"
   const fp = new FeatureProbe({
     remoteUrl: /* remoteUrl */,
     clientSdkKey: /* clientSdkKey */
@@ -114,17 +126,37 @@ Here are some common problems and solutions during the use of FeatureProbe.
   ~~~
   
   </TabItem>
-   <TabItem value="MiniProgram" label="MiniProgram">
+  <TabItem value="MiniProgram" label="MiniProgram">
   
-  ~~~js title="demo.js"
-  fpClient.init({
+  ~~~js title="example/app.js"
+  import { initialize } from "featureprobe-client-sdk-miniprogram";
+
+  const fp = initialize({
     remoteUrl: /* remoteUrl */,
-    clientSdkKey: /* clientSdkKey */
-    user: /* user */
+    clientSdkKey: /* clientSdkKey */,
+    user: /* user */,
     // highlight-start
     timeoutInterval: 5000, // 5 seconds
     // highlight-end
   })
+  ~~~
+  
+  </TabItem>
+  <TabItem value="React" label="React">
+  
+  ~~~js title="demo.tsx"
+  <FPProvider 
+    config={{
+      remoteUrl: /* remoteUrl */,
+      clientSdkKey: /* clientSdkKey */,
+      user:  /* user */,
+      // highlight-start
+      timeoutInterval: 5000, // 5 seconds
+      // highlight-end
+    }}
+  >
+    <div className="App"></div>
+  </FPProvider>
   ~~~
   
   </TabItem>
@@ -136,7 +168,7 @@ Here are some common problems and solutions during the use of FeatureProbe.
 <Tabs groupId="language">
 <TabItem value="JavaScript" label="JavaScript">
 
-  ~~~js title="demo.js"
+  ~~~js title="example/index.html"
   fp.on("error", function() {
       console.log("Error initing Javascript SDK!")
   })
@@ -146,9 +178,23 @@ Here are some common problems and solutions during the use of FeatureProbe.
 
 <TabItem value="MiniProgram" label="MiniProgram">
 
-  ~~~js title="demo.js"
-  fpClient.on("error", function() {
+  ~~~js title="example/app.js"
+  fp.on("error", function() {
     console.log("Error initing MiniProgram SDK!")
+  })
+  ~~~
+
+</TabItem>
+
+<TabItem value="React" label="React">
+
+  ~~~js title="example/provider/src/components/HookComponent.tsx"
+  import { useFPClient } from 'featureprobe-client-sdk-react';
+
+  const fp = useFPClient();
+
+  fp.on("error", function() {
+    console.log("Error initing React SDK!")
   })
   ~~~
 
@@ -157,29 +203,112 @@ Here are some common problems and solutions during the use of FeatureProbe.
 
 
 
-### 1.5 How to solve "You don't have any application listening for the X event on X toggle in X environment"?
+### 1.5 How to solve "You don't have any application listening for the X event in X environment"?
 
-- Please make sure that the test application displays "✅ SDK connection successful" first. If you receive a prompt saying "You don't have any application with successful SDK key connection", please follow the troubleshooting steps corresponding to section [1.4](/introduction/faq#14-how-to-solve-you-have-no-applications-connected-using-this-sdk-key-in-user-guidance-of-sdk-initialization) first.
+<!-- - Please make sure that the test application displays "✅ Event tracked successfully" first. If you receive a prompt saying "You don't have any application with successful SDK key connection", please follow the troubleshooting steps corresponding to section [1.4](/introduction/faq#14-how-to-solve-you-have-no-applications-connected-using-this-sdk-key-in-user-guidance-of-sdk-initialization) first. -->
 
 - Confirm that the collection of metric data is in the enabled state. For instructions on how to do this, please refer to the "[Save metrics and start iteration](/tutorials/analysis#save-metrics-and-start-iteration)" section.
 
 - If the metric's event type is "custom event", you need to use the track function provided by the SDK to report event data. The function call is as follows:
 
+  Server side SDKs:
   <Tabs groupId="language">
-     <TabItem value="java" label="Java" default>
+    <TabItem value="java" label="Java" default>
 
-  ~~~java  title="src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java"
-  fpClient.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
-  ~~~
+    ~~~java  title="src/main/java/com/featureprobe/sdk/example/FeatureProbeDemo.java"
+    fp.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
+    ~~~
 
     </TabItem>
 
-     <TabItem value="rust" label="Rust">
+    <TabItem value="golang" label="Go">
+  
+    ~~~go title="example/main.go"
+    value := 99.9
+    fp.track("YOUR_CUSTOM_EVENT_NAME", user, &value);
+    ~~~
 
-  ~~~rust title="examples/demo.rs"
-  fpClient.track("YOUR_CUSTOM_EVENT_NAME", &user, Some(5.5));
-  ~~~
+    </TabItem>
 
+    <TabItem value="rust" label="Rust">
+
+    ~~~rust title="examples/demo.rs"
+    fp.track("YOUR_CUSTOM_EVENT_NAME", &user, Some(5.5));
+    ~~~
+
+    </TabItem>
+
+    <TabItem value="python" label="Python">
+  
+    ~~~python title="demo.py"
+    fp.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
+    ~~~
+    
+    </TabItem>
+    <TabItem value="nodejs" label="Node.js">
+
+    ~~~js title="example/demo.js"
+    fp.track("YOUR_CUSTOM_EVENT_NAME", user, 5.5);
+    ~~~
+    
+    </TabItem>
+
+  </Tabs>
+
+  Client side SDKs:
+  
+  <Tabs groupId="language">
+
+    <TabItem value="JavaScript" label="JavaScript">
+
+    ~~~js title="example/index.html"
+    fp.track('YOUR_CUSTOM_EVENT_NAME', 5.5);
+    ~~~
+    
+    </TabItem>
+
+    <TabItem value="Android" label="Android">
+
+    ~~~bash
+    fp.track("YOUR_CUSTOM_EVENT_NAME", 5.5)
+    ~~~
+    
+    </TabItem>
+
+    <TabItem value="Swift" label="Swift">
+
+    ~~~bash
+    fp.track(event: "YOUR_CUSTOM_EVENT_NAME", value: 5.5)
+    ~~~
+    
+    </TabItem>
+
+    <TabItem value="Objective-C" label="Objective-C">
+
+    ~~~bash
+    [fp trackWithEvent:@"YOUR_CUSTOM_EVENT_NAME" value:5.5];
+    ~~~
+    
+    </TabItem>
+
+    <TabItem value="MiniProgram" label="MiniProgram">
+
+    ~~~js title="example/app.js"
+    featureProbeClient.track('YOUR_CUSTOM_EVENT_NAME', 5.5);
+    ~~~
+    
+    </TabItem>
+
+    <TabItem value="React" label="React">
+
+    ~~~js title="example/provider/src/components/HookComponent.tsx"
+    import { useFPClient } from 'featureprobe-client-sdk-react';
+
+    const fp = useFPClient();
+
+    fp.track('YOUR_CUSTOM_EVENT_NAME', 5.5);
+    ~~~
+    
     </TabItem>
 
   </Tabs>

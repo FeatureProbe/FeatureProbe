@@ -86,7 +86,7 @@ user.with("ATTRIBUTE_NAME_IN_RULE", VALUE_OF_ATTRIBUTE);
 
 const fp = new FeatureProbe({
   remoteUrl: /* FeatureProbe Server URI */,
-  clientSdkKey: /* FeatureProbe Server SDK Key */,
+  clientSdkKey: /* clientSdkKey */,
   user,
 });
 
@@ -101,7 +101,7 @@ user.with("ATTRIBUTE_NAME_IN_RULE", VALUE_OF_ATTRIBUTE);
 
 const fp = new featureProbe.FeatureProbe({
     remoteUrl: /* FeatureProbe Server URI */,
-    clientSdkKey: /* FeatureProbe Server SDK Key */,
+    clientSdkKey: /* clientSdkKey */,
     user,
 });
 

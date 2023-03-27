@@ -62,6 +62,18 @@ const Serve = (props: IProps) => {
   }, [variations]);
 
   useEffect(() => {
+    if (id) {
+      register(`rule_${id}_serve`, { 
+        required: true,
+      });
+    } else {
+      register('defaultServe', { 
+        required: true,
+      });
+    }
+  }, [id, intl, register]);
+
+  useEffect(() => {
     const options: IDropItemProps[] = variationsInUse.map((item: IDropItemProps, index: number) => {
       return {
         value: index,
@@ -110,6 +122,7 @@ const Serve = (props: IProps) => {
     } else {
       setPercentageShow(false);
       saveValue(-1);
+      setValue(id ? `rule_${id}_serve` : 'defaultServe', null);
     }
   }, [id, index, serve, variationsInUse, setValue, setError, clearErrors]);
 
@@ -223,11 +236,12 @@ const Serve = (props: IProps) => {
             disabled={disabled}
             options={variationsOptions}
             error={ errors[id ? `rule_${id}_serve`: 'defaultServe'] ? true : false }
-            {
-              ...register(id ? `rule_${id}_serve`: 'defaultServe', { 
-                required: true,
-              })
-            }
+            name={id ? `rule_${id}_serve`: 'defaultServe'}
+            // {
+            //   ...register(id ? `rule_${id}_serve`: 'defaultServe', { 
+            //     required: true,
+            //   })
+            // }
             onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
               handleChange(e, detail);
               setValue(detail.name, detail.value);
