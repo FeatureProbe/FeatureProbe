@@ -120,8 +120,10 @@ public class TargetingService {
     public TargetingResponse publish(String projectKey, String environmentKey, String toggleKey,
                                      TargetingPublishRequest targetingPublishRequest) {
         Environment environment = selectEnvironment(projectKey, environmentKey);
+        TargetingResponse response = publishTargeting(projectKey, environmentKey, toggleKey,
+                targetingPublishRequest, null);
         changeLogService.create(environment, ChangeLogType.CHANGE);
-        return publishTargeting(projectKey, environmentKey, toggleKey, targetingPublishRequest, null);
+        return response;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -465,6 +467,7 @@ public class TargetingService {
         }
         List<Targeting> targetingList = environments.stream()
                 .map(environment -> createDefaultTargeting(toggle, environment)).collect(Collectors.toList());
+        environments.stream().forEach(environment -> changeLogService.create(environment, ChangeLogType.CHANGE));
         this.createTargetingEntities(targetingList);
     }
 
