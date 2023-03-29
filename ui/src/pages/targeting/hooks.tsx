@@ -192,6 +192,34 @@ export const useSegment = () => {
   };
 };
 
+export const usePrerequisite = () => {
+  const [prerequisite, savePrerequisite] = useState({});
+
+  const handleAddPrerequisite = (key: string, value: string) => {
+    // prerequisite[key] = value;
+    savePrerequisite({...prerequisite});
+  };
+
+  const handleRemovePrerequisite = (key: string) => {
+    // delete prerequisite[key];
+    savePrerequisite({...prerequisite});
+  };
+
+  const handlecChangePrerequisite = (key: string, value: string) => {
+    // prerequisite[key] = value;
+    savePrerequisite({...prerequisite});
+  };
+
+  return {
+    prerequisite,
+    savePrerequisite,
+    handleAddPrerequisite,
+    handleRemovePrerequisite,
+    handlecChangePrerequisite,
+  };
+
+};
+
 export const useReactHookForm = () => {
   return {
     ...useForm(),

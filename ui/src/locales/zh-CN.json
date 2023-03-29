@@ -118,6 +118,9 @@
   "common.know.text": "我知道了",
   "common.metrics.text": "指标",
   "common.data.text": "数据",
+  "common.prerequisite.text": "前置条件",
+  "common.prerequisite.lowercase.text": "前置条件",
+  "common.prerequisite.description": "该开关只对满足所有前置条件的用户群体开放",
   
   "header.getuser.error.text": "无法获取用户信息!",
 
@@ -657,5 +660,10 @@
   "analysis.result.diagnose.reason1": "无分流数据",
   "analysis.result.diagnose.reason2": "无事件上报",
   "analysis.result.diagnose.reason3": "无Join数据",
-  "analysis.result.diagnose.reason.view": "查看常见原因"
+  "analysis.result.diagnose.reason.view": "查看常见原因",
+
+  "prerequisite.return.value": "返回值",
+  "prerequisite.add": "添加前置条件",
+  "prerequisite.toggle.placeholder": "请选择依赖的开关",
+  "prerequisite.return.value.placeholder": "请选择返回值"
 }

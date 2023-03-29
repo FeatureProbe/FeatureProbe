@@ -21,6 +21,7 @@ import { useBeforeUnload } from './hooks';
 import message from 'components/MessageBox';
 import Button from 'components/Button';
 import Variations from 'components/Variations';
+import Prerequisite from './components/Prerequisite';
 import SectionTitle from 'components/SectionTitle';
 import EventTracker from 'components/EventTracker';
 import { replaceSpace } from 'utils/tools';
@@ -304,7 +305,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   return (
     <div>
       <Form onSubmit={handleSubmit(onSubmit, onError)} autoComplete="off" ref={formRef}>
-        <div className={`${styles.status}`}>
+        <div className={styles.status}>
           <div className={`${styles['joyride-status']} joyride-toggle-status`}>
             <SectionTitle title={intl.formatMessage({ id: 'targeting.status.text' })} />
             <div className={styles['toggle-status']}>
@@ -336,6 +337,15 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           </div>
         </div>
 
+        <div className={styles.prerequisite}>
+          <SectionTitle
+            title={intl.formatMessage({ id: 'common.prerequisite.text' })}
+            showTooltip={true}
+            tooltipText={intl.formatMessage({ id: 'common.prerequisite.description' })}
+          />
+          <Prerequisite />
+        </div>
+
         <div className={styles.variations}>
           <SectionTitle
             title={intl.formatMessage({ id: 'common.variations.text' })}
@@ -351,6 +361,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
             defaultServeContainer={defaultServeContainer}
           />
         </div>
+        
         <div className={styles.rules}>
           <Rules
             disabled={disabled}

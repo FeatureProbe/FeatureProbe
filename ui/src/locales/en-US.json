@@ -118,6 +118,9 @@
   "common.know.text": "I see",
   "common.metrics.text": "Metrics",
   "common.data.text": "Data",
+  "common.prerequisite.text": "Prerequisite",
+  "common.prerequisite.lowercase.text": "prerequisite",
+  "common.prerequisite.description": "The toggle is only open to users who meet all prerequisites.",
 
   "header.getuser.error.text": "Error getting user profile",
 
@@ -657,5 +660,11 @@
   "analysis.result.diagnose.reason1": "No variation records",
   "analysis.result.diagnose.reason2": "No event records",
   "analysis.result.diagnose.reason3": "No join records",
-  "analysis.result.diagnose.reason.view": "View common reasons"
+  "analysis.result.diagnose.reason.view": "View common reasons",
+
+  "prerequisite.return.value": "Return value",
+  "prerequisite.add": "Add prerequisite",
+  "prerequisite.toggle.placeholder": "Please select a prerequisite toggle",
+  "prerequisite.return.value.placeholder": "Please select return value"
+
 }
