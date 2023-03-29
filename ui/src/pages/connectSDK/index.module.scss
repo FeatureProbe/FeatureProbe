@@ -479,19 +479,23 @@
   animation-timing-function: linear;
 }
 
-
 @keyframes right {
   0% {
     transform: rotate(-135deg);
   }
-
-  50%, 100% {
+  50% {
+    transform: rotate(45deg);
+  }
+  100% {
     transform: rotate(45deg);
   }
 }
 
 @keyframes left {
-  0%, 50% {
+  0% {
+    transform: rotate(-135deg);
+  }
+  50% {
     transform: rotate(-135deg);
   }
   100% {
