@@ -16,8 +16,8 @@ create table events
     name     varchar(256)     not null,
     value    double precision null,
     sdk_key  varchar(256)     not null,
-    sdk_type  varchar(64)     not null default  '',
-    sdk_version  varchar(64)     not null default  '',
+    sdk_type  varchar(64)     not null,
+    sdk_version  varchar(64)  not null
 );
 
 insert into access
@@ -41,16 +41,16 @@ insert into access
 values (1676273668, 'user5', 'toggle_1', 1, 1, 1, 'sdk_key');
 
 insert into events
-    (time, user_key, name, value, sdk_key)
-values (1676273668, 'user1', 'click_1', 1, 'sdk_key');
+    (time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user1', 'click_1', 1, 'sdk_key', 'JAVA', '1.0');
 
 insert into events
-    (time, user_key, name, value, sdk_key)
-values (1676273668, 'user2', 'click_1', 1, 'sdk_key');
+    (time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user2', 'click_1', 1, 'sdk_key', 'JAVA', '1.0');
 
 insert into events
-    (time, user_key, name, value, sdk_key)
-values (1676273668, 'user5', 'click_1', 1, 'sdk_key');
+    (time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user5', 'click_1', 1, 'sdk_key', 'JAVA', '1.0');
 
 insert into access
 (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key)
@@ -93,77 +93,77 @@ insert into access
 values (1676273668, 'user0', 'toggle_3', 2, 1, 1, 'sdk_key2');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user1', 'purchase', 10.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user1', 'purchase', 10.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user1', 'purchase', 20.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user1', 'purchase', 20.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user2', 'purchase', 30.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user2', 'purchase', 30.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user2', 'purchase', 40.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user2', 'purchase', 40.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user3', 'purchase', 50.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user3', 'purchase', 50.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user3', 'purchase', 60.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user3', 'purchase', 60.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user4', 'purchase', 70.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user4', 'purchase', 70.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user4', 'purchase', 80.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user4', 'purchase', 80.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user4', 'purchase', 90.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user4', 'purchase', 90.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user5', 'purchase', 90.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user5', 'purchase', 90.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user5', 'purchase', 100.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user5', 'purchase', 100.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user6', 'purchase', 110.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user6', 'purchase', 110.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user6', 'purchase', 120.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user6', 'purchase', 120.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user7', 'purchase', 130.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user7', 'purchase', 130.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user7', 'purchase', 140.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user7', 'purchase', 140.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user8', 'purchase', 150.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user8', 'purchase', 150.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user8', 'purchase', 160.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user8', 'purchase', 160.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user8', 'purchase', 170.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user8', 'purchase', 170.0, 'sdk_key2', 'JAVA', '1.0');
 
 insert into events
-(time, user_key, name, value, sdk_key)
-values (1676273668, 'user1', 'can_not_join', 170.0, 'sdk_key2');
+(time, user_key, name, value, sdk_key, sdk_type, sdk_version)
+values (1676273668, 'user1', 'can_not_join', 170.0, 'sdk_key2', 'JAVA', '1.0');

@@ -56,8 +56,8 @@ class AnalysisControllerTests {
         storeEvents(jdbcUrl)
         val service = AnalysisService(jdbcUrl, "root", "root")
 
-        assert(service.existsEvent("sdk_key", "testStoreClickExist"))
-        assert(!service.existsEvent("sdk_key", "testStoreClickNotExist"))
+        assert(service.existsEvent("sdk_key", "testStoreClickExist", "JAVA"))
+        assert(!service.existsEvent("sdk_key", "testStoreClickNotExist", "Python"))
     }
 
     fun testStoreEvents(jdbcUrl: String) {

@@ -375,7 +375,7 @@ public class MetricService {
         if (!metric.isPresent()) {
             return false;
         }
-        String metricName = metric.get().getName();
+        String metricName = getMetricName(metric.get());
         String response = callAnalysisServer("/exists_event",
                 buildExistsEventURLQuery(sdkType, metricName), sdkServerKey);
 

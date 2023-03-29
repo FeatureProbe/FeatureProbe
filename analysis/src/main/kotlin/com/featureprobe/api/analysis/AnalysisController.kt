@@ -37,10 +37,10 @@ class AnalysisController(val service: AnalysisService) {
     @GetMapping("/exists_event")
     fun existEvents(
         @RequestParam metric: String,
-        @RequestParam(value = "sdkType", required = false) sdkType: String,
+        @RequestParam(value = "sdkType") sdkType: String,
         @RequestHeader(value = "Authorization") sdkKey: String) : EventExistsResponse  {
 
-        return EventExistsResponse(200, service.existsEvent(sdkKey, metric))
+        return EventExistsResponse(200, service.existsEvent(sdkKey, metric, sdkType))
     }
 
     @GetMapping("/analysis")
@@ -146,11 +146,11 @@ class AnalysisService(
     }
 
 
-    fun existsEvent(sdkKey: String, metric: String): Boolean {
+    fun existsEvent(sdkKey: String, metric: String, sdkType: String): Boolean {
         val session = sessionOf(dataSource)
         session.use {
             return (session.run(
-                    queryOf(EXISTS_EVENT_SQL, sdkKey, metric)
+                    queryOf(EXISTS_EVENT_SQL, sdkKey, metric, sdkType)
                             .map { row -> row.int("count") }.asList)).isNotEmpty()
         }
     }
