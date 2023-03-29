@@ -228,10 +228,15 @@ const AccessToggle = () => {
                       <FormattedMessage id='common.toggle.text' /> :
                     </div>
                     <div className={styles['card-value']}>
-                      <FormattedMessage id='connect.first.toggle.view.left' />
-                      <span className={styles['toggle-name']}>{ toggleName }</span>
-                      <FormattedMessage id='connect.first.toggle.view.right' />
-                      <span className={styles['toggle-key']}>{ toggleKey }</span>
+                      { toggleName }
+                    </div>
+                  </div>
+                  <div className={styles['card-item']}>
+                    <div className={styles['card-title']}>
+                      <FormattedMessage id='common.key.text' /> :
+                    </div>
+                    <div className={styles['card-value']}>
+                      { toggleKey }
                     </div>
                   </div>
                 </div>

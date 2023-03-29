@@ -25,7 +25,7 @@ import { ISegmentList } from 'interfaces/segment';
 import { IRouterParams, IVersionParams } from 'interfaces/project';
 import { IToggleInfo, ITarget, IContent, IModifyInfo, ITargetingVersions, IVersion, ITargetingVersionsByVersion, IApprovalInfo, ITargeting, ITargetingVersion } from 'interfaces/targeting';
 import { NOT_FOUND } from 'constants/httpCode';
-import { LAST_SEEN } from 'constants/dictionary_keys';
+import { LAST_SEEN } from 'constants/dictionaryKeys';
 import { I18NContainer } from 'hooks';
 import styles from './index.module.scss';
 

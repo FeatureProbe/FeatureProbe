@@ -17,7 +17,7 @@ import { getSegmentList } from 'services/segment';
 import { saveDictionary } from 'services/dictionary';
 import { ISegment, ISegmentList } from 'interfaces/segment';
 import { NOT_FOUND } from 'constants/httpCode';
-import { LAST_SEEN } from 'constants/dictionary_keys';
+import { LAST_SEEN } from 'constants/dictionaryKeys';
 import { Provider } from './provider';
 import styles from './index.module.scss';
 
