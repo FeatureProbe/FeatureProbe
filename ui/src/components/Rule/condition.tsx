@@ -18,8 +18,8 @@ import {
   STRING_TYPE,
   NUMBER_TYPE,
 } from './constants';
-import styles from './index.module.scss';
 import { SEMVER_EN, SEMVER_ZH } from 'constants/docAddress';
+import styles from './index.module.scss';
 
 interface IProps {
   rule: IRule;

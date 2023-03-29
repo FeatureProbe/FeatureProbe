@@ -228,7 +228,7 @@ const AccessToggle = () => {
                       <FormattedMessage id='common.toggle.text' /> :
                     </div>
                     <div className={styles['card-value']}>
-                      <span className={styles['card-value']}>{ toggleName }</span>
+                      { toggleName }
                     </div>
                   </div>
                   <div className={styles['card-item']}>
@@ -236,7 +236,7 @@ const AccessToggle = () => {
                       <FormattedMessage id='common.key.text' /> :
                     </div>
                     <div className={styles['card-value']}>
-                      <span className={styles['card-value']}>{ toggleKey }</span>
+                      { toggleKey }
                     </div>
                   </div>
                 </div>
