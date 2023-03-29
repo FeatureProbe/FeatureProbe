@@ -18,7 +18,19 @@ import { createEvent } from 'services/analysis';
 import { getFromDictionary, saveDictionary } from 'services/dictionary';
 import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, COUNT, SUM, AVERAGE } from '../../constants';
 import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
-import { USER_GUIDE_TRACK_EVENT } from 'constants/dictionary_keys';
+import { USER_GUIDE_TRACK_EVENT } from 'constants/dictionaryKeys';
+import { 
+  DOC_METRIC_CONVERSION_EN,
+  DOC_METRIC_CONVERSION_ZH,
+  DOC_METRIC_COUNT_EN,
+  DOC_METRIC_COUNT_ZH,
+  DOC_METRIC_SUM_ZH,
+  DOC_METRIC_SUM_EN,
+  DOC_METRIC_AVERAGE_EN,
+  DOC_METRIC_AVERAGE_ZH,
+  CSS_SELECTOR_ZH,
+  CSS_SELECTOR_EN,
+} from 'constants/docAddress';
 
 import { 
   getEventTypeOptions,
@@ -181,9 +193,9 @@ const Metrics = (props: IProps) => {
 
   useEffect(() => {
     if (intl.locale === 'zh-CN') {
-      selectorUrl.current = 'https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building_blocks/Selectors';
+      selectorUrl.current = CSS_SELECTOR_ZH;
     } else if(intl.locale === 'en-US') {
-      selectorUrl.current = 'https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors';
+      selectorUrl.current = CSS_SELECTOR_EN;
     }
   }, [intl]);
 
@@ -345,27 +357,27 @@ const Metrics = (props: IProps) => {
   const handleGotoMetricExplain = useCallback(() => {
     if (metricType === CONVERSION) {
       if (intl.locale === 'zh-CN') {
-        window.open('https://docs.featureprobe.io/zh-CN/reference/metric-explanation/#%E8%BD%AC%E5%8C%96%E7%B1%BB');
+        window.open(DOC_METRIC_CONVERSION_ZH);
       } else {
-        window.open('https://docs.featureprobe.io/reference/metric-explanation#conversion-metrics');
+        window.open(DOC_METRIC_CONVERSION_EN);
       }
     } else if (metricType === COUNT) {
       if (intl.locale === 'zh-CN') {
-        window.open('https://docs.featureprobe.io/zh-CN/reference/metric-explanation/#%E8%AE%A1%E6%95%B0%E7%B1%BB');
+        window.open(DOC_METRIC_COUNT_ZH);
       } else {
-        window.open('https://docs.featureprobe.io/reference/metric-explanation#count-metrics');
+        window.open(DOC_METRIC_COUNT_EN);
       }
     } else if (metricType === SUM) {
       if (intl.locale === 'zh-CN') {
-        window.open('https://docs.featureprobe.io/zh-CN/reference/metric-explanation/#%E5%8A%A0%E5%92%8C%E7%B1%BB');
+        window.open(DOC_METRIC_SUM_ZH);
       } else {
-        window.open('https://docs.featureprobe.io/reference/metric-explanation/#sum-metrics');
+        window.open(DOC_METRIC_SUM_EN);
       }
     } else if (metricType === AVERAGE) {
       if (intl.locale === 'zh-CN') {
-        window.open('https://docs.featureprobe.io/zh-CN/reference/metric-explanation/#%E5%B9%B3%E5%9D%87%E7%B1%BB');
+        window.open(DOC_METRIC_AVERAGE_ZH);
       } else {
-        window.open('https://docs.featureprobe.io/reference/metric-explanation/#average-metrics');
+        window.open(DOC_METRIC_AVERAGE_EN);
       }
     }
   }, [intl, metricType]);

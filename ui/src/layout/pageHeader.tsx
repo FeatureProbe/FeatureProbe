@@ -18,6 +18,7 @@ import logoWhite from 'images/logo-white.svg';
 import { HeaderContainer } from './hooks';
 import { EventTrack } from 'utils/track';
 import serviceManualSvg from 'images/service-manual.svg';
+import { DOC_EN, DOC_ZH, GITHUB } from 'constants/docAddress';
 import styles from './pageHeader.module.scss';
 
 const PROJECT_NAV = 'projects';
@@ -160,14 +161,14 @@ const PageHeader = () => {
   }, [history]);
 
   const handleGotoGithub = useCallback(() => {
-    window.open('https://github.com/FeatureProbe/FeatureProbe');
+    window.open(GITHUB);
   }, []);
 
   const handleGotoDocument = useCallback(() => {
     if (i18n === 'en-US') {
-      window.open('https://docs.featureprobe.io/');
+      window.open(DOC_EN);
     } else {
-      window.open('https://docs.featureprobe.io/zh-CN');
+      window.open(DOC_ZH);
     }
   }, [i18n]);
 

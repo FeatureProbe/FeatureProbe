@@ -33,7 +33,7 @@ import { Provider } from './provider';
 import { IToggle, IToggleList,  } from 'interfaces/toggle';
 import { IEnvironment, ITag, ITagOption } from 'interfaces/project';
 import { NOT_FOUND } from 'constants/httpCode';
-import { LAST_SEEN } from 'constants/dictionary_keys';
+import { LAST_SEEN } from 'constants/dictionaryKeys';
 import { evaluationOptions, permanentOptions, statusOptions } from './options';
 
 import styles from './index.module.scss';

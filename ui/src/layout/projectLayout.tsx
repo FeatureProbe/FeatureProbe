@@ -18,7 +18,7 @@ import { IProject, IRouterParams } from 'interfaces/project';
 import { IToggleInfo } from 'interfaces/targeting';
 import { EnvironmentColors } from 'constants/colors';
 import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
-import { DEMO_TIP_SHOW, USER_GUIDE_LAYOUT } from 'constants/dictionary_keys';
+import { DEMO_TIP_SHOW, USER_GUIDE_LAYOUT } from 'constants/dictionaryKeys';
 
 import { 
   TOGGLE_PATH, 

@@ -19,6 +19,7 @@ import {
   NUMBER_TYPE,
 } from './constants';
 import styles from './index.module.scss';
+import { SEMVER_EN, SEMVER_ZH } from 'constants/docAddress';
 
 interface IProps {
   rule: IRule;
@@ -99,9 +100,9 @@ const RuleContent = (props: IProps) => {
 
   const handleGotoSemver = useCallback(() => {
     if (intl.locale === 'zh-CN') {
-      window.open('https://semver.org/lang/zh-CN/');
+      window.open(SEMVER_ZH);
     } else {
-      window.open('https://semver.org/');
+      window.open(SEMVER_EN);
     }
   }, [intl.locale]);
 
