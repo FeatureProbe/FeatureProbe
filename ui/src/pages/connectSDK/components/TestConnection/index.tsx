@@ -221,7 +221,14 @@ const TestConnection = (props: IProps) => {
                                 <FormattedMessage id='connect.fourth.failed.left' />
                                 { currentSDK && <img className={styles['connect-logo']} src={SDK_LOGOS[currentSDK]} alt='logo' /> }
                                 { currentSDK }
-                                <FormattedMessage id='connect.fourth.failed.right' />
+                                {
+                                  intl.formatMessage({
+                                    id: 'connect.fourth.failed.right'
+                                  }, {
+                                    toggle: toggleKey,
+                                    environment: environmentKey,
+                                  })
+                                }
                               </div>
                             )
                           }

@@ -427,7 +427,7 @@
   "connect.fourth.running.left": "Listening for ",
   "connect.fourth.running.right": " SDK events for {toggle} in the {environment} environment.",
   "connect.fourth.failed.left": "You have no ",
-  "connect.fourth.failed.right": " applications connected. ",
+  "connect.fourth.failed.right": " applications listening for SDK events for {toggle} in the {environment} environment. ",
   "connect.fourth.success": " SDK connected successfully.",
   "connect.fourth.failed.button": "Retry Connection",
   "connect.fourth.failed.link": "Common reasons for failed",
