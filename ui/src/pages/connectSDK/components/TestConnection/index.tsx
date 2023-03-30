@@ -26,7 +26,7 @@ interface IProps {
 }
 
 const CURRENT = 3;
-const INTERVAL = 3;
+const INTERVAL = 30;
 
 const TestConnection = (props: IProps) => {
   const { currentStep, isConnected, isLoading, isTrackEvent, eventInfo, currentSDK, checkStatus, saveIsLoading } = props;
