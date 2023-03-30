@@ -9,6 +9,7 @@ import styles from '../../index.module.scss';
 import { CLICK, CUSTOM, PAGE_VIEW } from 'pages/analysis/constants';
 import { IEvent } from 'interfaces/analysis';
 import { DOC_FAQ_ACCESS_EN, DOC_FAQ_ACCESS_ZH, DOC_FAQ_TRACK_EN, DOC_FAQ_TRACK_ZH } from 'constants/docAddress';
+import { SdkLanguage, SDK_LOGOS } from 'pages/connectSDK/constants';
 
 interface IProps {
   isLoading: boolean;
@@ -19,6 +20,7 @@ interface IProps {
   toggleKey: string;
   isTrackEvent?: boolean;
   eventInfo?: IEvent;
+  currentSDK: SdkLanguage;
   checkStatus(): void;
   saveIsLoading(loading: boolean): void;
 }
@@ -27,7 +29,7 @@ const CURRENT = 3;
 const INTERVAL = 30;
 
 const TestConnection = (props: IProps) => {
-  const { currentStep, isConnected, isLoading, isTrackEvent, eventInfo, checkStatus, saveIsLoading } = props;
+  const { currentStep, isConnected, isLoading, isTrackEvent, eventInfo, currentSDK, checkStatus, saveIsLoading } = props;
   const { toggleKey, environmentKey } = useParams<IRouterParams>();
   const [ count, saveCount ] = useState<number>(1);
   const [ displayName, saveDisplayName ] = useState<string>('');
@@ -83,6 +85,10 @@ const TestConnection = (props: IProps) => {
     saveDisplayName(name);
   }, [eventInfo, intl]);
 
+  if (currentSDK) {
+    console.log(SDK_LOGOS[currentSDK]);
+  }
+
   return (
     <div className={styles.step}>
       <div className={styles['step-left']}>
@@ -112,8 +118,19 @@ const TestConnection = (props: IProps) => {
                       <Icon type='success-circle' customclass={styles['success-circle']} />
                       {
                         isTrackEvent 
-                          ? <FormattedMessage id='connect.fourth.event.success' /> 
-                          : <FormattedMessage id='connect.fourth.success' />
+                          ? (
+                            <>
+                              { currentSDK && <img className={styles['connect-logo']} src={SDK_LOGOS[currentSDK]} alt='logo' /> }
+                              { currentSDK }
+                              <FormattedMessage id='connect.fourth.event.success' /> 
+                            </>
+                          ) : (
+                            <>
+                              { currentSDK && <img className={styles['connect-logo']} src={SDK_LOGOS[currentSDK]} alt='logo' /> }
+                              { currentSDK }
+                              <FormattedMessage id='connect.fourth.success' />
+                            </>
+                          )
                       }
                     </div>
                   ) : (
@@ -130,27 +147,50 @@ const TestConnection = (props: IProps) => {
                         <div className={styles['connect-retrying-text']}>
                           {
                             isTrackEvent ? (
-                              <>
+                              <div className={styles['connect-result']}>
                                 {
                                   intl.formatMessage({
-                                    id: 'connect.fourth.event.running'
+                                    id: 'connect.fourth.event.running.left'
                                   }, {
                                     eventName: displayName,
                                     environment: environmentKey,
                                     toggle: toggleKey,
                                   })
                                 }
-                              </>
-                            ) : <>
-                              {
-                                intl.formatMessage({
-                                  id: 'connect.fourth.running'
-                                }, {
-                                  environment: environmentKey,
-                                  toggle: toggleKey,
-                                })
-                              }
-                            </>
+                                { currentSDK && <img className={styles['connect-logo']} src={SDK_LOGOS[currentSDK]} alt='logo' /> }
+                                { currentSDK }
+                                {
+                                  intl.formatMessage({
+                                    id: 'connect.fourth.event.running.right'
+                                  }, {
+                                    eventName: displayName,
+                                    environment: environmentKey,
+                                    toggle: toggleKey,
+                                  })
+                                }
+                              </div>
+                            ) : (
+                              <div className={styles['connect-result']}>
+                                {
+                                  intl.formatMessage({
+                                    id: 'connect.fourth.running.left'
+                                  }, {
+                                    environment: environmentKey,
+                                    toggle: toggleKey,
+                                  })
+                                }
+                                { currentSDK && <img className={styles['connect-logo']} src={SDK_LOGOS[currentSDK]} alt='logo' /> }
+                                { currentSDK }
+                                {
+                                  intl.formatMessage({
+                                    id: 'connect.fourth.running.right'
+                                  }, {
+                                    environment: environmentKey,
+                                    toggle: toggleKey,
+                                  })
+                                }
+                              </div>
+                            )
                           }
                         </div>
                       </div>
@@ -160,18 +200,34 @@ const TestConnection = (props: IProps) => {
                           <Icon type='error-circle' customclass={styles['error-circle']} />
                           {
                             isTrackEvent ? (
-                              <>
+                              <div className={styles['connect-result']}>
                                 {
                                   intl.formatMessage({
-                                    id: 'connect.fourth.event.failed'
+                                    id: 'connect.fourth.event.failed.left'
                                   }, {
                                     eventName: displayName,
                                     environment: environmentKey,
                                   })
                                 }
-                                
-                              </>
-                            ) : <FormattedMessage id='connect.fourth.failed' />
+                                { currentSDK && <img className={styles['connect-logo']} src={SDK_LOGOS[currentSDK]} alt='logo' /> }
+                                { currentSDK }
+                                {
+                                  intl.formatMessage({
+                                    id: 'connect.fourth.event.failed.right'
+                                  }, {
+                                    eventName: displayName,
+                                    environment: environmentKey,
+                                  })
+                                }
+                              </div>
+                            ) : (
+                              <div className={styles['connect-result']}>
+                                <FormattedMessage id='connect.fourth.failed.left' />
+                                { currentSDK && <img className={styles['connect-logo']} src={SDK_LOGOS[currentSDK]} alt='logo' /> }
+                                { currentSDK }
+                                <FormattedMessage id='connect.fourth.failed.right' />
+                              </div>
+                            )
                           }
                           <a 
                             className={styles['error-link']}

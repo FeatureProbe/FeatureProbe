@@ -300,6 +300,7 @@ const AccessEvent = () => {
                 <TestConnection 
                  isLoading={isTrackLoading}
                  projectKey={projectKey}
+                 currentSDK={currentSDK}
                  environmentKey={environmentKey}
                  toggleKey={toggleKey}
                  currentStep={currentStep}
