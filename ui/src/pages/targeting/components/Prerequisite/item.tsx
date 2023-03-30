@@ -1,21 +1,23 @@
-import { ReactNode, SyntheticEvent, useCallback } from 'react';
-import { useIntl } from 'react-intl';
-import { Dropdown, DropdownProps } from 'semantic-ui-react';
+import { ReactNode, SyntheticEvent, useCallback, useEffect } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { Dropdown, DropdownProps, Popup } from 'semantic-ui-react';
 import Icon from 'components/Icon';
 import { IPrerequisite, IToggleInfo, IVariation } from 'interfaces/targeting';
-import { prerequisiteContainer } from '../../provider';
+import { prerequisiteContainer, hooksFormContainer } from '../../provider';
 
 import styles from './index.module.scss';
 
 interface IProps {
   item?: IPrerequisite;
   index: number;
-  prerequisiteToggle?: IToggleInfo[];
+  prerequisiteToggles?: IToggleInfo[];
 }
 
 interface IOption {
   key: string;
   value: string;
+  disabled?: boolean;
+  type?: string;
   text: ReactNode | string;
   content?: ReactNode | string;
 }
@@ -27,51 +29,105 @@ interface IMergeVariation {
 }
 
 const PrerequisiteItem = (props: IProps) => {
-  const { item, index, prerequisiteToggle } = props;
+  const { item, index, prerequisiteToggles } = props;
   const intl = useIntl();
 
   const {
+    formState: { errors },
+    setValue,
+    trigger,
+    register,
+    getValues,
+    unregister,
+    clearErrors,
+  } = hooksFormContainer.useContainer();
+
+  const {
     handlecChangePrerequisite,
+    handleDeletePrerequisite,
   } = prerequisiteContainer.useContainer();
+
+  useEffect(() => {
+    register(`prerequisite_${item?.id}_toggle`, {
+      required: {
+        value: true,
+        message: intl.formatMessage({id: 'prerequisite.toggle.placeholder'})
+      },
+    });
+
+    register(`prerequisite_${item?.id}_returnValue`, {
+      required: {
+        value: true,
+        message: intl.formatMessage({id: 'prerequisite.return.value.placeholder'})
+      },
+    });
+  }, [intl, item?.id, register]);
 
   const getToggleOptions = useCallback(() => {
     const options: IOption[] = [];
-    if (prerequisiteToggle) {
-      prerequisiteToggle.forEach((toggle: IToggleInfo) => {
-        options.push({
-          key: toggle.key,
-          value: toggle.key,
-          text: (
-            <span className={styles['dropdown-toggle']}>
-              <span className={styles['toggle-name']}>
-                {toggle.key}
-              </span>
-              {
-                toggle.disabled ? (
-                  <span className={styles['disabled-tag']}>
-                    {intl.formatMessage({ id: 'common.disabled.text' })}
-                  </span>
-                ) : (
-                  <span className={styles['enabled-tag']}>
-                    {intl.formatMessage({ id: 'common.enabled.text' })}
-                  </span>
-                )
-              }
-              
+
+    prerequisiteToggles?.forEach((toggle: IToggleInfo) => {
+      options.push({
+        key: toggle.key,
+        value: toggle.key,
+        disabled: toggle.returnType === 'json',
+        text: (
+          <span className={styles['dropdown-toggle']}>
+            <span className={styles['toggle-name']}>
+              {toggle.key}
             </span>
-          )
-        });
+            {
+              toggle.returnType === 'json' ? (
+                <Popup
+                  inverted
+                  className={styles.popup}
+                  position='top center'
+                  trigger={
+                    <div>
+                      {
+                        toggle.disabled ? (
+                          <span className={styles['disabled-tag']}>
+                            {intl.formatMessage({ id: 'common.disabled.text' })}
+                          </span>
+                        ) : (
+                          <span className={styles['enabled-tag']}>
+                            {intl.formatMessage({ id: 'common.enabled.text' })}
+                          </span>
+                        )
+                      }
+                    </div>
+                  }
+                  content={<FormattedMessage id='prerequisite.json.not.support' />}
+                />
+              ) : (
+                <div>
+                  {
+                    toggle.disabled ? (
+                      <span className={styles['disabled-tag']}>
+                        {intl.formatMessage({ id: 'common.disabled.text' })}
+                      </span>
+                    ) : (
+                      <span className={styles['enabled-tag']}>
+                        {intl.formatMessage({ id: 'common.enabled.text' })}
+                      </span>
+                    )
+                  }
+                </div>
+              )
+            }
+          </span>
+        )
       });
-    }
+    });
 
     return options;
-  }, [prerequisiteToggle, intl]);
+  }, [prerequisiteToggles, intl]);
 
   const getToggleValueOptions = useCallback(() => {
     const options: IOption[] = [];
 
-    if (prerequisiteToggle) {
-      const existingToggle = prerequisiteToggle.find((toggle: IToggleInfo) => toggle.key === item?.key);
+    if (prerequisiteToggles) {
+      const existingToggle = prerequisiteToggles.find((toggle: IToggleInfo) => toggle.key === item?.key);
 
       if (existingToggle) {
         const mergedVariations: IMergeVariation[] = [];
@@ -105,8 +161,8 @@ const PrerequisiteItem = (props: IProps) => {
                   {variation.value}
                 </div>
                 {
-                  variation.descriptions.map((description: string) => (
-                    <div className={styles['value-description']}>
+                  variation.descriptions.map((description: string, index: number) => (
+                    <div key={index} className={styles['value-description']}>
                       {description}
                     </div>
                   ))
@@ -117,9 +173,31 @@ const PrerequisiteItem = (props: IProps) => {
         });
       }
     }
-
     return options;
-  }, [prerequisiteToggle, item?.key]);
+  }, [prerequisiteToggles, item?.key]);
+
+  const getToggleType = useCallback((toggleKey: string) => {
+    const existingToggle = prerequisiteToggles?.find((toggle: IToggleInfo) => toggle.key === toggleKey);
+    return existingToggle?.returnType;
+  }, [prerequisiteToggles]);
+
+  const handleDelete = useCallback((e: SyntheticEvent) => {
+    e.stopPropagation();
+
+    for(const key in getValues()) {
+      if (key.startsWith(`prerequisite_${item?.id}_`)) {
+        unregister(key);
+        clearErrors(key);
+      }
+    }
+
+    for(const key in errors) {
+      if (key.startsWith(`prerequisite_${item?.id}_`)) {
+        clearErrors(key);
+      }
+    }
+    handleDeletePrerequisite(index);
+  }, [handleDeletePrerequisite, index, getValues, item?.id, unregister, clearErrors, errors]);
   
   return (
     <div className={styles.title}>
@@ -130,20 +208,24 @@ const PrerequisiteItem = (props: IProps) => {
           floating
           search
           selectOnBlur={false}
-          // name='metricType'
+          name={`prerequisite_${item?.id}_toggle`}
           value={item?.key}
           placeholder={intl.formatMessage({id: 'prerequisite.toggle.placeholder'})} 
           options={getToggleOptions()} 
           icon={<Icon customclass={'angle-down'} type='angle-down' />}
-          // error={ errors.metricType ? true : false }
+          error={ errors[`prerequisite_${item?.id}_toggle`] ? true : false }
           onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
-            console.log(detail.value);
-            handlecChangePrerequisite(index, detail.value, null);
-            // setValue(detail.name, detail.value);
-            // handleMetricTypeChange(e, detail);
-            // await trigger('metricType');
+            const type = getToggleType(detail.value as string);
+            handlecChangePrerequisite(index, detail.value, type, null);
+            setValue(detail.name, detail.value);
+            await trigger(`prerequisite_${item?.id}_toggle`);
           }}
         />
+        {errors[`prerequisite_${item?.id}_toggle`] && (
+          <div className={'error-text-normal'}>
+            {errors[`prerequisite_${item?.id}_toggle`].message}
+          </div>
+        )}
       </div>
       <div className={styles['title-right']}>
         <Dropdown
@@ -152,28 +234,29 @@ const PrerequisiteItem = (props: IProps) => {
           floating
           selectOnBlur={false}
           value={item?.value}
-          // name='metricType'
-          placeholder={
-            intl.formatMessage({id: 'prerequisite.return.value.placeholder'})
-          }
+          name={`prerequisite_${item?.id}_returnValue`}
+          placeholder={intl.formatMessage({id: 'prerequisite.return.value.placeholder'})}
           options={getToggleValueOptions()} 
           icon={<Icon customclass={'angle-down'} type='angle-down' />}
-          // error={ errors.metricType ? true : false }
+          error={ errors[`prerequisite_${item?.id}_returnValue`] ? true : false }
           onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
-            handlecChangePrerequisite(index, item?.key, detail.value);
-            // setValue(detail.name, detail.value);
-            // handleMetricTypeChange(e, detail);
-            // await trigger('metricType');
+            handlecChangePrerequisite(index, item?.key, item?.type, detail.value);
+            setValue(detail.name, detail.value);
+            await trigger(`prerequisite_${item?.id}_returnValue`);
           }}
-        >
-        </Dropdown>
+        />
+        {errors[`prerequisite_${item?.id}_returnValue`] && (
+          <div className={'error-text-normal'}>
+            {errors[`prerequisite_${item?.id}_returnValue`].message}
+          </div>
+        )}
       </div>
       <div>
         <Icon
           type='minus'
           customclass={styles['icon-minus']}
-          onClick={() => {
-            //
+          onClick={(e: SyntheticEvent) => {
+            handleDelete(e);
           }}
         />
       </div>

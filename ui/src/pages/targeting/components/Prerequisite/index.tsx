@@ -2,21 +2,21 @@ import { useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import { prerequisiteContainer } from '../../provider';
 import PrerequisiteItem from './item';
-
-import styles from './index.module.scss';
+import { prerequisiteContainer } from '../../provider';
 import { IPrerequisite, IToggleInfo } from 'interfaces/targeting';
 
+import styles from './index.module.scss';
+
 interface IProps {
-  prerequisiteToggle?: IToggleInfo[];
+  prerequisiteToggles?: IToggleInfo[];
 }
 
 const Prerequisite = (props: IProps) => {
-  const { prerequisiteToggle } = props;
+  const { prerequisiteToggles } = props;
 
   const { 
-    prerequisite,
+    prerequisites,
     handleAddPrerequisite,
   } = prerequisiteContainer.useContainer();
 
@@ -27,7 +27,7 @@ const Prerequisite = (props: IProps) => {
   return (
     <div className={styles.prerequisite}>
       {
-        (prerequisite && prerequisite.length > 0) && (
+        (prerequisites && prerequisites.length > 0) && (
           <div className={`${styles.title} ${styles['prerequisite-title']}`}>
             <div className={styles['title-left']}>
               <FormattedMessage id='common.toggle.text' />
@@ -40,12 +40,13 @@ const Prerequisite = (props: IProps) => {
       }
       
       {
-        prerequisite?.map((item: IPrerequisite, index: number) => {
+        prerequisites?.map((item: IPrerequisite, index: number) => {
           return (
-            <PrerequisiteItem 
+            <PrerequisiteItem
+              key={index}
               item={item}
               index={index}
-              prerequisiteToggle={prerequisiteToggle}
+              prerequisiteToggles={prerequisiteToggles}
             />
           );
         })
@@ -54,14 +55,12 @@ const Prerequisite = (props: IProps) => {
       <div className={styles.add}>
         <Button
           primary
-          tyzpe='button'
+          type='button'
           className={styles['add-btn']}
           onClick={addPrerequisite}
         >
           <Icon type='add' customclass={styles.iconfont} />
-          <span>
-            <FormattedMessage id='prerequisite.add' />
-          </span>
+          <FormattedMessage id='prerequisite.add' />
         </Button>
       </div>
     </div>

@@ -27,14 +27,17 @@ const DiffSection: React.FC<DiffSectionProps> = (props) => {
 
     const diffContent = before && after ? idiff(left, right) : undefined;
 
+    if (diffKey === 'prerequisites') {
+      console.log(diffContent);
+    }
     return diffContent;
-  }, [before, after, beforeDiff]);
+  }, [beforeDiff, before, after, diffKey]);
 
   useEffect(() => {
     let modifyCount = 0;
     diffContent?.forEach((item) => {
       if (item.type !== 'same') {
-        if (diffKey === 'status' || diffKey === 'default' || diffKey === 'disabled') {
+        if (diffKey === 'status' || diffKey === 'default' || diffKey === 'disabled' || diffKey === 'prerequisites') {
           modifyCount = 1;
         } else {
           modifyCount++;

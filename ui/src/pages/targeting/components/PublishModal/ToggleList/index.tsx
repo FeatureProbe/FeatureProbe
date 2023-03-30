@@ -28,21 +28,18 @@ const ToggleList = (props: IProps) => {
 
   return (
     <div>
-      <Table basic="very" unstackable>
+      <Table basic="very" unstackable className={styles['table']}>
         <Table.Header className={styles['table-header']}>
           <Table.Row>
             <Table.HeaderCell className={styles['column-toggle']}>
               <FormattedMessage id="common.toggle.text" />
-            </Table.HeaderCell>
-            <Table.HeaderCell className={styles['column-environment']}>
-              <FormattedMessage id="common.environment.text" />
             </Table.HeaderCell>
             <Table.HeaderCell className={styles['column-status']}>
               <FormattedMessage id="toggles.table.status" />
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        <Table.Body>
+        <Table.Body className={styles['table-body']}>
           {
             toggleList?.map((toggle: IToggle) => {
               const listItem = classNames(styles['list-item'], {
@@ -93,11 +90,6 @@ const ToggleList = (props: IProps) => {
                         <TextLimit text={toggle.description} maxWidth={242} />
                       </div>
                     )}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className={styles['toggle-modified']}>
-                      <TextLimit text={toggle?.environmentName} maxWidth={100} />
-                    </div>
                   </Table.Cell>
                   <Table.Cell>
                     {toggle?.disabled ? (

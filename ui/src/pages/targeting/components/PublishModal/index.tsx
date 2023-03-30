@@ -9,6 +9,7 @@ import {
   Popup,
   RadioProps,
   InputOnChangeData,
+  PaginationProps,
 } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
@@ -19,6 +20,7 @@ import { DiffStatusContent } from 'components/Diff/DiffStatus';
 import { DiffServe } from 'components/Diff/DiffServe';
 import { I18NRules, RulesDiffContent } from 'components/Diff/RulesDiffContent';
 import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
+import PrerequisitesDiffContent from 'components/Diff/PrerequisitesDiffContent';
 import message from 'components/MessageBox';
 import { approveToggle, saveToggle } from 'services/toggle';
 import { IRouterParams } from 'interfaces/project';
@@ -34,6 +36,7 @@ import {
 } from 'interfaces/targeting';
 
 import styles from './index.module.scss';
+import ToggleList from './ToggleList';
 
 interface IProps {
   open: boolean;
@@ -67,6 +70,11 @@ const PublishModal = (props: IProps) => {
   const [options, saveOptions] = useState<IOption[]>();
   const [isCollect, saveIsCollect] = useState<string>('');
   const [isDiffChange, saveIsDiffChange] = useState<boolean>(false);
+  const [isToggleShow, saveToggleShow] = useState<boolean>(false);
+  const [pagination, setPagination] = useState({
+    pageIndex: 1,
+    totalPages: 1,
+  });
   const intl = useIntl();
   const history = useHistory();
   const {
@@ -289,6 +297,20 @@ const PublishModal = (props: IProps) => {
     }
   }, [open, beforeRuleDiff, initialTargeting, publishTargeting]);
 
+  const handlePageChange = useCallback((e: SyntheticEvent, data: PaginationProps) => {
+    // fetchToggleList(currentSegmentKey, {
+    //   pageIndex: Number(data.activePage) - 1,
+    //   pageSize: 5,
+    // });
+  }, []);
+
+  const handleGotoToggle = useCallback(
+    (envKey: string, toggleKey: string) => {
+      window.open(`/${projectKey}/${envKey}/${toggleKey}/targeting`);
+    },
+    [projectKey]
+  );
+
   return (
     <Modal open={open} width={800} handleCancel={handlePublishCancel} handleConfirm={handlePublishConfirm}>
       <div>
@@ -307,6 +329,45 @@ const PublishModal = (props: IProps) => {
               </div>
             )
           }
+          <div className={styles['prerequisite-tips']}>
+            <div
+              className={styles['prerequisite-tips-title']}
+              onClick={() => {
+                saveToggleShow(!isToggleShow);
+              }}
+            >
+              <div className={styles['prerequisite-tips-left']}>
+                <Icon type='warning-circle' customclass={styles['prerequisite-circle']} />
+                {
+                  intl.formatMessage({
+                    id: '该开关正在被以下1个开关作为前置条件使用，开关变更有可能会影响进入以下开关的流量。'
+                  }, {
+                    toggle: 1,
+                  })
+                }
+              </div>
+              {
+                isToggleShow ? (
+                  <Icon customclass={styles['icon-accordion']} type="angle-up" />
+                ) : (
+                  <Icon customclass={styles['icon-accordion']} type="angle-down" />
+                )
+              }
+            </div>
+            {
+              isToggleShow && (
+                <div className={styles['prerequisite-toggles']}>
+                  <ToggleList 
+                    total={1}
+                    pagination={pagination}
+                    toggleList={[]}
+                    handlePageChange={handlePageChange}
+                    handleGotoToggle={handleGotoToggle}
+                  />
+                </div>
+              )
+            }
+          </div>
           <Diff
             sections={[
               {
@@ -321,6 +382,15 @@ const PublishModal = (props: IProps) => {
                   return <DiffStatusContent content={content} />;
                 },
                 diffKey: 'status',
+              },
+              {
+                before: initialTargeting?.content.prerequisites ?? [],
+                after: publishTargeting?.content.prerequisites ?? [],
+                title: intl.formatMessage({ id: 'common.prerequisite.text' }),
+                renderContent: (content) => {
+                  return <PrerequisitesDiffContent content={content} />;
+                },
+                diffKey: 'prerequisites',
               },
               {
                 before: initialTargeting?.content.variations,

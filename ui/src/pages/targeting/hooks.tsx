@@ -193,35 +193,38 @@ export const useSegment = () => {
 };
 
 export const usePrerequisite = () => {
-  const [prerequisite, savePrerequisite] = useState<IPrerequisite[]>([]);
+  const [prerequisites, savePrerequisites] = useState<IPrerequisite[]>([]);
 
-  const handleAddPrerequisite = (key: string, value: string) => {
-    prerequisite.push({
-      key,
-      value,
+  const handleAddPrerequisite = () => {
+    prerequisites.push({
+      id: uuidv4(),
+      key: '',
+      value: '',
+      type: '',
     });
 
-    console.log('add---', prerequisite);
-    savePrerequisite([...prerequisite]);
+    console.log('add---', prerequisites);
+    savePrerequisites([...prerequisites]);
   };
 
   const handleDeletePrerequisite = (index: number) => {
-    prerequisite.splice(index, 1);
-    console.log('delete---', prerequisite);
+    prerequisites.splice(index, 1);
+    console.log('delete---', prerequisites);
 
-    savePrerequisite([...prerequisite]);
+    savePrerequisites([...prerequisites]);
   };
 
-  const handlecChangePrerequisite = (index: number, key: string, value: string) => {
-    prerequisite[index].key = key;
-    prerequisite[index].value = value;
-    console.log('change---', prerequisite);
-    savePrerequisite([...prerequisite]);
+  const handlecChangePrerequisite = (index: number, key: string, type: string, value: string) => {
+    prerequisites[index].key = key;
+    prerequisites[index].type = type;
+    prerequisites[index].value = value;
+    console.log('change---', prerequisites);
+    savePrerequisites([...prerequisites]);
   };
 
   return {
-    prerequisite,
-    savePrerequisite,
+    prerequisites,
+    savePrerequisites,
     handleAddPrerequisite,
     handleDeletePrerequisite,
     handlecChangePrerequisite,

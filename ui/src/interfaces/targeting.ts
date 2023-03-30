@@ -64,6 +64,7 @@ export interface ITarget {
   variations: IVariation[];
   defaultServe: IServe;
   disabledServe: IServe;
+  prerequisites?: IPrerequisite[];
 }
 
 export interface IContent {
@@ -203,6 +204,8 @@ export interface ITargetingDiff {
 }
 
 export interface IPrerequisite {
+  id?: string;
   key: string;
   value: string;
+  type: string;
 }

@@ -113,3 +113,39 @@
   align-items: center;
   padding: 7px 0;
 }
+
+.prerequisite-tips {
+    margin: 0 24px 24px;
+
+    &-title {
+      display: flex;
+      align-items: center;
+      background: #fffae0;
+      color: #660e16;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 1;
+      padding: 7px 0;
+      cursor: pointer;
+    }
+
+  &-left {
+    flex: 1;
+  }
+}
+
+.prerequisite-circle {
+  font-size: 17px !important;
+  color: #FFC300;
+  margin: 0 8px 0 14px;
+}
+
+.prerequisite-toggles {
+  padding: 15px 24px 24px;
+  background: #f8f9fa;
+  border-radius: 0 0 6px 6px;
+}
+
+.icon-accordion {
+  margin-right: 16px;
+}

@@ -32,11 +32,13 @@ import {
   disabledServeContainer,
   hooksFormContainer,
   segmentContainer,
+  prerequisiteContainer,
 } from './provider';
 import { VariationColors } from 'constants/colors';
 import {
   IApprovalInfo,
   ICondition,
+  IPrerequisite,
   IRule,
   ITarget,
   ITargeting,
@@ -64,7 +66,7 @@ interface IProps {
   allowEnableTrackEvents: boolean;
   initialTargeting?: ITargeting;
   segmentList?: ISegmentList;
-  prerequisiteToggle?: IToggleInfo[];
+  prerequisiteToggles?: IToggleInfo[];
   initTargeting(): void;
   saveToggleDisable(status: boolean): void;
 }
@@ -82,7 +84,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     trackEvents,
     latestVersion,
     allowEnableTrackEvents,
-    prerequisiteToggle,
+    prerequisiteToggles,
     initTargeting,
     saveToggleDisable,
   } = props;
@@ -90,6 +92,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   const { variations } = variationContainer.useContainer();
   const { defaultServe } = defaultServeContainer.useContainer();
   const { disabledServe } = disabledServeContainer.useContainer();
+  const { prerequisites } = prerequisiteContainer.useContainer();
   const [ open, setOpen ] = useState<boolean>(false);
   const [ publishDisabled, setPublishDisabled ] = useState<boolean>(true);
   const [ publishTargeting, setPublishTargeting ] = useState<ITargeting>();
@@ -190,6 +193,15 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
   }, [variations, targeting, defaultServe, disabledServe, setValue]);
 
   useEffect(() => {
+    if (targeting) {
+      prerequisites.forEach((prerequisite: IPrerequisite) => {
+        setValue(`prerequisite_${prerequisite.id}_toggle`, prerequisite.key);
+        setValue(`prerequisite_${prerequisite.id}_returnValue`, prerequisite.value);
+      });
+    }
+  }, [prerequisites, setValue, targeting]);
+
+  useEffect(() => {
     const requestRules = cloneDeep(rules);
     requestRules.forEach((rule: IRule) => {
       rule.conditions.forEach((condition: ICondition) => {
@@ -213,16 +225,34 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       delete variation.id;
     });
 
-    setPublishTargeting({
-      disabled: toggleDisabled,
-      content: {
-        rules: requestRules,
-        disabledServe,
-        defaultServe,
-        variations: requestVariations,
-      },
+    const requestPrerequisites = cloneDeep(prerequisites);
+    requestPrerequisites.forEach((prerequisite: IPrerequisite) => {
+      delete prerequisite.id;
     });
-  }, [toggleDisabled, rules, variations, defaultServe, disabledServe]);
+
+    if (requestPrerequisites.length > 0) {
+      setPublishTargeting({
+        disabled: toggleDisabled,
+        content: {
+          rules: requestRules,
+          disabledServe,
+          defaultServe,
+          variations: requestVariations,
+          prerequisites: requestPrerequisites,
+        },
+      });
+    } else {
+      setPublishTargeting({
+        disabled: toggleDisabled,
+        content: {
+          rules: requestRules,
+          disabledServe,
+          defaultServe,
+          variations: requestVariations,
+        },
+      });
+    }
+  }, [toggleDisabled, rules, variations, defaultServe, disabledServe, prerequisites]);
 
   useEffect(() => {
     if (initialTargeting) {
@@ -306,13 +336,13 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
 
   return (
     <div>
-      <Form onSubmit={handleSubmit(onSubmit, onError)} autoComplete="off" ref={formRef}>
+      <Form onSubmit={handleSubmit(onSubmit, onError)} autoComplete='off' ref={formRef}>
         <div className={styles.status}>
           <div className={`${styles['joyride-status']} joyride-toggle-status`}>
             <SectionTitle title={intl.formatMessage({ id: 'targeting.status.text' })} />
             <div className={styles['toggle-status']}>
               <Radio
-                size="mini"
+                size='mini'
                 toggle
                 checked={!toggleDisabled}
                 onChange={(e: SyntheticEvent, data: CheckboxProps) => saveToggleDisable(!data.checked || false)}
@@ -320,36 +350,36 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
                 disabled={disabled}
               />
             </div>
-            {toggleDisabled ? (
-              <div className={styles['status-text']}>
-                <span>
-                  <FormattedMessage id="targeting.status.disabled.text" />
-                </span>
-                <span
-                  className={styles['name-color']}
-                  style={{ background: VariationColors[Number(disabledServe.select) % 20] }}
-                ></span>
-                <span className={styles['name-text']}>{disabledText}</span>
-              </div>
-            ) : (
-              <div className={styles['status-text']}>
-                <FormattedMessage id="common.enabled.text" />
-              </div>
-            )}
+            {
+              toggleDisabled ? (
+                <div className={styles['status-text']}>
+                  <span>
+                    <FormattedMessage id='targeting.status.disabled.text' />
+                  </span>
+                  <span
+                    className={styles['name-color']}
+                    style={{ background: VariationColors[Number(disabledServe.select) % 20] }}
+                  ></span>
+                  <span className={styles['name-text']}>{disabledText}</span>
+                </div>
+              ) : (
+                <div className={styles['status-text']}>
+                  <FormattedMessage id='common.enabled.text' />
+                </div>
+              )
+            }
           </div>
         </div>
-
         <div className={styles.prerequisite}>
           <SectionTitle
             title={intl.formatMessage({ id: 'common.prerequisite.text' })}
             showTooltip={true}
             tooltipText={intl.formatMessage({ id: 'common.prerequisite.description' })}
           />
-          <Prerequisite 
-            prerequisiteToggle={prerequisiteToggle}
+          <Prerequisite
+            prerequisiteToggles={prerequisiteToggles}
           />
         </div>
-
         <div className={styles.variations}>
           <SectionTitle
             title={intl.formatMessage({ id: 'common.variations.text' })}
@@ -365,7 +395,6 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
             defaultServeContainer={defaultServeContainer}
           />
         </div>
-        
         <div className={styles.rules}>
           <Rules
             disabled={disabled}
@@ -380,20 +409,20 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
         <div className={styles['disabled-return']}>
           <DisabledServe disabled={disabled} />
         </div>
-        <div id="footer" className={styles.footer}>
-          <EventTracker category="targeting" action="publish-toggle">
+        <div id='footer' className={styles.footer}>
+          <EventTracker category='targeting' action='publish-toggle'>
             <Button
               className={styles['publish-btn']}
               disabled={publishDisabled || disabled || isLoading}
               primary
-              type="submit"
+              type='submit'
             >
-              {isLoading && <Loader inverted active inline size="tiny" className={styles['publish-btn-loader']} />}
+              {isLoading && <Loader inverted active inline size='tiny' className={styles['publish-btn-loader']} />}
               <span className={styles['publish-btn-text']}>
                 {approvalInfo?.enableApproval ? (
-                  <FormattedMessage id="common.request.approval.text" />
+                  <FormattedMessage id='common.request.approval.text' />
                 ) : (
-                  <FormattedMessage id="common.publish.text" />
+                  <FormattedMessage id='common.publish.text' />
                 )}
               </span>
             </Button>
@@ -414,9 +443,13 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
         <Prompt when={!publishDisabled} message={intl.formatMessage({ id: 'targeting.page.leave.text' })} />
         <UserGuide />
       </Form>
-      <SizeTips hide={sizeConfirm || sizeState === 'normal'} size={size} onConfirm={() => {
-        setSizeConfirm(true);
-      }} />
+      <SizeTips
+        hide={sizeConfirm || sizeState === 'normal'}
+        size={size}
+        onConfirm={() => {
+          setSizeConfirm(true);
+        }}
+      />
     </div>
   );
 });

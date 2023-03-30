@@ -23,7 +23,7 @@ import { getTargeting, getToggleInfo, getTargetingVersion, getTargetingVersionsB
 import { saveDictionary } from 'services/dictionary';
 import { ISegmentList } from 'interfaces/segment';
 import { IRouterParams, IVersionParams } from 'interfaces/project';
-import { IToggleInfo, ITarget, IContent, IModifyInfo, ITargetingVersions, IVersion, ITargetingVersionsByVersion, IApprovalInfo, ITargeting, ITargetingVersion, IPrerequisite } from 'interfaces/targeting';
+import { IToggleInfo, ITarget, IContent, IModifyInfo, ITargetingVersions, IVersion, ITargetingVersionsByVersion, IApprovalInfo, ITargeting, ITargetingVersion } from 'interfaces/targeting';
 import { NOT_FOUND } from 'constants/httpCode';
 import { LAST_SEEN } from 'constants/dictionaryKeys';
 import { I18NContainer } from 'hooks';
@@ -63,7 +63,7 @@ const ToggleDetail = () => {
   const [ isTargetingLoading, saveIsTargetingLoading ] = useState<boolean>(true);
   const [ isInfoLoading, saveIsInfoLoading ] = useState<boolean>(true);
   const [ isHistoryLoading, saveIsHistoryLoading ] = useState<boolean>(true);
-  const [ prerequisiteToggle, savePrerequisiteToggle ] = useState<IToggleInfo[]>();
+  const [ prerequisiteToggles, savePrerequisiteToggles ] = useState<IToggleInfo[]>();
   const { ref, height = 1 } = useResizeObserver<HTMLDivElement>();
   const { i18n } = I18NContainer.useContainer();
 
@@ -117,7 +117,7 @@ const ToggleDetail = () => {
     getPrerequisiteToggle<IToggleInfo[]>(projectKey, environmentKey, toggleKey).then(res => {
       const { success, data } = res;
       if (success && data) {
-        savePrerequisiteToggle(data);
+        savePrerequisiteToggles(data);
       }
     });
   }, [projectKey, environmentKey, toggleKey]);
@@ -498,7 +498,7 @@ const ToggleDetail = () => {
                             approvalInfo={approvalInfo}
                             toggleDisabled={toggleDisabled}
                             initialTargeting={initialTargeting}
-                            prerequisiteToggle={prerequisiteToggle}
+                            prerequisiteToggles={prerequisiteToggles}
                             initTargeting={() => {
                               initTargeting();
                               initHistory();
