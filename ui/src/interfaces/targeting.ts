@@ -56,6 +56,7 @@ export interface IToggleInfo {
   archived: boolean;
   permanent: boolean;
   useDays?: number;
+  disabled?: boolean;
 }
 
 export interface ITarget {
@@ -199,4 +200,9 @@ export interface ITargetingDiff {
   oldDisabled: boolean;
   currentContent: ITarget;
   oldContent: ITarget;
+}
+
+export interface IPrerequisite {
+  key: string;
+  value: string;
 }

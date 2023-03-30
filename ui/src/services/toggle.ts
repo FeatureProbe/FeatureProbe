@@ -316,3 +316,19 @@ export const getToggleAttributes = async<T> (projectKey: string, environmentKey:
     },
   });
 };
+
+export const getPrerequisiteToggle = async<T> (projectKey: string, environmentKey: string, toggleKey: string) => {
+  const url = `${
+    API.getPrerequisiteToggleURI
+      .replace(':projectKey', projectKey)
+      .replace(':environmentKey', environmentKey)
+      .replace(':toggleKey', toggleKey)
+  }`;
+  
+  return request<T>(url, {
+    method: 'GET',
+    headers: {
+      ...ApplicationJson()
+    },
+  });
+};

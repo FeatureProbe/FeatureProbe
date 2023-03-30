@@ -20,6 +20,7 @@ const ToggleURI = {
   targetingVersionsURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/targeting/versions`,
   targetingVersionsByVersionURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/targeting/versions/:version`,
   getAttributesURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/targeting/attributes`,
+  getPrerequisiteToggleURI: `${origin}/projects/:projectKey/environments/:environmentKey/toggles/:toggleKey/targeting/prerequisite/toggles`,
 };
 
 export default ToggleURI;

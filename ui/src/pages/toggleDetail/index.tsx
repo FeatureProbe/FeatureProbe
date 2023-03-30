@@ -19,11 +19,11 @@ import FlowExplain from './components/FlowExplain';
 import History from 'components/History';
 import { Provider } from '../targeting/provider';
 import { getSegmentList } from 'services/segment';
-import { getTargeting, getToggleInfo, getTargetingVersion, getTargetingVersionsByVersion } from 'services/toggle';
+import { getTargeting, getToggleInfo, getTargetingVersion, getTargetingVersionsByVersion, getPrerequisiteToggle } from 'services/toggle';
 import { saveDictionary } from 'services/dictionary';
 import { ISegmentList } from 'interfaces/segment';
 import { IRouterParams, IVersionParams } from 'interfaces/project';
-import { IToggleInfo, ITarget, IContent, IModifyInfo, ITargetingVersions, IVersion, ITargetingVersionsByVersion, IApprovalInfo, ITargeting, ITargetingVersion } from 'interfaces/targeting';
+import { IToggleInfo, ITarget, IContent, IModifyInfo, ITargetingVersions, IVersion, ITargetingVersionsByVersion, IApprovalInfo, ITargeting, ITargetingVersion, IPrerequisite } from 'interfaces/targeting';
 import { NOT_FOUND } from 'constants/httpCode';
 import { LAST_SEEN } from 'constants/dictionaryKeys';
 import { I18NContainer } from 'hooks';
@@ -63,6 +63,7 @@ const ToggleDetail = () => {
   const [ isTargetingLoading, saveIsTargetingLoading ] = useState<boolean>(true);
   const [ isInfoLoading, saveIsInfoLoading ] = useState<boolean>(true);
   const [ isHistoryLoading, saveIsHistoryLoading ] = useState<boolean>(true);
+  const [ prerequisiteToggle, savePrerequisiteToggle ] = useState<IToggleInfo[]>();
   const { ref, height = 1 } = useResizeObserver<HTMLDivElement>();
   const { i18n } = I18NContainer.useContainer();
 
@@ -112,10 +113,20 @@ const ToggleDetail = () => {
     });
   }, [projectKey]);
 
+  const initPrerequisiteToggle = useCallback(() => {
+    getPrerequisiteToggle<IToggleInfo[]>(projectKey, environmentKey, toggleKey).then(res => {
+      const { success, data } = res;
+      if (success && data) {
+        savePrerequisiteToggle(data);
+      }
+    });
+  }, [projectKey, environmentKey, toggleKey]);
+
   useEffect(() => {
     initToggleInfo();
     initSegmentList();
-  }, [initToggleInfo, initSegmentList]);
+    initPrerequisiteToggle();
+  }, [initToggleInfo, initSegmentList, initPrerequisiteToggle]);
 
   // Get toggle targeting
   const initTargeting = useCallback(() => {
@@ -476,9 +487,9 @@ const ToggleDetail = () => {
                             allowEnableTrackEvents={allowEnableTrackEvents}
                             disabled={
                               targetingDisabled
+                              || trackEvents
                               || toggleArchived
                               || (approvalInfo?.enableApproval && approvalInfo.status !== 'RELEASE')
-                              || trackEvents
                             }
                             latestVersion={latestVersion}
                             targeting={targeting}
@@ -487,6 +498,7 @@ const ToggleDetail = () => {
                             approvalInfo={approvalInfo}
                             toggleDisabled={toggleDisabled}
                             initialTargeting={initialTargeting}
+                            prerequisiteToggle={prerequisiteToggle}
                             initTargeting={() => {
                               initTargeting();
                               initHistory();

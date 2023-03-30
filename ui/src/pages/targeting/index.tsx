@@ -64,6 +64,7 @@ interface IProps {
   allowEnableTrackEvents: boolean;
   initialTargeting?: ITargeting;
   segmentList?: ISegmentList;
+  prerequisiteToggle?: IToggleInfo[];
   initTargeting(): void;
   saveToggleDisable(status: boolean): void;
 }
@@ -81,6 +82,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     trackEvents,
     latestVersion,
     allowEnableTrackEvents,
+    prerequisiteToggle,
     initTargeting,
     saveToggleDisable,
   } = props;
@@ -343,7 +345,9 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
             showTooltip={true}
             tooltipText={intl.formatMessage({ id: 'common.prerequisite.description' })}
           />
-          <Prerequisite />
+          <Prerequisite 
+            prerequisiteToggle={prerequisiteToggle}
+          />
         </div>
 
         <div className={styles.variations}>
