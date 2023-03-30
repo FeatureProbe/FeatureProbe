@@ -273,6 +273,7 @@ const AccessToggle = () => {
                   isConnected={isAccess}
                   isLoading={isAccessLoading}
                   projectKey={projectKey}
+                  currentSDK={currentSDK}
                   environmentKey={environmentKey}
                   toggleKey={toggleKey}
                   currentStep={currentStep}

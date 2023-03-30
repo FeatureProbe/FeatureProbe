@@ -191,6 +191,11 @@
   margin-top: 14px;
 }
 
+.connect-result {
+  display: inline-flex;
+  align-items: center;
+}
+
 .connect-failed {
   margin-bottom: 16px;
   font-size: 13px;
@@ -199,6 +204,13 @@
 .connect-success {
   margin-bottom: 16px;
   font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.connect-logo {
+  width: 20px;
+  margin: 0 5px;
 }
 
 .connect-retrying {
