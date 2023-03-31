@@ -40,6 +40,7 @@ pub struct ServerConfig {
     pub realtime_port: u16,
     #[cfg(feature = "realtime")]
     pub realtime_path: String,
+    pub prerequisite_deep: u8,
 }
 
 impl ServerConfig {
@@ -146,6 +147,11 @@ impl ServerConfig {
             Ok(path) => path,
         };
 
+        let prerequisite_deep = match config.get_int("prerequisite_deep") {
+            Err(_) => 20, // default max prerequisite deep
+            Ok(deep) => deep as u8,
+        };
+
         Ok(ServerConfig {
             toggles_url,
             events_url,
@@ -159,6 +165,7 @@ impl ServerConfig {
             realtime_port,
             #[cfg(feature = "realtime")]
             realtime_path,
+            prerequisite_deep,
         })
     }
 }
