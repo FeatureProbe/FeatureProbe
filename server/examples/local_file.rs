@@ -46,8 +46,10 @@ async fn main() {
         realtime_port: 9100,
         #[cfg(feature = "realtime")]
         realtime_path: "/server/realtime".to_owned(),
+        prerequisite_deep: 20,
     };
 
+    let prerequisite_deep = config.prerequisite_deep;
     #[cfg(feature = "realtime")]
     let realtime_socket = RealtimeSocket::serve(config.realtime_port, &config.realtime_path);
     let repo = SdkRepository::new(
@@ -63,6 +65,7 @@ async fn main() {
         analysis_url,
         events_timeout: refresh_seconds,
         http_client: Default::default(),
+        prerequisite_deep,
     };
     tokio::spawn(serve_http::<FpHttpHandler>(fp_port, feature_probe_server));
 
