@@ -87,7 +87,7 @@ sidebar_position: 2
    Server服务更详细启动参数说明详见 [FeatureProbe Server 参数说明文档](../../reference/deployment-configuration#featureprobe-server)
    :::
 
-4、运行 FeatureProbe Analysis 实例：
+4. 运行 FeatureProbe Analysis 实例：
 
 :::info
 Analysis服务数据库与API数据库是分开的，运行Analysis之前，请先创建一个名为 feature_probe_events 的库, 可以使用上面同一个数据库服务。
@@ -111,7 +111,7 @@ Analysis服务数据库与API数据库是分开的，运行Analysis之前，请�
    # 上述 10.100.1.4:13306 为 MySQL Server 的 IP 和端口，请根据实际情况调整
    ```
 
-4. 运行 FeatureProbe UI 实例:
+5. 运行 FeatureProbe UI 实例:
 
    ```bash
    docker run -p 4009:4009 \
