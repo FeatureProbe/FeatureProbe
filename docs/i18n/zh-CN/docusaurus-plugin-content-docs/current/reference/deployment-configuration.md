@@ -21,6 +21,8 @@ API 模块和 Server 模块在启动时参数说明。
 | app.security.jwt.keystore-location      | ./jwt.jks         | 否       | 证书文件路径                                                 |
 | app.security.jwt.keystore-password      | password          | 否       | 生成证书时 storepass                                         |
 | app.security.jwt.private-key-passphrase | password          | 否       | 生成证书时的 keypass                                         |
+| app.analysis-url |    http://127.0.0.1:4006       | 否       |  指标分析服务的地址                            |
+| server-base-urls | http://127.0.0.1:4007          | 否       |  Server服务的地址，多个地址用, 分割，用于降低配置变更延迟                                        |
 
 *上述参数使用 docker 方式启动程序通过 Environment 传入，如以 jar 包启动通过 java ` --` 传入.*
 
@@ -49,6 +51,7 @@ keytool -genkey -alias my-featureprobe-jwt -keyalg RSA -keysize 1024 -keystore f
 | FP_TOGGLES_URL           | http://127.0.0.1:8080/api/server/toggles  | 是       | 连接的 FeatureProbe API 服务地址；用于拉取开关         |
 | FP_KEYS_URL              | http://127.0.0.1:8080/api/server/sdk_keys | 是       | 连接的 FeatureProbe API 服务地址；用于拉取 sdk key     |
 | FP_EVENTS_URL            | http://127.0.0.1:8080/api/server/events   | 是       | 连接的 FeatureProbe API 服务地址；用于上报开关访问事件 |
+| FP_ANALYSIS_URL          |  -   | 是       | 指标分析服务地址，用于事件上报 |
 | FP_SERVER_PORT           | 4007                                      | 否       | 服务端口                                               |
 | FP_REFRESH_SECONDS       | 3                                         | 否       | 轮询拉取开关间隔时间                                   |
 | RUST_LOG                 | info                                      | 否       | 应用日志级别;  `info`/`error`                          |

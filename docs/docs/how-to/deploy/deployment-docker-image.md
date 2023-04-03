@@ -59,9 +59,13 @@ Please replace the above IP address with the actual IP address according to the 
       -e spring.datasource.jdbc-url=jdbc:mysql://10.100.1.4:13306/feature_probe \
       -e spring.datasource.username=root \
       -e spring.datasource.password=root \
+      -e app.analysis-url=http://10.100.1.1:4006
+      -e app.server-base-urls=http://10.100.1.1:4009
       --name featureProbeAPI -d featureprobe/api
       
    # The above 10.100.1.4:13306 is the IP and port of MySQL Server, please adjust it according to the actual situation
+   # The above 10.100.1.4:4006 is the IP and port of Analysis Server, please adjust it according to the actual situation
+   # The above 10.100.1.4:4009 is the IP and port of Server, please adjust it according to the actual situation
    ```
 
    :::info
@@ -77,16 +81,42 @@ Please replace the above IP address with the actual IP address according to the 
      -e FP_TOGGLES_URL=http://10.100.1.1:4008/internal/server/toggles \
      -e FP_EVENTS_URL=http://10.100.1.1:4008/internal/server/events \
      -e FP_KEYS_URL=http://10.100.1.1:4008/internal/server/sdk_keys \
+     -e FP_ANALYSIS_URL=http://10.100.1.1:4006/events \
      --name featureProbeServer -d featureprobe/server
      
    # The above 10.100.1.1:4008 is FeatureProbe API service IP and port, please adjust according to the actual situation
+   # The above 10.100.1.1:4006 is FeatureProbe Analysis service IP and port, please adjust according to the actual situation
    ```
 
    :::info
    For a more detailed description of the startup parameters of the Server service, see  [FeatureProbe Server parameters](../../reference/deployment-configuration#featureprobe-server)
    :::
 
-4. Run the FeatureProbe UI instance:
+4、Run the FeatureProbe Analysis instance:
+
+:::info
+The Analysis service database and the API database are separated. Before running Analysis, please create a database named 'feature_probe_events'. You can use the same database service as mentioned above.
+:::
+
+   ```shell
+   CREATE DATABASE IF NOT EXISTS feature_probe_events;
+   ```
+
+   ```bash
+   docker run -p 4006:4006 \
+	   -e server.port=4006 \
+	   -e app.datasource.jdbcUrl=jdbc:mysql://10.100.1.4:13306/feature_probe_events \
+	   -e app.datasource.username=root \
+	   -e app.datasource.password=fp@root \
+	   -e spring.profiles.active=online \
+	   -e JVM_ARGS='-Xmx2048m -Xms2048m' \
+	   -e TZ=Asia/Shanghai \
+	   --name featureProbeAnalysis -d featureprobe/analysis
+     
+   # The above 10.100.1.4:13306 is the IP and port of MySQL Server, please adjust it according to the actual situation
+   ```
+
+5. Run the FeatureProbe UI instance:
 
    ```bash
    docker run -p 4009:4009 \

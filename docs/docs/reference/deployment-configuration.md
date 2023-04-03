@@ -19,6 +19,8 @@ The following is the description of the parameters of the API module and Server 
 | app.security.jwt.keystore-location      | ./jwt.jks         | no       | Certificate file path                                                 |
 | app.security.jwt.keystore-password      | password          | no       | Storepass when generating the certificate                                         |
 | app.security.jwt.private-key-passphrase | password          | no       | Keypass when generating the certificate                                        |
+| app.analysis-url |    http://127.0.0.1:4006       | no       |  Analysis Server URL                          |
+| server-base-urls | http://127.0.0.1:4007          | no       |  Server URLs;           Multiple URLs, separated by commas            |
 
 *The above parameters use the docker method to start the program and pass it in through Environment, such as starting it with a jar package and passing it in through java -D.*
 
@@ -48,6 +50,7 @@ After the certificate is generated, you need to modify the enabling parameters `
 | FP_TOGGLES_URL           | http://127.0.0.1:8080/api/server/toggles  | yes       | Service address to connect to FeatureProbe API. Used for pull toggles         |
 | FP_KEYS_URL              | http://127.0.0.1:8080/api/server/sdk_keys | yes       | Service address to connect to FeatureProbe API. Used for pull sdk key     |
 | FP_EVENTS_URL            | http://127.0.0.1:8080/api/server/events   | yes       | Service address to connect to FeatureProbe API. Used to report toggle access events |
+| FP_ANALYSIS_URL          |  -   | yes       | Analysis Server URL，Used to report toggle events|
 | FP_REFRESH_SECONDS       | 3                                         | no       | Interval of polling pull toggle                                    |
 | RUST_LOG                 | info                                      | no       | Application log level, `info`/`error`                          |
 
