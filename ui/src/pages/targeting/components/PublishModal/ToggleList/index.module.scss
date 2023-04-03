@@ -36,11 +36,11 @@
   cursor: pointer;
   outline: 1px solid transparent;
   border-radius: 8px;
-  height: 72px;
+  height: 32px;
 }
 
 .list-item-enabled {
-  background-color: rgba(245, 72, 59, 0.05);
+  // background-color: rgba(245, 72, 59, 0.05);
 
   :global {
     td {
@@ -59,7 +59,7 @@
 .toggle-status {
   align-items: center;
   display: flex;
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .toggle-status-icon {
@@ -105,7 +105,7 @@
 
 .toggle-info-name {
   color: #556ee6;
-  font-size: 15px;
+  font-size: 13px;
   font-family: HelveticaNeue-Medium, sans-serif;
 }
 

@@ -203,13 +203,11 @@ export const usePrerequisite = () => {
       type: '',
     });
 
-    console.log('add---', prerequisites);
     savePrerequisites([...prerequisites]);
   };
 
   const handleDeletePrerequisite = (index: number) => {
     prerequisites.splice(index, 1);
-    console.log('delete---', prerequisites);
 
     savePrerequisites([...prerequisites]);
   };
@@ -218,7 +216,6 @@ export const usePrerequisite = () => {
     prerequisites[index].key = key;
     prerequisites[index].type = type;
     prerequisites[index].value = value;
-    console.log('change---', prerequisites);
     savePrerequisites([...prerequisites]);
   };
 

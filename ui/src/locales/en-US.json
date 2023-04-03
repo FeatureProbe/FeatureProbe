@@ -270,6 +270,8 @@
   "toggles.archive.content": "The toggle will be archived in all environments.",
   "toggles.archive.success": "Toggle archived successfully",
   "toggles.archive.error": "Error archiving toggle",
+  "toggles.archive.prerequisite.tips": "该开关正在被以下{toggle}个开关作为前置条件使用，无法下线。",
+  "toggles.archive.disabled.title": "Can not archive",
   "toggles.restore.title": "Are you sure to restore this toggle?",
   "toggles.restore.content": "The toggle will be restored in all environments.",
   "toggles.restore.success": "Toggle restored successfully",
@@ -301,6 +303,7 @@
   "targeting.publish.success.text": "Published successfully",
   "targeting.publish.tips": "The metric data is being collected, and the toggle change may affect the accuracy of the results.",
   "targeting.publish.start.collect": "The collection of analysis data is currently not started. Do you want to start data collection at the same time?",
+  "targeting.publish.prerequisite.tips": "该开关正在被以下{toggle}个开关作为前置条件使用，开关变更有可能会影响进入以下开关的流量。",
   "targeting.status.text": "Status",
   "targeting.status.disabled.text": "disabled, serving ",
   "targeting.variations.evaluations.text": "Variation {type} evaluations",
@@ -661,5 +664,6 @@
   "prerequisite.add": "Add prerequisite",
   "prerequisite.toggle.placeholder": "Please select a prerequisite toggle",
   "prerequisite.return.value.placeholder": "Please select return value",
-  "prerequisite.json.not.support": "Toggles whose return type is JSON are not currently selected as prerequisites."
+  "prerequisite.json.not.support": "Toggles whose return type is JSON are not currently selected as prerequisites.",
+  "prerequisite.toggle.duplicate": "开关重复，请重新选择"
 }

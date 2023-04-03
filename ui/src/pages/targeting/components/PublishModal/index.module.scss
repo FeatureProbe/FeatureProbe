@@ -144,6 +144,16 @@
   padding: 15px 24px 24px;
   background: #f8f9fa;
   border-radius: 0 0 6px 6px;
+
+  :global {
+    .ui.table td {
+      padding: 0 !important;
+    }
+    
+    .ui.pagination.menu {
+      background-color: transparent;
+    }
+  }
 }
 
 .icon-accordion {

@@ -28,6 +28,30 @@ interface IMergeVariation {
   descriptions: string[];
 }
 
+function findRecordsByField<T, K extends keyof T>(
+  records: T[],
+  field: K,
+): T[] {
+  const map = new Map<T[K], T[]>();
+
+  records.forEach((record) => {
+    const value = record[field];
+    if (!map.has(value)) {
+      map.set(value, []);
+    }
+    map.get(value)?.push(record);
+  });
+
+  const result: T[] = [];
+  map.forEach((records) => {
+    if (records.length > 1) {
+      result.push(...records);
+    }
+  });
+
+  return result;
+}
+
 const PrerequisiteItem = (props: IProps) => {
   const { item, index, prerequisiteToggles } = props;
   const intl = useIntl();
@@ -37,12 +61,14 @@ const PrerequisiteItem = (props: IProps) => {
     setValue,
     trigger,
     register,
+    setError,
     getValues,
     unregister,
     clearErrors,
   } = hooksFormContainer.useContainer();
 
   const {
+    prerequisites,
     handlecChangePrerequisite,
     handleDeletePrerequisite,
   } = prerequisiteContainer.useContainer();
@@ -181,6 +207,19 @@ const PrerequisiteItem = (props: IProps) => {
     return existingToggle?.returnType;
   }, [prerequisiteToggles]);
 
+  const checkExistToggles = useCallback(() => {
+    clearErrors();
+    const existingPrerequite = findRecordsByField<IPrerequisite, 'key'>(prerequisites, 'key');
+    existingPrerequite?.map((pre: IPrerequisite) => {
+      setError(
+        `prerequisite_${pre.id}_toggle`, 
+        {
+          message: intl.formatMessage({id: 'prerequisite.toggle.duplicate'}),
+        }
+      );
+    });
+  }, [clearErrors, intl, prerequisites, setError]);
+
   const handleDelete = useCallback((e: SyntheticEvent) => {
     e.stopPropagation();
 
@@ -196,8 +235,18 @@ const PrerequisiteItem = (props: IProps) => {
         clearErrors(key);
       }
     }
+
     handleDeletePrerequisite(index);
-  }, [handleDeletePrerequisite, index, getValues, item?.id, unregister, clearErrors, errors]);
+    checkExistToggles();
+  }, [checkExistToggles, handleDeletePrerequisite, index, getValues, item?.id, unregister, clearErrors, errors]);
+
+  const handleChangeToggle = useCallback(async (detail: DropdownProps) => {
+    const type = getToggleType(detail.value as string);
+    handlecChangePrerequisite(index, detail.value, type, null);
+    setValue(detail.name, detail.value);
+    await trigger(`prerequisite_${item?.id}_toggle`);
+    checkExistToggles();
+  }, [getToggleType, handlecChangePrerequisite, index, setValue, trigger, item?.id, checkExistToggles]);
   
   return (
     <div className={styles.title}>
@@ -215,10 +264,7 @@ const PrerequisiteItem = (props: IProps) => {
           icon={<Icon customclass={'angle-down'} type='angle-down' />}
           error={ errors[`prerequisite_${item?.id}_toggle`] ? true : false }
           onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
-            const type = getToggleType(detail.value as string);
-            handlecChangePrerequisite(index, detail.value, type, null);
-            setValue(detail.name, detail.value);
-            await trigger(`prerequisite_${item?.id}_toggle`);
+            handleChangeToggle(detail);
           }}
         />
         {errors[`prerequisite_${item?.id}_toggle`] && (

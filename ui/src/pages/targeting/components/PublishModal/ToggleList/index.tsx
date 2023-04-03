@@ -1,11 +1,11 @@
 import { SyntheticEvent } from 'react';
-import { Table, PaginationProps, Popup } from 'semantic-ui-react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { Table, PaginationProps } from 'semantic-ui-react';
+import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
-import { IToggle } from 'interfaces/segment';
 import TextLimit from 'components/TextLimit';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
 import CustomPagination from 'components/Pagination';
+import { IPrerequisiteToggle } from 'interfaces/prerequisite';
 
 import styles from './index.module.scss';
 
@@ -17,14 +17,12 @@ interface IPagination {
 interface IProps {
   total: number;
   pagination: IPagination;
-  toggleList: IToggle[];
+  toggleList: IPrerequisiteToggle[];
   handlePageChange(e: SyntheticEvent, data: PaginationProps): void;
-  handleGotoToggle(env: string, toggleKey: string): void;
 }
 
 const ToggleList = (props: IProps) => {
-  const { toggleList, total, pagination, handlePageChange, handleGotoToggle } = props;
-  const intl = useIntl();
+  const { toggleList, total, pagination, handlePageChange } = props;
 
   return (
     <div>
@@ -41,34 +39,15 @@ const ToggleList = (props: IProps) => {
         </Table.Header>
         <Table.Body className={styles['table-body']}>
           {
-            toggleList?.map((toggle: IToggle) => {
+            toggleList?.map((toggle: IPrerequisiteToggle) => {
               const listItem = classNames(styles['list-item'], {
                 [styles['list-item-enabled']]: !toggle.disabled,
               });
 
               return (
-                <Table.Row
-                  key={toggle.key}
-                  className={listItem}
-                  onClick={() => {
-                    handleGotoToggle(toggle.environmentKey, toggle.key);
-                  }}
-                >
+                <Table.Row key={toggle.key} className={listItem}>
                   <Table.Cell>
                     <div className={styles['toggle-info']}>
-                      {
-                        toggle.analyzing && (
-                          <Popup
-                            inverted
-                            className='popup-override'
-                            trigger={
-                              <img src={require('images/collect.gif')} className={styles.analysis} alt='collect' />
-                            }
-                            content={intl.formatMessage({id: 'analysis.ongoing'})}
-                            position='top center'
-                          />
-                        )
-                      }
                       <div className={styles['toggle-info-name']}>
                         <TextLimit text={toggle.name} maxWidth={150} />
                       </div>
@@ -85,11 +64,6 @@ const ToggleList = (props: IProps) => {
                         </CopyToClipboardPopup>
                       </div>
                     </div>
-                    {toggle.description && (
-                      <div className={styles['toggle-info-description']}>
-                        <TextLimit text={toggle.description} maxWidth={242} />
-                      </div>
-                    )}
                   </Table.Cell>
                   <Table.Cell>
                     {toggle?.disabled ? (

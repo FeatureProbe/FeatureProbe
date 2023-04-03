@@ -22,8 +22,9 @@ import { I18NRules, RulesDiffContent } from 'components/Diff/RulesDiffContent';
 import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
 import PrerequisitesDiffContent from 'components/Diff/PrerequisitesDiffContent';
 import message from 'components/MessageBox';
-import { approveToggle, saveToggle } from 'services/toggle';
+import { approveToggle, saveToggle, getPrerequisiteDependencies } from 'services/toggle';
 import { IRouterParams } from 'interfaces/project';
+import { IPrerequisiteToggle, IPrerequisiteToggleList } from 'interfaces/prerequisite';
 
 import {
   IApprovalInfo,
@@ -51,6 +52,11 @@ interface IProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+interface ISearchParams {
+  pageIndex: number;
+  pageSize: number;
+}
+
 const PublishModal = (props: IProps) => {
   const {
     open,
@@ -66,15 +72,21 @@ const PublishModal = (props: IProps) => {
   } = props;
 
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
-  const [comment, saveComment] = useState<string>('');
-  const [options, saveOptions] = useState<IOption[]>();
-  const [isCollect, saveIsCollect] = useState<string>('');
-  const [isDiffChange, saveIsDiffChange] = useState<boolean>(false);
-  const [isToggleShow, saveToggleShow] = useState<boolean>(false);
-  const [pagination, setPagination] = useState({
+  const [ comment, saveComment ] = useState<string>('');
+  const [ options, saveOptions ] = useState<IOption[]>();
+  const [ isCollect, saveIsCollect ] = useState<string>('');
+  const [ isDiffChange, saveIsDiffChange ] = useState<boolean>(false);
+  const [ isToggleShow, saveToggleShow ] = useState<boolean>(false);
+  const [ pagination, setPagination ] = useState({
     pageIndex: 1,
     totalPages: 1,
   });
+  const [ total, saveTotal ] = useState<number>(0);
+  const [ searchParams, setSearchParams ] = useState<ISearchParams>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
+  const [ toggles, saveToggles ] = useState<IPrerequisiteToggle[]>([]);
   const intl = useIntl();
   const history = useHistory();
   const {
@@ -84,6 +96,24 @@ const PublishModal = (props: IProps) => {
     setValue,
     clearErrors,
   } = useForm();
+
+  useEffect(() => {
+    if (open) {
+      getPrerequisiteDependencies<IPrerequisiteToggleList>(projectKey, environmentKey, toggleKey, searchParams).then(res => {
+        const { success, data } = res;
+        if (success && data) {
+          const { content, pageable, totalPages, totalElements } = data;
+          saveToggles(content);
+          setPagination({
+            pageIndex: (pageable?.pageNumber || 0) + 1,
+            totalPages: totalPages || 1,
+          });
+          saveTotal(totalElements || 0);
+          return;
+        } 
+      });
+    }
+  }, [environmentKey, open, projectKey, searchParams, toggleKey]);
 
   useEffect(() => {
     register('reason', {
@@ -298,18 +328,11 @@ const PublishModal = (props: IProps) => {
   }, [open, beforeRuleDiff, initialTargeting, publishTargeting]);
 
   const handlePageChange = useCallback((e: SyntheticEvent, data: PaginationProps) => {
-    // fetchToggleList(currentSegmentKey, {
-    //   pageIndex: Number(data.activePage) - 1,
-    //   pageSize: 5,
-    // });
-  }, []);
-
-  const handleGotoToggle = useCallback(
-    (envKey: string, toggleKey: string) => {
-      window.open(`/${projectKey}/${envKey}/${toggleKey}/targeting`);
-    },
-    [projectKey]
-  );
+    setSearchParams({
+      ...searchParams,
+      pageIndex: Number(data.activePage) - 1,
+    });
+  }, [searchParams]);
 
   return (
     <Modal open={open} width={800} handleCancel={handlePublishCancel} handleConfirm={handlePublishConfirm}>
@@ -329,45 +352,48 @@ const PublishModal = (props: IProps) => {
               </div>
             )
           }
-          <div className={styles['prerequisite-tips']}>
-            <div
-              className={styles['prerequisite-tips-title']}
-              onClick={() => {
-                saveToggleShow(!isToggleShow);
-              }}
-            >
-              <div className={styles['prerequisite-tips-left']}>
-                <Icon type='warning-circle' customclass={styles['prerequisite-circle']} />
+          {
+            total > 0 && (
+              <div className={styles['prerequisite-tips']}>
+                <div
+                  className={styles['prerequisite-tips-title']}
+                  onClick={() => {
+                    saveToggleShow(!isToggleShow);
+                  }}
+                >
+                  <div className={styles['prerequisite-tips-left']}>
+                    <Icon type='warning-circle' customclass={styles['prerequisite-circle']} />
+                    {
+                      intl.formatMessage({
+                        id: 'targeting.publish.prerequisite.tips'
+                      }, {
+                        toggle: total,
+                      })
+                    }
+                  </div>
+                  {
+                    isToggleShow ? (
+                      <Icon customclass={styles['icon-accordion']} type="angle-up" />
+                    ) : (
+                      <Icon customclass={styles['icon-accordion']} type="angle-down" />
+                    )
+                  }
+                </div>
                 {
-                  intl.formatMessage({
-                    id: '该开关正在被以下1个开关作为前置条件使用，开关变更有可能会影响进入以下开关的流量。'
-                  }, {
-                    toggle: 1,
-                  })
+                  isToggleShow && (
+                    <div className={styles['prerequisite-toggles']}>
+                      <ToggleList 
+                        total={total}
+                        pagination={pagination}
+                        toggleList={toggles}
+                        handlePageChange={handlePageChange}
+                      />
+                    </div>
+                  )
                 }
               </div>
-              {
-                isToggleShow ? (
-                  <Icon customclass={styles['icon-accordion']} type="angle-up" />
-                ) : (
-                  <Icon customclass={styles['icon-accordion']} type="angle-down" />
-                )
-              }
-            </div>
-            {
-              isToggleShow && (
-                <div className={styles['prerequisite-toggles']}>
-                  <ToggleList 
-                    total={1}
-                    pagination={pagination}
-                    toggleList={[]}
-                    handlePageChange={handlePageChange}
-                    handleGotoToggle={handleGotoToggle}
-                  />
-                </div>
-              )
-            }
-          </div>
+            )
+          }
           <Diff
             sections={[
               {

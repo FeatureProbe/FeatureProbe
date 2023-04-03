@@ -254,3 +254,77 @@
   margin-top: 8px;
   margin-left: 40px;
 }
+
+.prerequisite-modal-content {
+  position: relative;
+}
+
+.warning-circle {
+  font-size: 20px !important;
+  color: #f5483b;
+  padding: 0 10px;
+}
+
+.modal-inner-box {
+  min-height: 405px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: PingFangSC-Medium, sans-serif;
+  font-size: 16px;
+  color: #212529;
+  height: 25px;
+  margin-bottom: 9px;
+}
+
+.modal-header-icon {
+  font-size: 16px !important;
+  cursor: pointer;
+  color: #495057;
+}
+
+.modal-info-circle {
+  font-size: 17px;
+  color: #ffc300;;
+  margin-right: 9px;
+}
+
+.modal-tips {
+  height: 36px;
+  background: #fffae0;;
+  font-size: 14px;
+  color: #660e16;
+  line-height: 36px;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.modal-not-delete-content {
+  padding: 24px;
+  background: #f8f9fa;
+  border-radius: 0 0 6px 6px;
+
+  :global {
+    .ui.table td {
+      padding: 0 !important;
+    }
+    
+    .ui.pagination.menu {
+      background-color: transparent;
+    }
+  }
+}
+
+.modal-footer {
+  display: flex;
+  height: 43px;
+  justify-content: flex-end;
+  align-items: flex-end;
+  border-top: 1px solid #ced4da;
+
+  & > button {
+    margin-left: 8px !important;
+  }
+}

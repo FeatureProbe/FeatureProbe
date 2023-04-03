@@ -332,3 +332,23 @@ export const getPrerequisiteToggle = async<T> (projectKey: string, environmentKe
     },
   });
 };
+
+export const getPrerequisiteDependencies = async<T> (projectKey: string, environmentKey: string, toggleKey: string, params: {
+  pageIndex: number;
+  pageSize: number;
+}) => {
+  const url = `${
+    API.getDependentPrerequisteToggleURI
+      .replace(':projectKey', projectKey)
+      .replace(':environmentKey', environmentKey)
+      .replace(':toggleKey', toggleKey)
+  }?${qs.stringify(params)}`;
+  
+  return request<T>(url, {
+    method: 'GET',
+    headers: {
+      ...ApplicationJson()
+    },
+  });
+};
+

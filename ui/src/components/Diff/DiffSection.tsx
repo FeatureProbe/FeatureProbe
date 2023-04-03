@@ -27,11 +27,8 @@ const DiffSection: React.FC<DiffSectionProps> = (props) => {
 
     const diffContent = before && after ? idiff(left, right) : undefined;
 
-    if (diffKey === 'prerequisites') {
-      console.log(diffContent);
-    }
     return diffContent;
-  }, [beforeDiff, before, after, diffKey]);
+  }, [beforeDiff, before, after]);
 
   useEffect(() => {
     let modifyCount = 0;

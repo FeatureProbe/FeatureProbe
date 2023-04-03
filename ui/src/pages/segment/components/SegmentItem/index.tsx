@@ -182,20 +182,24 @@ const ToggleItem = (props: IProps) => {
           return buttons;
         }}
       />
-      <Modal open={canNotDeleteOpen} width={800} footer={
-        <div className={styles['modal-footer']}>
-          <Button
-            key="confirm"
-            primary
-            onClick={async (e: SyntheticEvent) => {
-              e.stopPropagation();
-              setCanNotDeleteOpen(false);
-            }}
-          >
-            <FormattedMessage id="common.confirm.text" />
-          </Button>
-        </div>
-      }>
+      <Modal
+        open={canNotDeleteOpen}
+        width={800} 
+        footer={
+          <div className={styles['modal-footer']}>
+            <Button
+              key="confirm"
+              primary
+              onClick={async (e: SyntheticEvent) => {
+                e.stopPropagation();
+                setCanNotDeleteOpen(false);
+              }}
+            >
+              <FormattedMessage id="common.confirm.text" />
+            </Button>
+          </div>
+        }
+      >
         <div className={styles['modal-inner-box']}>
           <div className={styles['modal-header']}>
             <span>
