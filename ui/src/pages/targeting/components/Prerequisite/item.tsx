@@ -121,6 +121,7 @@ const PrerequisiteItem = (props: IProps) => {
     }
   }, [intl, item?.id, item?.key, item?.value, prerequisiteToggles, setError]);
 
+  // Make toggle Dropdown options
   const getToggleOptions = useCallback(() => {
     const options: IOption[] = [];
 
@@ -181,6 +182,7 @@ const PrerequisiteItem = (props: IProps) => {
     return options;
   }, [prerequisiteToggles, intl]);
 
+  // Make return value Dropdown options
   const getToggleValueOptions = useCallback(() => {
     const options: IOption[] = [];
 
@@ -254,7 +256,14 @@ const PrerequisiteItem = (props: IProps) => {
     return existingToggle?.returnType;
   }, [prerequisiteToggles]);
 
+  // When change toggle or remve prerequisite, check duplicate toggle
   const checkExistToggles = useCallback(() => {
+    for(const key in errors) {
+      if (key.endsWith('_toggle')) {
+        clearErrors(key);
+      }
+    }
+
     const existingPrerequite = findRecordsByField<IPrerequisite, 'key'>(prerequisites, 'key');
     existingPrerequite?.map((pre: IPrerequisite) => {
       setError(
@@ -264,8 +273,9 @@ const PrerequisiteItem = (props: IProps) => {
         }
       );
     });
-  }, [intl, prerequisites, setError]);
+  }, [clearErrors, errors, intl, prerequisites, setError]);
 
+  // Delete prerequisite
   const handleDelete = useCallback((e: SyntheticEvent) => {
     e.stopPropagation();
 
@@ -286,13 +296,17 @@ const PrerequisiteItem = (props: IProps) => {
     checkExistToggles();
   }, [checkExistToggles, handleDeletePrerequisite, index, getValues, item?.id, unregister, clearErrors, errors]);
 
+  // Change toggle
   const handleChangeToggle = useCallback(async (detail: DropdownProps) => {
     const type = getToggleType(detail.value as string);
     handlecChangePrerequisite(index, detail.value, type, null);
     setValue(detail.name, detail.value);
+    if (errors[`prerequisite_${item?.id}_returnValue`]) {
+      clearErrors(`prerequisite_${item?.id}_returnValue`);
+    }
     await trigger(`prerequisite_${item?.id}_toggle`);
     checkExistToggles();
-  }, [getToggleType, handlecChangePrerequisite, index, setValue, trigger, item?.id, checkExistToggles]);
+  }, [getToggleType, handlecChangePrerequisite, index, setValue, errors, item?.id, trigger, checkExistToggles, clearErrors]);
   
   return (
     <div className={styles.title}>
