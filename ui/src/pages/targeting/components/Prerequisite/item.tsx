@@ -10,6 +10,7 @@ import styles from './index.module.scss';
 interface IProps {
   item?: IPrerequisite;
   index: number;
+  disabled?: boolean;
   prerequisiteToggles?: IToggleInfo[];
 }
 
@@ -53,7 +54,7 @@ function findRecordsByField<T, K extends keyof T>(
 }
 
 const PrerequisiteItem = (props: IProps) => {
-  const { item, index, prerequisiteToggles } = props;
+  const { item, index, disabled, prerequisiteToggles } = props;
   const intl = useIntl();
 
   const {
@@ -79,6 +80,15 @@ const PrerequisiteItem = (props: IProps) => {
         value: true,
         message: intl.formatMessage({id: 'prerequisite.toggle.placeholder'})
       },
+      validate: (value: string) => {
+        const existingPrerequite = prerequisites.filter((pre: IPrerequisite) => {
+          return pre.key === value;
+        });
+        if (existingPrerequite.length > 1) {
+          return intl.formatMessage({id: 'prerequisite.toggle.duplicate'});
+        }
+        return true;
+      }
     });
 
     register(`prerequisite_${item?.id}_returnValue`, {
@@ -86,8 +96,30 @@ const PrerequisiteItem = (props: IProps) => {
         value: true,
         message: intl.formatMessage({id: 'prerequisite.return.value.placeholder'})
       },
+      validate: () => {
+        if (prerequisiteToggles) {
+          const existingToggle = prerequisiteToggles?.find((toggle: IToggleInfo) => toggle.key === item?.key);
+          const existingVariations = existingToggle?.variations.filter((variation: IVariation) => variation.value === item?.value) ?? [];
+          if (existingVariations.length === 0) {
+            return intl.formatMessage({id: 'prerequisite.return.value.not.exist'});
+          }
+        }
+        return true;
+      }
     });
-  }, [intl, item?.id, register]);
+  }, [intl, item?.id, item?.key, item?.value, prerequisiteToggles, prerequisites, register, setError]);
+
+  useEffect(() => {
+    if (prerequisiteToggles && item?.key && item?.value) {
+      const existingToggle = prerequisiteToggles?.find((toggle: IToggleInfo) => toggle.key === item?.key);
+      const existingVariations = existingToggle?.variations.filter((variation: IVariation) => variation.value === item?.value) ?? [];
+      if (existingVariations.length === 0) {
+        setError(`prerequisite_${item?.id}_returnValue`, {
+          message: intl.formatMessage({id: 'prerequisite.return.value.not.exist'})
+        });
+      }
+    }
+  }, [intl, item?.id, item?.key, item?.value, prerequisiteToggles, setError]);
 
   const getToggleOptions = useCallback(() => {
     const options: IOption[] = [];
@@ -199,8 +231,23 @@ const PrerequisiteItem = (props: IProps) => {
         });
       }
     }
+
+    if (item?.value && options.find((option: IOption) => option.value === item?.value) === undefined) {
+      options.push({
+        key: item.value,
+        value: item.value,
+        text: item.value,
+        content: (
+          <div>
+            <div className={styles['dropdown-value']}>
+              {item?.value}
+            </div>
+          </div>
+        )
+      });
+    }
     return options;
-  }, [prerequisiteToggles, item?.key]);
+  }, [prerequisiteToggles, item?.value, item?.key]);
 
   const getToggleType = useCallback((toggleKey: string) => {
     const existingToggle = prerequisiteToggles?.find((toggle: IToggleInfo) => toggle.key === toggleKey);
@@ -208,7 +255,6 @@ const PrerequisiteItem = (props: IProps) => {
   }, [prerequisiteToggles]);
 
   const checkExistToggles = useCallback(() => {
-    clearErrors();
     const existingPrerequite = findRecordsByField<IPrerequisite, 'key'>(prerequisites, 'key');
     existingPrerequite?.map((pre: IPrerequisite) => {
       setError(
@@ -218,7 +264,7 @@ const PrerequisiteItem = (props: IProps) => {
         }
       );
     });
-  }, [clearErrors, intl, prerequisites, setError]);
+  }, [intl, prerequisites, setError]);
 
   const handleDelete = useCallback((e: SyntheticEvent) => {
     e.stopPropagation();
@@ -255,8 +301,9 @@ const PrerequisiteItem = (props: IProps) => {
           fluid 
           selection
           floating
-          search
+          // search
           selectOnBlur={false}
+          disabled={disabled}
           name={`prerequisite_${item?.id}_toggle`}
           value={item?.key}
           placeholder={intl.formatMessage({id: 'prerequisite.toggle.placeholder'})} 
@@ -280,6 +327,7 @@ const PrerequisiteItem = (props: IProps) => {
           floating
           selectOnBlur={false}
           value={item?.value}
+          disabled={disabled}
           name={`prerequisite_${item?.id}_returnValue`}
           placeholder={intl.formatMessage({id: 'prerequisite.return.value.placeholder'})}
           options={getToggleValueOptions()} 
@@ -297,14 +345,18 @@ const PrerequisiteItem = (props: IProps) => {
           </div>
         )}
       </div>
-      <div>
-        <Icon
-          type='minus'
-          customclass={styles['icon-minus']}
-          onClick={(e: SyntheticEvent) => {
-            handleDelete(e);
-          }}
-        />
+      <div className={styles['title-remove']}>
+        {
+          disabled ? null : (
+            <Icon
+              type='minus'
+              customclass={styles['icon-minus']}
+              onClick={(e: SyntheticEvent) => {
+                handleDelete(e);
+              }}
+            />
+          )
+        }
       </div>
     </div>
   );

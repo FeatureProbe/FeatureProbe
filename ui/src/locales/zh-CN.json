@@ -664,6 +664,7 @@
   "prerequisite.add": "添加前置条件",
   "prerequisite.toggle.placeholder": "请选择依赖的开关",
   "prerequisite.return.value.placeholder": "请选择返回值",
+  "prerequisite.return.value.not.exist": "该返回值已不存在，请尽快更换",
   "prerequisite.json.not.support": "暂不支持JSON类型的开关作为前置条件",
   "prerequisite.toggle.duplicate": "开关重复，请重新选择"
 }

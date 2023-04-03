@@ -9,11 +9,12 @@ import { IPrerequisite, IToggleInfo } from 'interfaces/targeting';
 import styles from './index.module.scss';
 
 interface IProps {
+  disabled?: boolean;
   prerequisiteToggles?: IToggleInfo[];
 }
 
 const Prerequisite = (props: IProps) => {
-  const { prerequisiteToggles } = props;
+  const { disabled, prerequisiteToggles } = props;
 
   const { 
     prerequisites,
@@ -46,6 +47,7 @@ const Prerequisite = (props: IProps) => {
               key={index}
               item={item}
               index={index}
+              disabled={disabled}
               prerequisiteToggles={prerequisiteToggles}
             />
           );
@@ -57,6 +59,7 @@ const Prerequisite = (props: IProps) => {
           primary
           type='button'
           className={styles['add-btn']}
+          disabled={disabled}
           onClick={addPrerequisite}
         >
           <Icon type='add' customclass={styles.iconfont} />

@@ -225,33 +225,22 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
       delete variation.id;
     });
 
-    const requestPrerequisites = cloneDeep(prerequisites);
+    const requestPrerequisites = cloneDeep(prerequisites) ?? [];
     requestPrerequisites.forEach((prerequisite: IPrerequisite) => {
       delete prerequisite.id;
     });
 
-    if (requestPrerequisites.length > 0) {
-      setPublishTargeting({
-        disabled: toggleDisabled,
-        content: {
-          rules: requestRules,
-          disabledServe,
-          defaultServe,
-          variations: requestVariations,
-          prerequisites: requestPrerequisites,
-        },
-      });
-    } else {
-      setPublishTargeting({
-        disabled: toggleDisabled,
-        content: {
-          rules: requestRules,
-          disabledServe,
-          defaultServe,
-          variations: requestVariations,
-        },
-      });
-    }
+    setPublishTargeting({
+      disabled: toggleDisabled,
+      content: {
+        rules: requestRules,
+        disabledServe,
+        defaultServe,
+        variations: requestVariations,
+        prerequisites: requestPrerequisites,
+      },
+    });
+   
   }, [toggleDisabled, rules, variations, defaultServe, disabledServe, prerequisites]);
 
   useEffect(() => {
@@ -377,6 +366,7 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
             tooltipText={intl.formatMessage({ id: 'common.prerequisite.description' })}
           />
           <Prerequisite
+            disabled={disabled}
             prerequisiteToggles={prerequisiteToggles}
           />
         </div>

@@ -1,6 +1,6 @@
 .prerequisite {
   color: #495057;
-  padding: 16px;
+  padding: 16px 4px 16px 16px;
 }
 
 .title {
@@ -9,7 +9,7 @@
 }
 
 .prerequisite-title {
-  margin-right: 32px;
+  margin-right: 28px;
 }
 
 .title-left {
@@ -19,6 +19,10 @@
 
 .title-right {
   flex: 1;
+}
+
+.title-remove {
+  width: 28px;
 }
 
 .add {
@@ -71,7 +75,6 @@
   color: #556ee6;
   font-size: 12px;
   padding: 0 5px;
-  // margin-right: 48px;
 }
 
 .disabled-tag {
@@ -83,7 +86,6 @@
   color: #a9afbc;
   font-size: 12px;
   padding: 0 5px;
-  // margin-right: 48px;
 }
 
 .dropdown-value {
