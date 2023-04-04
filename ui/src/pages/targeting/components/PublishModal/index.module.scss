@@ -115,19 +115,19 @@
 }
 
 .prerequisite-tips {
-    margin: 0 24px 24px;
+  margin: 0 24px 24px;
 
-    &-title {
-      display: flex;
-      align-items: center;
-      background: #fffae0;
-      color: #660e16;
-      border-radius: 6px;
-      font-size: 12px;
-      line-height: 1;
-      padding: 7px 0;
-      cursor: pointer;
-    }
+  &-title {
+    display: flex;
+    align-items: center;
+    background: #fffae0;
+    color: #660e16;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1;
+    padding: 7px 0;
+    cursor: pointer;
+  }
 
   &-left {
     flex: 1;
@@ -136,7 +136,7 @@
 
 .prerequisite-circle {
   font-size: 17px !important;
-  color: #FFC300;
+  color: #ffc300;
   margin: 0 8px 0 14px;
 }
 
@@ -149,7 +149,6 @@
     .ui.table td {
       padding: 0 !important;
     }
-    
     .ui.pagination.menu {
       background-color: transparent;
     }

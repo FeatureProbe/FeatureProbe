@@ -259,12 +259,6 @@
   position: relative;
 }
 
-.warning-circle {
-  font-size: 20px !important;
-  color: #f5483b;
-  padding: 0 10px;
-}
-
 .modal-inner-box {
   min-height: 405px;
 }
@@ -287,13 +281,13 @@
 
 .modal-info-circle {
   font-size: 17px;
-  color: #ffc300;;
+  color: #ffc300;
   margin-right: 9px;
 }
 
 .modal-tips {
   height: 36px;
-  background: #fffae0;;
+  background: #fffae0;
   font-size: 14px;
   color: #660e16;
   line-height: 36px;
@@ -310,7 +304,6 @@
     .ui.table td {
       padding: 0 !important;
     }
-    
     .ui.pagination.menu {
       background-color: transparent;
     }
