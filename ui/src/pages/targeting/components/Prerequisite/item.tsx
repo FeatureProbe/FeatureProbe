@@ -59,8 +59,6 @@ const PrerequisiteItem = (props: IProps) => {
   const { item, index, disabled, prerequisiteToggles } = props;
   const intl = useIntl();
 
-  console.log('item----', item);
-
   const {
     formState: { errors },
     setValue,

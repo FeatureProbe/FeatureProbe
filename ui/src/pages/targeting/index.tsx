@@ -312,12 +312,11 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     setOpen(true);
   }, [intl, size, sizeState, validateForm]);
 
-  const onError = useCallback(() => {
+  const onError = useCallback((errors) => {
+    console.log('errors--', errors);
     validateForm();
     scrollToError();
   }, [scrollToError, validateForm]);
-
-  console.log(errors);
 
   const disabledText = useMemo(() => {
     if (variations[disabledServe.select]) {
