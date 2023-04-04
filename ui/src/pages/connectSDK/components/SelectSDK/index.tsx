@@ -116,7 +116,7 @@ const SelectSDK = (props: IProps) => {
                       {
                         (eventInfo?.eventType !== PAGE_VIEW && eventInfo?.eventType !== CLICK) && (
                           <>
-                            <Dropdown.Header content={intl.formatMessage({id: 'connect.second.server.sdks'})} />
+                            <Dropdown.Header className={styles['sdk-title']} content={intl.formatMessage({id: 'connect.second.server.sdks'})} />
                             <Dropdown.Divider />
                             {
                               SERVER_SIDE_SDKS.map((sdk: IOption) => {
@@ -138,7 +138,7 @@ const SelectSDK = (props: IProps) => {
                           </>
                         )
                       }
-                      <Dropdown.Header content={intl.formatMessage({id: 'connect.second.client.sdks'})} />
+                      <Dropdown.Header className={styles['client-sdk-title']} content={intl.formatMessage({id: 'connect.second.client.sdks'})} />
                         <Dropdown.Divider />
                         {
                           (

@@ -5,7 +5,7 @@ import Icon from 'components/Icon';
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import { IDictionary } from 'interfaces/targeting';
-import { FLOW_EXPLAIN } from 'constants/dictionary_keys';
+import { FLOW_EXPLAIN } from 'constants/dictionaryKeys';
 
 import styles from './index.module.scss';
 

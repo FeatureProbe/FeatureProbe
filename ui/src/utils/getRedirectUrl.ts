@@ -2,7 +2,7 @@ import { getProjectList } from 'services/project';
 import { IProject, IEnvironment } from 'interfaces/project';
 import { IDictionary } from 'interfaces/targeting';
 import { getFromDictionary } from 'services/dictionary';
-import { LAST_SEEN } from 'constants/dictionary_keys';
+import { LAST_SEEN } from 'constants/dictionaryKeys';
 
 const getInfo = async () => {
   const res =  await getFromDictionary<IDictionary>(LAST_SEEN);

@@ -3,7 +3,7 @@ import Joyride, { CallBackProps, EVENTS, ACTIONS, Step } from 'react-joyride';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
 import { getFromDictionary, saveDictionary } from 'services/dictionary';
-import { USER_GUIDE_LAYOUT, USER_GUIDE_TARGETING } from 'constants/dictionary_keys';
+import { USER_GUIDE_LAYOUT, USER_GUIDE_TARGETING } from 'constants/dictionaryKeys';
 import { IDictionary } from 'interfaces/targeting';
 
 const STEPS: Step[] = [

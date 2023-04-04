@@ -15,7 +15,7 @@ import { OWNER } from 'constants/auth';
 import { getFromDictionary, saveDictionary } from 'services/dictionary';
 import EventTracker from 'components/EventTracker';
 import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
-import { USER_GUIDE_PROJECT } from 'constants/dictionary_keys';
+import { USER_GUIDE_PROJECT } from 'constants/dictionaryKeys';
 import { IDictionary } from 'interfaces/targeting';
 
 import styles from './index.module.scss';

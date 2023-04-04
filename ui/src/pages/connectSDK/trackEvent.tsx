@@ -226,7 +226,7 @@ const AccessEvent = () => {
                 <div className={styles['intro-info']}>
                   <div className={styles['card-item']}>
                     <div className={styles['card-title']}>
-                      <FormattedMessage id='common.project.text' /> :
+                      <FormattedMessage id='common.project.text' />:
                     </div>
                     <div className={styles['card-value']}>
                       { projectName }
@@ -234,7 +234,7 @@ const AccessEvent = () => {
                   </div>
                   <div className={styles['card-item']}>
                     <div className={styles['card-title']}>
-                      <FormattedMessage id='common.environment.text' /> :
+                      <FormattedMessage id='common.environment.text' />:
                     </div>
                     <div className={styles['card-value']}>
                       { environmentName }
@@ -242,21 +242,27 @@ const AccessEvent = () => {
                   </div>
                   <div className={styles['card-item']}>
                     <div className={styles['card-title']}>
-                      <FormattedMessage id='common.event.uppercase.text' /> :
+                      <FormattedMessage id='analysis.event.type' />:
                     </div>
                     <div className={styles['card-value']}>
-                      {
-                        eventInfo?.eventType == CUSTOM && (
-                          <span>
-                            <FormattedMessage id='analysis.event.custom' />
-                            -
-                            { eventInfo?.eventName }
-                          </span>
-                        )
-                      }
+                      { eventInfo?.eventType == CUSTOM && <FormattedMessage id='analysis.event.custom' /> }
                       { eventInfo?.eventType == PAGE_VIEW && <FormattedMessage id='analysis.event.pageview' /> }
                       { eventInfo?.eventType == CLICK && <FormattedMessage id='analysis.event.click' /> }
                     </div>
+                  </div>
+                  <div className={styles['card-item']}>
+                    {
+                      eventInfo?.eventType == CUSTOM && (
+                        <>
+                          <div className={styles['card-title']}>
+                            <FormattedMessage id='analysis.event.name' />:
+                          </div>
+                          <div className={styles['card-value']}>
+                            { eventInfo?.eventName }
+                          </div>
+                        </>
+                      )
+                    }
                   </div>
                 </div>
               </div>
@@ -294,6 +300,7 @@ const AccessEvent = () => {
                 <TestConnection 
                  isLoading={isTrackLoading}
                  projectKey={projectKey}
+                 currentSDK={currentSDK}
                  environmentKey={environmentKey}
                  toggleKey={toggleKey}
                  currentStep={currentStep}

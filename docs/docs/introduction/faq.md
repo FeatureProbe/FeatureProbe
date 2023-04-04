@@ -25,7 +25,7 @@ Here are some common problems and solutions during the use of FeatureProbe.
 
 - FeatureProbe provides Open API to manage information such as projects, toggles (query, create, modify, publish, etc.) and environments, covering all operations on the current FeatureProbe management platform. See [OpenAPI Documentation](https://featureprobe.io/api-docs) for details.
 
-### 1.4 How to solve “You have no applications connected using this SDK Key” in user guidance of SDK initialization?
+### 1.4 How to solve "You have no X applications listening for SDK events for X in the X environment" in user guidance of SDK initialization?
 
 - Check whether `RemoteURL` and `ServerSdkKey` or `ClientSdkKey` are consistent with the environment where the current access toggle is located:
 
@@ -203,7 +203,7 @@ Here are some common problems and solutions during the use of FeatureProbe.
 
 
 
-### 1.5 How to solve "You don't have any application listening for the X event in X environment"?
+### 1.5 How to solve "You have no X applications listening for X event in the X environment" in user guidance of tracking events?
 
 <!-- - Please make sure that the test application displays "✅ Event tracked successfully" first. If you receive a prompt saying "You don't have any application with successful SDK key connection", please follow the troubleshooting steps corresponding to section [1.4](/introduction/faq#14-how-to-solve-you-have-no-applications-connected-using-this-sdk-key-in-user-guidance-of-sdk-initialization) first. -->
 

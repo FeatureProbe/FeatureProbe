@@ -34,7 +34,7 @@ import { saveDictionary, getFromDictionary } from 'services/dictionary';
 
 import { useFormErrorScrollIntoView, useRequestTimeCheck } from 'hooks';
 import { commonConfig, floaterStyle, tourStyle } from 'constants/tourConfig';
-import { USER_GUIDE_TOGGLE } from 'constants/dictionary_keys';
+import { USER_GUIDE_TOGGLE } from 'constants/dictionaryKeys';
 import styles from './index.module.scss';
 
 interface IParams {

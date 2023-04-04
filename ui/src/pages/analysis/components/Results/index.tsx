@@ -25,6 +25,7 @@ import { CUSTOM, CONVERSION, CLICK, PAGE_VIEW, SUM, AVERAGE, COUNT } from '../..
 import { useQuery } from 'hooks';
 
 import styles from './index.module.scss';
+import { DOC_FAQ_NO_EVENT_EN, DOC_FAQ_NO_EVENT_ZH, DOC_FAQ_NO_JOIN_EN, DOC_FAQ_NO_JOIN_ZH, DOC_FAQ_NO_RECORD_EN, DOC_FAQ_NO_RECORD_ZH } from 'constants/docAddress';
 
 interface IProps {
   eventInfo?: IEvent;
@@ -170,21 +171,21 @@ const Results = (props: IProps) => {
   const handleViewReason = useCallback(() => {
     if (errCode === '460' || errCode === '462') {
       if (intl.locale === 'en-US') {
-        window.open('https://docs.featureprobe.io/introduction/faq/#31-no-variation-records');
+        window.open(DOC_FAQ_NO_RECORD_EN);
       } else {
-        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq/#31-%E6%97%A0%E5%88%86%E6%B5%81%E6%95%B0%E6%8D%AE');
+        window.open(DOC_FAQ_NO_RECORD_ZH);
       }
     } else if (errCode === '461') {
       if (intl.locale === 'en-US') {
-        window.open('https://docs.featureprobe.io/introduction/faq/#32-no-event-records');
+        window.open(DOC_FAQ_NO_EVENT_EN);
       } else {
-        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq/#32-%E6%97%A0%E4%BA%8B%E4%BB%B6%E6%95%B0%E6%8D%AE');
+        window.open(DOC_FAQ_NO_EVENT_ZH);
       }
     } else if (errCode === '463') {
       if (intl.locale === 'en-US') {
-        window.open('https://docs.featureprobe.io/introduction/faq/#33-no-join-records');
+        window.open(DOC_FAQ_NO_JOIN_EN);
       } else {
-        window.open('https://docs.featureprobe.io/zh-CN/introduction/faq/#33-%E6%97%A0join%E6%95%B0%E6%8D%AE');
+        window.open(DOC_FAQ_NO_JOIN_ZH);
       }
     }
   }, [errCode, intl.locale]);
