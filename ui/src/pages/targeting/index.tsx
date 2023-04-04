@@ -317,6 +317,8 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
     scrollToError();
   }, [scrollToError, validateForm]);
 
+  console.log(errors);
+
   const disabledText = useMemo(() => {
     if (variations[disabledServe.select]) {
       return variations[disabledServe.select].name || variations[disabledServe.select].value;

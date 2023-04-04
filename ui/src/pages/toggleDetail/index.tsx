@@ -234,9 +234,9 @@ const ToggleDetail = () => {
 
   useEffect(() => {
     if (currentVersion) {
-      setHistoryOpen(true);
       getVersionsByVersion();
       saveRememberVersion(true);
+      setHistoryOpen(true);
     } else {
       saveIsTargetingLoading(true);
       initTargeting();
@@ -327,8 +327,20 @@ const ToggleDetail = () => {
 
   // Reset history if user change environment in left sidebar
   useEffect(() => {
-    resetHistory();
-  }, [environmentKey, resetHistory]);
+    if (environmentKey) {
+      saveTargetingDisabled(false);
+      saveCount(0);
+      saveHistoryPageIndex(0);
+      saveVersions([]);
+    }
+    if (currentVersion) {
+      setHistoryOpen(true);
+      saveRememberVersion(true);
+    } else {
+      setHistoryOpen(false);
+      saveRememberVersion(false);
+    }
+  }, [environmentKey, currentVersion]);
 
   const initHistory = useCallback(() => {
     saveVersions([]);

@@ -59,6 +59,8 @@ const PrerequisiteItem = (props: IProps) => {
   const { item, index, disabled, prerequisiteToggles } = props;
   const intl = useIntl();
 
+  console.log('item----', item);
+
   const {
     formState: { errors },
     setValue,
@@ -90,7 +92,7 @@ const PrerequisiteItem = (props: IProps) => {
           return intl.formatMessage({id: 'prerequisite.toggle.duplicate'});
         }
         return true;
-      }
+      },
     });
 
     register(`prerequisite_${item?.id}_returnValue`, {
@@ -107,9 +109,9 @@ const PrerequisiteItem = (props: IProps) => {
           }
         }
         return true;
-      }
+      },
     });
-  }, [intl, item?.id, item?.key, item?.value, prerequisiteToggles, prerequisites, register, setError]);
+  }, [intl, item?.id, item?.key, item?.value, prerequisiteToggles, prerequisites, register]);
 
   useEffect(() => {
     if (prerequisiteToggles && item?.key && item?.value) {
@@ -121,7 +123,7 @@ const PrerequisiteItem = (props: IProps) => {
         });
       }
     }
-  }, [intl, item?.id, item?.key, item?.value, prerequisiteToggles, setError]);
+  }, [clearErrors, intl, item?.id, item?.key, item?.value, prerequisiteToggles, setError]);
 
   // Make toggle Dropdown options
   const getToggleOptions = useCallback(() => {
@@ -381,6 +383,9 @@ const PrerequisiteItem = (props: IProps) => {
             handlecChangePrerequisite(index, item?.key, item?.type, detail.value);
             setValue(detail.name, detail.value);
             await trigger(`prerequisite_${item?.id}_returnValue`);
+            if (errors[`prerequisite_${item?.id}_returnValue`]) {
+              clearErrors(`prerequisite_${item?.id}_returnValue`);
+            }
           }}
         />
         {errors[`prerequisite_${item?.id}_returnValue`] && (
