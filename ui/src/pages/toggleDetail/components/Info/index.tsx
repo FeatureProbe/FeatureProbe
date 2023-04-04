@@ -4,6 +4,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
+import { cloneDeep } from 'lodash';
 import Diff from 'components/Diff';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
 import Button from 'components/Button';
@@ -24,7 +25,6 @@ import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, IT
 import { IRouterParams } from 'interfaces/project';
 
 import styles from './index.module.scss';
-import { cloneDeep } from 'lodash';
 
 interface IProps {
   toggleInfo?: IToggleInfo;
