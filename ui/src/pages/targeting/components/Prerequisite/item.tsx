@@ -21,12 +21,14 @@ interface IOption {
   type?: string;
   text: ReactNode | string;
   content?: ReactNode | string;
+  children?: ReactNode | string;
 }
 
 interface IMergeVariation {
   value: string;
   name: string;
   descriptions: string[];
+  names: string[];
 }
 
 function findRecordsByField<T, K extends keyof T>(
@@ -129,12 +131,10 @@ const PrerequisiteItem = (props: IProps) => {
       options.push({
         key: toggle.key,
         value: toggle.key,
+        text: toggle.key,
         disabled: toggle.returnType === 'json',
-        text: (
-          <span className={styles['dropdown-toggle']}>
-            <span className={styles['toggle-name']}>
-              {toggle.key}
-            </span>
+        content: (
+          <span>
             {
               toggle.returnType === 'json' ? (
                 <Popup
@@ -142,36 +142,46 @@ const PrerequisiteItem = (props: IProps) => {
                   className={styles.popup}
                   position='top center'
                   trigger={
-                    <div>
-                      {
-                        toggle.disabled ? (
-                          <span className={styles['disabled-tag']}>
-                            {intl.formatMessage({ id: 'common.disabled.text' })}
-                          </span>
-                        ) : (
-                          <span className={styles['enabled-tag']}>
-                            {intl.formatMessage({ id: 'common.enabled.text' })}
-                          </span>
-                        )
-                      }
-                    </div>
+                    <span className={styles['dropdown-toggle']}>
+                      <span className={styles['toggle-name']}>
+                        {toggle.key}
+                      </span>
+                      <span>
+                        {
+                          toggle.disabled ? (
+                            <span className={styles['disabled-tag']}>
+                              {intl.formatMessage({ id: 'common.disabled.text' })}
+                            </span>
+                          ) : (
+                            <span className={styles['enabled-tag']}>
+                              {intl.formatMessage({ id: 'common.enabled.text' })}
+                            </span>
+                          )
+                        }
+                      </span>
+                    </span>
                   }
                   content={<FormattedMessage id='prerequisite.json.not.support' />}
                 />
               ) : (
-                <div>
-                  {
-                    toggle.disabled ? (
-                      <span className={styles['disabled-tag']}>
-                        {intl.formatMessage({ id: 'common.disabled.text' })}
-                      </span>
-                    ) : (
-                      <span className={styles['enabled-tag']}>
-                        {intl.formatMessage({ id: 'common.enabled.text' })}
-                      </span>
-                    )
-                  }
-                </div>
+                <span className={styles['dropdown-toggle']}>
+                  <span className={styles['toggle-name']}>
+                    {toggle.key}
+                  </span>
+                  <span>
+                    {
+                      toggle.disabled ? (
+                        <span className={styles['disabled-tag']}>
+                          {intl.formatMessage({ id: 'common.disabled.text' })}
+                        </span>
+                      ) : (
+                        <span className={styles['enabled-tag']}>
+                          {intl.formatMessage({ id: 'common.enabled.text' })}
+                        </span>
+                      )
+                    }
+                  </span>
+                </span>
               )
             }
           </span>
@@ -199,12 +209,16 @@ const PrerequisiteItem = (props: IProps) => {
             if (variation.description) {
               existingVariation.descriptions.push(variation.description);
             }
+            if (variation.name) {
+              existingVariation.names.push(variation.name);
+            }
           } else {
             if (variation.name && variation.value) {
               mergedVariations.push({
                 value: variation.value,
                 name: variation.name,
-                descriptions: variation.description ? [variation.description] : []
+                descriptions: variation.description ? [variation.description] : [],
+                names: variation.name ? [variation.name] : []
               });
             }
           }
@@ -221,9 +235,12 @@ const PrerequisiteItem = (props: IProps) => {
                   {variation.value}
                 </div>
                 {
-                  variation.descriptions.map((description: string, index: number) => (
-                    <div key={index} className={styles['value-description']}>
-                      {description}
+                  variation.names.map((name: string, index: number) => (
+                    <div key={index} className={styles['value-name']}>
+                      {name}
+                      <span className={styles['value-description']}>
+                        {variation.descriptions[index] ? variation.descriptions[index] : ''}
+                      </span>
                     </div>
                   ))
                 }
@@ -307,7 +324,7 @@ const PrerequisiteItem = (props: IProps) => {
     await trigger(`prerequisite_${item?.id}_toggle`);
     checkExistToggles();
   }, [getToggleType, handlecChangePrerequisite, index, setValue, errors, item?.id, trigger, checkExistToggles, clearErrors]);
-  
+
   return (
     <div className={styles.title}>
       <div className={styles['title-left']}>
@@ -315,19 +332,32 @@ const PrerequisiteItem = (props: IProps) => {
           fluid 
           selection
           floating
-          // search
+          search
           selectOnBlur={false}
           disabled={disabled}
           name={`prerequisite_${item?.id}_toggle`}
           value={item?.key}
           placeholder={intl.formatMessage({id: 'prerequisite.toggle.placeholder'})} 
-          options={getToggleOptions()} 
+          options={getToggleOptions()}
           icon={<Icon customclass={'angle-down'} type='angle-down' />}
           error={ errors[`prerequisite_${item?.id}_toggle`] ? true : false }
           onChange={async (e: SyntheticEvent, detail: DropdownProps) => {
             handleChangeToggle(detail);
           }}
         />
+        <div className={styles['title-left-tag']}>
+          {
+            prerequisiteToggles?.find((toggle: IToggleInfo) => toggle.key === item?.key)?.disabled ? (
+              <span className={styles['disabled-tag']}>
+                {intl.formatMessage({ id: 'common.disabled.text' })}
+              </span>
+            ) : (
+              <span className={styles['enabled-tag']}>
+                {intl.formatMessage({ id: 'common.enabled.text' })}
+              </span>
+            )
+          }
+        </div>
         {errors[`prerequisite_${item?.id}_toggle`] && (
           <div className={'error-text-normal'}>
             {errors[`prerequisite_${item?.id}_toggle`].message}
