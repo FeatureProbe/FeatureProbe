@@ -85,6 +85,10 @@ const TestConnection = (props: IProps) => {
     saveDisplayName(name);
   }, [eventInfo, intl]);
 
+  if (currentSDK) {
+    console.log(SDK_LOGOS[currentSDK]);
+  }
+
   return (
     <div className={styles.step}>
       <div className={styles['step-left']}>

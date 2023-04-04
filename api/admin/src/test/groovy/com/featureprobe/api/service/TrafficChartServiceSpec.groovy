@@ -214,7 +214,7 @@ class TrafficChartServiceSpec extends Specification {
         def isAccess = trafficService.isAccess("projectKey", "dev", "toggleKey", SDKType.Java)
         then:
         1 * environmentRepository.findByProjectKeyAndKey("projectKey", "dev") >> Optional.of(new Environment(serverSdkKey: "123"))
-        1 * trafficRepository.existsBySdkKeyAndToggleKeyAndSdkType("123", "toggleKey", "JAVA") >> true
+        1 * trafficRepository.existsBySdkKeyAndToggleKeyAndSdkType("123", "toggleKey", "Java") >> true
         isAccess
     }
 

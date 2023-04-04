@@ -57,9 +57,13 @@ sidebar_position: 2
       -e spring.datasource.jdbc-url=jdbc:mysql://10.100.1.4:13306/feature_probe \
       -e spring.datasource.username=root \
       -e spring.datasource.password=root \
+      -e app.analysis-url=http://10.100.1.1:4006
+      -e app.server-base-urls=http://10.100.1.1:4009
       --name featureProbeAPI -d featureprobe/api
       
    # 上述 10.100.1.4:13306 为 MySQL Server 的 IP 和端口，请根据实际情况调整
+   # 上述 10.100.1.1:4006 为FeatureProbe Analysis 的IP和端口，请根据实际情况调整
+   # 上述 10.100.1.1:4009 为FeatureProbe Server 的IP和端口，请根据实际情况调整
    ```
    :::info
    API服务更详细的启动参数说明见 [FeatureProbe API 参数说明文档](../../reference/deployment-configuration#featureprobe-api)
@@ -73,15 +77,41 @@ sidebar_position: 2
      -e FP_TOGGLES_URL=http://10.100.1.1:4008/internal/server/toggles \
      -e FP_EVENTS_URL=http://10.100.1.1:4008/internal/server/events \
      -e FP_KEYS_URL=http://10.100.1.1:4008/internal/server/sdk_keys \
+     -e FP_ANALYSIS_URL=http://10.100.1.1:4006/events \
      --name featureProbeServer -d featureprobe/server
      
    # 上述 10.100.1.1:4008 为 FeatureProbe API 服务 IP 和端口，请根据实际情况调整
+   # 上述 10.100.1.1:4006 为 FeatureProbe Analysis 服务 IP 和端口，请根据实际情况调整
    ```
    :::info
    Server服务更详细启动参数说明详见 [FeatureProbe Server 参数说明文档](../../reference/deployment-configuration#featureprobe-server)
    :::
 
-4. 运行 FeatureProbe UI 实例:
+4. 运行 FeatureProbe Analysis 实例：
+
+:::info
+Analysis服务数据库与API数据库是分开的，运行Analysis之前，请先创建一个名为 feature_probe_events 的库, 可以使用上面同一个数据库服务。
+:::
+
+   ```shell
+   CREATE DATABASE IF NOT EXISTS feature_probe_events;
+   ```
+
+   ```bash
+   docker run -p 4006:4006 \
+	   -e server.port=4006 \
+	   -e app.datasource.jdbcUrl=jdbc:mysql://10.100.1.4:13306/feature_probe_events \
+	   -e app.datasource.username=root \
+	   -e app.datasource.password=fp@root \
+	   -e spring.profiles.active=online \
+	   -e JVM_ARGS='-Xmx2048m -Xms2048m' \
+	   -e TZ=Asia/Shanghai \
+	   --name featureProbeAnalysis -d featureprobe/analysis
+     
+   # 上述 10.100.1.4:13306 为 MySQL Server 的 IP 和端口，请根据实际情况调整
+   ```
+
+5. 运行 FeatureProbe UI 实例:
 
    ```bash
    docker run -p 4009:4009 \

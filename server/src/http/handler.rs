@@ -12,6 +12,7 @@ use axum::{
 };
 use feature_probe_event::collector::{EventHandler, FPEventError};
 use feature_probe_server_sdk::{FPUser, Repository, SyncType, Url};
+use log::info;
 use parking_lot::Mutex;
 use reqwest::{
     header::{self, AUTHORIZATION, USER_AGENT},
@@ -25,7 +26,6 @@ use std::{
     sync::Arc,
     time::Duration,
 };
-use log::info;
 use tracing::debug;
 
 #[async_trait]
@@ -73,6 +73,7 @@ pub struct FpHttpHandler {
     pub events_url: Url,
     pub analysis_url: Option<Url>,
     pub events_timeout: Duration,
+    pub prerequisite_deep: u8,
 }
 
 #[async_trait]
@@ -112,7 +113,11 @@ impl HttpHandler for FpHttpHandler {
         TypedHeader(SdkAuthorization(sdk_key)): TypedHeader<SdkAuthorization>,
     ) -> Result<Response, FPServerError> {
         let user = decode_user(params.user)?;
-        match self.repo.client_sdk_eval_string(&sdk_key, &user) {
+        let prerequisite_deep = self.prerequisite_deep;
+        match self
+            .repo
+            .client_sdk_eval_string(&sdk_key, &user, prerequisite_deep)
+        {
             Ok(body) => Ok((StatusCode::OK, cors_headers(), body).into_response()),
             Err(e) => match e {
                 NotReady(_) => {
@@ -211,9 +216,11 @@ impl EventHandler for FpHttpHandler {
             if sdk_key.starts_with("client") {
                 match self.repo.secret_keys().get(sdk_key.as_str()) {
                     Some(key) => key.clone(),
-                    None =>  return Ok((StatusCode::UNAUTHORIZED, cors_headers(), "{}").into_response())
+                    None => {
+                        return Ok((StatusCode::UNAUTHORIZED, cors_headers(), "{}").into_response())
+                    }
                 }
-            } else{
+            } else {
                 sdk_key.clone()
             }
         };
@@ -241,8 +248,6 @@ async fn send_events(
 ) {
     if let Some(analysis_url) = analysis_url {
         let headers = headers.clone();
-        let analysis_url = analysis_url.clone();
-        let timeout = timeout.clone();
         let data = data.clone();
         let http_client = http_client.clone();
         tokio::spawn(async move {
@@ -277,12 +282,12 @@ async fn do_send_events(
     };
 }
 
-fn build_header(headers: HeaderMap, sdk_key: String, user_agent: &String) -> HeaderMap {
+fn build_header(headers: HeaderMap, sdk_key: String, user_agent: &str) -> HeaderMap {
     let ua = headers.get("ua");
     let auth = SdkAuthorization(sdk_key).encode();
     let mut headers = HeaderMap::with_capacity(3);
     headers.append(AUTHORIZATION, auth);
-    if let Ok(v) = HeaderValue::from_str(&user_agent) {
+    if let Ok(v) = HeaderValue::from_str(user_agent) {
         headers.append(USER_AGENT, v);
     }
 

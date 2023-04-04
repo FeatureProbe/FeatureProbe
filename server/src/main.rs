@@ -73,6 +73,7 @@ async fn start(server_config: ServerConfig) -> Result<()> {
             bail!("server config error: {}", e);
         }
     };
+
     tokio::spawn(crate::http::serve_http::<FpHttpHandler>(
         server_port,
         handler,
@@ -123,6 +124,7 @@ fn init_handler(
         events_url: server_config.events_url,
         analysis_url: server_config.analysis_url,
         events_timeout: server_config.refresh_interval,
+        prerequisite_deep: server_config.prerequisite_deep,
     })
 }
 

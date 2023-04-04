@@ -170,7 +170,7 @@ class MetricServiceSpec extends Specification {
         where:
         sdkType       | expectedQuery
         null          | "metric=myMetric"
-        SDKType.Java  | "metric=myMetric&sdkType=JAVA"
+        SDKType.Java  | "metric=myMetric&sdkType=Java"
         SDKType.React | "metric=myMetric&sdkType=REACT"
     }
 

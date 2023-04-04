@@ -456,6 +456,7 @@ mod tests {
             realtime_port: listen_port + 100,
             #[cfg(feature = "realtime")]
             realtime_path: "/server/realtime".to_owned(),
+            prerequisite_deep: 20,
         };
 
         #[cfg(feature = "realtime")]
@@ -474,6 +475,7 @@ mod tests {
             analysis_url,
             events_timeout: Duration::from_secs(10),
             http_client: Default::default(),
+            prerequisite_deep: 20,
         };
         tokio::spawn(crate::http::serve_http::<FpHttpHandler>(
             listen_port,

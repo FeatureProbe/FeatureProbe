@@ -135,6 +135,7 @@ impl SdkRepository {
         &self,
         client_sdk_key: &str,
         user: &FPUser,
+        prerequisite_deep: u8,
     ) -> Result<String, FPServerError> {
         let secret_mapping = self.inner.secret_mapping.read();
         if secret_mapping.version() == 0 {
@@ -144,7 +145,8 @@ impl SdkRepository {
             Some(sdk_key) => sdk_key,
             None => return Err(FPServerError::NotFound(client_sdk_key.to_string())),
         };
-        self.inner.all_evaluated_string(server_sdk_key, user)
+        self.inner
+            .all_evaluated_string(server_sdk_key, user, prerequisite_deep)
     }
 
     pub fn client_sdk_events_string(&self, client_sdk_key: &str) -> Result<String, FPServerError> {
@@ -276,7 +278,12 @@ impl Inner {
         serde_json::to_string(&*repo).map_err(|e| FPServerError::JsonError(e.to_string()))
     }
 
-    fn all_evaluated_string(&self, sdk_key: &str, user: &FPUser) -> Result<String, FPServerError> {
+    fn all_evaluated_string(
+        &self,
+        sdk_key: &str,
+        user: &FPUser,
+        prerequisite_deep: u8,
+    ) -> Result<String, FPServerError> {
         let clients = self.sdk_clients.read();
         let client = match clients.get(sdk_key) {
             Some(client) if !client.initialized() => {
@@ -291,7 +298,12 @@ impl Inner {
             .toggles
             .iter()
             .filter(|(_, t)| t.is_for_client())
-            .map(|(key, toggle)| (key.to_owned(), toggle.eval_detail(user, &repo.segments)))
+            .map(|(key, toggle)| {
+                (
+                    key.to_owned(),
+                    toggle.eval(user, &repo.segments, &repo.toggles, true, prerequisite_deep),
+                )
+            })
             .collect();
         serde_json::to_string(&map).map_err(|e| FPServerError::JsonError(e.to_string()))
     }
@@ -451,6 +463,7 @@ mod tests {
             realtime_port: port + 100,
             #[cfg(feature = "realtime")]
             realtime_path: "/server/realtime".to_owned(),
+            prerequisite_deep: 20,
         };
 
         #[cfg(feature = "realtime")]
@@ -488,6 +501,7 @@ mod tests {
             realtime_port: port + 100,
             #[cfg(feature = "realtime")]
             realtime_path: "/server/realtime".to_owned(),
+            prerequisite_deep: 20,
         };
 
         #[cfg(feature = "realtime")]
@@ -521,6 +535,7 @@ mod tests {
             #[cfg(feature = "realtime")]
             realtime_port: port + 100,
             realtime_path: "/server/realtime".to_owned(),
+            prerequisite_deep: 20,
         };
 
         #[cfg(feature = "realtime")]

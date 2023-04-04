@@ -3,14 +3,14 @@ package com.featureprobe.api.base.enums;
 import org.apache.commons.lang3.StringUtils;
 
 public enum SDKType {
-    Java("JAVA"),
-    Python("PYTHON"),
-    Rust("RUST"),
-    Go("GO"),
+    Java("Java"),
+    Python("Python"),
+    Rust("Rust"),
+    Go("Go"),
     NodeJS("Node"),
-    Android("ANDROID"),
-    Swift("SWIFT"),
-    ObjectiveC("OBJECTIVEC"),
+    Android("Android"),
+    Swift("iOS"),
+    ObjectiveC("iOS"),
     JavaScript("JS"),
     MiniProgram("MINIPROGRAM"),
     React("REACT");

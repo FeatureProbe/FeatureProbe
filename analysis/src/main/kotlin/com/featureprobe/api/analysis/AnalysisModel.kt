@@ -29,7 +29,7 @@ const val INSERT_EVENT_SQL =
 VALUES (?, ?, ?, ?, ?, ?, ?);"""
 
 const val EXISTS_EVENT_SQL =
-    """SELECT 1 as count FROM events WHERE sdk_key = ? AND name = ? LIMIT 1;"""
+    """SELECT 1 as count FROM events WHERE sdk_key = ? AND name = ? AND sdk_type = ? LIMIT 1;"""
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
