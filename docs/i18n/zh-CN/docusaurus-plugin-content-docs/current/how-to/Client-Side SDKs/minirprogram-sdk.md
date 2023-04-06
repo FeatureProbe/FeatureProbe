@@ -10,6 +10,7 @@ sidebar_position: 4
 
 :::tip
 小程序SDK 从 [ 2.0.1 ](https://www.npmjs.com/package/featureprobe-client-sdk-miniprogram/v/2.0.1) 版本开始支持事件上报的能力。
+:::
 
 :::note SDK quick links
 除了本参考指南外，我们还提供源代码、API 参考文档和示例应用程序，相关链接如下所示：
