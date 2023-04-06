@@ -174,7 +174,7 @@ function toModified(removed: DiffObj[], added: DiffObj[]) {
           value: right,
           diff: type === 'modify' ? resetDiffResult(diff) : undefined
         });
-      } else if (left.key !== right.__key) {
+      } else if (left.__key !== right.__key) {
         result.push({
           type: 'remove',
           value: left,

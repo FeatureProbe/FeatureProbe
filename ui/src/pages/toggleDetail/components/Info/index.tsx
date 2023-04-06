@@ -15,6 +15,7 @@ import Loading from 'components/Loading';
 import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
 import { I18NRules, RulesDiffContent } from 'components/Diff/RulesDiffContent';
 import { DiffStatusContent } from 'components/Diff/DiffStatus';
+import PrerequisitesDiffContent from 'components/Diff/PrerequisitesDiffContent'; 
 import { DiffServe } from 'components/Diff/DiffServe';
 import PopupConfirm from 'components/PopupConfirm';
 import ApprovalOperation from '../ApprovalOperation';
@@ -209,6 +210,9 @@ const Info: React.FC<IProps> = (props) => {
     },
     [preDiffServe, intl]
   );
+
+  console.log('before', before);
+  console.log('after', after);
 
 	return (
     <div className={styles.info}>
@@ -454,6 +458,15 @@ const Info: React.FC<IProps> = (props) => {
                     return <DiffStatusContent content={content} />;
                   },
                   diffKey: 'status',
+                },
+                {
+                  before: before?.content.prerequisites ?? [],
+                  after: after?.content.prerequisites ?? [],
+                  title: intl.formatMessage({ id: 'common.prerequisite.text' }),
+                  renderContent: (content) => {
+                    return <PrerequisitesDiffContent content={content} />;
+                  },
+                  diffKey: 'prerequisites',
                 },
                 {
                   before: before?.content.variations,
