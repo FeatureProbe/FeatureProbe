@@ -212,6 +212,8 @@ fp.on('ready', function() {
 - **cache_ready** - SDK成功从本地缓存`LocalStorage`中获取缓存开关后发布`cache_ready`事件，`cache_ready`发布时不会关心SDK是否成功`ready`
 - **error** - SDK无法从`Server端`成功获取开关，且超过超时时间，将发布`error`事件
 - **update** - 除了首次从`Server端`获取开关外，SDK后续通过定期轮询的方式从`Server端`成功获取开关后发布`update`事件
+- **fetch_toggle_error** - SDK无法从`Server端`拉取开关结果时，将发布`fetch_toggle_error`事件
+- **fetch_event_error** - SDK初始化过程中，无法从`Server端`拉取平台上配置的事件（自定义事件、点击事件、页面事件）时，将发布`fetch_event_error`事件
 
 
 ## 集成测试

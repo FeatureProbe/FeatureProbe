@@ -212,6 +212,8 @@ This SDK takes the following options:
 - **cache_ready** - Emit `cache_ready` event after successfully fetching toggles from `LocalStorage`
 - **error** - Emit `error` event when error fetching toggles from `Server` and timeout exceeded
 - **update** - Emit `update` event every time successfully fetching toggles from `Server`, except for the first time (Emit `ready` event first time)
+- **fetch_toggle_error** - Emit `fetch_toggle_error` event every time error fetching toggles from `Server`
+- **fetch_event_error** - Emit `fetch_event_error` event when error fetching events(Custom events, Pageview events and Click events) from `Server` during SDK initialization
 
 ## Testing
 
