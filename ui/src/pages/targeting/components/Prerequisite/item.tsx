@@ -345,19 +345,23 @@ const PrerequisiteItem = (props: IProps) => {
             handleChangeToggle(detail);
           }}
         />
-        <div className={styles['title-left-tag']}>
-          {
-            prerequisiteToggles?.find((toggle: IToggleInfo) => toggle.key === item?.key)?.disabled ? (
-              <span className={styles['disabled-tag']}>
-                {intl.formatMessage({ id: 'common.disabled.text' })}
-              </span>
-            ) : (
-              <span className={styles['enabled-tag']}>
-                {intl.formatMessage({ id: 'common.enabled.text' })}
-              </span>
-            )
-          }
-        </div>
+        {
+          item?.key && (
+            <div className={styles['title-left-tag']}>
+              {
+                prerequisiteToggles?.find((toggle: IToggleInfo) => toggle.key === item?.key)?.disabled ? (
+                  <span className={styles['disabled-tag']}>
+                    {intl.formatMessage({ id: 'common.disabled.text' })}
+                  </span>
+                ) : (
+                  <span className={styles['enabled-tag']}>
+                    {intl.formatMessage({ id: 'common.enabled.text' })}
+                  </span>
+                )
+              }
+            </div>
+          )
+        }
         {errors[`prerequisite_${item?.id}_toggle`] && (
           <div className={'error-text-normal'}>
             {errors[`prerequisite_${item?.id}_toggle`].message}

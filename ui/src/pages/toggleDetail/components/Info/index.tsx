@@ -211,9 +211,6 @@ const Info: React.FC<IProps> = (props) => {
     [preDiffServe, intl]
   );
 
-  console.log('before', before);
-  console.log('after', after);
-
 	return (
     <div className={styles.info}>
       {
