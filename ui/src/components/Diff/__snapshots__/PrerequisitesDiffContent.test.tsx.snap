@@ -23,12 +23,12 @@ exports[`DiffPrerequisites snapshot 1`] = `
               <th
                 class="table-header-name"
               >
-                name
+                Toggles
               </th>
               <th
                 class=""
               >
-                value
+                Return value
               </th>
             </tr>
           </thead>
@@ -133,12 +133,12 @@ exports[`DiffPrerequisites snapshot 1`] = `
               <th
                 class="table-header-name"
               >
-                name
+                Toggles
               </th>
               <th
                 class=""
               >
-                value
+                Return value
               </th>
             </tr>
           </thead>
@@ -252,12 +252,12 @@ exports[`DiffPrerequisites snapshot 2`] = `
               <th
                 class="table-header-name"
               >
-                name
+                Toggles
               </th>
               <th
                 class=""
               >
-                value
+                Return value
               </th>
             </tr>
           </thead>
@@ -308,12 +308,12 @@ exports[`DiffPrerequisites snapshot 2`] = `
               <th
                 class="table-header-name"
               >
-                name
+                Toggles
               </th>
               <th
                 class=""
               >
-                value
+                Return value
               </th>
             </tr>
           </thead>
