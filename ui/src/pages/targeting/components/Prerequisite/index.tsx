@@ -31,7 +31,7 @@ const Prerequisite = (props: IProps) => {
         (prerequisites && prerequisites.length > 0) && (
           <div className={`${styles.title} ${styles['prerequisite-title']}`}>
             <div className={styles['title-left']}>
-              <FormattedMessage id='common.toggle.text' />
+              <FormattedMessage id='common.toggles.text' />
             </div>
             <div className={styles['title-right']}>
               <FormattedMessage id='prerequisite.return.value' />

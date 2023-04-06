@@ -74,10 +74,10 @@ const PrerequisitesDiffContent: React.FC<PrerequisitesDiffContentProps> = (props
             <Table.Header className={fieldStyles['table-header']}>
               <Table.Row>
                 <Table.HeaderCell className={styles['table-header-name']}>
-                  <FormattedMessage id="common.name.lowercase.text" />
+                  <FormattedMessage id="common.toggles.text" />
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <FormattedMessage id="common.value.text" />
+                  <FormattedMessage id="prerequisite.return.value" />
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
@@ -102,10 +102,10 @@ const PrerequisitesDiffContent: React.FC<PrerequisitesDiffContentProps> = (props
             <Table.Header className={fieldStyles['table-header']}>
               <Table.Row>
                 <Table.HeaderCell className={styles['table-header-name']}>
-                  <FormattedMessage id="common.name.lowercase.text" />
+                  <FormattedMessage id="common.toggles.text" />
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <FormattedMessage id="common.value.text" />
+                  <FormattedMessage id="prerequisite.return.value" />
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
