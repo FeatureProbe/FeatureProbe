@@ -118,6 +118,9 @@
   "common.know.text": "我知道了",
   "common.metrics.text": "指标",
   "common.data.text": "数据",
+  "common.prerequisite.text": "前置条件",
+  "common.prerequisite.lowercase.text": "前置条件",
+  "common.prerequisite.description": "该开关只对满足所有前置条件的用户群体开放",
   
   "header.getuser.error.text": "无法获取用户信息!",
 
@@ -267,6 +270,8 @@
   "toggles.archive.content": "所有环境下的此开关将一并下线",
   "toggles.archive.success": "开关下线成功",
   "toggles.archive.error": "开关下线失败",
+  "toggles.archive.prerequisite.tips": "该开关正在被以下{toggle}个开关作为前置条件使用，无法下线。",
+  "toggles.archive.disabled.title": "无法下线",
   "toggles.restore.title": "确认恢复开关？",
   "toggles.restore.content": "所有环境下的此开关将一并恢复",
   "toggles.restore.success": "开关恢复成功",
@@ -298,6 +303,7 @@
   "targeting.publish.success.text": "发布成功!",
   "targeting.publish.tips": "指标分析数据正在收集中，开关变更有可能会影响指标分析结果的准确性。",
   "targeting.publish.start.collect": "当前未开始收集分析数据，是否同时开启数据收集？",
+  "targeting.publish.prerequisite.tips": "该开关正在被以下{toggle}个开关作为前置条件使用，开关变更有可能会影响进入以下开关的流量。",
   "targeting.status.text": "状态",
   "targeting.status.disabled.text": "未生效, 返回 ",
   "targeting.variations.evaluations.text": "访问到分组的{type}",
@@ -652,5 +658,13 @@
   "analysis.result.diagnose.reason1": "无分流数据",
   "analysis.result.diagnose.reason2": "无事件上报",
   "analysis.result.diagnose.reason3": "无Join数据",
-  "analysis.result.diagnose.reason.view": "查看常见原因"
+  "analysis.result.diagnose.reason.view": "查看常见原因",
+
+  "prerequisite.return.value": "返回值",
+  "prerequisite.add": "添加前置条件",
+  "prerequisite.toggle.placeholder": "请选择依赖的开关",
+  "prerequisite.return.value.placeholder": "请选择返回值",
+  "prerequisite.return.value.not.exist": "该返回值已不存在，请尽快更换",
+  "prerequisite.json.not.support": "暂不支持JSON类型的开关作为前置条件",
+  "prerequisite.toggle.duplicate": "开关重复，请重新选择"
 }

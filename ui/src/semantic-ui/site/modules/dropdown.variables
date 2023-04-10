@@ -20,3 +20,5 @@
 @hoveredItemColor: #212529;
 @selectionItemDivider: 1px solid transparent;
 @upwardSelectionVisibleBorderRadius: 6px;
+@errorItemActiveBackground: #fffafa;
+@errorItemHoverBackground: #f1f3ff;

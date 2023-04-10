@@ -1,0 +1,351 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DiffPrerequisites snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="diff-content"
+  >
+    <div
+      class="before"
+    >
+      <div
+        class="diff-fields"
+      >
+        <table
+          class="ui small unstackable very basic table"
+        >
+          <thead
+            class="table-header"
+          >
+            <tr
+              class=""
+            >
+              <th
+                class="table-header-name"
+              >
+                Toggles
+              </th>
+              <th
+                class=""
+              >
+                Return value
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="diff-item diff-item-remove"
+            >
+              <td
+                class="table-item-name"
+              >
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  key 1
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  value 1
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="diff-item diff-item-same"
+            >
+              <td
+                class="table-item-name"
+              >
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  key 2
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  value 2
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="diff-item diff-item-same"
+            >
+              <td
+                class="table-item-name"
+              >
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  key 3
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  value 3
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="diff-item "
+            >
+              <td
+                class="table-item-name"
+              />
+              <td
+                class=""
+              />
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div
+      class="after"
+    >
+      <div
+        class="diff-fields"
+      >
+        <table
+          class="ui small unstackable very basic table"
+        >
+          <thead
+            class="table-header"
+          >
+            <tr
+              class=""
+            >
+              <th
+                class="table-header-name"
+              >
+                Toggles
+              </th>
+              <th
+                class=""
+              >
+                Return value
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="diff-item "
+            >
+              <td
+                class="table-item-name"
+              />
+              <td
+                class=""
+              />
+            </tr>
+            <tr
+              class="diff-item diff-item-same"
+            >
+              <td
+                class="table-item-name"
+              >
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  key 2
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  value 2
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="diff-item diff-item-same"
+            >
+              <td
+                class="table-item-name"
+              >
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  key 3
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  value 3
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="diff-item diff-item-add"
+            >
+              <td
+                class="table-item-name"
+              >
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  key 4
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-undefined"
+                >
+                  value 4
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DiffPrerequisites snapshot 2`] = `
+<DocumentFragment>
+  <div
+    class="diff-content"
+  >
+    <div
+      class="before"
+    >
+      <div
+        class="diff-fields"
+      >
+        <table
+          class="ui small unstackable very basic table"
+        >
+          <thead
+            class="table-header"
+          >
+            <tr
+              class=""
+            >
+              <th
+                class="table-header-name"
+              >
+                Toggles
+              </th>
+              <th
+                class=""
+              >
+                Return value
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="diff-item"
+            >
+              <td
+                class="table-item-name"
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  key 1
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-remove"
+                >
+                  value 1
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div
+      class="after"
+    >
+      <div
+        class="diff-fields"
+      >
+        <table
+          class="ui small unstackable very basic table"
+        >
+          <thead
+            class="table-header"
+          >
+            <tr
+              class=""
+            >
+              <th
+                class="table-header-name"
+              >
+                Toggles
+              </th>
+              <th
+                class=""
+              >
+                Return value
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="diff-item"
+            >
+              <td
+                class="table-item-name"
+              >
+                <div
+                  class="diff-field-value field-value-same"
+                >
+                  key 1
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <div
+                  class="diff-field-value field-value-add"
+                >
+                  value 2
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

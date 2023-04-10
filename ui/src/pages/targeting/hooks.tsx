@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
 import { InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
-import { ICondition, IRule, IServe, IVariation } from 'interfaces/targeting';
+import { ICondition, IRule, IServe, IVariation, IPrerequisite } from 'interfaces/targeting';
 import { ISegmentList } from 'interfaces/segment';
 import { DATETIME_TYPE, SEGMENT_TYPE } from 'components/Rule/constants';
 import { getVariationName } from 'utils/tools';
@@ -190,6 +190,43 @@ export const useSegment = () => {
     segmentList,
     saveSegmentList,
   };
+};
+
+export const usePrerequisite = () => {
+  const [prerequisites, savePrerequisites] = useState<IPrerequisite[]>([]);
+
+  const handleAddPrerequisite = () => {
+    prerequisites.push({
+      id: uuidv4(),
+      key: '',
+      value: '',
+      type: '',
+    });
+
+    savePrerequisites([...prerequisites]);
+  };
+
+  const handleDeletePrerequisite = (index: number) => {
+    prerequisites.splice(index, 1);
+
+    savePrerequisites([...prerequisites]);
+  };
+
+  const handlecChangePrerequisite = (index: number, key: string, type: string, value: string) => {
+    prerequisites[index].key = key;
+    prerequisites[index].type = type;
+    prerequisites[index].value = value;
+    savePrerequisites([...prerequisites]);
+  };
+
+  return {
+    prerequisites,
+    savePrerequisites,
+    handleAddPrerequisite,
+    handleDeletePrerequisite,
+    handlecChangePrerequisite,
+  };
+
 };
 
 export const useReactHookForm = () => {

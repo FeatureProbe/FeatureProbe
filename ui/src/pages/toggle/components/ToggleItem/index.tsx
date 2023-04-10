@@ -2,24 +2,32 @@ import { SyntheticEvent, useState, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { v4 as uuidv4 } from 'uuid';
-import { Table, Popup } from 'semantic-ui-react';
+import { Table, Popup, PaginationProps } from 'semantic-ui-react';
 import dayjs from 'dayjs';
 import { cloneDeep } from 'lodash';
 import Icon from 'components/Icon';
 import Modal from 'components/Modal';
 import message from 'components/MessageBox';
+import Button from 'components/Button';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
 import TextLimit from 'components/TextLimit';
 import TagsList from 'components/TagsList';
-import { getToggleInfo, offlineToggle, restoreToggle } from 'services/toggle';
+import { getPrerequisiteDependencies, getToggleInfo, offlineToggle, restoreToggle } from 'services/toggle';
 import { IToggle } from 'interfaces/toggle';
 import { IToggleInfo, IVariation } from 'interfaces/targeting';
 import { variationContainer, toggleInfoContainer } from '../../provider';
+import { IPrerequisiteToggle, IPrerequisiteToggleList } from 'interfaces/prerequisite';
+import ToggleList from 'pages/targeting/components/PublishModal/ToggleList';
 import styles from './index.module.scss';
 
 interface ILocationParams {
   projectKey: string;
   environmentKey: string;
+}
+
+interface ISearchParams {
+  pageIndex: number;
+  pageSize: number;
 }
 
 interface IProps {
@@ -36,11 +44,21 @@ const ToggleItem = (props: IProps) => {
   const [ visible, setVisible ] = useState<boolean>(false);
   const [ archiveOpen, setArchiveOpen] = useState<boolean>(false);
   const [ restoreOpen, setRestoreOpen] = useState<boolean>(false);
+  const [ canNotDeleteOpen, setCanNotDeleteOpen ] = useState<boolean>(false);
+  const [ pagination, setPagination ] = useState({
+    pageIndex: 1,
+    totalPages: 1,
+  });
+  const [ total, saveTotal ] = useState<number>(0);
+  const [ searchParams ] = useState<ISearchParams>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
+  const [ toggles, saveToggles ] = useState<IPrerequisiteToggle[]>([]);
 
   const history = useHistory();
   const intl = useIntl();
   const { projectKey, environmentKey } = useParams<ILocationParams>();
-
   const { saveVariations } = variationContainer.useContainer();
   const { saveToggleInfo, saveOriginToggleInfo } = toggleInfoContainer.useContainer();
 
@@ -51,6 +69,26 @@ const ToggleItem = (props: IProps) => {
   const handleMouseLeave = useCallback(() => {
     setVisible(false);
   }, []);
+
+  const getToggleList = useCallback((toggleKey: string, searchParams: ISearchParams) => {
+    getPrerequisiteDependencies<IPrerequisiteToggleList>(projectKey, environmentKey, toggleKey, searchParams).then(res => {
+      const { success, data } = res;
+      if (success && data) {
+        const { content, pageable, totalPages, totalElements } = data;
+        saveToggles(content);
+        setPagination({
+          pageIndex: (pageable?.pageNumber || 0) + 1,
+          totalPages: totalPages || 1,
+        });
+        saveTotal(totalElements || 0);
+        if (totalElements > 0) {
+          setCanNotDeleteOpen(true);
+        } else {
+          setArchiveOpen(true);
+        }
+      } 
+    });
+  }, [environmentKey, projectKey]);
 
   const gotoEditing = useCallback((toggleKey: string) => {
     history.push(`/${projectKey}/${environmentKey}/${toggleKey}/targeting`);
@@ -118,6 +156,13 @@ const ToggleItem = (props: IProps) => {
       message.error(intl.formatMessage({id: 'toggles.restore.error'}));
     }
   }, [toggle.key, projectKey, intl, refreshToggleList]);
+
+  const handlePageChange = useCallback((e: SyntheticEvent, data: PaginationProps) => {
+    getToggleList(toggle.key, {
+      ...searchParams,
+      pageIndex: Number(data.activePage) - 1,
+    });
+  }, [getToggleList, searchParams, toggle.key]);
 
 	return (
     <Table.Row
@@ -346,7 +391,7 @@ const ToggleItem = (props: IProps) => {
                     onClick={(e) => { 
                       document.body.click();
                       e.stopPropagation();
-                      setArchiveOpen(true); 
+                      getToggleList(toggle.key, searchParams);
                     }}
                   >
                     <FormattedMessage id='common.archive.text' />
@@ -373,7 +418,7 @@ const ToggleItem = (props: IProps) => {
         }}
       >
         <div onClick={(e: SyntheticEvent) => { e.stopPropagation(); }}>
-          <div className={styles['modal-header']}>
+          <div>
             <Icon customclass={styles['warning-circle']} type='warning-circle' />
             <span className={styles['modal-header-text']}>
               <FormattedMessage id='toggles.archive.title' />
@@ -399,7 +444,7 @@ const ToggleItem = (props: IProps) => {
         }}
       >
         <div onClick={(e: SyntheticEvent) => { e.stopPropagation(); }}>
-          <div className={styles['modal-header']}>
+          <div>
             <Icon customclass={styles['warning-circle']} type='warning-circle' />
             <span className={styles['modal-header-text']}>
               <FormattedMessage id='toggles.restore.title' />
@@ -407,6 +452,55 @@ const ToggleItem = (props: IProps) => {
           </div>
           <div className={styles['modal-content']}>
             <FormattedMessage id='toggles.restore.content' />
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        open={canNotDeleteOpen}
+        width={600} 
+        footer={
+          <div className={styles['modal-footer']}>
+            <Button
+              key="confirm"
+              primary
+              onClick={async (e: SyntheticEvent) => {
+                e.stopPropagation();
+                setCanNotDeleteOpen(false);
+              }}
+            >
+              <FormattedMessage id="common.confirm.text" />
+            </Button>
+          </div>
+        }
+      >
+        <div className={styles['modal-inner-box']}>
+          <div className={styles['modal-header']}>
+            <span>
+              <FormattedMessage id="toggles.archive.disabled.title" />
+            </span>
+            <Icon
+              customclass={styles['modal-header-icon']}
+              type="close"
+              onClick={(e: SyntheticEvent) => {
+                e.stopPropagation();
+                setCanNotDeleteOpen(false);
+              }}
+            />
+          </div>
+          <div className={styles['prerequisite-modal-content']}>
+            <div className={styles['modal-tips']}>
+              <Icon type="warning-circle" customclass={styles['modal-info-circle']} />
+              {intl.formatMessage({ id: 'toggles.archive.prerequisite.tips'}, { toggle: total })}
+            </div>
+            <div className={styles['modal-not-delete-content']}>
+              <ToggleList 
+                total={total}
+                pagination={pagination}
+                toggleList={toggles}
+                handlePageChange={handlePageChange}
+              />
+            </div>
           </div>
         </div>
       </Modal>

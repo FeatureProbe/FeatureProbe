@@ -19,7 +19,7 @@ import FlowExplain from './components/FlowExplain';
 import History from 'components/History';
 import { Provider } from '../targeting/provider';
 import { getSegmentList } from 'services/segment';
-import { getTargeting, getToggleInfo, getTargetingVersion, getTargetingVersionsByVersion } from 'services/toggle';
+import { getTargeting, getToggleInfo, getTargetingVersion, getTargetingVersionsByVersion, getPrerequisiteToggle } from 'services/toggle';
 import { saveDictionary } from 'services/dictionary';
 import { ISegmentList } from 'interfaces/segment';
 import { IRouterParams, IVersionParams } from 'interfaces/project';
@@ -63,6 +63,7 @@ const ToggleDetail = () => {
   const [ isTargetingLoading, saveIsTargetingLoading ] = useState<boolean>(true);
   const [ isInfoLoading, saveIsInfoLoading ] = useState<boolean>(true);
   const [ isHistoryLoading, saveIsHistoryLoading ] = useState<boolean>(true);
+  const [ prerequisiteToggles, savePrerequisiteToggles ] = useState<IToggleInfo[]>();
   const { ref, height = 1 } = useResizeObserver<HTMLDivElement>();
   const { i18n } = I18NContainer.useContainer();
 
@@ -112,10 +113,20 @@ const ToggleDetail = () => {
     });
   }, [projectKey]);
 
+  const initPrerequisiteToggle = useCallback(() => {
+    getPrerequisiteToggle<IToggleInfo[]>(projectKey, environmentKey, toggleKey).then(res => {
+      const { success, data } = res;
+      if (success && data) {
+        savePrerequisiteToggles(data);
+      }
+    });
+  }, [projectKey, environmentKey, toggleKey]);
+
   useEffect(() => {
     initToggleInfo();
     initSegmentList();
-  }, [initToggleInfo, initSegmentList]);
+    initPrerequisiteToggle();
+  }, [initToggleInfo, initSegmentList, initPrerequisiteToggle]);
 
   // Get toggle targeting
   const initTargeting = useCallback(() => {
@@ -223,9 +234,9 @@ const ToggleDetail = () => {
 
   useEffect(() => {
     if (currentVersion) {
-      setHistoryOpen(true);
       getVersionsByVersion();
       saveRememberVersion(true);
+      setHistoryOpen(true);
     } else {
       saveIsTargetingLoading(true);
       initTargeting();
@@ -316,8 +327,20 @@ const ToggleDetail = () => {
 
   // Reset history if user change environment in left sidebar
   useEffect(() => {
-    resetHistory();
-  }, [environmentKey, resetHistory]);
+    if (environmentKey) {
+      saveTargetingDisabled(false);
+      saveCount(0);
+      saveHistoryPageIndex(0);
+      saveVersions([]);
+    }
+    if (currentVersion) {
+      setHistoryOpen(true);
+      saveRememberVersion(true);
+    } else {
+      setHistoryOpen(false);
+      saveRememberVersion(false);
+    }
+  }, [environmentKey, currentVersion]);
 
   const initHistory = useCallback(() => {
     saveVersions([]);
@@ -476,9 +499,9 @@ const ToggleDetail = () => {
                             allowEnableTrackEvents={allowEnableTrackEvents}
                             disabled={
                               targetingDisabled
+                              || trackEvents
                               || toggleArchived
                               || (approvalInfo?.enableApproval && approvalInfo.status !== 'RELEASE')
-                              || trackEvents
                             }
                             latestVersion={latestVersion}
                             targeting={targeting}
@@ -487,6 +510,7 @@ const ToggleDetail = () => {
                             approvalInfo={approvalInfo}
                             toggleDisabled={toggleDisabled}
                             initialTargeting={initialTargeting}
+                            prerequisiteToggles={prerequisiteToggles}
                             initTargeting={() => {
                               initTargeting();
                               initHistory();

@@ -9,6 +9,7 @@ import {
   Popup,
   RadioProps,
   InputOnChangeData,
+  PaginationProps,
 } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
@@ -19,9 +20,11 @@ import { DiffStatusContent } from 'components/Diff/DiffStatus';
 import { DiffServe } from 'components/Diff/DiffServe';
 import { I18NRules, RulesDiffContent } from 'components/Diff/RulesDiffContent';
 import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
+import PrerequisitesDiffContent from 'components/Diff/PrerequisitesDiffContent';
 import message from 'components/MessageBox';
-import { approveToggle, saveToggle } from 'services/toggle';
+import { approveToggle, saveToggle, getPrerequisiteDependencies } from 'services/toggle';
 import { IRouterParams } from 'interfaces/project';
+import { IPrerequisiteToggle, IPrerequisiteToggleList } from 'interfaces/prerequisite';
 
 import {
   IApprovalInfo,
@@ -34,6 +37,7 @@ import {
 } from 'interfaces/targeting';
 
 import styles from './index.module.scss';
+import ToggleList from './ToggleList';
 
 interface IProps {
   open: boolean;
@@ -46,6 +50,11 @@ interface IProps {
   initTargeting(): void;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface ISearchParams {
+  pageIndex: number;
+  pageSize: number;
 }
 
 const PublishModal = (props: IProps) => {
@@ -63,10 +72,21 @@ const PublishModal = (props: IProps) => {
   } = props;
 
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
-  const [comment, saveComment] = useState<string>('');
-  const [options, saveOptions] = useState<IOption[]>();
-  const [isCollect, saveIsCollect] = useState<string>('');
-  const [isDiffChange, saveIsDiffChange] = useState<boolean>(false);
+  const [ comment, saveComment ] = useState<string>('');
+  const [ options, saveOptions ] = useState<IOption[]>();
+  const [ isCollect, saveIsCollect ] = useState<string>('');
+  const [ isDiffChange, saveIsDiffChange ] = useState<boolean>(false);
+  const [ isToggleShow, saveToggleShow ] = useState<boolean>(false);
+  const [ pagination, setPagination ] = useState({
+    pageIndex: 1,
+    totalPages: 1,
+  });
+  const [ total, saveTotal ] = useState<number>(0);
+  const [ searchParams, setSearchParams ] = useState<ISearchParams>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
+  const [ toggles, saveToggles ] = useState<IPrerequisiteToggle[]>([]);
   const intl = useIntl();
   const history = useHistory();
   const {
@@ -76,6 +96,24 @@ const PublishModal = (props: IProps) => {
     setValue,
     clearErrors,
   } = useForm();
+
+  useEffect(() => {
+    if (open) {
+      getPrerequisiteDependencies<IPrerequisiteToggleList>(projectKey, environmentKey, toggleKey, searchParams).then(res => {
+        const { success, data } = res;
+        if (success && data) {
+          const { content, pageable, totalPages, totalElements } = data;
+          saveToggles(content);
+          setPagination({
+            pageIndex: (pageable?.pageNumber || 0) + 1,
+            totalPages: totalPages || 1,
+          });
+          saveTotal(totalElements || 0);
+          return;
+        } 
+      });
+    }
+  }, [environmentKey, open, projectKey, searchParams, toggleKey]);
 
   useEffect(() => {
     register('reason', {
@@ -154,18 +192,18 @@ const PublishModal = (props: IProps) => {
     }
   }, [
     intl,
-    approvalInfo, 
-    comment, 
-    isCollect, 
-    allowEnableTrackEvents, 
-    publishTargeting, 
-    projectKey, 
-    environmentKey, 
-    toggleKey, 
+    approvalInfo,
+    comment,
+    isCollect,
+    allowEnableTrackEvents,
+    publishTargeting,
+    projectKey,
+    environmentKey,
+    toggleKey,
     latestVersion,
     setOpen,
-    trigger, 
-    setValue, 
+    trigger,
+    setValue,
     setLoading,
     initTargeting,
   ]);
@@ -289,6 +327,13 @@ const PublishModal = (props: IProps) => {
     }
   }, [open, beforeRuleDiff, initialTargeting, publishTargeting]);
 
+  const handlePageChange = useCallback((e: SyntheticEvent, data: PaginationProps) => {
+    setSearchParams({
+      ...searchParams,
+      pageIndex: Number(data.activePage) - 1,
+    });
+  }, [searchParams]);
+
   return (
     <Modal open={open} width={800} handleCancel={handlePublishCancel} handleConfirm={handlePublishConfirm}>
       <div>
@@ -307,6 +352,48 @@ const PublishModal = (props: IProps) => {
               </div>
             )
           }
+          {
+            total > 0 && (
+              <div className={styles['prerequisite-tips']}>
+                <div
+                  className={styles['prerequisite-tips-title']}
+                  onClick={() => {
+                    saveToggleShow(!isToggleShow);
+                  }}
+                >
+                  <div className={styles['prerequisite-tips-left']}>
+                    <Icon type='warning-circle' customclass={styles['prerequisite-circle']} />
+                    {
+                      intl.formatMessage({
+                        id: 'targeting.publish.prerequisite.tips'
+                      }, {
+                        toggle: total,
+                      })
+                    }
+                  </div>
+                  {
+                    isToggleShow ? (
+                      <Icon customclass={styles['icon-accordion']} type="angle-up" />
+                    ) : (
+                      <Icon customclass={styles['icon-accordion']} type="angle-down" />
+                    )
+                  }
+                </div>
+                {
+                  isToggleShow && (
+                    <div className={styles['prerequisite-toggles']}>
+                      <ToggleList 
+                        total={total}
+                        pagination={pagination}
+                        toggleList={toggles}
+                        handlePageChange={handlePageChange}
+                      />
+                    </div>
+                  )
+                }
+              </div>
+            )
+          }
           <Diff
             sections={[
               {
@@ -321,6 +408,15 @@ const PublishModal = (props: IProps) => {
                   return <DiffStatusContent content={content} />;
                 },
                 diffKey: 'status',
+              },
+              {
+                before: initialTargeting?.content.prerequisites ?? [],
+                after: publishTargeting?.content.prerequisites ?? [],
+                title: intl.formatMessage({ id: 'common.prerequisite.text' }),
+                renderContent: (content) => {
+                  return <PrerequisitesDiffContent content={content} />;
+                },
+                diffKey: 'prerequisites',
               },
               {
                 before: initialTargeting?.content.variations,

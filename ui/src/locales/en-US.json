@@ -118,6 +118,9 @@
   "common.know.text": "I see",
   "common.metrics.text": "Metrics",
   "common.data.text": "Data",
+  "common.prerequisite.text": "Prerequisites",
+  "common.prerequisite.lowercase.text": "prerequisite",
+  "common.prerequisite.description": "The toggle is only open to users who meet all prerequisites.",
 
   "header.getuser.error.text": "Error getting user profile",
 
@@ -267,6 +270,8 @@
   "toggles.archive.content": "The toggle will be archived in all environments.",
   "toggles.archive.success": "Toggle archived successfully",
   "toggles.archive.error": "Error archiving toggle",
+  "toggles.archive.prerequisite.tips": "This toggle has been used as a prerequisite by the following {toggle} toggles",
+  "toggles.archive.disabled.title": "Can not archive",
   "toggles.restore.title": "Are you sure to restore this toggle?",
   "toggles.restore.content": "The toggle will be restored in all environments.",
   "toggles.restore.success": "Toggle restored successfully",
@@ -298,6 +303,7 @@
   "targeting.publish.success.text": "Published successfully",
   "targeting.publish.tips": "The metric data is being collected, and the toggle change may affect the accuracy of the results.",
   "targeting.publish.start.collect": "The collection of analysis data is currently not started. Do you want to start data collection at the same time?",
+  "targeting.publish.prerequisite.tips": "This toggle has been used as a prerequisite by the following {toggle} toggles, changing it may affect the entering traffic.",
   "targeting.status.text": "Status",
   "targeting.status.disabled.text": "disabled, serving ",
   "targeting.variations.evaluations.text": "Variation {type} evaluations",
@@ -652,5 +658,13 @@
   "analysis.result.diagnose.reason1": "No variation records",
   "analysis.result.diagnose.reason2": "No event records",
   "analysis.result.diagnose.reason3": "No join records",
-  "analysis.result.diagnose.reason.view": "View common reasons"
+  "analysis.result.diagnose.reason.view": "View common reasons",
+
+  "prerequisite.return.value": "Return value",
+  "prerequisite.add": "Add prerequisite",
+  "prerequisite.toggle.placeholder": "Please select a prerequisite toggle",
+  "prerequisite.return.value.placeholder": "Please select return value",
+  "prerequisite.return.value.not.exist": "This return value no longer exists, please replace it",
+  "prerequisite.json.not.support": "Toggles whose return type is JSON are not currently selected as prerequisites.",
+  "prerequisite.toggle.duplicate": "The toggle is dulplicate, please select again"
 }

@@ -4,6 +4,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
+import { cloneDeep } from 'lodash';
 import Diff from 'components/Diff';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
 import Button from 'components/Button';
@@ -14,17 +15,17 @@ import Loading from 'components/Loading';
 import VariationsDiffContent from 'components/Diff/VariationsDiffContent';
 import { I18NRules, RulesDiffContent } from 'components/Diff/RulesDiffContent';
 import { DiffStatusContent } from 'components/Diff/DiffStatus';
+import PrerequisitesDiffContent from 'components/Diff/PrerequisitesDiffContent'; 
 import { DiffServe } from 'components/Diff/DiffServe';
 import PopupConfirm from 'components/PopupConfirm';
 import ApprovalOperation from '../ApprovalOperation';
-import { defaultServeContainer, disabledServeContainer, variationContainer, ruleContainer } from 'pages/targeting/provider';
+import { defaultServeContainer, disabledServeContainer, variationContainer, ruleContainer, prerequisiteContainer } from 'pages/targeting/provider';
 import { getTargetingDiff } from 'services/toggle';
 import { DATETIME_TYPE, SEGMENT_TYPE } from 'components/Rule/constants';
-import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, ITarget, IServe, IRule, IVariation, ICondition } from 'interfaces/targeting';
+import { IToggleInfo, IModifyInfo, IApprovalInfo, ITargetingDiff, ITargeting, ITarget, IServe, IRule, IVariation, ICondition, IPrerequisite } from 'interfaces/targeting';
 import { IRouterParams } from 'interfaces/project';
 
 import styles from './index.module.scss';
-import { cloneDeep } from 'lodash';
 
 interface IProps {
   toggleInfo?: IToggleInfo;
@@ -77,6 +78,7 @@ const Info: React.FC<IProps> = (props) => {
   const { variations, saveVariations } = variationContainer.useContainer();
   const { saveDefaultServe } = defaultServeContainer.useContainer();
   const { saveDisabledServe } = disabledServeContainer.useContainer();
+  const { savePrerequisites } = prerequisiteContainer.useContainer();
   const { projectKey, environmentKey, toggleKey } = useParams<IRouterParams>();
   const intl = useIntl();
 
@@ -102,6 +104,12 @@ const Info: React.FC<IProps> = (props) => {
         });
         rule.active = true;
       });
+
+      const clonePrerequisites = cloneDeep(targeting.prerequisites) || [];
+      clonePrerequisites.forEach((prerequisite: IPrerequisite) => {
+        prerequisite.id = uuidv4();
+      });
+      savePrerequisites(clonePrerequisites);
 
       saveRules(targetRule);
       saveDefaultServe(targeting.defaultServe);
@@ -447,6 +455,15 @@ const Info: React.FC<IProps> = (props) => {
                     return <DiffStatusContent content={content} />;
                   },
                   diffKey: 'status',
+                },
+                {
+                  before: before?.content.prerequisites ?? [],
+                  after: after?.content.prerequisites ?? [],
+                  title: intl.formatMessage({ id: 'common.prerequisite.text' }),
+                  renderContent: (content) => {
+                    return <PrerequisitesDiffContent content={content} />;
+                  },
+                  diffKey: 'prerequisites',
                 },
                 {
                   before: before?.content.variations,

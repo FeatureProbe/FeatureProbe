@@ -316,3 +316,41 @@ export const getToggleAttributes = async<T> (projectKey: string, environmentKey:
     },
   });
 };
+
+export const getPrerequisiteToggle = async<T> (projectKey: string, environmentKey: string, toggleKey: string, params?: {
+  likeNameAndKey: string;
+}) => {
+  const url = `${
+    API.getPrerequisiteToggleURI
+      .replace(':projectKey', projectKey)
+      .replace(':environmentKey', environmentKey)
+      .replace(':toggleKey', toggleKey)
+  }?${qs.stringify(params)}`;
+  
+  return request<T>(url, {
+    method: 'GET',
+    headers: {
+      ...ApplicationJson()
+    },
+  });
+};
+
+export const getPrerequisiteDependencies = async<T> (projectKey: string, environmentKey: string, toggleKey: string, params: {
+  pageIndex: number;
+  pageSize: number;
+}) => {
+  const url = `${
+    API.getDependentPrerequisteToggleURI
+      .replace(':projectKey', projectKey)
+      .replace(':environmentKey', environmentKey)
+      .replace(':toggleKey', toggleKey)
+  }?${qs.stringify(params)}`;
+  
+  return request<T>(url, {
+    method: 'GET',
+    headers: {
+      ...ApplicationJson()
+    },
+  });
+};
+

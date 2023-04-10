@@ -1,0 +1,118 @@
+.prerequisite {
+  color: #495057;
+  padding: 16px 4px 16px 16px;
+}
+
+.title {
+  margin-bottom: 12px;
+  display: flex;
+}
+
+.prerequisite-title {
+  margin-right: 28px;
+}
+
+.title-left {
+  flex: 1;
+  margin-right: 20px;
+  position: relative;
+}
+
+.title-left-tag {
+  position: absolute;
+  right: 28px;
+  top: 5px;
+}
+
+.title-right {
+  flex: 1;
+}
+
+.title-remove {
+  width: 28px;
+}
+
+.iconfont {
+  font-size: 12px !important;
+  margin-right: 4px;
+}
+
+.add-btn {
+  width: 180px;
+}
+
+.icon-minus {
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+  margin-left: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  line-height: 24px;
+  text-align: center;
+  color: #74788d;
+}
+
+.icon-minus:hover {
+  background-color: rgba(33, 37, 41, 0.04);
+  color: #495057;
+}
+
+.dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+
+.toggle-name {
+  flex: 1;
+}
+
+.enabled-tag {
+  height: 16px;
+  border: 1px solid #556ee6;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 14px;
+  color: #556ee6;
+  font-size: 12px;
+  padding: 0 5px;
+  margin-right: 20px;
+}
+
+.disabled-tag {
+  height: 16px;
+  border: 1px solid #a9afbc;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 14px;
+  color: #a9afbc;
+  font-size: 12px;
+  padding: 0 5px;
+  margin-right: 20px;
+}
+
+.dropdown-value {
+  color: #212529;
+  line-height: 18px;
+}
+
+.value-name {
+  font-size: 12px;
+  color: #74788d;
+  line-height: 18px;
+  margin-top: 3px;
+}
+
+.value-description {
+  margin-left: 16px;
+}
+
+.trigger {
+  line-height: 25px;
+}
+
+.popup {
+  opacity: 0.8;
+}

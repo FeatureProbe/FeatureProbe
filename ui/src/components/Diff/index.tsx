@@ -39,7 +39,9 @@ const Diff: React.FC<DiffProps> = (props) => {
         <div>
           <Icon type="warning-circle" customclass={styles['warning-circle']} />
           <FormattedMessage id="common.diff.tips" />
-          <span><FormattedMessage id="diff.count.text" values={{count: count}} /></span>
+          <span>
+            <FormattedMessage id="diff.count.text" values={{count: count}} />
+          </span>
         </div>
         <div>
           <div>
