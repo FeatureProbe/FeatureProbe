@@ -17,7 +17,7 @@ If those users don't complain or even give good feedback, we can populate the ch
 - Operation Procedure
 
    * The operations team adds adds a new feature toggle named "Promotional Percentage Rollout", enable to 10% of users. Shown in below picture:
-   ![roll out](/demo_percentage_publish_en.png)
+   ![roll out](/demo_percentage_publish_10_en.png)
    * The developer imports the FeatureProbe SDK in the code base, uses the toggle, then show to users.
    * After confirming that there is no problem with the 10% of users, operations teams increase the number of users until to 100% of users.
 

@@ -15,7 +15,7 @@ FeatureProbe 最常见的应用场景是管理新功能的发布。当我们发�
 
 - 操作流程
   * 运营人员在 FeatureProbe 上创建一个名叫"Promotional Percentage Rollout"的开关，初始化放量 10%:
-  ![roll out](/demo_percentage_publish_cn.png)
+  ![roll out](/demo_percentage_publish_10_cn.png)
   * 开发人员在代码中引用 FeatureProbe 的 sdk 访问这个活动开关，并拿到相应展示内容展示给用户。
   * 在确认10%放量没有问题之后，运营人员直接把灰度比例逐步调大，直到放量给所有用户。
 
