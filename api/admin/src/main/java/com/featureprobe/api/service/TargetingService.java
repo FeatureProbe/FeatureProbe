@@ -234,11 +234,11 @@ public class TargetingService {
         }
         List<Targeting> targetingList = targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey,
                 environmentKey, parentToggleKeys);
-        Set<PrerequisiteModel> parentPrerequisiteModels = targetingList.stream()
+        Set<PrerequisiteModel> prerequisite = targetingList.stream()
                 .map(Targeting::getContent).map(content -> JsonMapper.toObject(content, TargetingContent.class)
                         .getPrerequisites()).filter(Objects::nonNull)
                 .flatMap(List::stream).collect(Collectors.toSet());
-        return  hasDependencyCycle(projectKey, environmentKey, rootToggleKey, parentPrerequisites, deep - 1);
+        return  hasDependencyCycle(projectKey, environmentKey, rootToggleKey, prerequisite, deep - 1);
     }
 
     @Transactional(rollbackFor = Exception.class)
