@@ -184,10 +184,10 @@ class ToggleServiceSpec extends Specification {
         1 * trafficRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
                 Pageable.ofSize(1), 1)
-        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, [toggleKey]) >>
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, new HashSet<String>([toggleKey])) >>
                 [new Targeting(toggleKey: toggleKey, environmentKey: environmentKey, projectKey: projectKey, disabled: true)]
         1 * targetingSketchRepository.findByProjectKeyAndEnvironmentKeyAndStatusAndToggleKeyIn(projectKey, environmentKey,
-                SketchStatusEnum.PENDING, [toggleKey]) >> [new TargetingSketch(projectKey: projectKey, environmentKey: environmentKey, toggleKey: toggleKey,
+                SketchStatusEnum.PENDING, new HashSet<String>([toggleKey])) >> [new TargetingSketch(projectKey: projectKey, environmentKey: environmentKey, toggleKey: toggleKey,
                 content: rules, disabled: false, oldVersion: 1, status: SketchStatusEnum.PENDING, createdBy: new Member(account: "Admin"))]
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>
                 Optional.of(new Environment(key: environmentKey, serverSdkKey: "123", clientSdkKey: "123"))
@@ -219,10 +219,10 @@ class ToggleServiceSpec extends Specification {
         1 * trafficRepository.findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(_, _, _) >> toggleKeys
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
                 Pageable.ofSize(1), 1)
-        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, [toggleKey]) >>
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, new HashSet<String>([toggleKey])) >>
                 [new Targeting(toggleKey: toggleKey, environmentKey: environmentKey, projectKey: projectKey, disabled: true)]
         1 * targetingSketchRepository.findByProjectKeyAndEnvironmentKeyAndStatusAndToggleKeyIn(projectKey, environmentKey,
-                SketchStatusEnum.PENDING, [toggleKey]) >> [new TargetingSketch(projectKey: projectKey, environmentKey: environmentKey, toggleKey: toggleKey,
+                SketchStatusEnum.PENDING, new HashSet<String>([toggleKey])) >> [new TargetingSketch(projectKey: projectKey, environmentKey: environmentKey, toggleKey: toggleKey,
                 content: rules, disabled: false, oldVersion: 1, status: SketchStatusEnum.PENDING, createdBy: new Member(account: "Admin"))]
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>
                 Optional.of(new Environment(key: environmentKey, serverSdkKey: "123", clientSdkKey: "123"))
@@ -254,10 +254,10 @@ class ToggleServiceSpec extends Specification {
         1 * toggleRepository.findAll(_) >> [new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())]
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
                 Pageable.ofSize(1), 1)
-        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, [toggleKey]) >>
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, new HashSet<String>([toggleKey])) >>
                 [new Targeting(toggleKey: toggleKey, environmentKey: environmentKey, projectKey: projectKey, disabled: true)]
         1 * targetingSketchRepository.findByProjectKeyAndEnvironmentKeyAndStatusAndToggleKeyIn(projectKey, environmentKey,
-                SketchStatusEnum.PENDING, [toggleKey]) >> [new TargetingSketch(projectKey: projectKey, environmentKey: environmentKey, toggleKey: toggleKey,
+                SketchStatusEnum.PENDING, new HashSet<String>([toggleKey])) >> [new TargetingSketch(projectKey: projectKey, environmentKey: environmentKey, toggleKey: toggleKey,
                 content: rules, disabled: false, oldVersion: 1, status: SketchStatusEnum.PENDING, createdBy: new Member(account: "Admin"))]
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>
                 Optional.of(new Environment(key: environmentKey, serverSdkKey: "123", clientSdkKey: "123"))
@@ -290,10 +290,10 @@ class ToggleServiceSpec extends Specification {
                 environmentKey, [ToggleReleaseStatusEnum.RELEASE]) >> [new Targeting(toggleKey: toggleKey, environmentKey: environmentKey, projectKey: projectKey, disabled: true)]
         1 * toggleRepository.findAll(_, _) >> new PageImpl<>([new Toggle(key: toggleKey, projectKey: projectKey, createdTime: new Date())],
                 Pageable.ofSize(1), 1)
-        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, [toggleKey]) >>
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, new HashSet<String>([toggleKey])) >>
                 [new Targeting(toggleKey: toggleKey, environmentKey: environmentKey, projectKey: projectKey, disabled: true)]
         1 * targetingSketchRepository.findByProjectKeyAndEnvironmentKeyAndStatusAndToggleKeyIn(projectKey, environmentKey,
-                SketchStatusEnum.PENDING, [toggleKey]) >> [new TargetingSketch(projectKey: projectKey, environmentKey: environmentKey, toggleKey: toggleKey,
+                SketchStatusEnum.PENDING, new HashSet<String>([toggleKey])) >> [new TargetingSketch(projectKey: projectKey, environmentKey: environmentKey, toggleKey: toggleKey,
                 content: rules, disabled: false, oldVersion: 1, status: SketchStatusEnum.PENDING, createdBy: new Member(account: "Admin"))]
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >>
                 Optional.of(new Environment(key: environmentKey, serverSdkKey: "123", clientSdkKey: "123"))

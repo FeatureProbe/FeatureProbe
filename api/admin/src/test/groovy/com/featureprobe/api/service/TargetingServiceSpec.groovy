@@ -8,12 +8,18 @@ import com.featureprobe.api.base.model.OrganizationMemberModel
 import com.featureprobe.api.base.model.TargetingContent
 import com.featureprobe.api.base.tenant.TenantContext
 import com.featureprobe.api.base.util.JsonMapper
+import com.featureprobe.api.config.AppConfig
 import com.featureprobe.api.dao.entity.Member
 import com.featureprobe.api.dao.entity.Segment
+import com.featureprobe.api.dao.entity.Toggle
 import com.featureprobe.api.dao.entity.ToggleControlConf
 import com.featureprobe.api.dao.exception.ResourceConflictException
 import com.featureprobe.api.dao.exception.ResourceNotFoundException
+import com.featureprobe.api.dao.repository.PrerequisiteRepository
+import com.featureprobe.api.dao.repository.ToggleRepository
 import com.featureprobe.api.dto.CancelSketchRequest
+import com.featureprobe.api.dto.PrerequisiteToggleRequest
+import com.featureprobe.api.dto.PrerequisiteToggleResponse
 import com.featureprobe.api.dto.TargetingApprovalRequest
 import com.featureprobe.api.dto.TargetingDiffResponse
 import com.featureprobe.api.dto.TargetingPublishRequest
@@ -61,17 +67,21 @@ class TargetingServiceSpec extends Specification {
     EnvironmentRepository environmentRepository
     ApprovalRecordRepository approvalRecordRepository
     TargetingSketchRepository targetingSketchRepository
+    ToggleRepository toggleRepository
+    PrerequisiteRepository prerequisiteRepository
     ChangeLogService changeLogService
     PublishMessageRepository changeLogRepository
     DictionaryRepository dictionaryRepository
     ToggleControlConfService toggleControlConfService
     MetricService metricService
+    AppConfig appConfig
     EntityManager entityManager
 
     def projectKey
     def environmentKey
     def toggleKey
     def content
+    def nonPrerequisiteContent
     def changeContent
     def numberErrorContent
     def datetimeErrorContent
@@ -89,29 +99,25 @@ class TargetingServiceSpec extends Specification {
         environmentRepository = Mock(EnvironmentRepository)
         approvalRecordRepository = Mock(ApprovalRecordRepository)
         targetingSketchRepository = Mock(TargetingSketchRepository)
+        toggleRepository = Mock(ToggleRepository)
+        prerequisiteRepository = Mock(PrerequisiteRepository)
         toggleControlConfService = Mock(ToggleControlConfService)
         entityManager = Mock(SessionImpl)
         changeLogRepository = Mock(PublishMessageRepository)
         dictionaryRepository = Mock(DictionaryRepository)
         metricService = Mock(MetricService)
+        appConfig = new AppConfig(maximumDependencyDepth: 2);
         changeLogService = new ChangeLogService(changeLogRepository, environmentRepository, dictionaryRepository)
         targetingService = new TargetingService(targetingRepository, segmentRepository,
                 targetingSegmentRepository, targetingVersionRepository, variationHistoryRepository,
-                environmentRepository, approvalRecordRepository, targetingSketchRepository, changeLogService,
-                toggleControlConfService, metricService, entityManager)
+                environmentRepository, approvalRecordRepository, targetingSketchRepository, toggleRepository,
+                prerequisiteRepository, changeLogService, toggleControlConfService, metricService, appConfig, entityManager)
 
         projectKey = "feature_probe"
         environmentKey = "test"
         toggleKey = "feature_toggle_unit_test"
-        content = "{\"rules\":[{\"conditions\":[{\"type\":\"string\",\"subject\":\"city\",\"predicate\":\"is one of\"," +
-                "\"objects\":[\"Paris\"]},{\"type\":\"segment\",\"subject\":\"\",\"predicate\":\"is in\"," +
-                "\"objects\":[\"test_segment\"]},{\"type\":\"number\",\"subject\":\"age\",\"predicate\":\"=\"," +
-                "\"objects\":[\"20\"]},{\"type\":\"datetime\",\"subject\":\"\",\"predicate\":\"before\"," +
-                "\"objects\":[\"2022-06-27T16:08:10+08:00\"]},{\"type\":\"semver\",\"subject\":\"\"," +
-                "\"predicate\":\"before\",\"objects\":[\"1.0.1\"]}],\"name\":\"Paris women show 50% red buttons, 50% blue\"," +
-                "\"serve\":{\"split\":[5000,5000,0]}}],\"disabledServe\":{\"select\":1},\"defaultServe\":{\"select\":1}," +
-                "\"variations\":[{\"value\":\"red\",\"name\":\"Red Button\",\"description\":\"Set button color to Red\"}," +
-                "{\"value\":\"blue\",\"name\":\"Blue Button\",\"description\":\"Set button color to Blue\"}]}"
+        content = "{\"rules\":[{\"conditions\":[{\"type\":\"string\",\"subject\":\"city\",\"predicate\":\"is one of\",\"objects\":[\"Paris\"]},{\"type\":\"segment\",\"subject\":\"\",\"predicate\":\"is in\",\"objects\":[\"test_segment\"]},{\"type\":\"number\",\"subject\":\"age\",\"predicate\":\"=\",\"objects\":[\"20\"]},{\"type\":\"datetime\",\"subject\":\"\",\"predicate\":\"before\",\"objects\":[\"2022-06-27T16:08:10+08:00\"]},{\"type\":\"semver\",\"subject\":\"\",\"predicate\":\"before\",\"objects\":[\"1.0.1\"]}],\"name\":\"Paris women show 50% red buttons, 50% blue\",\"serve\":{\"split\":[5000,5000,0]}}],\"disabledServe\":{\"select\":1},\"defaultServe\":{\"select\":1},\"variations\":[{\"value\":\"red\",\"name\":\"Red Button\",\"description\":\"Set button color to Red\"},{\"value\":\"blue\",\"name\":\"Blue Button\",\"description\":\"Set button color to Blue\"}],\"prerequisites\":[{\"key\":\"metric_diagnosis_two\",\"value\":\"false\",\"type\":\"boolean\"},{\"key\":\"metric_diagnosis_one\",\"value\":\"true\",\"type\":\"boolean\"}]}"
+        nonPrerequisiteContent = "{\"rules\":[{\"conditions\":[{\"type\":\"string\",\"subject\":\"city\",\"predicate\":\"is one of\",\"objects\":[\"Paris\"]},{\"type\":\"segment\",\"subject\":\"\",\"predicate\":\"is in\",\"objects\":[\"test_segment\"]},{\"type\":\"number\",\"subject\":\"age\",\"predicate\":\"=\",\"objects\":[\"20\"]},{\"type\":\"datetime\",\"subject\":\"\",\"predicate\":\"before\",\"objects\":[\"2022-06-27T16:08:10+08:00\"]},{\"type\":\"semver\",\"subject\":\"\",\"predicate\":\"before\",\"objects\":[\"1.0.1\"]}],\"name\":\"Paris women show 50% red buttons, 50% blue\",\"serve\":{\"split\":[5000,5000,0]}}],\"disabledServe\":{\"select\":1},\"defaultServe\":{\"select\":1},\"variations\":[{\"value\":\"red\",\"name\":\"Red Button\",\"description\":\"Set button color to Red\"},{\"value\":\"blue\",\"name\":\"Blue Button\",\"description\":\"Set button color to Blue\"}],\"prerequisites\":[]}"
         changeContent = "{\"rules\":[{\"conditions\":[{\"type\":\"string\",\"subject\":\"city2\",\"predicate\":\"is one of\"," +
                 "\"objects\":[\"Paris\"]},{\"type\":\"segment\",\"subject\":\"\",\"predicate\":\"is in\"," +
                 "\"objects\":[\"test_segment2\"]},{\"type\":\"number\",\"subject\":\"age\",\"predicate\":\"=\"," +
@@ -171,6 +177,7 @@ class TargetingServiceSpec extends Specification {
         def ret = targetingService.publish(projectKey, environmentKey, toggleKey, targetingRequest)
 
         then:
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, _) >> [new Targeting(content: nonPrerequisiteContent), new Targeting(content: nonPrerequisiteContent)]
         segmentRepository.existsByProjectKeyAndKey(projectKey, _) >> true
         1 * environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey) >> Optional.of(new Environment(enableApproval: false, version: 1))
         1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey, toggleKey) >>
@@ -192,10 +199,39 @@ class TargetingServiceSpec extends Specification {
         }
     }
 
-    def "publish targeting conflicts should be throws `OptimisticLockException`"() {
+    def "prerequisites dependency cycle"() {
         given:
         TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
         TargetingContent targetingContent = JsonMapper.toObject(content, TargetingContent.class);
+        targetingRequest.setContent(targetingContent)
+        targetingRequest.setDisabled(false)
+
+        when:
+        targetingService.publish(projectKey, environmentKey, "metric_diagnosis_one", targetingRequest)
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "prerequisites deep overflow"() {
+        given:
+        TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
+        TargetingContent targetingContent = JsonMapper.toObject(content, TargetingContent.class);
+        targetingRequest.setContent(targetingContent)
+        targetingRequest.setDisabled(false)
+        def deepContent = "{\"rules\":[{\"conditions\":[{\"type\":\"string\",\"subject\":\"city\",\"predicate\":\"is one of\",\"objects\":[\"Paris\"]},{\"type\":\"segment\",\"subject\":\"\",\"predicate\":\"is in\",\"objects\":[\"test_segment\"]},{\"type\":\"number\",\"subject\":\"age\",\"predicate\":\"=\",\"objects\":[\"20\"]},{\"type\":\"datetime\",\"subject\":\"\",\"predicate\":\"before\",\"objects\":[\"2022-06-27T16:08:10+08:00\"]},{\"type\":\"semver\",\"subject\":\"\",\"predicate\":\"before\",\"objects\":[\"1.0.1\"]}],\"name\":\"Paris women show 50% red buttons, 50% blue\",\"serve\":{\"split\":[5000,5000,0]}}],\"disabledServe\":{\"select\":1},\"defaultServe\":{\"select\":1},\"variations\":[{\"value\":\"red\",\"name\":\"Red Button\",\"description\":\"Set button color to Red\"},{\"value\":\"blue\",\"name\":\"Blue Button\",\"description\":\"Set button color to Blue\"}],\"prerequisites\":[{\"key\":\"metric_diagnosis_three\",\"value\":\"false\",\"type\":\"boolean\"},{\"key\":\"metric_diagnosis_four\",\"value\":\"true\",\"type\":\"boolean\"}]}"
+
+        when:
+        targetingService.publish(projectKey, environmentKey, toggleKey, targetingRequest)
+        then:
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, _) >> [new Targeting(content: content), new Targeting(content: content)]
+        1 * targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, _) >> [new Targeting(content: deepContent), new Targeting(content: deepContent)]
+        thrown(IllegalArgumentException)
+    }
+
+    def "publish targeting conflicts should be throws `OptimisticLockException`"() {
+        given:
+        TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
+        TargetingContent targetingContent = JsonMapper.toObject(nonPrerequisiteContent, TargetingContent.class);
         targetingRequest.setContent(targetingContent)
         targetingRequest.setDisabled(false)
         targetingRequest.setBaseVersion(100)
@@ -215,7 +251,7 @@ class TargetingServiceSpec extends Specification {
 
     def "submit targeting approval"() {
         given:
-        TargetingContent targetingContent = JsonMapper.toObject(content, TargetingContent.class)
+        TargetingContent targetingContent = JsonMapper.toObject(nonPrerequisiteContent, TargetingContent.class)
         TargetingApprovalRequest approvalRequest = new TargetingApprovalRequest(content: targetingContent, comment: "Test", disabled: false, reviewers: ["test@test.com"])
         setAuthContext("Admin", "ADMIN")
         when:
@@ -233,7 +269,7 @@ class TargetingServiceSpec extends Specification {
     def "publish targeting segment not found"() {
         when:
         TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
-        TargetingContent targetingContent = JsonMapper.toObject(content, TargetingContent.class);
+        TargetingContent targetingContent = JsonMapper.toObject(nonPrerequisiteContent, TargetingContent.class);
         targetingRequest.setContent(targetingContent)
         targetingRequest.setDisabled(false)
         targetingService.publish(projectKey, environmentKey, toggleKey, targetingRequest)
@@ -464,6 +500,15 @@ class TargetingServiceSpec extends Specification {
         diff.currentDisabled
     }
 
+    def "query prerequisite toggles"(){
+        when:
+        def toggles = targetingService.preToggles(projectKey, environmentKey, toggleKey, new PrerequisiteToggleRequest(likeNameAndKey: "name"))
+        then:
+        1 * toggleRepository.findAll(_) >> [new Toggle(name: "test_name", key: "test_key", returnType: "string")]
+        1 * targetingRepository.findAll(_) >> [new Targeting(toggleKey: "test_key", disabled: true, content: content)]
+        1 == toggles.size()
+        2 == toggles.get(0).getVariations().size()
+    }
 
     private setAuthContext(String account, String role) {
         SecurityContextHolder.setContext(new SecurityContextImpl(

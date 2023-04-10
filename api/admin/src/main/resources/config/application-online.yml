@@ -41,6 +41,7 @@ app:
   server-base-urls: http://127.0.0.1:4007 # , split
   get-started-server-url: http://127.0.0.1:4007
   analysis-base-url: http://127.0.0.1:4006
+  maximum-dependency-depth: 20
   security:
     jwt:
       keystore-location: keys/keystore.jks

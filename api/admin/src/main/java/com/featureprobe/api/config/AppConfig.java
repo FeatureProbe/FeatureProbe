@@ -20,4 +20,6 @@ public class AppConfig {
     private String serverBaseUrls;
 
     private String analysisBaseUrl;
+
+    private Integer maximumDependencyDepth;
 }

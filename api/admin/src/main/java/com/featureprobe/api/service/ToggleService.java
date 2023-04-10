@@ -205,7 +205,7 @@ public class ToggleService {
                 retainAllKeys(toggleKeys, keys);
             }
             togglePage = compoundQuery(projectKey, searchRequest, toggleKeys, isPrecondition);
-            List<String> keys = togglePage.getContent().stream().map(Toggle::getKey).collect(Collectors.toList());
+            Set<String> keys = togglePage.getContent().stream().map(Toggle::getKey).collect(Collectors.toSet());
 
             Map<String, Targeting> targetingMap = queryTargetingMap(projectKey, searchRequest.getEnvironmentKey(),
                     keys);
@@ -286,7 +286,7 @@ public class ToggleService {
     }
 
 
-    private Map<String, Set<String>> queryTagMap(List<String> toggleKeys) {
+    private Map<String, Set<String>> queryTagMap(Set<String> toggleKeys) {
         List<ToggleTagRelation> toggleTags = toggleTagRepository.findByToggleKeyIn(toggleKeys);
         Set<Long> tagIds = toggleTags.stream().map(ToggleTagRelation::getTagId).collect(Collectors.toSet());
         List<Tag> tags = tagRepository.findAllById(tagIds);
@@ -303,7 +303,7 @@ public class ToggleService {
     }
 
     private Map<String, TargetingSketch> queryNewestTargetingSketchMap(String projectKey, String environmentKey,
-                                                                       List<String> toggleKeys) {
+                                                                       Set<String> toggleKeys) {
         List<TargetingSketch> targetingSketches = targetingSketchRepository
                 .findByProjectKeyAndEnvironmentKeyAndStatusAndToggleKeyIn(projectKey, environmentKey,
                         SketchStatusEnum.PENDING, toggleKeys);
@@ -312,7 +312,7 @@ public class ToggleService {
     }
 
     private Map<String, Targeting> queryTargetingMap(String projectKey, String environmentKey,
-                                                     List<String> toggleKeys) {
+                                                     Set<String> toggleKeys) {
         List<Targeting> targetingList = targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey,
                 environmentKey, toggleKeys);
         return targetingList.stream().collect(Collectors.toMap(Targeting::uniqueKey, Function.identity(), (x, y) -> x));
@@ -453,7 +453,7 @@ public class ToggleService {
     }
 
     private Map<String, TrafficCache> queryTrafficCacheMap(String projectKey, String environmentKey,
-                                                           List<String> toggleKeys) {
+                                                           Set<String> toggleKeys) {
         Environment environment = environmentRepository.findByProjectKeyAndKey(projectKey, environmentKey).get();
         Specification<TrafficCache> spec = (root, query, cb) -> {
             Predicate p0 = root.get("toggleKey").in(toggleKeys);

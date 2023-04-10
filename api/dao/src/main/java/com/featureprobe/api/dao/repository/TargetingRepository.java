@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface TargetingRepository extends JpaRepository<Targeting, Long>, JpaSpecificationExecutor<Targeting> {
@@ -28,7 +29,8 @@ public interface TargetingRepository extends JpaRepository<Targeting, Long>, Jpa
                                                                                     boolean deleted);
 
     List<Targeting> findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(String projectKey, String environmentKey,
-                                                                    List<String> toggleKeys);
+                                                                    Set<String> toggleKeys);
+
 
     List<Targeting> findAllByProjectKeyAndEnvironmentKey(String projectKey, String environmentKey);
 }

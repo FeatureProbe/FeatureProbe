@@ -8,6 +8,7 @@ import com.featureprobe.api.base.util.JsonMapper;
 import com.featureprobe.api.dao.entity.Segment;
 import com.featureprobe.sdk.server.model.Condition;
 import com.featureprobe.sdk.server.model.ConditionType;
+import com.featureprobe.sdk.server.model.Prerequisite;
 import com.featureprobe.sdk.server.model.Rule;
 import com.featureprobe.sdk.server.model.Toggle;
 import com.google.common.collect.Maps;
@@ -102,6 +103,7 @@ public class ServerToggleBuilder {
         this.setDisabledServe();
         this.setDefaultServe();
         this.setVariations();
+        this.setPrerequisite();
         this.setRules();
         return toggle;
     }
@@ -136,6 +138,14 @@ public class ServerToggleBuilder {
         toggle.setVariations(variations);
     }
 
+    private void setPrerequisite() {
+        if (this.variationValueConverter == null) {
+            throw new ServerToggleBuildException("return type not set");
+        }
+        List<Prerequisite> prerequisites = targetingContent
+                .getPrerequisiteByConverter(this.converters);
+        toggle.setPrerequisites(prerequisites);
+    }
 
     private void setRules() {
         if (CollectionUtils.isEmpty(targetingContent.getRules())) {

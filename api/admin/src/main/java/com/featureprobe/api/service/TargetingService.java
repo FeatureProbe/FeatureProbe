@@ -3,20 +3,29 @@ package com.featureprobe.api.service;
 import com.featureprobe.api.auth.TokenHelper;
 import com.featureprobe.api.base.enums.OrganizationRoleEnum;
 import com.featureprobe.api.base.model.BaseRule;
+import com.featureprobe.api.base.model.PrerequisiteModel;
 import com.featureprobe.api.base.model.SegmentRuleModel;
 import com.featureprobe.api.base.model.TargetingContent;
 import com.featureprobe.api.base.model.ToggleRule;
 import com.featureprobe.api.base.model.Variation;
 import com.featureprobe.api.base.tenant.TenantContext;
 import com.featureprobe.api.base.util.ToggleContentLimitChecker;
+import com.featureprobe.api.config.AppConfig;
+import com.featureprobe.api.dao.entity.Prerequisite;
 import com.featureprobe.api.dao.entity.Segment;
 import com.featureprobe.api.dao.entity.Toggle;
 import com.featureprobe.api.dao.entity.ToggleControlConf;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
+import com.featureprobe.api.dao.repository.PrerequisiteRepository;
+import com.featureprobe.api.dao.repository.ToggleRepository;
 import com.featureprobe.api.dao.utils.PageRequestUtil;
 import com.featureprobe.api.dto.AfterTargetingVersionResponse;
 import com.featureprobe.api.dto.ApprovalResponse;
 import com.featureprobe.api.dto.CancelSketchRequest;
+import com.featureprobe.api.dto.DependentToggleRequest;
+import com.featureprobe.api.dto.DependentToggleResponse;
+import com.featureprobe.api.dto.PrerequisiteToggleRequest;
+import com.featureprobe.api.dto.PrerequisiteToggleResponse;
 import com.featureprobe.api.dto.TargetingApprovalRequest;
 import com.featureprobe.api.dto.TargetingDiffResponse;
 import com.featureprobe.api.dto.TargetingPublishRequest;
@@ -54,6 +63,7 @@ import com.featureprobe.api.base.util.JsonMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -67,14 +77,17 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -107,11 +120,17 @@ public class TargetingService {
 
     private TargetingSketchRepository targetingSketchRepository;
 
+    private ToggleRepository toggleRepository;
+
+    private PrerequisiteRepository prerequisiteRepository;
+
     private ChangeLogService changeLogService;
 
     private ToggleControlConfService toggleControlConfService;
 
     private MetricService metricService;
+
+    private AppConfig appConfig;
 
     @PersistenceContext
     public EntityManager entityManager;
@@ -119,6 +138,15 @@ public class TargetingService {
     @Transactional(rollbackFor = Exception.class)
     public TargetingResponse publish(String projectKey, String environmentKey, String toggleKey,
                                      TargetingPublishRequest targetingPublishRequest) {
+        List<PrerequisiteModel> prerequisites = targetingPublishRequest.getContent().getPrerequisites();
+        if (!CollectionUtils.isEmpty(prerequisites)){
+            if (hasDependencyCycle(projectKey, environmentKey, toggleKey, new HashSet<>(prerequisites),
+                    appConfig.getMaximumDependencyDepth())) {
+                throw new IllegalArgumentException("validate.prerequisite.dependency.cycle");
+            }
+            updateDependentToggles(projectKey, environmentKey, toggleKey, prerequisites);
+        }
+
         Environment environment = selectEnvironment(projectKey, environmentKey);
         TargetingResponse response = publishTargeting(projectKey, environmentKey, toggleKey,
                 targetingPublishRequest, null);
@@ -130,6 +158,12 @@ public class TargetingService {
     public ApprovalResponse approval(String projectKey, String environmentKey, String toggleKey,
                                      TargetingApprovalRequest approvalRequest) {
         validateTargetingContent(projectKey, approvalRequest.getContent());
+        List<PrerequisiteModel> prerequisites = approvalRequest.getContent().getPrerequisites();
+        if (!CollectionUtils.isEmpty(prerequisites) &&
+                hasDependencyCycle(projectKey, environmentKey, toggleKey, new HashSet<>(prerequisites),
+                appConfig.getMaximumDependencyDepth())){
+            throw new IllegalArgumentException("validate.prerequisite.dependency.cycle");
+        }
         Environment environment = selectEnvironment(projectKey, environmentKey);
         if (environment.isEnableApproval()) {
             List<String> reviews = JsonMapper.toListObject(environment.getReviewers(), String.class);
@@ -150,6 +184,27 @@ public class TargetingService {
         throw new IllegalArgumentException("validate.approval.disable");
     }
 
+    private void updateDependentToggles(String projectKey, String environmentKey, String toggleKey,
+                                        List<PrerequisiteModel> prerequisiteModels) {
+        prerequisiteRepository.deleteAllByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey, environmentKey,
+                toggleKey);
+        List<Prerequisite> prerequisites = prerequisiteModels.stream().map(prerequisiteModel ->
+                buildPrerequisite(projectKey, environmentKey, toggleKey, prerequisiteModel))
+                .collect(Collectors.toList());
+        prerequisiteRepository.saveAll(prerequisites);
+    }
+
+    private Prerequisite buildPrerequisite(String projectKey, String environmentKey, String toggleKey,
+                                           PrerequisiteModel prerequisiteModel) {
+        Prerequisite prerequisite = new Prerequisite();
+        prerequisite.setProjectKey(projectKey);
+        prerequisite.setEnvironmentKey(environmentKey);
+        prerequisite.setToggleKey(toggleKey);
+        prerequisite.setParentToggleKey(prerequisiteModel.getKey());
+        prerequisite.setDependentValue(prerequisiteModel.getValue());
+        return prerequisite;
+    }
+
     private ApprovalResponse buildApprovalResponse(ApprovalRecord approvalRecord, Targeting currentData,
                                                    Targeting approvalData) {
         ApprovalResponse approvalResponse = ApprovalRecordMapper.INSTANCE.entityToApprovalResponse(approvalRecord);
@@ -162,6 +217,28 @@ public class TargetingService {
         approval.put("content", approvalData.getContent());
         approvalResponse.setApprovalData(approval);
         return approvalResponse;
+    }
+
+    private boolean hasDependencyCycle(String projectKey, String environmentKey , String rootToggleKey,
+                                       Set<PrerequisiteModel> parentPrerequisites, int deep) {
+        if (deep == 0) {
+            throw new IllegalArgumentException("validate.prerequisite.deep.limit");
+        }
+        if (CollectionUtils.isEmpty(parentPrerequisites)) {
+            return false;
+        }
+        Set<String> parentToggleKeys = parentPrerequisites.stream().map(PrerequisiteModel::getKey)
+                .collect(Collectors.toSet());
+        if (parentToggleKeys.contains(rootToggleKey)) {
+            return true;
+        }
+        List<Targeting> targetingList = targetingRepository.findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey,
+                environmentKey, parentToggleKeys);
+        Set<PrerequisiteModel> parentPrerequisiteModels = targetingList.stream()
+                .map(Targeting::getContent).map(content -> JsonMapper.toObject(content, TargetingContent.class)
+                        .getPrerequisites()).filter(Objects::nonNull)
+                .flatMap(List::stream).collect(Collectors.toSet());
+        return  hasDependencyCycle(projectKey, environmentKey, rootToggleKey, parentPrerequisites, deep - 1);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -357,7 +434,9 @@ public class TargetingService {
                 && metricService.existsMetric(targeting.getProjectKey(),
                 targeting.getEnvironmentKey(),
                 targeting.getToggleKey()));
-
+        if (Objects.isNull(targetingResponse.getContent().getPrerequisites())) {
+            targetingResponse.getContent().setPrerequisites(Collections.emptyList());
+        }
         return targetingResponse;
     }
 
@@ -382,7 +461,6 @@ public class TargetingService {
 
     private TargetingResponse publishTargeting(String projectKey, String environmentKey, String toggleKey,
                                                TargetingPublishRequest targetingPublishRequest, Long approvalId) {
-
         Targeting latestTargeting = selectTargeting(projectKey, environmentKey, toggleKey);
         if (targetingPublishRequest.isUpdateTargetingRules()) {
             latestTargeting = updateTargeting(projectKey, latestTargeting, targetingPublishRequest);
@@ -714,4 +792,84 @@ public class TargetingService {
         }
         return res;
     }
+
+    public List<PrerequisiteToggleResponse> preToggles(String projectKey, String environmentKey, String toggleKey,
+                                                       PrerequisiteToggleRequest query) {
+        List<Toggle> nonSelfToggles = getNonSelfToggles(projectKey, toggleKey, query);
+        List<Targeting> nonSelfTargetingList = getNonSelfTargetingList(projectKey, environmentKey, toggleKey);
+        Map<String, Targeting> targetingMap = nonSelfTargetingList.stream()
+                .collect(Collectors.toMap(Targeting::getToggleKey, Function.identity()));
+        return nonSelfToggles.stream().map(toggle -> buildPrerequisiteToggle(toggle, targetingMap))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    public Page<DependentToggleResponse> getDependentToggles(String projectKey, String environmentKey,
+                                                             String toggleKey, DependentToggleRequest requestParam) {
+        Page<Prerequisite> prerequisites = prerequisiteRepository
+                .findAllByProjectKeyAndEnvironmentKeyAndParentToggleKey(projectKey, environmentKey, toggleKey,
+                        PageRequestUtil.toPageable(requestParam, Sort.Direction.DESC, "createdTime"));
+        if (prerequisites.isEmpty()) return Page.empty();
+        Set<String> dependentToggleKeys = prerequisites.stream().map(Prerequisite::getToggleKey)
+                .collect(Collectors.toSet());
+        Map<String, Toggle> toggleMap = toggleRepository.findAllByProjectKeyAndKeyIn(projectKey, dependentToggleKeys)
+                .stream().collect(Collectors.toMap(Toggle::getKey, Function.identity()));
+        Map<String, Targeting> targetingMap = targetingRepository
+                .findByProjectKeyAndEnvironmentKeyAndToggleKeyIn(projectKey, environmentKey, dependentToggleKeys)
+                .stream().collect(Collectors.toMap(Targeting::getToggleKey, Function.identity()));
+        return  prerequisites.map(prerequisite -> buildDependentToggle(prerequisite, toggleMap, targetingMap));
+    }
+
+    private DependentToggleResponse buildDependentToggle(Prerequisite prerequisite, Map<String, Toggle> toggleMap,
+                                                         Map<String, Targeting> targetingMap) {
+        DependentToggleResponse dependentToggle = new DependentToggleResponse();
+        dependentToggle.setDependentValue(prerequisite.getDependentValue());
+        dependentToggle.setKey(prerequisite.getToggleKey());
+        dependentToggle.setName(toggleMap.get(prerequisite.getToggleKey()).getName());
+        dependentToggle.setDisabled(targetingMap.get(prerequisite.getToggleKey()).isDisabled());
+        return dependentToggle;
+    }
+
+    private PrerequisiteToggleResponse buildPrerequisiteToggle(Toggle toggle, Map<String, Targeting> targetingMap) {
+        PrerequisiteToggleResponse prerequisiteToggle = new PrerequisiteToggleResponse();
+        Targeting targeting = targetingMap.get(toggle.getKey());
+        if (Objects.isNull(targeting)) return null;
+        prerequisiteToggle.setName(toggle.getName());
+        prerequisiteToggle.setKey(toggle.getKey());
+        prerequisiteToggle.setReturnType(toggle.getReturnType());
+        prerequisiteToggle.setDisabled(targeting.isDisabled());
+        List<Variation> variations = JsonMapper.toObject(targeting.getContent(),
+                TargetingContent.class).getVariations();
+        prerequisiteToggle.setVariations(variations);
+        return prerequisiteToggle;
+    }
+
+    private List<Toggle> getNonSelfToggles(String projectKey, String toggleKey,
+                                           PrerequisiteToggleRequest params) {
+        Specification<Toggle> spec = (root, query, cb) -> {
+            Predicate p1 = cb.equal(root.get("projectKey"), projectKey);
+            Predicate p2 = root.get("key").in(toggleKey).not();
+            if (StringUtils.isNotBlank(params.getKey())) {
+                Predicate p3 = cb.equal(root.get("key"), params.getKey());
+                return query.where(cb.and(p1, p2, p3)).getRestriction();
+            } else if (StringUtils.isNotBlank(params.getLikeNameAndKey())) {
+                Predicate p3 = cb.like(root.get("name"), "%" + params.getLikeNameAndKey() + "%");
+                Predicate p4 = cb.like(root.get("key"), "%" + params.getLikeNameAndKey() + "%");
+                return query.where(cb.and(p1, p2), cb.or(p3, p4)).getRestriction();
+            }
+            return query.where(cb.and(p1, p2)).getRestriction();
+        };
+        return toggleRepository.findAll(spec);
+    }
+
+    private List<Targeting> getNonSelfTargetingList(String projectKey, String environmentKey, String toggleKey) {
+        Specification<Targeting> spec = (root, query, cb) -> {
+            Predicate p1 = cb.equal(root.get("projectKey"), projectKey);
+            Predicate p2 = cb.equal(root.get("environmentKey"), environmentKey);
+            Predicate p3 = root.get("toggleKey").in(toggleKey).not();
+            return query.where(cb.and(p1, p2, p3)).getRestriction();
+        };
+        return targetingRepository.findAll(spec);
+    }
+
 }
