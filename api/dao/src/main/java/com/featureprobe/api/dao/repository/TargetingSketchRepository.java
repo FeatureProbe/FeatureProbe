@@ -18,7 +18,7 @@ public interface TargetingSketchRepository extends JpaRepository<TargetingSketch
     List<TargetingSketch> findByProjectKeyAndEnvironmentKeyAndStatusAndToggleKeyIn(String projectKey,
                                                                                    String environmentKey,
                                                                                    SketchStatusEnum status,
-                                                                                   List<String> toggleKeys);
+                                                                                   Set<String> toggleKeys);
 
     boolean existsByProjectKeyAndEnvironmentKeyAndStatus(String projectKey, String environmentKey,
                                                          SketchStatusEnum status);

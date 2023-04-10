@@ -10,7 +10,7 @@ import java.util.Set;
 @Repository
 public interface ToggleTagRepository extends JpaRepository<ToggleTagRelation, Long> {
 
-    List<ToggleTagRelation> findByToggleKeyIn(List<String> toggleKeys);
+    List<ToggleTagRelation> findByToggleKeyIn(Set<String> toggleKeys);
 
     List<ToggleTagRelation> findByTagIdIn(Set<Long> tagIds);
 

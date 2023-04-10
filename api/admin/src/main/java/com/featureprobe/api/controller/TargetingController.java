@@ -13,6 +13,10 @@ import com.featureprobe.api.base.hook.Resource;
 import com.featureprobe.api.dto.AfterTargetingVersionResponse;
 import com.featureprobe.api.dto.ApprovalResponse;
 import com.featureprobe.api.dto.CancelSketchRequest;
+import com.featureprobe.api.dto.DependentToggleRequest;
+import com.featureprobe.api.dto.DependentToggleResponse;
+import com.featureprobe.api.dto.PrerequisiteToggleRequest;
+import com.featureprobe.api.dto.PrerequisiteToggleResponse;
 import com.featureprobe.api.dto.TargetingApprovalRequest;
 import com.featureprobe.api.dto.TargetingDiffResponse;
 import com.featureprobe.api.dto.TargetingPublishRequest;
@@ -167,4 +171,29 @@ public class TargetingController {
                                    @PathVariable("toggleKey") String toggleKey) {
         return targetingService.attributes(projectKey, environmentKey, toggleKey);
     }
+
+
+    @GetApiResponse
+    @GetMapping("/prerequisite/toggles")
+    @Operation(summary = "List available prerequisite toggles.",
+            description = "List available prerequisite toggles.")
+    public List<PrerequisiteToggleResponse> preToggles(@PathVariable("projectKey") String projectKey,
+                                                       @PathVariable("environmentKey") String environmentKey,
+                                                       @PathVariable("toggleKey") String toggleKey,
+                                                       PrerequisiteToggleRequest query) {
+        return targetingService.preToggles(projectKey, environmentKey, toggleKey, query);
+    }
+
+    @GetApiResponse
+    @GetMapping("/prerequisite/dependencies")
+    @Operation(summary = "List prerequisite dependent toggles.",
+            description = "List prerequisite dependent toggles.")
+    public Page<DependentToggleResponse> getDependentToggles(@PathVariable("projectKey") String projectKey,
+                                                             @PathVariable("environmentKey") String environmentKey,
+                                                             @PathVariable("toggleKey") String toggleKey,
+                                                             DependentToggleRequest requestParam) {
+        return targetingService.getDependentToggles(projectKey, environmentKey, toggleKey, requestParam);
+    }
+
+
 }
