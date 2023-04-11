@@ -8,6 +8,7 @@ sidebar_position: 3
 开关的“配置信息”（各环境间不共享，独立拥有,修改配置信息，不会同步到开关的"模板信息"），请切换到目标环境后，再进行配置（配置信息的初始信息，会自动同步开关的“模板信息”）
 
 ![toggle targeting screenshot](/toggle_targeting_zh.png)
+![toggle targeting screenshot](/targeting.png)
 
 1. Status：开关的状态（禁用后生效Disabled return value，启用后开关配置中的Rules及Default Rule生效）
 2. Variations：默认同步开关的模板信息（可更改）
