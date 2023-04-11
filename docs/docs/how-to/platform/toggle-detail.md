@@ -8,6 +8,7 @@ sidebar_position: 3
 The "configuration information" of the toggle (not shared between each environment, independently owned, modification of the configuration information will not be synchronized to the "template information" of the toggle), please toggle to the target environment, and then configure (the initial information of the configuration information will be automatically synchronized to the "template information" of the toggle) ")
 
 ![toggle targeting screenshot](/toggle_targeting_en.png)
+![toggle targeting screenshot](/targeting_en.png)
 
 1. Status: the status of the toggle (Disabled return value when disabled, Rules and Default Rule in the toggle configuration when enabled)
 2. Variations: template information of the default synchronization toggle (can be changed)
