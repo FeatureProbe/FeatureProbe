@@ -11,8 +11,9 @@ The "configuration information" of the toggle (not shared between each environme
 ![toggle targeting screenshot](/targeting_en.png)
 
 1. Status: the status of the toggle (Disabled return value when disabled, Rules and Default Rule in the toggle configuration when enabled)
-2. Variations: template information of the default synchronization toggle (can be changed)
-3. Rules: "or" relationship between multiple Rules (the order of rules is very important, a user comes in and is screened from top to bottom, the first Rule hit will not match the following Rule, and the one not hit will continue to be screened down)
+2. prerequisites：Support adding ‘prerequisites' for this toggle. Only users who meet all the ‘prerequisites' can enter this toggle. By adding “prerequisites" to select complex experimental groups, and achieve traffic segmentation in the experimental layer
+3. Variations: Set different return values
+4. Rules: "or" relationship between multiple Rules (the order of rules is very important, a user comes in and is screened from top to bottom, the first Rule hit will not match the following Rule, and the one not hit will continue to be screened down)
 
   - Add Rule: set "return value" for "specified group"
  
@@ -24,10 +25,10 @@ The "configuration information" of the toggle (not shared between each environme
     + Click on the Rule card area and drag it to sort the rules freely
     + Delete Rule card: click the delete icon in the upper right corner of the card to delete the whole Rule
 
-4. Set Default Rule: set the default return value for "unspecified population": choose from variations [you can choose a certain variation (100% of this item), or specify a percentage for each variation (the sum of all the variations (the sum of all the variations must be 100%)] 5.
-5. Disabled return value: the template information of the default synchronization toggle (can be changed)
-6. Click Publish to display the diff information before and after the change, and support filling in the [change description] (back in the history of the version)
-7. Click confirm to finish publishing
+5. Set Default Rule: set the default return value for "unspecified population": choose from variations [you can choose a certain variation (100% of this item), or specify a percentage for each variation (the sum of all the variations (the sum of all the variations must be 100%)] 5.
+6. Set When toggle is disabled: When the toggle is' disabled ', return this value
+7. Click Publish to display the diff information before and after the change, and support filling in the [change description] (back in the history of the version)
+8. Click confirm to finish publishing
 
 ## Connect to SDK
 Facilitate users to access our SDK easily and efficiently, and clearly know the access status
