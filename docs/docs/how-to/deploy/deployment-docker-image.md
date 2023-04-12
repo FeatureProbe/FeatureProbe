@@ -22,7 +22,7 @@ Three service images need to be deployed, as shown in the following deployment e
 | ---------- | ------------------- | ------------- |
 | 10.100.1.1 | FeatureProbe API    | 4008          |
 | 10.100.1.1 | FeatureProbe UI     | 4009（Nginx） |
-| 10.100.1.2 | FeatureProbe Server | 4007          |
+| 10.100.1.2 | FeatureProbe Server | 4007 4011     |
 | 10.100.1.3 | Database (MySQL)     | 13306         |
 
 :::tip
@@ -76,8 +76,9 @@ Please replace the above IP address with the actual IP address according to the 
 3. Run the FeatureProbe Server instance:
 
    ```bash
-   docker run -p 4007:4007 \
+   docker run -p 4007:4007 -p 4011:4011 \
      -e FP_SERVER_PORT=4007 \
+     -e FP_REALTIME_PORT=4011 \
      -e FP_TOGGLES_URL=http://10.100.1.1:4008/internal/server/toggles \
      -e FP_EVENTS_URL=http://10.100.1.1:4008/internal/server/events \
      -e FP_KEYS_URL=http://10.100.1.1:4008/internal/server/sdk_keys \
