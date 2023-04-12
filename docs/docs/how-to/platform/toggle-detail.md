@@ -12,7 +12,7 @@ The "configuration information" of the toggle (not shared between each environme
 
 1. Status: the status of the toggle (Disabled return value when disabled, Rules and Default Rule in the toggle configuration when enabled)
 2. prerequisites：Support adding ‘prerequisites' for this toggle. Only users who meet all the ‘prerequisites' can enter this toggle. By adding “prerequisites" to select complex experimental groups, and achieve traffic segmentation in the experimental layer
-3. Variations: Set different return values
+3. Variations: Support setting different return values for toggle
 4. Rules: "or" relationship between multiple Rules (the order of rules is very important, a user comes in and is screened from top to bottom, the first Rule hit will not match the following Rule, and the one not hit will continue to be screened down)
 
   - Add Rule: set "return value" for "specified group"
