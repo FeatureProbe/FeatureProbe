@@ -9,7 +9,16 @@ import PutAwayMemu from 'components/PutAwayMenu';
 import TextLimit from 'components/TextLimit';
 import Loading from 'components/Loading';
 import { IRouterParams, IProject, IEnvironment } from 'interfaces/project';
-import { TOGGLE_PATH, TARGETING_PATH, SEGMENT_PATH, SEGMENT_ADD_PATH, SEGMENT_EDIT_PATH, CONNECT_SDK_PATH, SETTING_PATH } from 'router/routes';
+import { 
+  TOGGLE_PATH,
+  TARGETING_PATH,
+  SEGMENT_PATH,
+  SEGMENT_ADD_PATH,
+  SEGMENT_EDIT_PATH,
+  CONNECT_SDK_PATH,
+  SETTING_PATH,
+  EVENT_TRACKER_PATH,
+} from 'router/routes';
 import { SidebarContainer } from './hooks';
 import styles from './sidebar.module.scss';
 
@@ -70,6 +79,8 @@ const ProjectSiderbar = (props: IProps) => {
       setSelectedItem('segments');
     } else if (path === SETTING_PATH) {
       setSelectedItem('settings');
+    } else if (path === EVENT_TRACKER_PATH) {
+      setSelectedItem('eventTracker');
     }
   }, [match]);
 
@@ -114,6 +125,10 @@ const ProjectSiderbar = (props: IProps) => {
     history.push(`/${projectKey}/${environmentKey}/settings`);
   }, [projectKey, environmentKey, history]);
 
+  const gotoLiveEvents = useCallback(() => {
+    history.push(`/${projectKey}/${environmentKey}/event-tracker`);
+  }, [projectKey, environmentKey, history]);
+
   return (
     <div className={sidebarCls}>
       {
@@ -150,8 +165,14 @@ const ProjectSiderbar = (props: IProps) => {
                   title={intl.formatMessage({id: 'common.toggles.text'})}
                 />
               </div>
+              <div className={`${selectedItem ==='eventTracker' && styles.selected} ${menuCls}`} onClick={gotoLiveEvents}>
+                <PutAwayMemu
+                  type='debugger'
+                  isPutAway={isPutAway}
+                  title={intl.formatMessage({id: 'common.event.tracker.text'})}
+                />
+              </div>
             </div>
-
             <div className={`${selectedItem ==='segments' && styles.selected} ${segmentCls}`} onClick={gotoSegments}>
               <PutAwayMemu
                 type='member'

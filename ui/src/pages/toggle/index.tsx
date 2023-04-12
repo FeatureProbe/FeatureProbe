@@ -532,11 +532,10 @@ const Toggle = () => {
                               enableApproval && (
                                 <Table.HeaderCell className={styles['column-publishing-status']}>
                                   <div>
-                                    <span>
-                                      <FormattedMessage id='toggles.table.publishing.status' />
-                                    </span>
+                                    <FormattedMessage id='toggles.table.publishing.status' />
                                     <Filter
                                       selected={releaseStatusList.length > 0}
+                                      customStyle={{ width: '180px' }}
                                       handleConfirm={() => {
                                         setSearchParams({
                                           ...searchParams,

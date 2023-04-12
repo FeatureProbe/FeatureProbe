@@ -26,7 +26,7 @@
   "common.toggles.text": "Toggles",
   "common.archived.toggles.text": "Archived Toggles",
   "common.toggle.text": "Toggle",
-  "common.debugger.text": "Debugger",
+  "common.event.tracker.text": "Event tracker",
   "common.segments.text": "Segments",
   "common.segments.lowercase.text": "segments",
   "common.segment.text": "Segment",
@@ -121,6 +121,7 @@
   "common.prerequisite.text": "Prerequisites",
   "common.prerequisite.lowercase.text": "prerequisite",
   "common.prerequisite.description": "The toggle is only open to users who meet all prerequisites.",
+  "common.all.text": "All",
 
   "header.getuser.error.text": "Error getting user profile",
 
@@ -666,5 +667,30 @@
   "prerequisite.return.value.placeholder": "Please select return value",
   "prerequisite.return.value.not.exist": "This return value no longer exists, please replace it",
   "prerequisite.json.not.support": "Toggles whose return type is JSON are not currently selected as prerequisites.",
-  "prerequisite.toggle.duplicate": "The toggle is dulplicate, please select again"
+  "prerequisite.toggle.duplicate": "The toggle is dulplicate, please select again",
+
+  "event.tracker.description": "Use this page to verify that we are receiving events from your application",
+  "event.tracker.table.time": "Time",
+  "event.tracker.table.type": "Type",
+  "event.tracker.table.user": "User",
+  "event.tracker.table.event": "Event",
+  "event.tracker.table.toggle.key": "Toggle key",
+  "event.tracker.table.evaluation.reason": "Evaluation reason",
+  "event.tracker.table.variation": "Variation",
+  "event.tracker.table.value": "Value",
+  "event.tracker.search.key.event": "Search for toggle key or event name",
+  "event.tracker.search.key": "Search for toggle key",
+  "event.tracker.search.event": "Search for event name",
+  "event.tracker.no.data1": "Waiting for tracking events...",
+  "event.tracker.no.data2": "Please make sure SDK is successfully connected.",
+  "event.tracker.not.open": "No data, please open event tracker first",
+  "event.tracker.type.access": "Access",
+  "event.tracker.type.summary": "Summary",
+  "event.tracker.type.debug": "Debug",
+  "event.tracker.operate.open": "Open",
+  "event.tracker.operate.close": "Close",
+  "event.tracker.status.open": "Event tracker is opened!",
+  "event.tracker.status.close": "Event tracker is closed!",
+  "event.tracker.a": "事件上报时间"
+
 }

@@ -1,8 +1,9 @@
+import { ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
 import styles from './index.module.scss';
 
 interface IProps {
-  text?: string;
+  text?: string | ReactNode;
 }
 
 const NoData = (props: IProps) => {

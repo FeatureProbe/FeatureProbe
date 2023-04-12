@@ -26,7 +26,7 @@
   "common.toggles.text": "开关",
   "common.archived.toggles.text": "下线开关",
   "common.toggle.text": "开关",
-  "common.debugger.text": "调试",
+  "common.event.tracker.text": "事件追踪器",
   "common.segments.text": "人群组",
   "common.segments.lowercase.text": "人群组",
   "common.segment.text": "人群组",
@@ -121,6 +121,7 @@
   "common.prerequisite.text": "前置条件",
   "common.prerequisite.lowercase.text": "前置条件",
   "common.prerequisite.description": "该开关只对满足所有前置条件的用户群体开放",
+  "common.all.text": "全部",
   
   "header.getuser.error.text": "无法获取用户信息!",
 
@@ -666,5 +667,29 @@
   "prerequisite.return.value.placeholder": "请选择返回值",
   "prerequisite.return.value.not.exist": "该返回值已不存在，请尽快更换",
   "prerequisite.json.not.support": "暂不支持JSON类型的开关作为前置条件",
-  "prerequisite.toggle.duplicate": "开关重复，请重新选择"
+  "prerequisite.toggle.duplicate": "开关重复，请重新选择",
+
+  "event.tracker.description": "使用此页面验证我们正在从您的应用程序接收事件",
+  "event.tracker.table.time": "事件上报时间",
+  "event.tracker.table.type": "事件上报类型",
+  "event.tracker.table.user": "用户",
+  "event.tracker.table.event": "事件",
+  "event.tracker.table.toggle.key": "开关",
+  "event.tracker.table.evaluation.reason": "原因",
+  "event.tracker.table.variation": "分组",
+  "event.tracker.table.value": "值",
+  "event.tracker.search.key.event": "请输入开关标识、事件名称进行搜索",
+  "event.tracker.search.key": "请输入开关标识进行搜索",
+  "event.tracker.search.event": "请输入事件名称进行搜索",
+  "event.tracker.no.data1": "已开启事件追踪器，正在等待事件上报...",
+  "event.tracker.no.data2": "请确保已成功连接SDK",
+  "event.tracker.not.open": "暂无数据，请先开启Event Tracker",
+  "event.tracker.type.access": "访问",
+  "event.tracker.type.summary": "汇总",
+  "event.tracker.type.debug": "调试",
+  "event.tracker.operate.open": "开启",
+  "event.tracker.operate.close": "关闭",
+  "event.tracker.status.open": "事件追踪器已开启！",
+  "event.tracker.status.close": "事件追踪器已关闭！",
+  "event.tracker.a": "事件上报时间"
 }
