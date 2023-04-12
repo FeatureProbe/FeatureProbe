@@ -114,7 +114,7 @@ export default App;
 ### Step 4. 在App.js同级目录下创建home.js，并在home.js中引入withFPConsumer
 
 ```jsx
-import { withFPConsumer } from 'featureprobe-client-sdk-client';
+import { withFPConsumer } from 'featureprobe-client-sdk-react';
 
 const Home = ({ toggles, client }) => {
   const value = client?.boolValue(/* toggleKey */, false);
