@@ -4,7 +4,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { v4 as uuidv4 } from 'uuid';
 import { Table, Popup, PaginationProps } from 'semantic-ui-react';
 import dayjs from 'dayjs';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import Icon from 'components/Icon';
 import Modal from 'components/Modal';
 import message from 'components/MessageBox';

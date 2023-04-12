@@ -9,8 +9,10 @@ import { hooksFormContainer, webHookInfoContainer } from 'pages/webhook/provider
 import FormItem from 'components/FormItem';
 import { IWebHook, WebHookStatus } from 'interfaces/webhook';
 import { createWebHook, updateWebHook, getSecretKey, checkUrl } from 'services/webhook';
-import { debounce, cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import debounce from 'lodash/debounce';
 import { useRequestTimeCheck } from 'hooks';
+
 import styles from './index.module.scss';
 
 interface IProps {

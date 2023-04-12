@@ -1,7 +1,8 @@
 import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { Form, Table, InputOnChangeData, PaginationProps, Checkbox } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { cloneDeep, debounce } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import debounce from 'lodash/debounce';
 import Icon from 'components/Icon';
 import message from 'components/MessageBox';
 import NoData from 'components/NoData';

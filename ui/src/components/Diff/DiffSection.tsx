@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import idiff, { ChangeItem } from './diff';
 import styles from './DiffSection.module.scss';

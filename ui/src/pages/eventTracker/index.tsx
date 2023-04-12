@@ -130,7 +130,7 @@ const EventTracker = () => {
               </span>
             </div>
           </div>
-          <List 
+          <List
             type={selectedNav}
           />
         </div>

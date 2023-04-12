@@ -1,7 +1,7 @@
 import { useEffect, useState, SyntheticEvent, ChangeEvent, useCallback } from 'react';
 import { Dropdown, Input, DropdownItemProps, DropdownProps, Form } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import Icon from 'components/Icon';
 import { IServe, IVariation } from 'interfaces/targeting';
 import { IContainer } from 'interfaces/provider';
@@ -18,9 +18,9 @@ interface IProps {
   disabled?: boolean;
   variations: IVariation[];
   serve?: IServe;
-  handleChangeServe: (item: IServe) => void;
   hooksFormContainer: IContainer;
   customStyle?: IAttr;
+  handleChangeServe: (item: IServe) => void;
 }
 
 type IDropItemProps = Partial<DropdownItemProps>;

@@ -71,6 +71,8 @@
   font-size: 12px !important;
   margin-left: 100px;
   cursor: pointer;
+  position: relative;
+  z-index: 2;
 }
 
 .project-content {

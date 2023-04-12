@@ -1,8 +1,7 @@
 import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Checkbox, PaginationProps, Table } from 'semantic-ui-react';
-import { cloneDeep } from 'lodash';
-import Pagination from 'components/Pagination';
+import cloneDeep from 'lodash/cloneDeep';
 import NoData from 'components/NoData';
 import Filter from 'components/Filter';
 import styles from './index.module.scss';
@@ -13,13 +12,8 @@ interface IProps {
 
 const List = (props: IProps) => {
   const { type } = props;
-  const [ isLoading, saveIsLoading ] = useState<boolean>(false);
   const [ events, saveEvents ] = useState<any[]>([]);
   const [ typeList, saveTypeList ] = useState<string[]>([]);
-  const [ pagination, savePagination ] = useState({
-    pageIndex: 1,
-    totalPages: 1,
-  });
   const intl = useIntl();
 
   useEffect(() => {
@@ -187,13 +181,7 @@ const List = (props: IProps) => {
         </Table.Header>
       </Table>
       {
-        events.length !== 0 ? (
-          <Pagination
-            total={1}
-            pagination={pagination}
-            handlePageChange={handlePageChange}
-          />
-        ) : (
+        events.length === 0 && (
           <NoData text={getNoDataText()} />
         )
       }

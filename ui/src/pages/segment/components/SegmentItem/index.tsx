@@ -2,7 +2,7 @@ import { SyntheticEvent, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { PaginationProps, Table } from 'semantic-ui-react';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import TextLimit from 'components/TextLimit';
 import Button from 'components/Button';
 import DeleteTipsModal from 'components/DeleteTipsModal';

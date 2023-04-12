@@ -2,7 +2,7 @@ import message from 'components/MessageBox';
 import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Form, TextAreaProps, RadioProps } from 'semantic-ui-react';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Button from 'components/Button';
