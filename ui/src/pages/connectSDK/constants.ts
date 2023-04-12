@@ -617,7 +617,7 @@ export default App;
     {
       title: intl.formatMessage({id: 'getstarted.react.fourth.step.title'}),
       code:
-`import { withFPConsumer } from 'featureprobe-client-sdk-client';
+`import { withFPConsumer } from 'featureprobe-client-sdk-react';
 
 const Home = ({ toggles, client }) => {
   ${returnType === 'boolean' ? `const value = client?.boolValue("${toggleKey}", false);` : ''}${returnType === 'number' ? `const value = client?.numberValue("${toggleKey}", 1.0);` : ''}${returnType === 'string' ? `const value = client?.stringValue("${toggleKey}", "s");` : ''}${returnType === 'json' ? `const value = client.jsonValue("${toggleKey}", {});` : ''}
@@ -639,7 +639,7 @@ export default withFPConsumer(Home);
       result.splice(3, 1, {
         title: intl.formatMessage({id: intl.formatMessage({id: 'getstarted.react.track.event.title'})}),
         code:
-  `import { useFPClient } from 'featureprobe-client-sdk-client';
+  `import { useFPClient } from 'featureprobe-client-sdk-react';
   
   const Home = ({ toggles, client }) => {
     const fp = useFPClient();
