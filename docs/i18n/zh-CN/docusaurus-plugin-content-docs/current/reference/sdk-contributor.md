@@ -140,7 +140,7 @@ curl --location --request GET 'https://featureprobe.io/server/api/server-sdk/tog
 
 ### 客户端SDK接收开关变更
 
-当我们通过 FeatureProbe 平台或者 Open API 对开关的配置做出变更或添加新的 page_view 或 click 事件指标时, 客户端SDK 需要更新内存中的开关对于的结果和事件集。目前需提供如下两种实现：
+当我们通过 FeatureProbe 平台或者 Open API 对开关的配置做出变更, 客户端SDK 需要更新内存中的开关对应的结果。目前需提供如下两种实现：
 
  1、**通过异步轮询获取开关配置**
 Server 获取开关结果API协议：
@@ -180,17 +180,17 @@ curl --location --request GET 'https://featureprobe.io/server/api/client-sdk/tog
 
 - 首先需要实现异步轮询机制，以便作为长连接更新的备选方案。
 
-- 需要引入[socket-io](https://github.com/socketio)客户端依赖到您的SDK中，并在 SDK 初始化时与 FeatureProbe Server 建立长连接。您可以在建立连接时发送一个 “register” 事件，并携带一个名为 key 值为 ${sdk_key} 的参数，以便在后续的身份验证过程中进行验证。其中 ${sdk_key} 是客户端应用程序传递给 FeatureProbe 配置的 Client SDK 密钥。
+- 需要引入[socket.io-client](https://github.com/socketio/socket.io-client)客户端依赖到您的SDK中，并在 SDK 初始化时与 FeatureProbe Server 建立长连接。您可以在建立连接时发送一个 “register” 事件，并携带一个名为 key 值为 ${sdk_key} 的参数，以便在后续的身份验证过程中进行验证。其中 ${sdk_key} 是客户端应用程序传递给 FeatureProbe 配置的 Client SDK 密钥。
 
 - 监听名为 “update” 的事件，以便在开关配置发生更改时立即通知客户端主动通过轮询API拉取最新开关规则。
 
-- 最后需要将长连接的地址（realtimeUri）通过 FPConfig 暴露给用户，以方便自定义配置。
+- 最后需要将长连接的地址（realtimeUrl）通过 FPConfig 暴露给用户，以方便自定义配置。
 
-***可供参考的代码[长链接Javascript实现#](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#)中的connectSocket()方法***
+***可供参考的代码[长链接Javascript实现 ](https://github.com/FeatureProbe/client-sdk-js/blob/main/src/FeatureProbe.ts#)中的connectSocket()方法***
 
 ## 评估开关的结果
 
-服务端和客户端SDK 在开关结果评估的方式上不一致。
+服务端SDK和客户端SDK 在开关结果评估的方式上不一致。
 
 ### 服务端SDK评估开关结果
 
@@ -198,16 +198,16 @@ curl --location --request GET 'https://featureprobe.io/server/api/client-sdk/tog
 
 ### 客户端SDK评估开关结果
 
-客户端SDK不用实现开关规则计算的逻辑，由 FeatureProbe 服务负责开关规则计算。所以对于客户端SDK 在实现上述获取开关结果的
+客户端SDK不用实现开关规则计算的逻辑，由 FeatureProbe 服务负责开关规则计算。所以对于客户端SDK 在实现上只需获取开关的结果。
 
 ## 上报事件
 
 目前 FeatureProbe 提供4事件类型的上报：
 
 - **custom**: 当应用程序调用 SDK 的 track 方法时发送的事件。
-- **event**: 开关评估信息。
-- **page_view**: 对于Javascript SDK端记录页面访问事件。
-- **click**: 对于Javascript SDK端记录页面点击事件。
+- **access**: 开关评估事件。
+- **pageview**: 对于Javascript SDK或React SDK端记录页面访问事件。
+- **click**: 对于Javascript SDK或React SDK端记录页面点击事件。
 
 以及需要上报一段时间内开关各分组访问统计。
 
@@ -280,9 +280,9 @@ curl --location --request POST 'https://featureprobe.io/server/api/events' \
 
 此 API 必须包含以下请求头：
 
-***Authorization***：值为 ${sdk_key}，其中 ${sdk_key} 是客户端应用程序传递给 FeatureProbe 配置的 Server(Client) SDK 密钥。
+***Authorization***：值为 sdk_key，其中 sdk_key 是客户端应用程序传递给 FeatureProbe 配置的 Server(Client) SDK 密钥。
 
-***user-agent***：值为 ${sdk_language_kind}/${sdk_version}，其中 ${sdk_language_kind} 是 SDK 实现的语言名称，${sdk_version} 是当前 SDK 的版本号。
+***UA***：值为 sdk_language_kind/sdk_version，其中 sdk_language_kind 是 SDK 实现的语言名称，sdk_version 是当前 SDK 的版本号。
 
 ## 参考资料
 
