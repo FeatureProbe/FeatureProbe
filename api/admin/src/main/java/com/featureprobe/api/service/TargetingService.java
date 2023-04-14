@@ -138,13 +138,16 @@ public class TargetingService {
     @Transactional(rollbackFor = Exception.class)
     public TargetingResponse publish(String projectKey, String environmentKey, String toggleKey,
                                      TargetingPublishRequest targetingPublishRequest) {
-        List<PrerequisiteModel> prerequisites = targetingPublishRequest.getContent().getPrerequisites();
-        if (!CollectionUtils.isEmpty(prerequisites)){
-            if (hasDependencyCycle(projectKey, environmentKey, toggleKey, new HashSet<>(prerequisites),
-                    appConfig.getMaximumDependencyDepth())) {
-                throw new IllegalArgumentException("validate.prerequisite.dependency.cycle");
+
+        if (Objects.nonNull(targetingPublishRequest.getContent())) {
+            List<PrerequisiteModel> prerequisites = targetingPublishRequest.getContent().getPrerequisites();
+            if (!CollectionUtils.isEmpty(prerequisites)){
+                if (hasDependencyCycle(projectKey, environmentKey, toggleKey, new HashSet<>(prerequisites),
+                        appConfig.getMaximumDependencyDepth())) {
+                    throw new IllegalArgumentException("validate.prerequisite.dependency.cycle");
+                }
+                updateDependentToggles(projectKey, environmentKey, toggleKey, prerequisites);
             }
-            updateDependentToggles(projectKey, environmentKey, toggleKey, prerequisites);
         }
 
         Environment environment = selectEnvironment(projectKey, environmentKey);
