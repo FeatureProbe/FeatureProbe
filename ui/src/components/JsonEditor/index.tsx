@@ -15,7 +15,7 @@ window.jsonlint = jsonlint;
 
 interface IProps {
   value?: string;
-  onChange(value: string): void;
+  onChange?(value: string): void;
 }
 
 const JsonEditor = (props: IProps) => {
@@ -39,7 +39,7 @@ const JsonEditor = (props: IProps) => {
       }
   
       myCodeMirror.on('change', cm => {
-        onChange(cm.getValue());
+        onChange && onChange(cm.getValue());
       });
     }
     

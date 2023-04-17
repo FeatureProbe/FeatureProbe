@@ -1,28 +1,28 @@
 import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Checkbox, PaginationProps, Table } from 'semantic-ui-react';
+import { Checkbox, Table } from 'semantic-ui-react';
 import cloneDeep from 'lodash/cloneDeep';
 import NoData from 'components/NoData';
 import Filter from 'components/Filter';
+import TableItem from '../TableItem';
+import { IEvent } from 'interfaces/eventTracker';
+
 import styles from './index.module.scss';
 
 interface IProps {
   type: string;
+  events: IEvent[];
 }
 
 const List = (props: IProps) => {
-  const { type } = props;
-  const [ events, saveEvents ] = useState<any[]>([]);
+  const { type, events } = props;
   const [ typeList, saveTypeList ] = useState<string[]>([]);
+  const [ displayEvents, saveDisplayEvents ] = useState<IEvent[]>(events);
   const intl = useIntl();
 
   useEffect(() => {
     saveTypeList([]);
   }, [type]);
-
-  const handlePageChange = useCallback((e: SyntheticEvent, data: PaginationProps) => {
-    //
-  }, []);
 
   // Change filter type
   const handleChange = useCallback((status) => {
@@ -33,7 +33,20 @@ const List = (props: IProps) => {
       typeList.push(status);
     }
     saveTypeList(cloneDeep(typeList));
-  }, [typeList, saveTypeList]);
+  }, [typeList]);
+
+  useEffect(() => {
+    if (typeList.length === 0) {
+      saveDisplayEvents(events);
+      return;
+    }
+    
+    const displayEvents = events.filter((event) => {
+      return typeList.includes(event.kind);
+    });
+
+    saveDisplayEvents(displayEvents);
+  }, [typeList, events]);
 
   const getNoDataText = useCallback(() => {
     return (
@@ -56,13 +69,13 @@ const List = (props: IProps) => {
             <Table.HeaderCell className={styles['column-time']}>
               <FormattedMessage id='event.tracker.table.time' />
             </Table.HeaderCell>
-            <Table.HeaderCell>
+            <Table.HeaderCell className={styles['column-type']}>
               <FormattedMessage id='event.tracker.table.type' />
               <Filter
                 selected={typeList.length > 0}
                 customStyle={{ width: '130px' }}
                 handleConfirm={() => {
-                  //
+                  saveTypeList(typeList);
                 }}
                 handleClear={() => {
                   saveTypeList([]);
@@ -179,9 +192,26 @@ const List = (props: IProps) => {
             <Table.HeaderCell className={styles['column-operation']}></Table.HeaderCell>
           </Table.Row>
         </Table.Header>
+        {
+          displayEvents?.length !== 0 && (
+            <Table.Body className={styles['table-body']}>
+              {
+                displayEvents?.map((event: IEvent, index: number) => {
+                  return (
+                    <TableItem
+                      key={index}
+                      type={type}
+                      event={event}
+                    />
+                  );
+                })
+              }
+            </Table.Body>
+          )
+        }
       </Table>
       {
-        events.length === 0 && (
+        displayEvents.length === 0 && (
           <NoData text={getNoDataText()} />
         )
       }

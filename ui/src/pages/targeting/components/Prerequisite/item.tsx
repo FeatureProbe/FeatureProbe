@@ -144,7 +144,7 @@ const PrerequisiteItem = (props: IProps) => {
                   trigger={
                     <span className={styles['dropdown-toggle']}>
                       <span className={styles['toggle-name']}>
-                        {toggle.key}
+                        {toggle.name} ({toggle.key})
                       </span>
                       <span>
                         {
@@ -166,7 +166,7 @@ const PrerequisiteItem = (props: IProps) => {
               ) : (
                 <span className={styles['dropdown-toggle']}>
                   <span className={styles['toggle-name']}>
-                    {toggle.key}
+                    {toggle.name} ({toggle.key})
                   </span>
                   <span>
                     {

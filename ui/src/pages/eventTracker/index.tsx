@@ -1,19 +1,77 @@
-import { Form, Input } from 'semantic-ui-react';
+import { SyntheticEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { Form, InputOnChangeData } from 'semantic-ui-react';
+import { useParams } from 'react-router';
 import classNames from 'classnames';
-import ProjectLayout from 'layout/projectLayout';
-import { useCallback, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { FormattedMessage, useIntl } from 'react-intl';
 import List from './components/List';
 import Button from 'components/Button';
+import Icon from 'components/Icon';
+import ProjectLayout from 'layout/projectLayout';
+import { getEventsStream, changeEventTrackerStatus } from 'services/eventTracker';
+import { IEvent, IEventStream } from 'interfaces/eventTracker';
 
 import styles from './index.module.scss';
-import Icon from 'components/Icon';
+
+interface IParams {
+  projectKey: string;
+  environmentKey: string;
+}
 
 const EventTracker = () => {
   const [ selectedNav, saveSelectedNav ] = useState<string>('all');
   const [ open, saveOpen ] = useState<boolean>(false);
+  const { projectKey, environmentKey } = useParams<IParams>();
+  const [ uuid, saveUuid ] = useState<string>(uuidv4());
+  const [ events, saveEvents ] = useState<IEvent[]>([]);
+  const [ allEvents, saveAllEvents ] = useState<IEvent[]>([]);
+  const [ toggleEvents, saveToggleEvents ] = useState<IEvent[]>([]);
+  const [ metricEvents, saveMetricEvents ] = useState<IEvent[]>([]);
+  const [ search, saveSearch ] = useState<string>('');
   const intl = useIntl();
+  const timer: { current: NodeJS.Timeout | null } = useRef(null);
 
+  const getData = useCallback(() => {
+    getEventsStream<IEventStream>(projectKey, environmentKey, uuid).then(res => {
+      const { success, data } = res;
+
+      if (success && data) {
+        saveOpen(data.debuggerEnabled);
+        saveEvents(data.events);
+        
+        if (!data.debuggerEnabled) {
+          clearInterval(timer.current as NodeJS.Timeout);
+        }
+      }
+    });
+  }, [projectKey, environmentKey, uuid]);
+
+  useEffect(() => {
+    if (timer.current) {
+      clearInterval(timer.current);
+    }
+    getData();
+    timer.current = setInterval(getData, 5000);
+    
+    return () => {
+      clearInterval(timer.current as NodeJS.Timeout);
+    };
+  }, [getData]);
+
+  useEffect(() => {
+    let all = allEvents.concat(events);
+    let toggle = all.filter(item => item.kind === 'access' || item.kind === 'debug' || item.kind === 'summary');
+    let metric = all.filter(item => item.kind === 'pageview' || item.kind === 'click' || item.kind === 'custom');
+
+    if (search !== '') {
+      all = all.filter(item => search === item.key || search === item.name);
+      toggle = toggle.filter(item => search === item.key || search === item.name);
+      metric = metric.filter(item => search === item.key || search === item.name);
+    }
+    saveAllEvents(all);
+    saveToggleEvents(toggle);
+    saveMetricEvents(metric);
+  }, [events, search]);
 
   const allCls = classNames(styles['navs-item'], {
     [styles['navs-item-selected']]: selectedNav === 'all'
@@ -27,8 +85,8 @@ const EventTracker = () => {
     [styles['navs-item-selected']]: selectedNav === 'metric'
   });
 
-  const handleSearch = useCallback(() => {
-    //
+  const handleSearch = useCallback((e: SyntheticEvent, detail: InputOnChangeData) => {
+    saveSearch(detail.value);
   }, []);
 
   const getByPlaceholderText = useCallback(() => {
@@ -40,6 +98,18 @@ const EventTracker = () => {
       return intl.formatMessage({ id: 'event.tracker.search.event' });
     }
   }, [selectedNav]);
+  
+  const handleEventTrackerEnabled = useCallback((enabled: boolean) => {
+    changeEventTrackerStatus(projectKey, environmentKey, {
+      enabled
+    }).then(res => {
+      const { success } = res;
+      if (success) {
+        saveOpen(enabled);
+        saveUuid(uuidv4());
+      }
+    });
+  }, [projectKey, environmentKey, getData]);
 
   return (
     <ProjectLayout>
@@ -61,7 +131,7 @@ const EventTracker = () => {
                         <FormattedMessage id='event.tracker.status.open' />
                       </span>
                       <Button type='button' secondary onClick={() => {
-                        //
+                        handleEventTrackerEnabled(false);
                       }}>
                         <span className={styles['btn-text']}>
                           <FormattedMessage id='event.tracker.operate.close' />
@@ -75,7 +145,7 @@ const EventTracker = () => {
                       <FormattedMessage id='event.tracker.status.close' />
                     </span>
                     <Button type='button' primary onClick={() => {
-                      //
+                      handleEventTrackerEnabled(true);
                     }}>
                       <span className={styles['btn-text']}>
                         <FormattedMessage id='event.tracker.operate.open' />
@@ -95,6 +165,9 @@ const EventTracker = () => {
                 }}
               >
                 <FormattedMessage id='common.all.text' />
+                <span className={styles['navs-count']}>
+                  ({allEvents.length})
+                </span>
               </div>
               <div 
                 className={toggleCls} 
@@ -103,6 +176,9 @@ const EventTracker = () => {
                 }}
               >
                 <FormattedMessage id='common.toggles.text' />
+                <span className={styles['navs-count']}>
+                  ({toggleEvents.length})
+                </span>
               </div>
               <div 
                 className={metricCls} 
@@ -111,6 +187,9 @@ const EventTracker = () => {
                 }}
               >
                 <FormattedMessage id='common.metrics.text' />
+                <span className={styles['navs-count']}>
+                  ({metricEvents.length})
+                </span>
               </div>
             </div>
             <div className={styles.search}>
@@ -125,13 +204,11 @@ const EventTracker = () => {
                   />
                 </Form.Field>
               </Form>
-              <span className={styles.refresh}>
-                <Icon type='refresh' />
-              </span>
             </div>
           </div>
           <List
             type={selectedNav}
+            events={selectedNav === 'all' ? allEvents : selectedNav === 'toggle' ? toggleEvents : metricEvents}
           />
         </div>
       </div>

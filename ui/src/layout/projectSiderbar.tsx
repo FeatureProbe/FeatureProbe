@@ -18,6 +18,7 @@ import {
   CONNECT_SDK_PATH,
   SETTING_PATH,
   EVENT_TRACKER_PATH,
+  TRACK_EVENT_PATH,
 } from 'router/routes';
 import { SidebarContainer } from './hooks';
 import styles from './sidebar.module.scss';
@@ -73,7 +74,7 @@ const ProjectSiderbar = (props: IProps) => {
 
   useEffect(() => {
     const { path } = match;
-    if (path === TOGGLE_PATH || path === TARGETING_PATH || path === CONNECT_SDK_PATH) {
+    if (path === TOGGLE_PATH || path === TARGETING_PATH || path === CONNECT_SDK_PATH || path === TRACK_EVENT_PATH) {
       setSelectedItem('toggle');
     } else if (path === SEGMENT_PATH || path === SEGMENT_ADD_PATH || path === SEGMENT_EDIT_PATH) {
       setSelectedItem('segments');

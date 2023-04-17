@@ -1,0 +1,97 @@
+.table-row {
+  height: 52px;
+  cursor: pointer;
+  outline: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.table-row:hover {
+  outline: 1px solid #556ee6;
+  background: rgba(85, 110, 230, 0.04);
+  border-radius: 8px !important;
+  -moz-outline-radius: 8px;
+}
+
+.event-time {
+  margin-left: 24px;
+}
+
+.toggle-key {
+  height: 16px;
+  background: #ececf6;
+  font-size: 12px;
+  color: #74788d;
+  padding: 2px 6px;
+  margin-left: 10px;
+  border-radius: 4px;
+}
+
+.view-attributes {
+  font-size: 14px;
+  color: #495057;
+  cursor: pointer;
+  border-bottom: 1px solid #495057;
+}
+
+.view-attributes:hover {
+  color: #566ee6;
+  border-bottom: 1px solid #566ee6;
+}
+
+.popup {
+  padding: 16px 12px !important;
+}
+
+.modal {
+  width: 365px;
+}
+
+.modal-header {
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: #212529;
+  letter-spacing: 0;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.modal-description {
+  font-size: 14px;
+  color: #74788D;
+  line-height: 22px;
+  font-weight: 400;
+  margin-top: 8px;
+}
+
+.modal-content {
+  margin-top: 12px;
+
+  :global {
+    .CodeMirror-scroll {
+      background: rgba(85, 110, 230, 0.04);
+      font-size: 12px;
+      color: rgb(120, 139, 227);
+      margin-bottom: 0;
+      margin-right: 0;
+      padding-bottom: 0;
+      border-radius: 8px;
+      max-height: 320px;
+      height: 320px;
+    }
+
+    .CodeMirror {
+      height: 320px;
+    }
+  }
+}
+
+.icon-copy {
+  color: #74788d;
+  cursor: pointer;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+.event-user-detail {
+  margin-left: 5px;
+}

@@ -669,9 +669,9 @@
   "prerequisite.json.not.support": "暂不支持JSON类型的开关作为前置条件",
   "prerequisite.toggle.duplicate": "开关重复，请重新选择",
 
-  "event.tracker.description": "使用此页面验证我们正在从您的应用程序接收事件",
-  "event.tracker.table.time": "事件上报时间",
-  "event.tracker.table.type": "事件上报类型",
+  "event.tracker.description": "使用此页面验证我们正在从您的应用程序接收事件。",
+  "event.tracker.table.time": "时间",
+  "event.tracker.table.type": "事件类型",
   "event.tracker.table.user": "用户",
   "event.tracker.table.event": "事件",
   "event.tracker.table.toggle.key": "开关",
@@ -691,5 +691,10 @@
   "event.tracker.operate.close": "关闭",
   "event.tracker.status.open": "事件追踪器已开启！",
   "event.tracker.status.close": "事件追踪器已关闭！",
+  "event.tracker.view.attributes": "查看属性",
+  "event.tracker.attributes": "属性",
+  "event.tracker.source": "事件来源：",
+  "event.tracker.tracked": "上报",
+  "event.tracker.evaluated": "访问",
   "event.tracker.a": "事件上报时间"
 }
