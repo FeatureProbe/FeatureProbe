@@ -22,7 +22,7 @@ sidebar_position: 2
 | ---------- | ------------------- | ------------- |
 | 10.100.1.1 | FeatureProbe API    | 4008          |
 | 10.100.1.1 | FeatureProbe UI     | 4009（Nginx） |
-| 10.100.1.2 | FeatureProbe Server | 4007          |
+| 10.100.1.2 | FeatureProbe Server | 4007 4011     |
 | 10.100.1.3 | 数据库（MySQL）     | 13306         |
 
 :::tip
@@ -72,8 +72,9 @@ sidebar_position: 2
 3. 运行 FeatureProbe Server 实例:
 
    ```bash
-   docker run -p 4007:4007 \
+   docker run -p 4007:4007 -p 4011:4011 \
      -e FP_SERVER_PORT=4007 \
+     -e FP_REALTIME_PORT=4011 \
      -e FP_TOGGLES_URL=http://10.100.1.1:4008/internal/server/toggles \
      -e FP_EVENTS_URL=http://10.100.1.1:4008/internal/server/events \
      -e FP_KEYS_URL=http://10.100.1.1:4008/internal/server/sdk_keys \

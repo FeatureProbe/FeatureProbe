@@ -115,7 +115,7 @@ Example response protocol:
 }
 ```
 
-- This API requires setting the Authorization HTTP request header to ${sdk_key} to authenticate when polling the API. ${sdk_key} is the Server SDK key passed by the client application to FeatureProbe configuration.
+- This API requires setting the Authorization HTTP request header to `sdk_key` to authenticate when polling the API. `sdk_key` is the Server SDK key passed by the client application to FeatureProbe configuration.
 
 - To implement asynchronous polling, a timer or polling library can be used to periodically send HTTP requests to retrieve the latest feature flag rules. The recommended default frequency is 5 seconds.
     
@@ -129,7 +129,7 @@ When there is a higher requirement for the latency of feature flags changes, opt
 
 - First, it is necessary to implement the asynchronous polling mechanism as an alternative solution for streaming api updates.
 
-- To implement the streaming api mechanism, you will need to add the [socket-io](https://github.com/socketio) client dependency to your SDK and establish a long connection with the FeatureProbe Server during SDK initialization. You can send a "register" event with a parameter named key and a value of ${sdk_key} to verify the SDK's identity during the authentication process. Here, ${sdk_key} is the Server SDK key passed by the client application to the FeatureProbe configuration.
+- To implement the streaming api mechanism, you will need to add the [socket.io-client](https://github.com/socketio/socket.io-client) client dependency to your SDK and establish a long connection with the FeatureProbe Server during SDK initialization. You can send a "register" event with a parameter named key and a value of `sdk_key` to verify the SDK's identity during the authentication process. Here, `sdk_key` is the Server SDK key passed by the client application to the FeatureProbe configuration.
 
 - Listen to the "update" event so that when the feature flags configuration changes, the client is immediately notified to proactively pull the latest switch rule through the polling API.
 
@@ -139,7 +139,7 @@ When there is a higher requirement for the latency of feature flags changes, opt
 
 ### Client SDK receives feature flags change
 
-When we make changes to the feature flags configuration or add new page_view or click event metric through the FeatureProbe platform or Open API, the client SDK needs to update the results and event sets of the corresponding  feature flags in memory. Currently, the following two implementations need to be provided:
+When we make changes to the feature flags configuration through the FeatureProbe platform or Open API, the client SDK needs to update the results of the corresponding  feature flags in memory. Currently, the following two implementations need to be provided:
 
  1、**Getting feature flag result through asynchronous polling**
 Protocol for the API used by the server to retrieve feature flag result:
@@ -162,9 +162,9 @@ Example response protocol:
 }
 ```
 
-- This API requires setting the Authorization HTTP request header to ${sdk_key} for authentication during polling API. ${sdk_key} is the Client SDK key passed by the client application to FeatureProbe configuration.
+- This API requires setting the Authorization HTTP request header to `sdk_key` for authentication during polling API. `sdk_key` is the Client SDK key passed by the client application to FeatureProbe configuration.
 
-- Additionally, the API requires setting the user parameter in the HTTP request as ${FPUser}, with its value being the Base64-encoded string obtained from serializing the FPUser object to a JSON format.
+- Additionally, the API requires setting the user parameter in the HTTP request as `FPUser`, with its value being the Base64-encoded string obtained from serializing the FPUser object to a JSON format.
 
 - To implement the asynchronous polling mechanism, you can use a timer or a polling library to periodically send HTTP requests to obtain the latest feature flags result. It is recommended to set the default frequency to 5 seconds.
     
@@ -179,7 +179,7 @@ Here are the steps to implement streaming api for updating feature flag changes 
 
 - First, implement asynchronous polling mechanism as an alternative solution for streaming api updates
 
-- To implement the streaming api mechanism, you will need to add the [socket-io](https://github.com/socketio) client dependency to your SDK and establish a long connection with the FeatureProbe Server during SDK initialization. You can send a "register" event with a parameter named key and a value of ${sdk_key} to verify the SDK's identity during the authentication process. Here, ${sdk_key} is the Server SDK key passed by the client application to the FeatureProbe configuration.
+- To implement the streaming api mechanism, you will need to add the [socket.io-client](https://github.com/socketio/socket.io-client) client dependency to your SDK and establish a long connection with the FeatureProbe Server during SDK initialization. You can send a "register" event with a parameter named key and a value of `sdk_key` to verify the SDK's identity during the authentication process. Here, `sdk_key` is the Server SDK key passed by the client application to the FeatureProbe configuration.
 
 - Listen to the "update" event so that when the feature flags configuration changes, the client is immediately notified to proactively pull the latest switch rule through the polling API.
 
@@ -204,11 +204,11 @@ The client-side SDK does not need to implement the logic of feature flag rule ca
 Currently, FeatureProbe provides 4 types of events for reporting:
 
 - **custom**: Events sent when the application calls the SDK's track method.
-- **event**: Feature flag evaluation information。
-- **page_view**: Records page access events for the JavaScript SDK.
+- **access**: Feature flag evaluation information。
+- **pageview**: Records page access events for the JavaScript SDK.
 - **click**: Records page click events for the JavaScript SDK.
 
-And it is necessary to report the access statistics of each group's feature flag within a certain period of tim
+And it is necessary to report the access statistics of each group's feature flag within a certain period of time.
 
 All SDKs must send events in batches to the FeatureProbe server asynchronously for a period of time. The SDKs need to enable a timer task, which is executed every 5 seconds by default, to send all events generated during this period to the server.
 
@@ -278,9 +278,9 @@ curl --location --request POST 'https://featureprobe.io/server/api/events' \
 
 This API must include the following request headers:
 
-***Authorization***：The value is ${sdk_key}, where ${sdk_key} is the Server(Client) SDK key passed by the client application to FeatureProbe configuration.
+***Authorization***：The value is `sdk_key`, where `sdk_key` is the Server(Client) SDK key passed by the client application to FeatureProbe configuration.
 
-***user-agent***：The value is ${sdk_language_kind}/${sdk_version}, where ${sdk_language_kind} is the language name of the SDK implementation, and ${sdk_version} is the version number of the current SDK.
+***UA***：The value is `sdk_language_kind/sdk_version`, where `sdk_language_kind` is the language name of the SDK implementation, and `sdk_version` is the version number of the current SDK.
 
 ## Reference Materials.
 
