@@ -158,37 +158,8 @@ const List = (props: IProps) => {
               </Filter>
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <FormattedMessage id='event.tracker.table.user' />
+              <FormattedMessage id='event.tracker.table.event' />
             </Table.HeaderCell>
-            {
-              (type === 'all' || type === 'metric') && (
-                <Table.HeaderCell>
-                  <FormattedMessage id='event.tracker.table.event' />
-                </Table.HeaderCell>
-              )
-            }
-            {
-              type === 'toggle' && (
-                <>
-                  <Table.HeaderCell>
-                    <FormattedMessage id='event.tracker.table.toggle.key' />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <FormattedMessage id='event.tracker.table.evaluation.reason' />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    <FormattedMessage id='event.tracker.table.variation' />
-                  </Table.HeaderCell>
-                </>
-              )
-            }
-            {
-              type === 'metric' && (
-                <Table.HeaderCell>
-                  <FormattedMessage id='event.tracker.table.value' />
-                </Table.HeaderCell>
-              )
-            }
             <Table.HeaderCell className={styles['column-operation']}></Table.HeaderCell>
           </Table.Row>
         </Table.Header>

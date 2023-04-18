@@ -1,8 +1,7 @@
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { SyntheticEvent, useEffect, useMemo, useState } from 'react';
 import { Popup, Table } from 'semantic-ui-react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import dayjs from 'dayjs';
-import Icon from 'components/Icon';
 import JsonEditor from 'components/JsonEditor';
 import CopyToClipboardPopup from 'components/CopyToClipboard';
 import { IEvent } from 'interfaces/eventTracker';
@@ -15,8 +14,9 @@ interface IProps {
 }
 
 const TableItem = (props: IProps) => {
-  const { type, event } = props;
+  const { event } = props;
   const [ open, saveOpen ] = useState<boolean>(false);
+  const intl = useIntl();
 
   useEffect(() => {
     const handler = () => {
@@ -28,6 +28,17 @@ const TableItem = (props: IProps) => {
 
     return () => window.removeEventListener('click', handler);
   }, [open]);
+
+  const getTypeText = useMemo(() => {
+    return new Map([
+      ['access', intl.formatMessage({id: 'event.tracker.type.access'})],
+      ['summary', intl.formatMessage({id: 'event.tracker.type.summary'})],
+      ['debug', intl.formatMessage({id: 'event.tracker.type.debug'})],
+      ['custom', intl.formatMessage({id: 'analysis.event.custom'})],
+      ['pageview', intl.formatMessage({id: 'analysis.event.pageview'})],
+      ['click', intl.formatMessage({id: 'analysis.event.click'})],
+    ]);
+  }, [intl]);
 
   return (
     <Table.Row className={styles['table-row']}>
@@ -41,114 +52,159 @@ const TableItem = (props: IProps) => {
         </div>
       </Table.Cell>
       <Table.Cell>
-        { event.kind }
+        { getTypeText.get(event.kind) }
       </Table.Cell>
       <Table.Cell>
         {
-          (event.kind === 'debug' || event.kind === 'summary') ? (
+          (event.kind === 'access' ) && (
             <div>
-              { event.userKey ?? '-' }
-              <span className={styles['event-user-detail']}>
-                { event.userDetail && JSON.stringify(JSON.parse(event.userDetail).attrs).replace(/"/g, '').replace(/{/g, '(').replace(/}/g, ')') }
-              </span>
+              {
+                intl.locale === 'zh-CN' ? (
+                  <>
+                    <span className={styles['toggle-user']}>{event.user}</span>
+                    <FormattedMessage id='event.tracker.evaluated.left' /> 
+                    {
+                      event.key && (
+                        <CopyToClipboardPopup text={event.key}>
+                          <span className={styles['toggle-key']}>{event.key}</span>
+                        </CopyToClipboardPopup>
+                      )
+                    }
+                    <FormattedMessage id='event.tracker.evaluated.right' />
+                    <span className={styles['toggle-value']}>{event.value}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className={styles['toggle-user']}>{event.user}</span>
+                    <FormattedMessage id='event.tracker.evaluated.left' /> 
+                    <span className={styles['toggle-value']}>{event.value}</span>
+                    <FormattedMessage id='event.tracker.evaluated.right' /> 
+                    {
+                      event.key && (
+                        <CopyToClipboardPopup text={event.key}>
+                          <span className={styles['toggle-key']}>{event.key}</span>
+                        </CopyToClipboardPopup>
+                      )
+                    }
+                  </>
+                )
+              }
             </div>
-          ) 
-          : (
+          )
+        }
+        {
+          (event.kind === 'summary') && (
             <div>
-              { event.user ?? '-' }
+              <FormattedMessage id='event.tracker.evaluated' /> 
+              <span className={styles['toggle-value']}>{event.value}</span>
+              {
+                event.toggleKey && (
+                  <CopyToClipboardPopup text={event.toggleKey}>
+                    <span className={styles['toggle-key']}>{event.toggleKey}</span>
+                  </CopyToClipboardPopup>
+                )
+              }
+            </div>
+          )
+        }
+        {
+          (event.kind === 'debug') && (
+            <div>
+              {
+                intl.locale === 'zh-CN' ? (
+                  <>
+                    <span className={styles['toggle-user']}>{event.userKey}</span>
+                    <FormattedMessage id='event.tracker.evaluated.left' /> 
+                    {
+                      event.toggleKey && (
+                        <CopyToClipboardPopup text={event.toggleKey}>
+                          <span className={styles['toggle-key']}>{event.toggleKey}</span>
+                        </CopyToClipboardPopup>
+                      )
+                    }
+                    <FormattedMessage id='event.tracker.evaluated.right' /> 
+                    <span className={styles['toggle-value']}>{event.value}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className={styles['toggle-user']}>{event.userKey}</span>
+                    <FormattedMessage id='event.tracker.evaluated.left' /> 
+                    <span className={styles['toggle-value']}>{event.value}</span>
+                    <FormattedMessage id='event.tracker.evaluated.right' /> 
+                    {
+                      event.toggleKey && (
+                        <CopyToClipboardPopup text={event.toggleKey}>
+                          <span className={styles['toggle-key']}>{event.toggleKey}</span>
+                        </CopyToClipboardPopup>
+                      )
+                    }
+                  </>
+                )
+              }
+            </div>
+          )
+        }
+        {
+          ['pageview', 'click'].includes(event.kind) && (
+            <div>
+              <FormattedMessage id='event.tracker.tracked' /> 
+              <span className={styles['toggle-user']}>{event.user}</span>
+            </div>
+          )
+        }
+        {
+          (event.kind === 'custom') && (
+            <div>
+              {
+                intl.locale === 'zh-CN' ? (
+                  <>
+                    <FormattedMessage id='event.tracker.tracked' />
+                    <span className={styles['toggle-user']}>{event.user}</span>
+                    <FormattedMessage id='event.tracker.tracked.middle' />
+                    {
+                      event.name && (
+                        <CopyToClipboardPopup text={event.name}>
+                          <span className={styles['toggle-key']}>{event.name}</span>
+                        </CopyToClipboardPopup>
+                      )
+                    }
+                    {
+                      event.value && (
+                        <>
+                          <FormattedMessage id='event.tracker.tracked.right' />
+                          <span>{event.value}</span>
+                        </>
+                      )
+                    }
+                  </>
+                ) : (
+                  <>
+                    <FormattedMessage id='event.tracker.tracked' />
+                    {
+                      event.name && (
+                        <CopyToClipboardPopup text={event.name}>
+                          <span className={styles['toggle-key']}>{event.name}</span>
+                        </CopyToClipboardPopup>
+                      )
+                    }
+                    <FormattedMessage id='event.tracker.tracked.middle' />
+                    <span className={styles['toggle-user']}>{event.user}</span>
+                    {
+                      event.value && (
+                        <>
+                          <FormattedMessage id='event.tracker.tracked.right' />
+                          <span>{event.value}</span>
+                        </>
+                      )
+                    }
+                  </>
+                )
+              }
+              
             </div>
           )
         }
       </Table.Cell>
-      {
-        type === 'all' && (
-          <Table.Cell>
-            {
-              (event.kind === 'access') && (
-                <div>
-                  <FormattedMessage id='event.tracker.evaluated' /> 
-                  <span className={styles['toggle-key']}>{event.key}</span>
-                </div>
-              )
-            }
-            {
-              ['debug', 'summary'].includes(event.kind) && (
-                <div>
-                  <FormattedMessage id='event.tracker.evaluated' /> 
-                  <span className={styles['toggle-key']}>{event.toggleKey}</span>
-                </div>
-              )
-            }
-            {
-              ['pageview', 'click'].includes(event.kind) && (
-                <div>
-                  <FormattedMessage id='event.tracker.tracked' /> 
-                  <span className={styles['toggle-key']}>{event.name}</span>
-                </div>
-              )
-            }
-            {
-              (event.kind === 'custom') && (
-                <div>
-                  <FormattedMessage id='event.tracker.tracked' /> 
-                  <span className={styles['toggle-key']}>{event.name}</span>
-                </div>
-              )
-            }
-          </Table.Cell>
-        )
-      }
-      {
-        type === 'toggle' && (
-          <>
-            <Table.Cell>
-              {
-                event.kind === 'access' ? (
-                  <div>
-                    <span>{event.key}</span>
-                    {
-                      event.key && (
-                        <CopyToClipboardPopup text={event.key}>
-                          <Icon type='copy' customclass={styles['icon-copy']} />
-                        </CopyToClipboardPopup>
-                      )
-                    }
-                  </div>
-                ) : (
-                  <div>
-                    <span>{event.toggleKey}</span>
-                    {
-                      event.toggleKey && (
-                        <CopyToClipboardPopup text={event.toggleKey}>
-                          <Icon type='copy' customclass={styles['icon-copy']} />
-                        </CopyToClipboardPopup>
-                      )
-                    }
-                  </div>
-                )
-              }
-            </Table.Cell>
-            <Table.Cell>
-              {event.reason ?? '-'}
-            </Table.Cell>
-            <Table.Cell>
-              {event.value ?? '-'}
-            </Table.Cell>
-          </>
-        )
-      }
-      {
-        type === 'metric' && (
-          <>
-            <Table.Cell>
-              {event.name}
-            </Table.Cell>
-            <Table.Cell>
-              {event.value ?? '-'}
-            </Table.Cell>
-          </>
-        )
-      }
       <Table.Cell>
         <Popup
           open={open}

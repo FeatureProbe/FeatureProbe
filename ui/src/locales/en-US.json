@@ -694,8 +694,10 @@
   "event.tracker.view.attributes": "View attributes",
   "event.tracker.attributes": "Attributes",
   "event.tracker.source": "Source: ",
-  "event.tracker.tracked": "Tracked ",
-  "event.tracker.evaluated": "Evaluated ",
-  "event.tracker.a": "事件上报时间"
-
+  "event.tracker.tracked": "Tracked",
+  "event.tracker.tracked.middle": "of ",
+  "event.tracker.tracked.right": " with value ",
+  "event.tracker.evaluated": "Evaluated",
+  "event.tracker.evaluated.left": "evaluated as ",
+  "event.tracker.evaluated.right": " of"
 }

@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 import classNames from 'classnames';
 import { v4 as uuidv4 } from 'uuid';
 import { FormattedMessage, useIntl } from 'react-intl';
+import cloneDeep from 'lodash/cloneDeep';
 import List from './components/List';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
@@ -27,9 +28,25 @@ const EventTracker = () => {
   const [ allEvents, saveAllEvents ] = useState<IEvent[]>([]);
   const [ toggleEvents, saveToggleEvents ] = useState<IEvent[]>([]);
   const [ metricEvents, saveMetricEvents ] = useState<IEvent[]>([]);
+  const [ originAllEvents, saveOriginAllEvents ] = useState<IEvent[]>([]);
+  const [ originToggleEvents, saveOriginToggleEvents ] = useState<IEvent[]>([]);
+  const [ originMetricEvents, saveOriginMetricEvents ] = useState<IEvent[]>([]);
   const [ search, saveSearch ] = useState<string>('');
   const intl = useIntl();
   const timer: { current: NodeJS.Timeout | null } = useRef(null);
+
+  useEffect(() => {
+    const all = originAllEvents.concat(events);
+    const toggle = all.filter(item => item.kind === 'access' || item.kind === 'debug' || item.kind === 'summary');
+    const metric = all.filter(item => item.kind === 'pageview' || item.kind === 'click' || item.kind === 'custom');
+
+    saveAllEvents(all);
+    saveToggleEvents(toggle);
+    saveMetricEvents(metric);
+    saveOriginAllEvents(all);
+    saveOriginToggleEvents(toggle);
+    saveOriginMetricEvents(metric);
+  }, [events]);
 
   const getData = useCallback(() => {
     getEventsStream<IEventStream>(projectKey, environmentKey, uuid).then(res => {
@@ -59,19 +76,24 @@ const EventTracker = () => {
   }, [getData]);
 
   useEffect(() => {
-    let all = allEvents.concat(events);
-    let toggle = all.filter(item => item.kind === 'access' || item.kind === 'debug' || item.kind === 'summary');
-    let metric = all.filter(item => item.kind === 'pageview' || item.kind === 'click' || item.kind === 'custom');
+    const all = cloneDeep(originAllEvents);
+    const toggle = cloneDeep(originToggleEvents);
+    const metric = cloneDeep(originMetricEvents);
 
     if (search !== '') {
-      all = all.filter(item => search === item.key || search === item.name);
-      toggle = toggle.filter(item => search === item.key || search === item.name);
-      metric = metric.filter(item => search === item.key || search === item.name);
+      const filterAll = all.filter(item => search === item.key || search === item.name);
+      const filterToggle = toggle.filter(item => search === item.key || search === item.toggleKey);
+      const filterMetric = metric.filter(item => search === item.name);
+
+      saveAllEvents(filterAll);
+      saveToggleEvents(filterToggle);
+      saveMetricEvents(filterMetric);
+    } else {
+      saveAllEvents(all);
+      saveToggleEvents(toggle);
+      saveMetricEvents(metric);
     }
-    saveAllEvents(all);
-    saveToggleEvents(toggle);
-    saveMetricEvents(metric);
-  }, [events, search]);
+  }, [search, originAllEvents, originToggleEvents, originMetricEvents]);
 
   const allCls = classNames(styles['navs-item'], {
     [styles['navs-item-selected']]: selectedNav === 'all'
@@ -199,7 +221,6 @@ const EventTracker = () => {
                     className={styles.input}
                     placeholder={getByPlaceholderText()} 
                     icon={<Icon customclass={styles['icon-search']} type='search' />}
-                    // value={''}
                     onChange={handleSearch}
                   />
                 </Form.Field>

@@ -694,7 +694,10 @@
   "event.tracker.view.attributes": "查看属性",
   "event.tracker.attributes": "属性",
   "event.tracker.source": "事件来源：",
-  "event.tracker.tracked": "上报",
-  "event.tracker.evaluated": "访问",
-  "event.tracker.a": "事件上报时间"
+  "event.tracker.tracked": "追踪到",
+  "event.tracker.tracked.middle": "的",
+  "event.tracker.tracked.right": "值为",
+  "event.tracker.evaluated": "访问了",
+  "event.tracker.evaluated.left": "访问了",
+  "event.tracker.evaluated.right": "的"
 }
