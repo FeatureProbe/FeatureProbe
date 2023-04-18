@@ -697,7 +697,7 @@
   "event.tracker.tracked": "Tracked",
   "event.tracker.tracked.middle": "of ",
   "event.tracker.tracked.right": " with value ",
-  "event.tracker.evaluated": "Evaluated",
+  "event.tracker.evaluated": "Evaluated ",
   "event.tracker.evaluated.left": "evaluated as ",
   "event.tracker.evaluated.right": " of"
 }

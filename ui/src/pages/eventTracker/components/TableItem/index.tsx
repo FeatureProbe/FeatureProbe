@@ -95,13 +95,33 @@ const TableItem = (props: IProps) => {
         {
           (event.kind === 'summary') && (
             <div>
-              <FormattedMessage id='event.tracker.evaluated' /> 
-              <span className={styles['toggle-value']}>{event.value}</span>
               {
-                event.toggleKey && (
-                  <CopyToClipboardPopup text={event.toggleKey}>
-                    <span className={styles['toggle-key']}>{event.toggleKey}</span>
-                  </CopyToClipboardPopup>
+                intl.locale === 'zh-CN' ? (
+                  <>
+                    <FormattedMessage id='event.tracker.evaluated.left' /> 
+                    {
+                      event.toggleKey && (
+                        <CopyToClipboardPopup text={event.toggleKey}>
+                          <span className={styles['toggle-key']}>{event.toggleKey}</span>
+                        </CopyToClipboardPopup>
+                      )
+                    }
+                    <FormattedMessage id='event.tracker.evaluated.right' />
+                    <span className={styles['toggle-value']}>{event.value}</span>
+                  </>
+                ) : (
+                  <>
+                    <FormattedMessage id='event.tracker.evaluated' /> 
+                    <span className={styles['toggle-value']}>{event.value}</span>
+                    <FormattedMessage id='event.tracker.evaluated.right' /> 
+                    {
+                      event.toggleKey && (
+                        <CopyToClipboardPopup text={event.toggleKey}>
+                          <span className={styles['toggle-key']}>{event.toggleKey}</span>
+                        </CopyToClipboardPopup>
+                      )
+                    }
+                  </>
                 )
               }
             </div>

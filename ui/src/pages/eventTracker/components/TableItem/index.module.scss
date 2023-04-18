@@ -87,6 +87,14 @@
     .CodeMirror {
       height: 320px;
     }
+
+    .CodeMirror-vscrollbar {
+      display: none !important;
+    }
+
+    .CodeMirror-hscrollbar {
+      display: none !important;
+    }
   }
 }
 
