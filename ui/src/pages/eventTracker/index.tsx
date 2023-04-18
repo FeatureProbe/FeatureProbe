@@ -46,6 +46,7 @@ const EventTracker = () => {
     saveOriginAllEvents(all);
     saveOriginToggleEvents(toggle);
     saveOriginMetricEvents(metric);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [events]);
 
   const getData = useCallback(() => {
@@ -119,7 +120,7 @@ const EventTracker = () => {
     } else if (selectedNav === 'metric') {
       return intl.formatMessage({ id: 'event.tracker.search.event' });
     }
-  }, [selectedNav]);
+  }, [selectedNav, intl]);
   
   const handleEventTrackerEnabled = useCallback((enabled: boolean) => {
     changeEventTrackerStatus(projectKey, environmentKey, {
@@ -131,7 +132,7 @@ const EventTracker = () => {
         saveUuid(uuidv4());
       }
     });
-  }, [projectKey, environmentKey, getData]);
+  }, [projectKey, environmentKey]);
 
   return (
     <ProjectLayout>
