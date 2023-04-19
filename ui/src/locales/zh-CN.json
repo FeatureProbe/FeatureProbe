@@ -683,7 +683,7 @@
   "event.tracker.search.event": "请输入事件名称进行搜索",
   "event.tracker.no.data1": "已开启事件追踪器，正在等待事件上报...",
   "event.tracker.no.data2": "请确保已成功连接SDK",
-  "event.tracker.not.open": "暂无数据，请先开启Event Tracker",
+  "event.tracker.not.open": "暂无数据，请先开启事件追踪器",
   "event.tracker.type.access": "访问",
   "event.tracker.type.summary": "汇总",
   "event.tracker.type.debug": "调试",
