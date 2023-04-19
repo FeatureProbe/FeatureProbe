@@ -11,11 +11,12 @@ import styles from './index.module.scss';
 
 interface IProps {
   type: string;
+  open: boolean;
   events: IEvent[];
 }
 
 const List = (props: IProps) => {
-  const { type, events } = props;
+  const { type, open, events } = props;
   const [ typeList, saveTypeList ] = useState<string[]>([]);
   const [ displayEvents, saveDisplayEvents ] = useState<IEvent[]>(events);
   const intl = useIntl();
@@ -49,17 +50,27 @@ const List = (props: IProps) => {
   }, [typeList, events]);
 
   const getNoDataText = useCallback(() => {
-    return (
-      <div className={styles['no-data']}>
-        <div className={styles['no-data-text']}>
-          {intl.formatMessage({ id: 'event.tracker.no.data1' })}
+    if (open) {
+      return (
+        <div className={styles['no-data']}>
+          <div className={styles['no-data-text']}>
+            {intl.formatMessage({ id: 'event.tracker.no.data1' })}
+          </div>
+          <div className={styles['no-data-text']}>
+            {intl.formatMessage({ id: 'event.tracker.no.data2' })}
+          </div>
         </div>
-        <div className={styles['no-data-text']}>
-          {intl.formatMessage({ id: 'event.tracker.no.data2' })}
+      );
+    } else {
+      return (
+        <div className={styles['no-data']}>
+          <div className={styles['no-data-text']}>
+            {intl.formatMessage({ id: 'event.tracker.not.open' })}
+          </div>
         </div>
-      </div>
-    );
-  }, [intl]);
+      );
+    }
+  }, [intl, open]);
 
   return (
     <div className={styles.table}>

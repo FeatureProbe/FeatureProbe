@@ -54,6 +54,7 @@ const EventTracker = () => {
       const { success, data } = res;
 
       if (success && data) {
+
         saveOpen(data.debuggerEnabled);
         saveEvents(data.events);
         
@@ -130,6 +131,11 @@ const EventTracker = () => {
       if (success) {
         saveOpen(enabled);
         saveUuid(uuidv4());
+        if (enabled) {
+          saveAllEvents([]);
+          saveToggleEvents([]);
+          saveMetricEvents([]);
+        }
       }
     });
   }, [projectKey, environmentKey]);
@@ -229,6 +235,7 @@ const EventTracker = () => {
             </div>
           </div>
           <List
+            open={open}
             type={selectedNav}
             events={selectedNav === 'all' ? allEvents : selectedNav === 'toggle' ? toggleEvents : metricEvents}
           />

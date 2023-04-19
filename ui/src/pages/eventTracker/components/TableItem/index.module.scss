@@ -62,7 +62,7 @@
 
 .modal-description {
   font-size: 14px;
-  color: #74788D;
+  color: #74788d;
   line-height: 22px;
   font-weight: 400;
   margin-top: 8px;
@@ -81,11 +81,12 @@
       padding-bottom: 0;
       border-radius: 8px;
       max-height: 320px;
-      height: 320px;
+      height: auto;
+      position: unset;
     }
 
     .CodeMirror {
-      height: 320px;
+      height: auto;
     }
 
     .CodeMirror-vscrollbar {

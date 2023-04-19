@@ -33,6 +33,19 @@
       overflow: auto !important;
       border-radius: 8px;
       height: 298px;
+      position: unset;
+    }
+
+    .CodeMirror {
+      height: auto;
+    }
+
+    .CodeMirror-vscrollbar {
+      display: none !important;
+    }
+
+    .CodeMirror-hscrollbar {
+      display: none !important;
     }
   }
 }
