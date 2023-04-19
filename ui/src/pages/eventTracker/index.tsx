@@ -140,10 +140,19 @@ const EventTracker = () => {
     });
   }, [projectKey, environmentKey]);
 
+  const gotoBottom = useCallback(() => {
+    const element = document.querySelector('.scroll-container');
+    if (element) {
+      setTimeout(() => {
+        element.scrollTop = element.scrollHeight;
+      }, 400);
+    }
+  }, []);
+
   return (
     <ProjectLayout>
-      <div className={styles.debugger}>
-        <div className={styles.card}>
+      <div className={styles['event-tracker']}>
+        <div className={`scroll-container ${styles.card}`}>
           <div className={styles.heading}>
             <FormattedMessage id='common.event.tracker.text' />
           </div>
@@ -239,6 +248,13 @@ const EventTracker = () => {
             type={selectedNav}
             events={selectedNav === 'all' ? allEvents : selectedNav === 'toggle' ? toggleEvents : metricEvents}
           />
+          {
+            (selectedNav === 'all' ? allEvents : selectedNav === 'toggle' ? toggleEvents : metricEvents).length > 0 && (
+              <div className={styles.bottom} onClick={gotoBottom}>
+                <Icon type='angle-down' customclass={styles['angle-down']} />
+              </div>
+            )
+          }
         </div>
       </div>
     </ProjectLayout>

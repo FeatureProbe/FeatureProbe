@@ -1,4 +1,4 @@
-.debugger {
+.event-tracker {
   position: relative;
   padding: 0 20px;
   min-width: 1200px;
@@ -121,4 +121,22 @@
   text-align: center;
   line-height: 32px;
   color: #74788d;
+}
+
+.bottom {
+  position: fixed;
+  bottom: 20px;
+  width: 30px;
+  height: 30px;
+  background-color: #556ee6;
+  border-radius: 100%;
+  text-align: center;
+  line-height: 30px;
+  align-self: center;
+  cursor: pointer;
+}
+
+.angle-down {
+  color: #fff;
+  font-size: 24px;
 }
