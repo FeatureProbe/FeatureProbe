@@ -65,6 +65,22 @@ const EventTracker = () => {
     });
   }, [projectKey, environmentKey, uuid]);
 
+  const clearEvents = useCallback(() => {
+    saveAllEvents([]);
+    saveToggleEvents([]);
+    saveMetricEvents([]);
+    saveOriginAllEvents([]);
+    saveOriginToggleEvents([]);
+    saveOriginMetricEvents([]);
+  }, []);
+
+  useEffect(() => {
+    clearEvents();
+    if (timer.current) {
+      clearInterval(timer.current);
+    }
+  }, [projectKey, environmentKey, clearEvents]);
+
   useEffect(() => {
     if (timer.current) {
       clearInterval(timer.current);
@@ -132,13 +148,11 @@ const EventTracker = () => {
         saveOpen(enabled);
         saveUuid(uuidv4());
         if (enabled) {
-          saveAllEvents([]);
-          saveToggleEvents([]);
-          saveMetricEvents([]);
+          clearEvents();
         }
       }
     });
-  }, [projectKey, environmentKey]);
+  }, [projectKey, environmentKey, clearEvents]);
 
   const gotoBottom = useCallback(() => {
     const element = document.querySelector('.scroll-container');

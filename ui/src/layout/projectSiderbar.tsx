@@ -110,6 +110,8 @@ const ProjectSiderbar = (props: IProps) => {
       url = `/${projectKey}/${env}/segments`;
     } else if (match.path === SETTING_PATH) {
       url = `/${projectKey}/${env}/settings`;
+    } else if (match.path === EVENT_TRACKER_PATH) {
+      url = `/${projectKey}/${env}/event-tracker`;
     }
     history.push(url);
   }, [history, projectKey, toggleKey, navigation, env, match.path]);
