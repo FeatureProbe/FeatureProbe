@@ -294,6 +294,7 @@ impl Inner {
         };
         let arc_repo = client.repo();
         let repo = arc_repo.read();
+        let debug_until_time = repo.debug_until_time;
         let map: HashMap<String, EvalDetail<Value>> = repo
             .toggles
             .iter()
@@ -301,7 +302,7 @@ impl Inner {
             .map(|(key, toggle)| {
                 (
                     key.to_owned(),
-                    toggle.eval(user, &repo.segments, &repo.toggles, true, prerequisite_deep),
+                    toggle.eval(user, &repo.segments, &repo.toggles, true, prerequisite_deep, debug_until_time),
                 )
             })
             .collect();
