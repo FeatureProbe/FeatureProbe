@@ -19,5 +19,6 @@ export interface IEvent {
 
 export interface IEventStream {
   debuggerEnabled: boolean;
+  debugUntilTime: number;
   events: IEvent[];
 }

@@ -689,8 +689,8 @@
   "event.tracker.type.debug": "Debug",
   "event.tracker.operate.open": "Open",
   "event.tracker.operate.close": "Close",
-  "event.tracker.status.open": "Event tracker is opened",
-  "event.tracker.status.close": "Event tracker is closed",
+  "event.tracker.status.open": "Event tracker is opened.",
+  "event.tracker.status.close": "Event tracker is closed.",
   "event.tracker.view.attributes": "View attributes",
   "event.tracker.attributes": "Attributes",
   "event.tracker.source": "From source: ",
@@ -699,5 +699,7 @@
   "event.tracker.tracked.right": " with value ",
   "event.tracker.evaluated": "Evaluated ",
   "event.tracker.evaluated.left": "evaluated as ",
-  "event.tracker.evaluated.right": " of"
+  "event.tracker.evaluated.right": " of",
+  "event.tracker.until.time.left": " Remaining ",
+  "event.tracker.until.time.right": " minutes"
 }

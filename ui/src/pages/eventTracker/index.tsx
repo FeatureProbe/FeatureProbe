@@ -13,6 +13,7 @@ import { getEventsStream, changeEventTrackerStatus } from 'services/eventTracker
 import { IEvent, IEventStream } from 'interfaces/eventTracker';
 
 import styles from './index.module.scss';
+import dayjs from 'dayjs';
 
 interface IParams {
   projectKey: string;
@@ -25,6 +26,7 @@ const EventTracker = () => {
   const { projectKey, environmentKey } = useParams<IParams>();
   const [ uuid, saveUuid ] = useState<string>(uuidv4());
   const [ events, saveEvents ] = useState<IEvent[]>([]);
+  const [ debugUntilTime, saveDebugUntilTime ] = useState<number>(0);
   const [ allEvents, saveAllEvents ] = useState<IEvent[]>([]);
   const [ toggleEvents, saveToggleEvents ] = useState<IEvent[]>([]);
   const [ metricEvents, saveMetricEvents ] = useState<IEvent[]>([]);
@@ -54,7 +56,7 @@ const EventTracker = () => {
       const { success, data } = res;
 
       if (success && data) {
-
+        saveDebugUntilTime(data.debugUntilTime);
         saveOpen(data.debuggerEnabled);
         saveEvents(data.events);
         
@@ -140,6 +142,7 @@ const EventTracker = () => {
   }, [selectedNav, intl]);
   
   const handleEventTrackerEnabled = useCallback((enabled: boolean) => {
+    saveDebugUntilTime(0);
     changeEventTrackerStatus(projectKey, environmentKey, {
       enabled
     }).then(res => {
@@ -181,6 +184,15 @@ const EventTracker = () => {
                     <Icon type='success-circle' customclass={styles['icon-success']} />
                       <span className={styles['text-success']}>
                         <FormattedMessage id='event.tracker.status.open' />
+                        {
+                          debugUntilTime !== 0 && (
+                            <>
+                              <FormattedMessage id='event.tracker.until.time.left' />
+                              { dayjs(debugUntilTime).diff(dayjs(Date.now()), 'minute')}
+                              <FormattedMessage id='event.tracker.until.time.right' />
+                            </>
+                          )
+                        }
                       </span>
                       <Button type='button' secondary onClick={() => {
                         handleEventTrackerEnabled(false);
