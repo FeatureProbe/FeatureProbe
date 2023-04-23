@@ -700,6 +700,6 @@
   "event.tracker.evaluated": "Evaluated ",
   "event.tracker.evaluated.left": "evaluated as ",
   "event.tracker.evaluated.right": " of",
-  "event.tracker.until.time.left": " Remaining ",
-  "event.tracker.until.time.right": " minutes"
+  "event.tracker.until.time.left": " Will close in ",
+  "event.tracker.until.time.right": " minutes."
 }

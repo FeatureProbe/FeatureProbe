@@ -700,6 +700,6 @@
   "event.tracker.evaluated": "访问了",
   "event.tracker.evaluated.left": "访问了",
   "event.tracker.evaluated.right": "的",
-  "event.tracker.until.time.left": "剩余时间",
-  "event.tracker.until.time.right": "分钟"
+  "event.tracker.until.time.left": "",
+  "event.tracker.until.time.right": "分钟后关闭"
 }

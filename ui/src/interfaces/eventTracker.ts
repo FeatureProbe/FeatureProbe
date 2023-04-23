@@ -21,4 +21,6 @@ export interface IEventStream {
   debuggerEnabled: boolean;
   debugUntilTime: number;
   events: IEvent[];
+  projectKey: string;
+  environmentKey: string;
 }

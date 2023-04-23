@@ -36,6 +36,8 @@ const EventTracker = () => {
   const [ search, saveSearch ] = useState<string>('');
   const intl = useIntl();
   const timer: { current: NodeJS.Timeout | null } = useRef(null);
+  const projectKeyRef = useRef(projectKey);
+  const environmentKeyRef = useRef(environmentKey);
 
   useEffect(() => {
     const all = originAllEvents.concat(events);
@@ -51,11 +53,26 @@ const EventTracker = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [events]);
 
+  const clearEvents = useCallback(() => {
+    saveOpen(false);
+    saveAllEvents([]);
+    saveToggleEvents([]);
+    saveMetricEvents([]);
+    saveOriginAllEvents([]);
+    saveOriginToggleEvents([]);
+    saveOriginMetricEvents([]);
+  }, []);
+
   const getData = useCallback(() => {
     getEventsStream<IEventStream>(projectKey, environmentKey, uuid).then(res => {
       const { success, data } = res;
 
       if (success && data) {
+        if (projectKeyRef.current !== projectKey || environmentKeyRef.current !== environmentKey) {
+          clearEvents();
+          return;
+        }
+
         saveDebugUntilTime(data.debugUntilTime);
         saveOpen(data.debuggerEnabled);
         saveEvents(data.events);
@@ -65,22 +82,15 @@ const EventTracker = () => {
         }
       }
     });
-  }, [projectKey, environmentKey, uuid]);
-
-  const clearEvents = useCallback(() => {
-    saveAllEvents([]);
-    saveToggleEvents([]);
-    saveMetricEvents([]);
-    saveOriginAllEvents([]);
-    saveOriginToggleEvents([]);
-    saveOriginMetricEvents([]);
-  }, []);
+  }, [projectKey, environmentKey, uuid, clearEvents]);
 
   useEffect(() => {
     clearEvents();
     if (timer.current) {
       clearInterval(timer.current);
     }
+    projectKeyRef.current = projectKey;
+    environmentKeyRef.current = environmentKey;
   }, [projectKey, environmentKey, clearEvents]);
 
   useEffect(() => {
@@ -277,7 +287,7 @@ const EventTracker = () => {
           {
             (selectedNav === 'all' ? allEvents : selectedNav === 'toggle' ? toggleEvents : metricEvents).length > 0 && (
               <div className={styles.bottom} onClick={gotoBottom}>
-                <Icon type='angle-down' customclass={styles['angle-down']} />
+                <Icon type='bottom' customclass={styles['angle-down']} />
               </div>
             )
           }

@@ -125,18 +125,20 @@
 
 .bottom {
   position: fixed;
-  bottom: 20px;
-  width: 30px;
-  height: 30px;
-  background-color: #556ee6;
+  bottom: 30px;
+  right: 10px;
+  width: 38px;
+  height: 38px;
+  background: #FFFFFF;
+  box-shadow: 0 -2px 5px 0 rgba(0, 0, 0, 0.02), 0 2px 7px 7px rgba(0, 0, 0, 0.02), 0 2px 7px 0 rgba(0, 0, 0, 0.06);
   border-radius: 100%;
   text-align: center;
-  line-height: 30px;
+  line-height: 38px;
   align-self: center;
   cursor: pointer;
 }
 
 .angle-down {
-  color: #fff;
-  font-size: 24px;
+  color: #495057;
+  font-size: 20px;
 }
