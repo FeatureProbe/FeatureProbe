@@ -1,5 +1,5 @@
 import { SyntheticEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Form, InputOnChangeData } from 'semantic-ui-react';
+import { Form, InputOnChangeData, Popup } from 'semantic-ui-react';
 import { useParams } from 'react-router';
 import classNames from 'classnames';
 import { v4 as uuidv4 } from 'uuid';
@@ -179,7 +179,7 @@ const EventTracker = () => {
   return (
     <ProjectLayout>
       <div className={styles['event-tracker']}>
-        <div className={`scroll-container ${styles.card}`}>
+        <div className={styles.card}>
           <div className={styles.heading}>
             <FormattedMessage id='common.event.tracker.text' />
           </div>
@@ -286,9 +286,18 @@ const EventTracker = () => {
           />
           {
             (selectedNav === 'all' ? allEvents : selectedNav === 'toggle' ? toggleEvents : metricEvents).length > 0 && (
-              <div className={styles.bottom} onClick={gotoBottom}>
-                <Icon type='bottom' customclass={styles['angle-down']} />
-              </div>
+              <Popup 
+                inverted
+                position='right center'
+                offset={[0, 20]}
+                content={intl.formatMessage({ id: 'event.tracker.goto.bottom' })} 
+                style={{opacity: 0.8}}
+                trigger={
+                  <div className={styles.bottom} onClick={gotoBottom}>
+                    <Icon type='bottom' customclass={styles['angle-down']} />
+                  </div>
+                } 
+              />
             )
           }
         </div>

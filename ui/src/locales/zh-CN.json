@@ -701,5 +701,6 @@
   "event.tracker.evaluated.left": "访问了",
   "event.tracker.evaluated.right": "的",
   "event.tracker.until.time.left": " ",
-  "event.tracker.until.time.right": "分钟后关闭"
+  "event.tracker.until.time.right": "分钟后关闭",
+  "event.tracker.goto.bottom": "回到底部"
 }

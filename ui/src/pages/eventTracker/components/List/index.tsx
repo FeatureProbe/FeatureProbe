@@ -73,7 +73,7 @@ const List = (props: IProps) => {
   }, [intl, open]);
 
   return (
-    <div className={styles.table}>
+    <div className={`scroll-container ${styles.table}`}>
       <Table basic='very' unstackable>
         <Table.Header className={styles['table-header']}>
           <Table.Row>
