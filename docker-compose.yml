@@ -17,7 +17,7 @@ services:
       - logging.level.root=INFO
       - logging.level.org.hibernate.SQL=INFO
       - logging.level.org.hibernate.type.descriptor.sql.BasicBinder=INFO
-      - app.analysis-url=http://analysisAPI:4006/analysis
+      - app.analysis-base-url=http://analysisAPI:4006
       - app.server-base-urls=http://127.0.0.1:4009/server
       - server.port=4008
       - TZ=Asia/Shanghai
