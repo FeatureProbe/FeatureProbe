@@ -10,6 +10,7 @@ import webhook from './webhook';
 import tokens from './tokens';
 import application from './application';
 import analysis from './analysis';
+import eventTracker from './eventTracker';
 
 const APIS = {
   ...project,
@@ -24,6 +25,7 @@ const APIS = {
   ...tokens,
   ...application,
   ...analysis,
+  ...eventTracker,
 };
 
 export default APIS;

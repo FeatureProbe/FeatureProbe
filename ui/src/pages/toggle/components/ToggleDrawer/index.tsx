@@ -11,10 +11,10 @@ import {
   DropdownItemProps,
 } from 'semantic-ui-react';
 import { useParams } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 import cloneDeep from 'lodash/cloneDeep';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Joyride, { CallBackProps, EVENTS, Step, ACTIONS } from 'react-joyride';
-import { debounce } from 'lodash';
 import message from 'components/MessageBox';
 import Button from 'components/Button';
 import Variations from 'components/Variations';

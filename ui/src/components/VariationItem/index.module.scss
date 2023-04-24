@@ -137,6 +137,19 @@
       overflow: auto !important;
       border-radius: 8px;
       height: 298px;
+      position: unset;
+    }
+
+    .CodeMirror {
+      height: auto;
+    }
+
+    .CodeMirror-vscrollbar {
+      display: none !important;
+    }
+
+    .CodeMirror-hscrollbar {
+      display: none !important;
     }
   }
 }
@@ -155,6 +168,19 @@
       overflow: auto !important;
       border: 1px solid #ff7066;
       border-radius: 8px;
+      position: unset;
+    }
+
+    .CodeMirror {
+      height: auto;
+    }
+
+    .CodeMirror-vscrollbar {
+      display: none !important;
+    }
+
+    .CodeMirror-hscrollbar {
+      display: none !important;
     }
   }
 }

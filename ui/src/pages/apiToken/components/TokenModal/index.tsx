@@ -1,7 +1,7 @@
 import { SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Button, Dropdown, DropdownProps, Form } from 'semantic-ui-react';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { CONFLICT } from 'constants/httpCode';
 import FormItem from 'components/FormItem';
 import Icon from 'components/Icon';

@@ -1,4 +1,4 @@
-import { ReactElement, SyntheticEvent, useState } from 'react';
+import { ReactElement, SyntheticEvent, useEffect, useState } from 'react';
 import { Popup } from 'semantic-ui-react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
@@ -9,12 +9,22 @@ interface IProps {
   handleConfirm(): void
   handleClear(): void
   selected?: boolean;
-  children: ReactElement
+  children: ReactElement;
+  customStyle?: React.CSSProperties;
 }
 
 const Filter = (props: IProps) => {
-  const { selected, children, handleConfirm, handleClear } = props;
+  const { selected, children, customStyle, handleConfirm, handleClear } = props;
   const [ popupOpen, savePopupOpen ] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handler = () => {
+      if (popupOpen) {
+        savePopupOpen(false);
+      }
+    };
+    window.addEventListener('click', handler);
+  }, [popupOpen]);
 
   return (
     <Popup
@@ -23,6 +33,7 @@ const Filter = (props: IProps) => {
       on='click'
       position='bottom right'
       className={styles.popup}
+      style={customStyle}
       trigger={
         <Icon 
           type='filter' 

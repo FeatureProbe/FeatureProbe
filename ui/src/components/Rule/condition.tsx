@@ -104,7 +104,7 @@ const RuleContent = (props: IProps) => {
     } else {
       window.open(SEMVER_EN);
     }
-  }, [intl.locale]);
+  }, [intl]);
 
   const renderLabel = useCallback((label: DropdownItemProps) => {
     return ({

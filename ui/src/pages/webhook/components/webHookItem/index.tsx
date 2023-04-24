@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Table, Popup, Checkbox } from 'semantic-ui-react';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import dayjs from 'dayjs';
 import message from 'components/MessageBox';
 import TextLimit from 'components/TextLimit';
@@ -11,11 +11,11 @@ import CopyToClipboardPopup from 'components/CopyToClipboard';
 import { deleteWebHook, updateWebHook } from 'services/webhook';
 import styles from './index.module.scss';
 interface IProps {
+  index: number;
   webhook: IWebHook;
   handleEdit: (key: number) => void;
   refresh: () => void;
   saveList: React.Dispatch<React.SetStateAction<IWebHook[]>>;
-  index: number;
 }
 
 const WebHookItem = (props: IProps) => {

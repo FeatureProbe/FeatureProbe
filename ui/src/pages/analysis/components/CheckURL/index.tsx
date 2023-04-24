@@ -1,7 +1,7 @@
 import { useState, SyntheticEvent, useCallback, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Form, InputOnChangeData, Popup } from 'semantic-ui-react';
-import { findIndex } from 'lodash';
+import findIndex from 'lodash/findIndex';
 import TextLimit from 'components/TextLimit';
 import { matchUrl } from 'utils/checkUrl';
 import Icon from 'components/Icon';

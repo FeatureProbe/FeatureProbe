@@ -13,7 +13,7 @@ import {
   CheckboxProps,
 } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import ToggleItem from './components/ToggleItem';
 import ToggleDrawer from './components/ToggleDrawer';
 import ProjectLayout from 'layout/projectLayout';
@@ -532,11 +532,10 @@ const Toggle = () => {
                               enableApproval && (
                                 <Table.HeaderCell className={styles['column-publishing-status']}>
                                   <div>
-                                    <span>
-                                      <FormattedMessage id='toggles.table.publishing.status' />
-                                    </span>
+                                    <FormattedMessage id='toggles.table.publishing.status' />
                                     <Filter
                                       selected={releaseStatusList.length > 0}
+                                      customStyle={{ width: '180px' }}
                                       handleConfirm={() => {
                                         setSearchParams({
                                           ...searchParams,

@@ -1,0 +1,71 @@
+.table {
+  margin-top: 12px;
+  height: calc(100vh - 230px);
+  overflow: auto;
+}
+
+.table-header {
+  position: sticky;
+  top: 0;
+  background: #f8f9fa;
+  height: 42px;
+  line-height: 42px;
+  font-size: 13px;
+  z-index: 1;
+
+  :global {
+    th {
+      padding-bottom: 0 !important;
+    }
+  }
+}
+
+.table-body {
+  position: relative;
+  top: 1px;
+}
+
+.column-time {
+  padding-left: 24px !important;
+  width: 200px;
+}
+
+.column-type {
+  width: 150px;
+}
+
+.column-operation {
+  width: 150px;
+}
+
+.filter-menu {
+  color: #212529;
+}
+
+.filter-menu-item {
+  height: 32px;
+  line-height: 32px;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 12px;
+
+  :global {
+    .checkbox {
+      width: 100%;
+    }
+  }
+}
+
+.filter-menu-item:hover {
+  background-color: #f8f9fa;
+}
+
+.no-data {
+  margin-bottom: 100px;
+}
+
+.no-data-text {
+  font-size: 14px;
+  color: #adb5bc;
+  font-weight: 400;
+}

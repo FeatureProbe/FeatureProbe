@@ -28,7 +28,8 @@ import {
   CONNECT_SDK_PATH,
   SEGMENT_EDIT_PATH,
   SETTING_PATH,
-  TRACK_EVENT_PATH
+  TRACK_EVENT_PATH,
+  EVENT_TRACKER_PATH,
 } from 'router/routes';
 
 import styles from './layout.module.scss';
@@ -319,6 +320,13 @@ const ProjectLayout = (props: IProps) => {
             match.path === TOGGLE_PATH && (
               <Breadcrumb.Section active>
                 <TextLimit text={projectInfo.name} maxWidth={190} popupProps={{ offset: [0, -12] }}  />
+              </Breadcrumb.Section>
+            )
+          }
+          {
+            match.path === EVENT_TRACKER_PATH && (
+              <Breadcrumb.Section active>
+                <FormattedMessage id='common.event.tracker.text' />
               </Breadcrumb.Section>
             )
           }

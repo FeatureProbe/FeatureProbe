@@ -2,7 +2,7 @@ import { SyntheticEvent, useEffect, useState, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Table, Form, PaginationProps, InputOnChangeData } from 'semantic-ui-react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import SegmentDrawer from './components/SegmentDrawer';
 import SegmentItem from './components/SegmentItem';
 import ProjectLayout from 'layout/projectLayout';

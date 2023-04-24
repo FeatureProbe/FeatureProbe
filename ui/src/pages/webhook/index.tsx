@@ -4,7 +4,8 @@ import { Button, Dimmer, Form, InputOnChangeData, Loader, PaginationProps, Table
 import Icon from 'components/Icon';
 import SettingLayout from 'layout/settingLayout';
 import WebHookItem from './components/webHookItem';
-import { cloneDeep, debounce } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import debounce from 'lodash/debounce';
 import { IWebHook, IWebHookListResponse } from 'interfaces/webhook';
 import WebHookDrawer from './components/WebHookDrawer';
 import { Provider } from './provider';

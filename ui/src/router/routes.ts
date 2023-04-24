@@ -17,9 +17,11 @@ const ProjectSetting = lazy(() => import('../pages/projectSetting'));
 const ApiToken = lazy(() => import('../pages/apiToken'));
 const PersonalAPIToken = lazy(() => import('pages/personalToken'));
 const WebHook = lazy(() => import('../pages/webhook'));
+const EventTracker = lazy(() => import('../pages/eventTracker'));
 
 export const PROJECT_PATH = '/projects';
 export const TOGGLE_PATH = '/:projectKey/:environmentKey/toggles';
+export const EVENT_TRACKER_PATH = '/:projectKey/:environmentKey/event-tracker';
 export const SETTING_PATH = '/:projectKey/:environmentKey/settings';
 export const SEGMENT_PATH = '/:projectKey/:environmentKey/segments';
 export const SEGMENT_ADD_PATH = '/:projectKey/:environmentKey/segments/new';
@@ -40,82 +42,87 @@ export const headerRoutes = [
   {
     path: PROJECT_PATH,
     exact: true,
-    component: Project
+    component: Project,
   },
   {
     path: SEGMENT_ADD_PATH,
     exact: true,
-    component: SegmentEdit
+    component: SegmentEdit,
   },
   {
     path: SEGMENT_EDIT_PATH,
     exact: true,
-    component: SegmentEdit
+    component: SegmentEdit,
   },
   {
     path: SEGMENT_PATH,
     exact: true,
-    component: Segment
+    component: Segment,
   },
   {
     path: TOGGLE_PATH,
     exact: true,
-    component: Toggle
+    component: Toggle,
   },
   {
     path: SETTING_PATH,
     exact: true,
-    component: ProjectSetting
+    component: ProjectSetting,
   },
   {
     path: CONNECT_SDK_PATH,
     exact: true,
-    component: ConnectSDK
+    component: ConnectSDK,
   },
   {
     path: TRACK_EVENT_PATH,
     exact: true,
-    component: TrackEvent
+    component: TrackEvent,
   },
   {
     path: TARGETING_PATH,
     exact: true,
-    component: Targeting
+    component: Targeting,
   },
   {
     path: APPROVAL_PATH,
     exact: true,
-    component: Approvals
+    component: Approvals,
   },
   {
     path: MEMBER_PATH,
     exact: true,
-    component: Member
+    component: Member,
   },
   {
     path: PROFILE_PATH,
     exact: true,
-    component: Profile
+    component: Profile,
   },
   {
     path: APITOKEN_PATH,
     exact: true,
-    component: ApiToken
+    component: ApiToken,
   },
   {
     path: APITOKEN_PATH,
     exact: true,
-    component: ApiToken
+    component: ApiToken,
   },
   {
     path: PERSONAL_APITOKEN_PATH,
     exact: true,
-    component: PersonalAPIToken
+    component: PersonalAPIToken,
   },
   {
     path: WEBHOOK_LIST_PATH,
     exact: true,
-    component: WebHook
+    component: WebHook,
+  },
+  {
+    path: EVENT_TRACKER_PATH,
+    exact: true,
+    component: EventTracker,
   }
 ];
 
@@ -123,11 +130,11 @@ export const blankRoutes = [
   {
     path: '/notFound',
     exact: true,
-    component: NotFound
+    component: NotFound,
   },
   {
     path: '/login',
     exact: true,
-    component: isDemo? DemoLogin : Login
+    component: isDemo? DemoLogin : Login,
   }
 ];

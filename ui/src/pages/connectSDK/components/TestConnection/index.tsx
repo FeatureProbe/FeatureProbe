@@ -71,7 +71,7 @@ const TestConnection = (props: IProps) => {
       faqUrl.current = DOC_FAQ_ACCESS_EN;
       metricFaqUrl.current = DOC_FAQ_TRACK_EN;
     }
-  }, [intl.locale]);
+  }, [intl]);
 
   useEffect(() => {
     let name = '';

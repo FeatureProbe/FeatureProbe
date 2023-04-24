@@ -514,7 +514,7 @@ fp.start();
     ? `${isTrackValue ? `fp.track("${eventName}", /* value */);` : `fp.track("${eventName}");`}`
     : `${returnType === 'boolean' ? `const value = fp.boolValue("${toggleKey}", false);` : ''}${returnType === 'number' ? `const value = fp.numberValue("${toggleKey}", 1.0);` : ''}${returnType === 'string' ? `const value = fp.stringValue("${toggleKey}", "s");` : ''}${returnType === 'json' ? `const value = fp.jsonValue("${toggleKey}", {});` : ''}`
   }
-})
+});
 `
     }
   ];
@@ -555,10 +555,11 @@ featureProbeClient.start();
       code:
 `${eventName 
   ? `${isTrackValue ? `featureProbeClient.on("ready", function() {
-  featureProbeClient.track("${eventName}", /* value */);` : `featureProbeClient.track("${eventName}")`}
+  featureProbeClient.track("${eventName}", /* value */);` : `featureProbeClient.on("ready", function() {
+    featureProbeClient.track("${eventName}");`}
 });`
   : `const app = getApp();
-const value = app.globalData.toggles[${toggleKey}].value;`
+const value = app.globalData.toggles["${toggleKey}"].value;`
 }
 `
     },
@@ -646,14 +647,13 @@ export default withFPConsumer(Home);
     ${isTrackValue ? `fp.track("${eventName}", /* value */);` : `fp.track("${eventName}");`}
   
     return (
-      <>
+      <div>
         You can use track custom event in this page
       </div>
     )
   };
   
-  export default withFPConsumer(Home);
-  `
+  export default withFPConsumer(Home);`
       });
     } else {
       result.splice(3, 1);
