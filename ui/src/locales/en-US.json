@@ -122,6 +122,8 @@
   "common.prerequisite.lowercase.text": "prerequisite",
   "common.prerequisite.description": "The toggle is only open to users who meet all prerequisites.",
   "common.all.text": "All",
+  "common.toggle.event.text": "Toggle events",
+  "common.metric.event.text": "Metric events",
 
   "header.getuser.error.text": "Error getting user profile",
 
@@ -695,11 +697,14 @@
   "event.tracker.attributes": "Attributes",
   "event.tracker.source": "From source: ",
   "event.tracker.tracked": "Tracked ",
-  "event.tracker.tracked.middle": "of ",
+  "event.tracker.tracked.middle": " event of user ",
   "event.tracker.tracked.right": " with value ",
-  "event.tracker.evaluated": "Evaluated ",
-  "event.tracker.evaluated.left": "evaluated as ",
-  "event.tracker.evaluated.right": " of",
+  "event.tracker.evaluated.user": "User ",
+  "event.tracker.evaluated": "Evaluated variation ",
+  "event.tracker.evaluated.left": "evaluated as variation ",
+  "event.tracker.evaluated.middle": " of toggle",
+  "event.tracker.evaluated.right": " times",
+  "event.tracker.evaluated.unit": " times",
   "event.tracker.until.time.left": " Will close in ",
   "event.tracker.until.time.right": " minutes.",
   "event.tracker.goto.bottom": "Go to bottom"

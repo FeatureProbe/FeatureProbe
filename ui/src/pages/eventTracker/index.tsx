@@ -33,6 +33,8 @@ const EventTracker = () => {
   const [ originAllEvents, saveOriginAllEvents ] = useState<IEvent[]>([]);
   const [ originToggleEvents, saveOriginToggleEvents ] = useState<IEvent[]>([]);
   const [ originMetricEvents, saveOriginMetricEvents ] = useState<IEvent[]>([]);
+  const [ typeList, saveTypeList ] = useState<string[]>([]);
+
   const [ search, saveSearch ] = useState<string>('');
   const intl = useIntl();
   const timer: { current: NodeJS.Timeout | null } = useRef(null);
@@ -44,9 +46,9 @@ const EventTracker = () => {
     const toggle = all.filter(item => item.kind === 'access' || item.kind === 'debug' || item.kind === 'summary');
     const metric = all.filter(item => item.kind === 'pageview' || item.kind === 'click' || item.kind === 'custom');
 
-    saveAllEvents(all);
-    saveToggleEvents(toggle);
-    saveMetricEvents(metric);
+    // saveAllEvents(all);
+    // saveToggleEvents(toggle);
+    // saveMetricEvents(metric);
     saveOriginAllEvents(all);
     saveOriginToggleEvents(toggle);
     saveOriginMetricEvents(metric);
@@ -106,24 +108,35 @@ const EventTracker = () => {
   }, [getData]);
 
   useEffect(() => {
-    const all = cloneDeep(originAllEvents);
-    const toggle = cloneDeep(originToggleEvents);
-    const metric = cloneDeep(originMetricEvents);
+    let all = cloneDeep(originAllEvents);
+    let toggle = cloneDeep(originToggleEvents);
+    let metric = cloneDeep(originMetricEvents);
 
     if (search !== '') {
-      const filterAll = all.filter(item => search === item.key || search === item.name);
-      const filterToggle = toggle.filter(item => search === item.key || search === item.toggleKey);
-      const filterMetric = metric.filter(item => search === item.name);
+      let filterAll = all.filter(item => search === item.key || search === item.name || search === item.toggleKey);
+      let filterToggle = toggle.filter(item => search === item.key || search === item.toggleKey);
+      let filterMetric = metric.filter(item => search === item.name);
 
+      if (typeList.length > 0) {
+        filterAll = filterAll.filter(item => typeList.includes(item.kind));
+        filterToggle = filterToggle.filter(item => typeList.includes(item.kind));
+        filterMetric = filterMetric.filter(item => typeList.includes(item.kind));
+      }
       saveAllEvents(filterAll);
       saveToggleEvents(filterToggle);
       saveMetricEvents(filterMetric);
     } else {
+      if (typeList.length > 0) {
+        all = all.filter(item => typeList.includes(item.kind));
+        toggle = toggle.filter(item => typeList.includes(item.kind));
+        metric = metric.filter(item => typeList.includes(item.kind));
+      }
+
       saveAllEvents(all);
       saveToggleEvents(toggle);
       saveMetricEvents(metric);
     }
-  }, [search, originAllEvents, originToggleEvents, originMetricEvents]);
+  }, [search, typeList, originAllEvents, originToggleEvents, originMetricEvents]);
 
   const allCls = classNames(styles['navs-item'], {
     [styles['navs-item-selected']]: selectedNav === 'all'
@@ -175,6 +188,17 @@ const EventTracker = () => {
       }, 400);
     }
   }, []);
+
+  // Change filter type
+  const handleChange = useCallback((status) => {
+    if (typeList.includes(status)) {
+      const index = typeList.indexOf(status);
+      typeList.splice(index, 1);
+    } else {
+      typeList.push(status);
+    }
+    saveTypeList(cloneDeep(typeList));
+  }, [typeList]);
 
   return (
     <ProjectLayout>
@@ -249,7 +273,7 @@ const EventTracker = () => {
                   saveSelectedNav('toggle');
                 }}
               >
-                <FormattedMessage id='common.toggles.text' />
+                <FormattedMessage id='common.toggle.event.text' />
                 <span className={styles['navs-count']}>
                   ({toggleEvents.length})
                 </span>
@@ -260,7 +284,7 @@ const EventTracker = () => {
                   saveSelectedNav('metric');
                 }}
               >
-                <FormattedMessage id='common.metrics.text' />
+                <FormattedMessage id='common.metric.event.text' />
                 <span className={styles['navs-count']}>
                   ({metricEvents.length})
                 </span>
@@ -283,6 +307,9 @@ const EventTracker = () => {
             open={open}
             type={selectedNav}
             events={selectedNav === 'all' ? allEvents : selectedNav === 'toggle' ? toggleEvents : metricEvents}
+            typeList={typeList}
+            handleChange={handleChange}
+            saveTypeList={saveTypeList}
           />
           {
             (selectedNav === 'all' ? allEvents : selectedNav === 'toggle' ? toggleEvents : metricEvents).length > 0 && (
