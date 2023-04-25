@@ -48,7 +48,7 @@ const JsonEditor = (props: IProps) => {
   }, [value, onChange, disabled]);
 
   return (
-    <textarea disabled ref={editorRef}></textarea>
+    <textarea ref={editorRef}></textarea>
   );
 };
 
