@@ -261,7 +261,7 @@ const TableItem = (props: IProps) => {
                     <FormattedMessage id='event.tracker.tracked.middle' />
                     <span className={styles['toggle-user']}>{event.user}</span>
                     {
-                      event.value && (
+                      (event.value !== null && event.value !== undefined) && (
                         <>
                           <FormattedMessage id='event.tracker.tracked.right' />
                           <span>{event.value}</span>
