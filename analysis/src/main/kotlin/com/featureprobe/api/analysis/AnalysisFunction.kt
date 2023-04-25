@@ -3,7 +3,11 @@ package com.featureprobe.api.analysis
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.util.JSONPObject
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.apache.commons.math3.distribution.AbstractRealDistribution
+import org.apache.tomcat.util.json.JSONParser
+import org.flywaydb.core.internal.util.JsonUtils
 import java.io.IOException
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -291,7 +295,8 @@ fun variationStdDeviationSql() =
 fun batchAddVariation(
     ps: PreparedStatement,
     it: AccessEvent,
-    sdkKey: String
+    sdkKey: String,
+    userAgent: String
 ) {
     ps.setLong(1, it.time)
     ps.setString(2, it.user)
@@ -300,13 +305,15 @@ fun batchAddVariation(
     ps.setObject(5, it.ruleIndex)
     ps.setObject(6, it.version)
     ps.setString(7, sdkKey)
-
+    ps.setString(8, getSdkType(userAgent))
+    ps.setString(9, getSdkVersion(userAgent))
+    ps.setString(10, it.value)
     ps.addBatch()
 }
 
 fun batchAddEvent(
     ps: PreparedStatement,
-    it: CustomEvent,
+    it: AnalysisEvent,
     sdkKey: String,
     userAgent: String
 ) {
@@ -321,7 +328,7 @@ fun batchAddEvent(
     ps.setString(5, sdkKey)
     ps.setString(6, getSdkType(userAgent))
     ps.setString(7, getSdkVersion(userAgent))
-
+    ps.setString(8, it.kind)
     ps.addBatch()
 }
 

@@ -64,8 +64,8 @@ class AnalysisControllerTests {
         val service = AnalysisService(jdbcUrl, "root", "root")
         val access0 = AccessEvent(1676273668, "user0", "testStoreEventsToggle", 1, 1, 1)
         val access1 = AccessEvent(1676273668, "user1", "testStoreEventsToggle", 1, null, null)
-        val event0 = CustomEvent(1676273668, "user0", "testStoreClick", 1.0)
-        val event1 = CustomEvent(1676273668, "user1", "testStoreClick", 1.0)
+        val event0 = AnalysisEvent(1676273668, "user0", "testStoreClick", 1.0)
+        val event1 = AnalysisEvent(1676273668, "user1", "testStoreClick", 1.0)
         val req = EventRequest(arrayListOf(access0, access1, event0, event1))
         val session = sessionOf(service.dataSource)
 
@@ -86,15 +86,15 @@ class AnalysisControllerTests {
 
     fun storeEvents(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
-        val event0 = CustomEvent(1676273668, "user0", "testStoreClickExist", 1.0)
+        val event0 = AnalysisEvent(1676273668, "user0", "testStoreClickExist", 1.0)
         val req = EventRequest(arrayListOf(event0))
         service.storeEvents(req, "sdk_key", "JAVA/1.0.0")
     }
 
     fun testStoreNullCustomEvents(jdbcUrl: String) {
         val service = AnalysisService(jdbcUrl, "root", "root")
-        val event0 = CustomEvent(1676273668, "user0", "testStoreClickNoValue", null)
-        val event1 = CustomEvent(1676273668, "user1", "testStoreClickNoValue", null)
+        val event0 = AnalysisEvent(1676273668, "user0", "testStoreClickNoValue", null)
+        val event1 = AnalysisEvent(1676273668, "user1", "testStoreClickNoValue", null)
         val req = EventRequest(arrayListOf(event0, event1))
         val session = sessionOf(service.dataSource)
 

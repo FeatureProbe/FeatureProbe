@@ -1,5 +1,6 @@
 package com.featureprobe.api.analysis
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -21,46 +22,75 @@ const val VARIATION_VARIANCE_TABLE: String = "__variationVariance"
 const val VARIATION_STD_DEVIATION_TABLE: String = "__variationStdDeviation"
 
 const val INSERT_VARIATION_SQL =
-    """INSERT INTO access (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key) 
-VALUES (?, ?, ?, ?, ?, ?, ?);"""
+    """INSERT INTO access (time, user_key, toggle_key, variation_index, rule_index, version, sdk_key, 
+        sdk_type, sdk_version, value) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
 
 const val INSERT_EVENT_SQL =
-    """INSERT INTO events (time, user_key, name, value, sdk_key, sdk_type, sdk_version)
-VALUES (?, ?, ?, ?, ?, ?, ?);"""
+    """INSERT INTO events (time, user_key, name, value, sdk_key, sdk_type, sdk_version, kind)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);"""
 
 const val EXISTS_EVENT_SQL =
     """SELECT 1 as count FROM events WHERE sdk_key = ? AND name = ? AND sdk_type = ? LIMIT 1;"""
+
+const val SELECT_ACCESS_SQL =
+    """SELECT * FROM access WHERE sdk_key = ? AND time >= ?;"""
+
+const val SELECT_EVENT_SQL =
+    """SELECT * FROM events WHERE sdk_key = ? AND time >= ?;"""
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY,
     property = "kind",
+    visible = true
 )
 @JsonSubTypes(
     JsonSubTypes.Type(AccessEvent::class, name = "access"),
-    JsonSubTypes.Type(CustomEvent::class, name = "custom"),
-    JsonSubTypes.Type(CustomEvent::class, name = "pageview"),
-    JsonSubTypes.Type(CustomEvent::class, name = "click"),
+    JsonSubTypes.Type(AnalysisEvent::class, name = "custom"),
+    JsonSubTypes.Type(AnalysisEvent::class, name = "pageview"),
+    JsonSubTypes.Type(AnalysisEvent::class, name = "click"),
+    JsonSubTypes.Type(DebugEvent::class, name = "debug")
 )
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Suppress("unused")
-sealed class Event(val kind: String)
+sealed class Event(open val kind: String)
 
 data class AccessEvent(
     val time: Long,
     val user: String,
+    val value: String,
     val key: String,
     val variationIndex: Int,
     val ruleIndex: Int?,
     val version: Int?,
-) : Event("access")
+    val sdkType: String?,
+    val sdkVersion: String?,
+) : Event("access") {
+    constructor(time: Long, user: String, key: String, variationIndex: Int, ruleIndex: Int?, version: Int?) :
+            this(time, user, "", key, variationIndex, ruleIndex, version, "", "")
+}
 
-
-data class CustomEvent(
+data class AnalysisEvent(
+    override val kind: String,
     val time: Long,
     val user: String,
     val name: String,
     val value: Double?,
-) : Event("custom")
+    val sdkType: String?,
+    val sdkVersion: String?,
+): Event(kind) {
+    constructor(time: Long, user: String, name: String, value: Double?) :
+            this("custom", time, user, name, value, "", "")
+}
+
+data class DebugEvent(
+    val time: Long,
+    val user: Any,
+    val key: String,
+    val variationIndex: Int,
+    val ruleIndex: Int?,
+    val version: Int?,
+) : Event("debug")
 
 data class EventRequest(
     val events: List<Event>,
@@ -74,7 +104,6 @@ data class EventExistsResponse(
         val status: Int,
         val exists: Boolean
 )
-
 
 data class AnalysisResponse(
     val status: Int,
