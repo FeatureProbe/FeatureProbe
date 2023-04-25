@@ -64,6 +64,9 @@ public class Traffic implements Serializable {
 
     private Long count;
 
+    @Column(columnDefinition = "TEXT")
+    private String value;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
     private Date startDate;

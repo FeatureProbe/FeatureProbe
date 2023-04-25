@@ -83,7 +83,7 @@ public class BaseServerService {
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceType.ENVIRONMENT, serverSdkKey));
         return new ServerResponse(queryTogglesBySdkKey(environment.getServerSdkKey()),
                 querySegmentsBySdkKey(environment.getServerSdkKey()), queryEventsBySdkKey(serverSdkKey),
-                environment.getVersion());
+                environment.getVersion(), environment.getDebuggerUntilTime());
     }
 
     public Map<String, byte[]> queryAllServerToggle() {
@@ -143,7 +143,8 @@ public class BaseServerService {
                     buildServerSegments(segments),
                     eventMap.getOrDefault(serverSdkKey,  Collections.emptyList())
                             .stream().filter(distinctByKey(JSEvent::getName)).collect(Collectors.toList()),
-                    serverEnvMap.get(serverSdkKey).getEnvVersion());
+                    serverEnvMap.get(serverSdkKey).getEnvVersion(),
+                    serverEnvMap.get(serverSdkKey).getDebugUntilTime());
             allServerResponse.put(serverSdkKey, JsonMapper.toJSONString(serverResponse).getBytes());
         }
         return allServerResponse;
@@ -235,6 +236,10 @@ public class BaseServerService {
     private ServerEnv toServerEnv(ServerToggleEntity serverToggle) {
         ServerEnv serverEnv = new ServerEnv();
         serverEnv.setEnvVersion(serverToggle.getEnvVersion());
+        Long debugUntilTime = (Objects.isNull(serverToggle.getDebugUntilTime()) ||
+                serverToggle.getDebugUntilTime() == 0)
+                ? null : serverToggle.getDebugUntilTime();
+        serverEnv.setDebugUntilTime(debugUntilTime);
         serverEnv.setOrganizationId(serverToggle.getOrganizationId());
         serverEnv.setProjectKey(serverToggle.getProjectKey());
         serverEnv.setEnvKey(serverToggle.getEnvKey());
@@ -358,6 +363,7 @@ public class BaseServerService {
 
         Long envVersion;
 
+        Long debugUntilTime;
         Long organizationId;
 
         String projectKey;

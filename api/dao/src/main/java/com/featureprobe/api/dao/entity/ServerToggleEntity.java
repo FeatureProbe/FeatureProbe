@@ -17,6 +17,8 @@ public interface ServerToggleEntity {
 
     Long getEnvVersion();
 
+    Long getDebugUntilTime();
+
     String getToggleKey();
 
     Date getPublishTime();

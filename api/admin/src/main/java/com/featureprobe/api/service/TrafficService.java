@@ -3,10 +3,13 @@ package com.featureprobe.api.service;
 import com.featureprobe.api.base.db.ExcludeTenant;
 import com.featureprobe.api.base.enums.TrafficCacheTypeEnum;
 import com.featureprobe.api.base.enums.ResourceType;
+import com.featureprobe.api.base.util.JsonMapper;
+import com.featureprobe.api.dao.entity.DebugEvent;
 import com.featureprobe.api.dao.entity.Environment;
 import com.featureprobe.api.dao.entity.Traffic;
 import com.featureprobe.api.dao.entity.TrafficCache;
 import com.featureprobe.api.dao.exception.ResourceNotFoundException;
+import com.featureprobe.api.dao.repository.DebugEventRepository;
 import com.featureprobe.api.dao.repository.EnvironmentRepository;
 import com.featureprobe.api.dao.repository.TrafficRepository;
 import com.featureprobe.api.dao.repository.TrafficCacheRepository;
@@ -14,6 +17,7 @@ import com.featureprobe.api.dto.TrafficCreateRequest;
 import com.featureprobe.api.dto.VariationAccessCounterRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +26,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,6 +41,9 @@ public class TrafficService {
     private TrafficRepository trafficRepository;
     private EnvironmentRepository environmentRepository;
     private TrafficCacheRepository trafficCacheRepository;
+    private DebugEventRepository debugEventRepository;
+
+    private final static ExecutorService executorService = Executors.newFixedThreadPool(5);
 
     @Transactional(rollbackFor = Exception.class)
     public void create(String serverSdkKey, String userAgent, List<TrafficCreateRequest> requests) {
@@ -43,6 +53,11 @@ public class TrafficService {
         requests.forEach(request -> {
             if (request.getAccess() == null) {
                 return;
+            }
+            if (CollectionUtils.isNotEmpty(request.getEvents())) {
+                DebugEventStorageTask debugEventStorageTask = new DebugEventStorageTask(serverSdkKey,
+                        debugEventRepository, request.getEvents(), userAgent);
+                executorService.submit(debugEventStorageTask);
             }
             List<Traffic> events = Optional.of(request.getAccess().getCounters())
                     .orElse(Collections.emptyMap())
@@ -57,6 +72,7 @@ public class TrafficService {
             }
         });
     }
+
 
 
     public void saveAllEvaluation(List<Traffic> events) {
@@ -82,7 +98,7 @@ public class TrafficService {
         return trafficCache;
     }
 
-    private List<Traffic> createEventEntities(Map.Entry<String, 
+    private List<Traffic> createEventEntities(Map.Entry<String,
             List<VariationAccessCounterRequest>> toggleToAccessCounter) {
         String toggleKey = toggleToAccessCounter.getKey();
 
@@ -99,7 +115,7 @@ public class TrafficService {
         event.setCount(accessCounter.getCount());
         event.setValueIndex(accessCounter.getIndex());
         event.setToggleVersion(accessCounter.getVersion());
-
+        event.setValue(JsonMapper.toJSONString(accessCounter.getValue()));
         return event;
     }
 
@@ -133,5 +149,51 @@ public class TrafficService {
         }
         String[] parts = userAgent.split("/");
         return parts.length > index ? parts[index] : null;
+    }
+
+    class DebugEventStorageTask implements Runnable {
+
+
+        private String sdkKey;
+        private DebugEventRepository debugEventRepository;
+
+        private List<Map> events;
+
+        private String userAgent;
+
+        public DebugEventStorageTask(String sdkKey, DebugEventRepository debugEventRepository, List<Map> events,
+                                     String userAgent) {
+            this.sdkKey = sdkKey;
+            this.debugEventRepository = debugEventRepository;
+            this.events = events;
+            this.userAgent = userAgent;
+        }
+
+        @Override
+        public void run() {
+            if (Objects.nonNull(events) && CollectionUtils.isNotEmpty(events)) {
+                List<DebugEvent> debugEvents = events.stream().filter(event -> "debug".equals(event.get("kind")))
+                        .map(event -> buildDebugEvent(event, sdkKey, userAgent)).collect(Collectors.toList());
+                debugEventRepository.saveAll(debugEvents);
+            }
+        }
+    }
+
+    private DebugEvent buildDebugEvent(Map event, String sdkKey, String userAgent) {
+        DebugEvent debugEvent = new DebugEvent();
+        debugEvent.setSdkKey(sdkKey);
+        debugEvent.setKind(String.valueOf(event.get("kind")));
+        debugEvent.setTime((Long) event.get("time"));
+        debugEvent.setUserKey(String.valueOf(event.get("user")));
+        debugEvent.setUserDetail(JsonMapper.toJSONString(event.get("userDetail")));
+        debugEvent.setToggleKey(String.valueOf(event.get("key")));
+        debugEvent.setValue(JsonMapper.toJSONString(event.get("value")));
+        debugEvent.setVersion((Integer) event.get("version"));
+        debugEvent.setVariationIndex((Integer) event.get("variationIndex"));
+        debugEvent.setRuleIndex((Integer) event.get("ruleIndex"));
+        debugEvent.setReason(String.valueOf(event.get("reason")));
+        debugEvent.setSdkType(getSdkType(userAgent));
+        debugEvent.setSdkVersion(getSdkVersion(userAgent));
+        return debugEvent;
     }
 }

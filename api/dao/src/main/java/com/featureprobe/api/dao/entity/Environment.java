@@ -23,7 +23,10 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.Date;
 
 @EqualsAndHashCode(exclude = "project")
 @ToString(callSuper = true, exclude = "project")
@@ -65,6 +68,9 @@ public class Environment extends AbstractAuditEntity implements TenantSupport, S
 
     @Column(name = "enable_approval", columnDefinition = "BIT", length = 1)
     private boolean enableApproval;
+
+    @Column(name = "debugger_until_time", columnDefinition = "BIGINT")
+    private Long debuggerUntilTime;
 
     private String reviewers;
 

@@ -17,6 +17,7 @@ public interface TrafficRepository extends JpaRepository<Traffic, Long>, JpaSpec
                                                                                               String toggleKey,
                                                                                               Date startDate,
                                                                                               Date endDate);
+    List<Traffic> findAllBySdkKeyAndStartDateGreaterThanEqual(String sdkKey, Date start);
 
     boolean existsBySdkKeyAndToggleKey(String sdkKey, String toggleKey);
 

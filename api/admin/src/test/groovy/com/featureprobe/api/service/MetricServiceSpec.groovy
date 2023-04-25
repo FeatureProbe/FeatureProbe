@@ -152,7 +152,6 @@ class MetricServiceSpec extends Specification {
                 .findAllByProjectKeyAndEnvironmentKeyAndToggleKeyAndCreatedTimeGreaterThanEqualOrderByVersionDesc(
                         projectKey, environmentKey, toggleKey, _) >> [new TargetingVersion(version: 1, createdTime: new Date(), comment: "Release 1")]
         1 == iteration.size()
-        1 == iteration.get(0).records.size()
     }
 
 

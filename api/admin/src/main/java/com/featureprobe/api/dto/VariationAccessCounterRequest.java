@@ -20,4 +20,7 @@ public class VariationAccessCounterRequest {
     @NotNull
     private Integer index;
 
+    @Schema(description = "The value of the variations.")
+    private Object value;
+
 }

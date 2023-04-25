@@ -124,7 +124,7 @@ class CacheServerDataSourceSpec extends Specification {
         def serverResponse = cacheServerDataSource.queryServerTogglesByServerSdkKey(serverSdkKey)
         then:
         1 * cache.get(serverSdkKey) >> JsonMapper.toJSONString(new ServerResponse([new Toggle( key: "toggle")],
-                [new Segment(uniqueId: "1", version: 1, rules: [])], [], 1)).getBytes()
+                [new Segment(uniqueId: "1", version: 1, rules: [])], [], 1, 123)).getBytes()
         1 == serverResponse.version
         1 == serverResponse.toggles.size()
         1 == serverResponse.segments.size()
