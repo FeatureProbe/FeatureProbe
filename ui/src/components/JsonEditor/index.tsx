@@ -15,11 +15,12 @@ window.jsonlint = jsonlint;
 
 interface IProps {
   value?: string;
+  disabled?: boolean;
   onChange?(value: string): void;
 }
 
 const JsonEditor = (props: IProps) => {
-  const { value, onChange } = props;
+  const { value, disabled, onChange } = props;
   const editorRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -28,6 +29,7 @@ const JsonEditor = (props: IProps) => {
         mode: 'application/json',
         lint: true,
         tabSize: 2,
+        readOnly: disabled,
       });
   
       try {
@@ -43,10 +45,10 @@ const JsonEditor = (props: IProps) => {
       });
     }
     
-  }, [value, onChange]);
+  }, [value, onChange, disabled]);
 
   return (
-    <textarea ref={editorRef}></textarea>
+    <textarea disabled ref={editorRef}></textarea>
   );
 };
 

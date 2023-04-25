@@ -1,7 +1,6 @@
-import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
+import { SyntheticEvent, useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Checkbox, Table } from 'semantic-ui-react';
-import cloneDeep from 'lodash/cloneDeep';
 import NoData from 'components/NoData';
 import Filter from 'components/Filter';
 import TableItem from '../TableItem';
@@ -13,41 +12,14 @@ interface IProps {
   type: string;
   open: boolean;
   events: IEvent[];
+  typeList: string[];
+  handleChange: (status: string) => void;
+  saveTypeList: (typeList: string[]) => void;
 }
 
 const List = (props: IProps) => {
-  const { type, open, events } = props;
-  const [ typeList, saveTypeList ] = useState<string[]>([]);
-  const [ displayEvents, saveDisplayEvents ] = useState<IEvent[]>(events);
+  const { type, open, events, typeList, handleChange, saveTypeList } = props;
   const intl = useIntl();
-
-  useEffect(() => {
-    saveTypeList([]);
-  }, [type]);
-
-  // Change filter type
-  const handleChange = useCallback((status) => {
-    if (typeList.includes(status)) {
-      const index = typeList.indexOf(status);
-      typeList.splice(index, 1);
-    } else {
-      typeList.push(status);
-    }
-    saveTypeList(cloneDeep(typeList));
-  }, [typeList]);
-
-  useEffect(() => {
-    if (typeList.length === 0) {
-      saveDisplayEvents(events);
-      return;
-    }
-    
-    const displayEvents = events.filter((event) => {
-      return typeList.includes(event.kind);
-    });
-
-    saveDisplayEvents(displayEvents);
-  }, [typeList, events]);
 
   const getNoDataText = useCallback(() => {
     if (open) {
@@ -175,10 +147,10 @@ const List = (props: IProps) => {
           </Table.Row>
         </Table.Header>
         {
-          displayEvents?.length !== 0 && (
+          events?.length !== 0 && (
             <Table.Body className={styles['table-body']}>
               {
-                displayEvents?.map((event: IEvent, index: number) => {
+                events?.map((event: IEvent, index: number) => {
                   return (
                     <TableItem
                       key={index}
@@ -193,9 +165,7 @@ const List = (props: IProps) => {
         }
       </Table>
       {
-        displayEvents.length === 0 && (
-          <NoData text={getNoDataText()} />
-        )
+        events.length === 0 && <NoData text={getNoDataText()} />
       }
     </div>
   );

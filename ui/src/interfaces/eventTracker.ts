@@ -15,6 +15,7 @@ export interface IEvent {
   valueIndex?: number;
   userKey?: string;
   userDetail?: string;
+  count?: number;
 }
 
 export interface IEventStream {
