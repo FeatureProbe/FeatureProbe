@@ -14,7 +14,9 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.annotation.PostConstruct
 import javax.sql.DataSource
 
@@ -26,10 +28,12 @@ class AnalysisController(val service: AnalysisService) {
     fun storeEvents(
         @RequestHeader(value = "Authorization") sdkKey: String,
         @RequestHeader(value = "user-agent", required = false) userAgent: String,
+        @RequestHeader(value = "UA", required = false, defaultValue = "") jsUserAgent: String,
         @RequestBody body: List<EventRequest>
     ): EventResponse {
         body.forEach {
-            service.storeEvents(it, sdkKey, userAgent)
+            val ua = if (jsUserAgent.isEmpty()) userAgent else jsUserAgent
+            service.storeEvents(it, sdkKey, ua)
         }
         return EventResponse(200)
     }
@@ -41,6 +45,13 @@ class AnalysisController(val service: AnalysisService) {
         @RequestHeader(value = "Authorization") sdkKey: String) : EventExistsResponse  {
 
         return EventExistsResponse(200, service.existsEvent(sdkKey, metric, sdkType))
+    }
+
+    @GetMapping("/events")
+    fun events(
+        @RequestHeader(value = "Authorization") sdkKey: String,
+        @RequestParam(value = "time") time: Long) : List<Any> {
+        return service.events(sdkKey, time)
     }
 
     @GetMapping("/analysis")
@@ -135,8 +146,8 @@ class AnalysisService(
             // access_events should add unique index for (user_key, toggle_key)
             request.events.forEach {
                 when (it) {
-                    is AccessEvent -> batchAddVariation(variationPrepStmt, it, sdkKey)
-                    is CustomEvent -> batchAddEvent(eventPrepStmt, it, sdkKey, userAgent)
+                    is AccessEvent -> batchAddVariation(variationPrepStmt, it, sdkKey, userAgent)
+                    is AnalysisEvent -> batchAddEvent(eventPrepStmt, it, sdkKey, userAgent)
                 }
             }
 
@@ -152,6 +163,38 @@ class AnalysisService(
             return (session.run(
                     queryOf(EXISTS_EVENT_SQL, sdkKey, metric, sdkType)
                             .map { row -> row.int("count") }.asList)).isNotEmpty()
+        }
+    }
+
+    fun events(sdkKey: String, time: Long): List<Any> {
+        val events = Collections.emptyList<Any>();
+        val session = sessionOf(dataSource)
+        session.use {
+            val accessEvents = queryOf(SELECT_ACCESS_SQL, sdkKey, time).map { row ->
+                AccessEvent(
+                    row.long("time"),
+                    row.string("user_key"),
+                    row.string("value"),
+                    row.string("toggle_key"),
+                    row.int("variation_index"),
+                    row.intOrNull("rule_index"),
+                    row.intOrNull("version"),
+                    row.stringOrNull("sdk_type"),
+                    row.stringOrNull("sdk_version")
+                )
+            }.asList.runWithSession(session)
+            val customEvents = queryOf(SELECT_EVENT_SQL, sdkKey, time).map { row ->
+                AnalysisEvent(
+                    row.string("kind"),
+                    row.long("time"),
+                    row.string("user_key"),
+                    row.string("name"),
+                    row.doubleOrNull("value"),
+                    row.stringOrNull("sdk_type"),
+                    row.stringOrNull("sdk_version")
+                )
+            }.asList.runWithSession(session)
+            return events.plus(accessEvents).plus(customEvents);
         }
     }
 
