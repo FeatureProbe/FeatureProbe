@@ -13,7 +13,6 @@ import {
   PointElement,
   TimeScale,
   Tooltip,
-  Chart,
 } from 'chart.js';
 import { FormattedMessage, useIntl } from 'react-intl';
 import message from 'components/MessageBox';
@@ -218,11 +217,9 @@ ChartJS.register(
   annotationPlugin,
   {
     id: Date.now().toString(),
-    afterDraw: (chart: Chart) => {
-      // @ts-ignore null compatibility
-      if (chart.tooltip._active && chart.tooltip._active.length) {
-        // @ts-ignore null compatibility
-        const activePoint = chart.tooltip._active[0];
+    afterDraw: (chart: ChartJS) => {
+      if (chart.tooltip && chart.tooltip.getActiveElements() && chart.tooltip.getActiveElements().length > 0) {
+        const activePoint = chart.tooltip.getActiveElements()[0];
         const ctx = chart.ctx;
         const x = activePoint.element.x;
         const topY = chart.scales.y.top;

@@ -73,6 +73,7 @@ export const createChartOptions = (traffic: ITraffic[], projectKey: string, envi
       };
     }
   });
+
   return config;
 };
   
