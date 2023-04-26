@@ -9,7 +9,7 @@ Event Tracker（事件追踪器）为开发人员提供了一种测试和验证�
 ## 打开Event Tracker
 若想使用该事件追踪器，需手动点击“开启”按钮，开启后，该时段内“环境”下所有“开关事件”及“指标事件”会展示出来。
 
-![toggle targeting screenshot](/approval_settings.png)
+![ event tracker screenshot](/debug.png)
 
 该板块把所有的事件上报数据分为6种类型：（访问事件、调试事件、汇总事件、自定义事件、点击事件、页面事件）
    - 访问事件：每个单独的功能开关访问的全部信息（哪个用户在什么时候访问了哪个开关的哪个分组）该数据是在“开始收集指标分析数据”时，才会上报，只有在上报期间“开启”Event Tracker，上报数据才会在该板块展示。
@@ -21,7 +21,5 @@ Event Tracker（事件追踪器）为开发人员提供了一种测试和验证�
 
 ## 关闭Event Tracker
 支持随时点击“关闭”按钮，停止展示新的上报数据。事件追踪器会在手动“开启”时刻的30分钟后，自动关闭，关闭Event Tracker后，数据不会直接清空，将会在下一次重新“开启”Event Tracker后，清空所有历史数据。
-
-![toggle targeting screenshot](/approval_settings.png)
 
 
