@@ -7,7 +7,7 @@
 version: "2.3"
 services:
   backendAPI:
-    image: featureprobe/api
+    image: featureprobe/api:2.5.0
     ports:
       - "4008:4008"
     environment:
@@ -33,7 +33,7 @@ services:
       retries: 10
 
   serverAPI:
-    image: featureprobe/server
+    image: featureprobe/server:2.5.0
     ports:
       - "4007:4007"
       - "4011:4011"
@@ -56,7 +56,7 @@ services:
         condition: service_started
 
   ui:
-    image: featureprobe/ui
+    image: featureprobe/ui:2.5.0
     ports:
       - "4009:4009"
     environment:
@@ -72,7 +72,7 @@ services:
       - database
 
   analysisAPI:
-    image: featureprobe/analysis
+    image: featureprobe/analysis:2.5.0
     ports:
       - "4006:4006"
     environment:
