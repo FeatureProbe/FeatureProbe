@@ -32,8 +32,8 @@
         <commons-collections.version>4.4</commons-collections.version>
         <commons-io.version>2.11.0</commons-io.version>
         <commons-codec.version>1.15</commons-codec.version>
-        <openapi-webmvc-core.verion>1.6.6</openapi-webmvc-core.verion>
-        <springdoc-openapi-ui.version>1.6.6</springdoc-openapi-ui.version>
+        <openapi-webmvc-core.verion>1.6.11</openapi-webmvc-core.verion>
+        <springdoc-openapi-ui.version>1.6.11</springdoc-openapi-ui.version>
         <java-jwt.version>4.0.0</java-jwt.version>
         <feature-probe-base.version>1.0.0</feature-probe-base.version>
         <feature-probe-cache.version>1.0.0</feature-probe-cache.version>
