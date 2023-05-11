@@ -57,3 +57,5 @@ app:
         - /api/application/**
       guest-disabled: true
       guest-default-password: Guest_12345
+    validator:
+      impl: common

@@ -5,13 +5,13 @@
 
     <parent>
         <artifactId>api</artifactId>
-        <groupId>com.featureprobe</groupId>
+        <groupId>io.featureprobe</groupId>
         <version>1.0.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.featureprobe</groupId>
+    <groupId>io.featureprobe</groupId>
     <artifactId>dao</artifactId>
     <version>1.0.0</version>
 
@@ -23,7 +23,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.featureprobe</groupId>
+            <groupId>io.featureprobe</groupId>
             <artifactId>base</artifactId>
         </dependency>
         <dependency>
