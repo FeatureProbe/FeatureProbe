@@ -4,8 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <distributionManagement>
+        <repository>
+            <id>snapshots</id>
+            <name>libs-snapshot</name>
+            <url>http://artifactory.intra.xiaojukeji.com/artifactory/libs-snapshot</url>
+        </repository>
+    </distributionManagement>
 
-    <groupId>com.featureprobe</groupId>
+    <groupId>io.featureprobe</groupId>
     <artifactId>api</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
@@ -32,11 +39,10 @@
         <commons-collections.version>4.4</commons-collections.version>
         <commons-io.version>2.11.0</commons-io.version>
         <commons-codec.version>1.15</commons-codec.version>
-        <openapi-webmvc-core.verion>1.6.6</openapi-webmvc-core.verion>
-        <springdoc-openapi-ui.version>1.6.6</springdoc-openapi-ui.version>
+        <openapi-webmvc-core.verion>1.6.11</openapi-webmvc-core.verion>
+        <springdoc-openapi-ui.version>1.6.11</springdoc-openapi-ui.version>
         <java-jwt.version>4.0.0</java-jwt.version>
         <feature-probe-base.version>1.0.0</feature-probe-base.version>
-        <feature-probe-cache.version>1.0.0</feature-probe-cache.version>
         <feature-probe-dao.version>1.0.0</feature-probe-dao.version>
     </properties>
 
@@ -171,17 +177,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.featureprobe</groupId>
+                <groupId>io.featureprobe</groupId>
                 <artifactId>base</artifactId>
                 <version>${feature-probe-base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.featureprobe</groupId>
-                <artifactId>cache</artifactId>
-                <version>${feature-probe-cache.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.featureprobe</groupId>
+                <groupId>io.featureprobe</groupId>
                 <artifactId>dao</artifactId>
                 <version>${feature-probe-dao.version}</version>
             </dependency>
