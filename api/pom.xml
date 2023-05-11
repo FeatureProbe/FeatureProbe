@@ -4,14 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <distributionManagement>
-        <repository>
-            <id>snapshots</id>
-            <name>libs-snapshot</name>
-            <url>http://artifactory.intra.xiaojukeji.com/artifactory/libs-snapshot</url>
-        </repository>
-    </distributionManagement>
-
     <groupId>io.featureprobe</groupId>
     <artifactId>api</artifactId>
     <packaging>pom</packaging>
