@@ -268,7 +268,7 @@
                     <installDirectory>../node</installDirectory>
                     <workingDirectory>../../ui</workingDirectory>
 <!--                    <nodeDownloadRoot>https://npm.taobao.org/mirrors/node/</nodeDownloadRoot>-->
-                    <skip>true</skip>
+                    <skip>false</skip>
                 </configuration>
                 <executions>
                     <execution>
