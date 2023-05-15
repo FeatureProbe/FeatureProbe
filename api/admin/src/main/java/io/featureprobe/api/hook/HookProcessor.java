@@ -23,7 +23,7 @@ public class HookProcessor {
 
     private final WebHookSettingsRepository webHookSettingsRepository;
 
-    private ApplicationEventPublisher eventPublisher;
+    private final ApplicationEventPublisher eventPublisher;
 
     private final IHookRuleBuilder hookRuleBuilder;
 

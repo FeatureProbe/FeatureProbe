@@ -4,9 +4,9 @@ import io.featureprobe.api.base.model.OrganizationMemberModel;
 
 public class TenantContext {
 
-    private static ThreadLocal<String> currentTenant = new ThreadLocal<>();
+    private static final ThreadLocal<String> currentTenant = new ThreadLocal<>();
 
-    private static ThreadLocal<OrganizationMemberModel> currentOrganization = new ThreadLocal<>();
+    private static final ThreadLocal<OrganizationMemberModel> currentOrganization = new ThreadLocal<>();
 
     public static String getCurrentTenant() {
         return currentTenant.get();

@@ -7,6 +7,10 @@ import io.featureprobe.api.dao.entity.Organization
 import io.featureprobe.api.dao.entity.OrganizationMember
 import io.featureprobe.api.dao.repository.OrganizationMemberRepository
 import io.featureprobe.api.dao.repository.OrganizationRepository
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.context.SecurityContextImpl
+import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import spock.lang.Specification
 
 class OrganizationServiceSpec extends Specification {
@@ -29,6 +33,26 @@ class OrganizationServiceSpec extends Specification {
                 Optional.of(new OrganizationMember(new Organization(id: 1), new Member(id: 1), OrganizationRoleEnum.OWNER))
         1 * organizationRepository.getById(1) >> new Organization(name: "Admin")
         "Admin" == organizationMember.organizationName
+    }
+
+    def "find organization by current member"() {
+        given:
+        setAuthContext("fp@d.com", "OWNER")
+
+        when:
+        def organizationResponses = organizationService.findByCurrentMember()
+
+        then:
+        1 * organizationMemberRepository.findByMemberId(100) >> [
+                new OrganizationMember(organization: new Organization(id: 1, name: "test_org"), member: new Member(account: "fp@d.com"))
+        ]
+        1 == organizationResponses.size()
+    }
+
+    private setAuthContext(String account, String role) {
+        SecurityContextHolder.setContext(new SecurityContextImpl(
+                new JwtAuthenticationToken(new Jwt.Builder("21212").header("a", "a")
+                        .claim("role", role).claim("userId", 100L).claim("account", account).build())))
     }
 }
 

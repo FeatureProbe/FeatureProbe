@@ -27,6 +27,10 @@ public class MemberItemResponse {
     @Schema(description = "The last visit time of the member.")
     private Date visitedTime;
 
+    private String organizationName;
+
+    private Long organizationId;
+
     public MemberItemResponse(String account, String role) {
         this.account = account;
         this.role = role;

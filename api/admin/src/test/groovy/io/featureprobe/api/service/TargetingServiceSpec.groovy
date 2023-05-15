@@ -53,7 +53,7 @@ import javax.persistence.OptimisticLockException
 @Title("Targeting Unit Test")
 class TargetingServiceSpec extends Specification {
 
-    TargetingService targetingService;
+    TargetingService targetingService
 
     TargetingRepository targetingRepository
     SegmentRepository segmentRepository
@@ -102,7 +102,7 @@ class TargetingServiceSpec extends Specification {
         changeLogRepository = Mock(PublishMessageRepository)
         dictionaryRepository = Mock(DictionaryRepository)
         metricService = Mock(MetricService)
-        appConfig = new AppConfig(maximumDependencyDepth: 2);
+        appConfig = new AppConfig(maximumDependencyDepth: 2)
         changeLogService = new ChangeLogService(changeLogRepository, environmentRepository, dictionaryRepository)
         targetingService = new TargetingService(targetingRepository, segmentRepository,
                 targetingSegmentRepository, targetingVersionRepository, variationHistoryRepository,
@@ -164,7 +164,7 @@ class TargetingServiceSpec extends Specification {
     def "publish targeting"() {
         given:
         TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
-        TargetingContent targetingContent = JsonMapper.toObject(content, TargetingContent.class);
+        TargetingContent targetingContent = JsonMapper.toObject(content, TargetingContent.class)
         targetingRequest.setContent(targetingContent)
         targetingRequest.setDisabled(false)
 
@@ -198,7 +198,7 @@ class TargetingServiceSpec extends Specification {
     def "prerequisites dependency cycle"() {
         given:
         TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
-        TargetingContent targetingContent = JsonMapper.toObject(content, TargetingContent.class);
+        TargetingContent targetingContent = JsonMapper.toObject(content, TargetingContent.class)
         targetingRequest.setContent(targetingContent)
         targetingRequest.setDisabled(false)
 
@@ -211,7 +211,7 @@ class TargetingServiceSpec extends Specification {
     def "prerequisites deep overflow"() {
         given:
         TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
-        TargetingContent targetingContent = JsonMapper.toObject(content, TargetingContent.class);
+        TargetingContent targetingContent = JsonMapper.toObject(content, TargetingContent.class)
         targetingRequest.setContent(targetingContent)
         targetingRequest.setDisabled(false)
         def deepContent = "{\"rules\":[{\"conditions\":[{\"type\":\"string\",\"subject\":\"city\",\"predicate\":\"is one of\",\"objects\":[\"Paris\"]},{\"type\":\"segment\",\"subject\":\"\",\"predicate\":\"is in\",\"objects\":[\"test_segment\"]},{\"type\":\"number\",\"subject\":\"age\",\"predicate\":\"=\",\"objects\":[\"20\"]},{\"type\":\"datetime\",\"subject\":\"\",\"predicate\":\"before\",\"objects\":[\"2022-06-27T16:08:10+08:00\"]},{\"type\":\"semver\",\"subject\":\"\",\"predicate\":\"before\",\"objects\":[\"1.0.1\"]}],\"name\":\"Paris women show 50% red buttons, 50% blue\",\"serve\":{\"split\":[5000,5000,0]}}],\"disabledServe\":{\"select\":1},\"defaultServe\":{\"select\":1},\"variations\":[{\"value\":\"red\",\"name\":\"Red Button\",\"description\":\"Set button color to Red\"},{\"value\":\"blue\",\"name\":\"Blue Button\",\"description\":\"Set button color to Blue\"}],\"prerequisites\":[{\"key\":\"metric_diagnosis_three\",\"value\":\"false\",\"type\":\"boolean\"},{\"key\":\"metric_diagnosis_four\",\"value\":\"true\",\"type\":\"boolean\"}]}"
@@ -227,7 +227,7 @@ class TargetingServiceSpec extends Specification {
     def "publish targeting conflicts should be throws `OptimisticLockException`"() {
         given:
         TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
-        TargetingContent targetingContent = JsonMapper.toObject(nonPrerequisiteContent, TargetingContent.class);
+        TargetingContent targetingContent = JsonMapper.toObject(nonPrerequisiteContent, TargetingContent.class)
         targetingRequest.setContent(targetingContent)
         targetingRequest.setDisabled(false)
         targetingRequest.setBaseVersion(100)
@@ -265,7 +265,7 @@ class TargetingServiceSpec extends Specification {
     def "publish targeting segment not found"() {
         when:
         TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
-        TargetingContent targetingContent = JsonMapper.toObject(nonPrerequisiteContent, TargetingContent.class);
+        TargetingContent targetingContent = JsonMapper.toObject(nonPrerequisiteContent, TargetingContent.class)
         targetingRequest.setContent(targetingContent)
         targetingRequest.setDisabled(false)
         targetingService.publish(projectKey, environmentKey, toggleKey, targetingRequest)
@@ -282,7 +282,7 @@ class TargetingServiceSpec extends Specification {
     def "publish targeting number format error"() {
         when:
         TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
-        TargetingContent targetingContent = JsonMapper.toObject(numberErrorContent, TargetingContent.class);
+        TargetingContent targetingContent = JsonMapper.toObject(numberErrorContent, TargetingContent.class)
         targetingRequest.setContent(targetingContent)
         targetingService.publish(projectKey, environmentKey, toggleKey, targetingRequest)
         then:
@@ -297,7 +297,7 @@ class TargetingServiceSpec extends Specification {
     def "publish targeting datetime format error"() {
         when:
         TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
-        TargetingContent targetingContent = JsonMapper.toObject(datetimeErrorContent, TargetingContent.class);
+        TargetingContent targetingContent = JsonMapper.toObject(datetimeErrorContent, TargetingContent.class)
         targetingRequest.setContent(targetingContent)
         targetingService.publish(projectKey, environmentKey, toggleKey, targetingRequest)
         then:
@@ -312,7 +312,7 @@ class TargetingServiceSpec extends Specification {
     def "publish targeting semVer format error"() {
         when:
         TargetingPublishRequest targetingRequest = new TargetingPublishRequest()
-        TargetingContent targetingContent = JsonMapper.toObject(semVerErrorContent, TargetingContent.class);
+        TargetingContent targetingContent = JsonMapper.toObject(semVerErrorContent, TargetingContent.class)
         targetingRequest.setContent(targetingContent)
         targetingService.publish(projectKey, environmentKey, toggleKey, targetingRequest)
         then:

@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public class UserPasswordAuthenticationToken extends AbstractAuthenticationToken {
 
-    private String account;
+    private final String account;
 
     private String source;
 

@@ -13,9 +13,9 @@ public enum ResourceType {
     ACCESS_TOKEN("access_token"),
     METRIC("projectKey_environmentKey_toggleKey"),
 
-    TOGGLE_CONTROL_CONF("projectKey_environmentKey_toggleKey");
+    TOGGLE_CONTROL_CONF("projectKey_environmentKey_toggleKey"), ORGANIZATION("organization");
 
-    private String paramName;
+    private final String paramName;
 
     ResourceType(String paramName) {
         this.paramName = paramName;

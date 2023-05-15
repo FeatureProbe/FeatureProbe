@@ -17,7 +17,7 @@ public enum SDKType {
 
     private final String value;
 
-    private SDKType(String value) {
+    SDKType(String value) {
         this.value = value;
     }
 

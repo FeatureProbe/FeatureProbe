@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationEvent;
 
 public class ToggleChangeEvent extends ApplicationEvent {
 
-    private String serverSdkKey;
+    private final String serverSdkKey;
 
     public ToggleChangeEvent(String serverSdkKey, Object source) {
         super(source);

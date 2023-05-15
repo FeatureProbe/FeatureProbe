@@ -62,6 +62,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -296,7 +297,8 @@ public class ToggleService {
             if (res.containsKey(toggleTag.getToggleKey())) {
                 res.get(toggleTag.getToggleKey()).add(tagMap.get(toggleTag.getTagId()));
             } else {
-                res.put(toggleTag.getToggleKey(), new HashSet<>(Arrays.asList(tagMap.get(toggleTag.getTagId()))));
+                res.put(toggleTag.getToggleKey(), new HashSet<>(
+                        Collections.singletonList(tagMap.get(toggleTag.getTagId()))));
             }
         });
         return res;

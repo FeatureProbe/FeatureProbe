@@ -19,7 +19,7 @@ import java.util.Map;
 @Hidden
 public class ApplicationController {
 
-    private JWTConfig jwtConfig;
+    private final JWTConfig jwtConfig;
 
     public ApplicationController(JWTConfig jwtConfig) {
         this.jwtConfig = jwtConfig;

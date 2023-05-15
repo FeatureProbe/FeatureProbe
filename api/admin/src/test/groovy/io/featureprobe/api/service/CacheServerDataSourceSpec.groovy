@@ -171,7 +171,7 @@ class CacheServerDataSourceSpec extends Specification {
                 [new PublishMessage(id: 3, type: ChangeLogType.ADD, serverSdkKey: "server-333"),
                  new PublishMessage(id: 4, type: ChangeLogType.CHANGE, serverSdkKey: "server-444"),
                  new PublishMessage(id: 5, type: ChangeLogType.DELETE, serverSdkKey: "server-555")]
-        1 * cache.put(CacheServerDataSource.SDK_KEYS_CACHE_KEY, _);
+        1 * cache.put(CacheServerDataSource.SDK_KEYS_CACHE_KEY, _)
         1 * environmentRepository.findAllByArchivedAndDeleted(false, false) >> [new Environment(clientSdkKey: "client-123", serverSdkKey: "server-123", version: 1)]
         1 * dictionaryRepository.findByKey(_) >> Optional.of(new Dictionary(value: "1"))
         2 * environmentRepository.findByServerSdkKeyOrClientSdkKey(_, _) >>

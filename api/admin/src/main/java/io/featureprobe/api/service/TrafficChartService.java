@@ -146,9 +146,9 @@ public class TrafficChartService {
         List<Traffic> events =
                 trafficRepository.findBySdkKeyAndToggleKeyAndStartDateGreaterThanEqualAndEndDateLessThanEqual(
                         serverSdkKey, toggleKey, toDate(pointStartTime),
-                        toDate(pointStartTime.plusHours(pointIntervalCount * pointCount)));
+                        toDate(pointStartTime.plusHours((long) pointIntervalCount * pointCount)));
         List<TargetingVersion> versions = queryAllTargetingVersion(targeting, pointStartTime,
-                pointStartTime.plusHours(pointIntervalCount * pointCount),
+                pointStartTime.plusHours((long) pointIntervalCount * pointCount),
                 Long.parseLong(TenantContext.getCurrentTenant()));
         List<TrafficPoint> trafficPoints = Collections.synchronizedList(new ArrayList<>());
         CountDownLatch counter = new CountDownLatch(pointCount);

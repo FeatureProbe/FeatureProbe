@@ -216,8 +216,8 @@ public class SegmentService {
             Optional<ToggleControlConf> toggleControlConfOptional = toggleControlConfRepository
                     .findByProjectKeyAndEnvironmentKeyAndToggleKey(targeting.getProjectKey(),
                             targeting.getEnvironmentKey(), targeting.getToggleKey());
-            toggleSegmentResponse.setAnalyzing(toggleControlConfOptional.isPresent() ?
-                    toggleControlConfOptional.get().isTrackAccessEvents() : false);
+            toggleSegmentResponse.setAnalyzing(
+                    toggleControlConfOptional.isPresent() && toggleControlConfOptional.get().isTrackAccessEvents());
             toggleSegmentResponse.setEnvironmentName(environment.get().getName());
             toggleSegmentResponse.setEnvironmentKey(environment.get().getKey());
             return toggleSegmentResponse;

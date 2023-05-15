@@ -8,9 +8,9 @@ public enum ResponseCode {
     INVALID_REQUEST("invalid_request", MessageKey.INVALID_REQUEST),
     FORBIDDEN("forbidden", MessageKey.FORBIDDEN);
 
-    private String code;
+    private final String code;
 
-    private String messageKey;
+    private final String messageKey;
 
     ResponseCode(String code, String messageKey) {
         this.code = code;

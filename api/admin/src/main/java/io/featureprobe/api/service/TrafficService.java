@@ -154,12 +154,12 @@ public class TrafficService {
     class DebugEventStorageTask implements Runnable {
 
 
-        private String sdkKey;
-        private DebugEventRepository debugEventRepository;
+        private final String sdkKey;
+        private final DebugEventRepository debugEventRepository;
 
-        private List<Map> events;
+        private final List<Map> events;
 
-        private String userAgent;
+        private final String userAgent;
 
         public DebugEventStorageTask(String sdkKey, DebugEventRepository debugEventRepository, List<Map> events,
                                      String userAgent) {
