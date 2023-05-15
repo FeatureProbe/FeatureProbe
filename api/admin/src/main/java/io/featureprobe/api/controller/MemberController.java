@@ -9,6 +9,7 @@ import io.featureprobe.api.base.doc.PatchApiResponse;
 import io.featureprobe.api.base.hook.Action;
 import io.featureprobe.api.base.hook.Hook;
 import io.featureprobe.api.base.hook.Resource;
+import io.featureprobe.api.base.tenant.TenantContext;
 import io.featureprobe.api.dto.MemberCreateRequest;
 import io.featureprobe.api.dto.MemberDeleteRequest;
 import io.featureprobe.api.dto.MemberModifyPasswordRequest;
@@ -46,12 +47,17 @@ public class MemberController {
 
     private MemberService memberService;
 
+
     @GetApiResponse
     @GetMapping("/current")
     @Operation(summary = "Get login member", description = "Get current login member.")
     @PreAuthorize("hasAnyAuthority('OWNER', 'WRITER')")
     public MemberItemResponse currentLoginMember() {
-        return new MemberItemResponse(TokenHelper.getAccount(), TokenHelper.getRole());
+        MemberItemResponse response = new MemberItemResponse(TokenHelper.getAccount(), TokenHelper.getRole());
+        response.setOrganizationName(TenantContext.getCurrentOrganization().getOrganizationName());
+        response.setOrganizationId(TenantContext.getCurrentOrganization().getOrganizationId());
+
+        return response;
     }
 
     @CreateApiResponse

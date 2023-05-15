@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 @Component
@@ -53,7 +54,7 @@ public class AccessTokenAuthenticationProvider implements AuthenticationProvider
             operationLogService.save(log);
             return new AccessTokenAuthenticationToken(AuthenticatedMember.create(member.get()),
                     String.valueOf(token.getOrganizationId()),
-                    Arrays.asList());
+                    Collections.emptyList());
         }
         return null;
     }

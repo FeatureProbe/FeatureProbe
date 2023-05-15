@@ -266,8 +266,8 @@ public class BaseServerService {
         controlConf.setProjectKey(toggleEntity.getProjectKey());
         controlConf.setEnvironmentKey(toggleEntity.getEnvKey());
         controlConf.setToggleKey(toggleEntity.getToggleKey());
-        controlConf.setTrackAccessEvents(Objects.isNull(toggleEntity.getTrackAccessEvents()) ? false :
-                toggleEntity.getTrackAccessEvents());
+        controlConf.setTrackAccessEvents(
+                !Objects.isNull(toggleEntity.getTrackAccessEvents()) && toggleEntity.getTrackAccessEvents());
         return controlConf;
     }
 
@@ -345,8 +345,7 @@ public class BaseServerService {
                         .returnType(toggle.getReturnType())
                         .forClient(toggle.getClientAvailability())
                         .rules(targeting.getContent())
-                        .trackAccessEvents(Objects.isNull(controlConf) ?
-                                false : controlConf.isTrackAccessEvents())
+                        .trackAccessEvents(!Objects.isNull(controlConf) && controlConf.isTrackAccessEvents())
                         .lastModified(targeting.getPublishTime())
                         .segments(segments.stream().collect(Collectors.toMap(Segment::getKey, Function.identity())))
                         .build();

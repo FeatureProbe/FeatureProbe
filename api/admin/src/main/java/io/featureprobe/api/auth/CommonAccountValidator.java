@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 @Component
@@ -41,7 +42,8 @@ public class CommonAccountValidator implements AccountValidator {
             if (passwordMatched && MemberStatusEnum.ACTIVE.name().equals(member.get().getStatus().name())) {
                 memberService.updateVisitedTime(token.getAccount());
                 operationLogService.save(log);
-                return new UserPasswordAuthenticationToken(AuthenticatedMember.create(member.get()), Arrays.asList());
+                return new UserPasswordAuthenticationToken(AuthenticatedMember.create(member.get()),
+                        Collections.emptyList());
             }
         }
         return null;

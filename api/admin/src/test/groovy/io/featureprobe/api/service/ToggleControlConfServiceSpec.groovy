@@ -23,23 +23,23 @@ class ToggleControlConfServiceSpec extends Specification {
 
     ToggleControlConfRepository toggleControlConfRepository
 
-    EventRepository eventRepository;
+    EventRepository eventRepository
 
-    MetricRepository metricRepository;
+    MetricRepository metricRepository
 
-    EnvironmentRepository environmentRepository;
+    EnvironmentRepository environmentRepository
 
-    MetricIterationRepository metricIterationRepository;
+    MetricIterationRepository metricIterationRepository
 
-    TargetingVersionRepository targetingVersionRepository;
+    TargetingVersionRepository targetingVersionRepository
 
-    PublishMessageRepository publishMessageRepository;
+    PublishMessageRepository publishMessageRepository
 
-    DictionaryRepository dictionaryRepository;
+    DictionaryRepository dictionaryRepository
 
-    ChangeLogService changeLogService;
+    ChangeLogService changeLogService
 
-    AppConfig appConfig;
+    AppConfig appConfig
 
     MetricService metricService
 

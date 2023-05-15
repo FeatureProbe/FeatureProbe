@@ -15,6 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 @Component
@@ -41,13 +42,13 @@ public class GuestAuthenticationProvider implements AuthenticationProvider {
             memberService.updateVisitedTime(token.getAccount());
             operationLogService.save(log);
             return new UserPasswordAuthenticationToken(AuthenticatedMember.create(member.get()),
-                    Arrays.asList());
+                    Collections.emptyList());
         }
 
         Member newMember = guestService.initGuest(token.getAccount(), token.getSource());
         operationLogService.save(log);
         return new UserPasswordAuthenticationToken(AuthenticatedMember.create(newMember),
-                Arrays.asList());
+                Collections.emptyList());
     }
 
     private boolean isAccessTokenMember(Optional<Member> member) {

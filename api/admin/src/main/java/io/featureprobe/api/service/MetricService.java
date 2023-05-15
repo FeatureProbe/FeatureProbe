@@ -82,9 +82,9 @@ public class MetricService {
     @PersistenceContext
     public EntityManager entityManager;
 
-    private static String ALGORITHM_BINOMIAL = "binomial";
+    private static final String ALGORITHM_BINOMIAL = "binomial";
 
-    private static String ALGORITHM_GAUSSIAN = "gaussian";
+    private static final String ALGORITHM_GAUSSIAN = "gaussian";
 
     private final OkHttpClient httpClient = new OkHttpClient.Builder()
             .connectionPool(new ConnectionPool(5, 5, TimeUnit.SECONDS))
@@ -200,7 +200,7 @@ public class MetricService {
         boolean positiveWin = true;
         if (!MetricTypeEnum.CONVERSION.equals(metric.getType())) {
             type = ALGORITHM_GAUSSIAN;
-            positiveWin = WinCriteria.POSITIVE.equals(metric.getWinCriteria()) ? true : false;
+            positiveWin = WinCriteria.POSITIVE.equals(metric.getWinCriteria());
         }
         if (MetricTypeEnum.SUM.equals(metric.getType())) {
             aggregationMethod = AggregationMethod.SUM.name();

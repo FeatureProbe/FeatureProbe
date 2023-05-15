@@ -14,7 +14,7 @@ public class SpringBeanManager implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+        SpringBeanManager.applicationContext = applicationContext;
     }
 
     public static <T>T getBeanByName(String beanName){
@@ -22,7 +22,7 @@ public class SpringBeanManager implements ApplicationContextAware {
     }
 
     public static <T>T getBeanByType(Class<T> clazz){
-        return (T) applicationContext.getBean(clazz);
+        return applicationContext.getBean(clazz);
     }
 
 }

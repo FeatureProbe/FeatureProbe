@@ -18,7 +18,7 @@ import java.io.IOException;
 @Order(1)
 public class UiFilter implements Filter {
 
-    private String passUri = "/static/css/**;/static/js/**;/static/media/**;/api/**;/internal/**;" +
+    private final String passUri = "/static/css/**;/static/js/**;/static/media/**;/api/**;/internal/**;" +
             "/favicon.ico;/asset-manifest.json;/actuator/health;";
 
     @Override

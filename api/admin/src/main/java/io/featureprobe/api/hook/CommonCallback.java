@@ -18,6 +18,7 @@ import okhttp3.Response;
 import org.springframework.stereotype.Component;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
@@ -81,7 +82,7 @@ public class CommonCallback implements ICallback {
             SecretKeySpec signinKey = new SecretKeySpec(secretKey.getBytes(), "HmacSHA1");
             Mac mac = Mac.getInstance("HmacSHA1");
             mac.init(signinKey);
-            byte[] rawHmac = mac.doFinal(content.getBytes("UTF8"));
+            byte[] rawHmac = mac.doFinal(content.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(rawHmac);
         } catch (Exception e) {
             log.error("WebHook Callback failed sign for key:{} and content:{}", secretKey, content, e);

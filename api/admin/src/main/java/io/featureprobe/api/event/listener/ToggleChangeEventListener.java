@@ -42,7 +42,7 @@ public class ToggleChangeEventListener implements ApplicationListener<ToggleChan
     public void onApplicationEvent(ToggleChangeEvent event) {
         String[] serverBaseUrls = Objects.isNull(appConfig.getServerBaseUrls()) ? null :
                 appConfig.getServerBaseUrls().split(",");
-        if (Objects.nonNull(serverBaseUrls) && serverBaseUrls.length > 0) {
+        if (Objects.nonNull(serverBaseUrls)) {
             for(String serverUrl : serverBaseUrls) {
                 pushChange(serverUrl + CHANGE_API_PATH, event.getServerSdkKey());
             }

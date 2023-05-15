@@ -1,7 +1,6 @@
 package io.featureprobe.api.auth;
 
 import io.featureprobe.api.base.model.OrganizationMemberModel;
-import io.featureprobe.api.base.util.JsonMapper;
 import io.featureprobe.api.dao.entity.Organization;
 import io.featureprobe.api.dto.CertificationUserResponse;
 import io.featureprobe.api.service.OrganizationService;
@@ -48,8 +47,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         Long organizationId = CollectionUtils.isEmpty(principal.getOrganizations()) ? null :
                 principal.getOrganizations().get(0).getId();
-        response.getWriter().write(JsonMapper.toJSONString(new CertificationUserResponse(token.getAccount(),
-                roleName, organizationId, jwt)));
+        response.getWriter().write(new CertificationUserResponse(token.getAccount(),
+                roleName, organizationId, jwt).toJSONString());
     }
 
     private List<OrganizationMemberModel> getOrganizationMemberModels(AuthenticatedMember principal) {

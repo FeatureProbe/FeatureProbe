@@ -31,7 +31,7 @@ public class ServerToggleBuilder {
     private TargetingContent targetingContent;
     private Map<String, Segment> segments;
 
-    private static Map<String, Variation.ValueConverter<?>> converters = Maps.newHashMap();
+    private static final Map<String, Variation.ValueConverter<?>> converters = Maps.newHashMap();
 
 
     static {
@@ -143,7 +143,7 @@ public class ServerToggleBuilder {
             throw new ServerToggleBuildException("return type not set");
         }
         List<Prerequisite> prerequisites = targetingContent
-                .getPrerequisiteByConverter(this.converters);
+                .getPrerequisiteByConverter(converters);
         toggle.setPrerequisites(prerequisites);
     }
 
