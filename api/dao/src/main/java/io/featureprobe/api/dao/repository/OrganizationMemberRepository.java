@@ -15,6 +15,4 @@ public interface OrganizationMemberRepository extends JpaRepository<Organization
     Optional<OrganizationMember> findByOrganizationIdAndMemberId(Long organizationId, Long memberId);
 
     List<OrganizationMember> findByMemberId(Long memberId);
-
-    void deleteByOrganizationId(Long organizationId);
 }
