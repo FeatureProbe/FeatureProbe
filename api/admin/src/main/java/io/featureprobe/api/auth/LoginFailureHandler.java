@@ -22,6 +22,9 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         BaseResponse res = new BaseResponse(HttpStatus.FORBIDDEN.name().toLowerCase(),
                 HttpStatus.FORBIDDEN.getReasonPhrase());
         response.setStatus(HttpStatus.FORBIDDEN.value());
+        if (exception instanceof OrganizationEmptyException) {
+            response.setStatus(HttpStatus.PRECONDITION_FAILED.value());
+        }
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.getWriter().write(JsonMapper.toJSONString(res));

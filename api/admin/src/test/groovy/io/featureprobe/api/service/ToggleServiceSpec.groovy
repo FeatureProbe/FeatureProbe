@@ -1,7 +1,6 @@
 package io.featureprobe.api.service
 
-
-import io.featureprobe.api.component.SpringBeanManager
+import io.featureprobe.api.base.component.SpringBeanManager
 import io.featureprobe.api.config.AppConfig
 import io.featureprobe.api.dao.repository.TargetingRepository
 import io.featureprobe.api.dto.ToggleCreateRequest

@@ -3,6 +3,7 @@ package io.featureprobe.api.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -27,6 +28,10 @@ public class UserPasswordAuthenticationProcessingFilter extends AbstractAuthenti
 
     private static final String GUEST_LOGIN_PASSWORD_PARAM = "password";
 
+    private static final String LOGIN_ORGANIZATION_PARAM = "organizationId";
+
+    private static final String INITIALIZE_ORGANIZATION_PARAM = "initializeOrganization";
+
     protected UserPasswordAuthenticationProcessingFilter() {
         super(GUEST_LOGIN_PATH);
     }
@@ -41,7 +46,14 @@ public class UserPasswordAuthenticationProcessingFilter extends AbstractAuthenti
         String account = authParam.get(GUEST_LOGIN_ACCOUNT_PARAM);
         String source = authParam.get(ACCOUNT_SOURCE);
         String password = authParam.get(GUEST_LOGIN_PASSWORD_PARAM);
-        return getAuthenticationManager().authenticate(new UserPasswordAuthenticationToken(account, source, password));
+        String organizationId = authParam.get(LOGIN_ORGANIZATION_PARAM);
+        String initializeOrganizationParam = authParam.get(INITIALIZE_ORGANIZATION_PARAM);
+        boolean initializeOrganization = false;
+        if (StringUtils.isNotBlank(initializeOrganizationParam)) {
+            initializeOrganization = Boolean.parseBoolean(initializeOrganizationParam);
+        }
+        return getAuthenticationManager().authenticate(
+                new UserPasswordAuthenticationToken(account, source, password, organizationId, initializeOrganization));
     }
 
 

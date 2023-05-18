@@ -6,6 +6,7 @@ import io.featureprobe.api.dto.CertificationUserResponse;
 import io.featureprobe.api.service.OrganizationService;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -20,6 +21,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -37,18 +41,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         UserPasswordAuthenticationToken token =
                 (UserPasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         AuthenticatedMember principal = token.getPrincipal();
-
         List<OrganizationMemberModel> organizations = getOrganizationMemberModels(principal);
-        if (CollectionUtils.isEmpty(organizations)) {
-            throw new AuthenticationServiceException(principal.getName() + " organization is empty!");
-        }
-        String roleName = organizations.get(0).getRoleName();
-        String jwt = JwtHelper.createJwtForMember(jwtConfiguration, principal, organizations, roleName);
-
-        Long organizationId = CollectionUtils.isEmpty(principal.getOrganizations()) ? null :
-                principal.getOrganizations().get(0).getId();
+        OrganizationMemberModel organizationMember = principal.getOrganizationMemberModel();
+        String jwt = JwtHelper.createJwtForMember(jwtConfiguration, principal, organizations,
+                organizationMember.getRoleName());
         response.getWriter().write(new CertificationUserResponse(token.getAccount(),
-                roleName, organizationId, jwt).toJSONString());
+                organizationMember.getRoleName(), organizationMember.getOrganizationId(), jwt).toJSONString());
     }
 
     private List<OrganizationMemberModel> getOrganizationMemberModels(AuthenticatedMember principal) {

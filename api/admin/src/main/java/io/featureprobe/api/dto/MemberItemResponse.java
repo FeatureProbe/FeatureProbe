@@ -15,6 +15,9 @@ public class MemberItemResponse {
     @Schema(description = "The account of the member.")
     private String account;
 
+    @Schema(description = "The nickname of the member.")
+    private String nickname;
+
     @Schema(description = "The role of the member.")
     private String role;
 

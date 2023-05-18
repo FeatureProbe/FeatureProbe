@@ -13,8 +13,6 @@ public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecif
 
     Optional<Member> findByAccount(String account);
 
-    Optional<Member> findByAccountEncrypt(String accountEncrypt);
-
     boolean existsByAccount(String account);
 
 }

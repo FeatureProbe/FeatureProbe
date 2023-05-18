@@ -1,10 +1,12 @@
 package io.featureprobe.api.auth;
 
 import io.featureprobe.api.base.enums.OperationType;
+import io.featureprobe.api.base.model.OrganizationMemberModel;
 import io.featureprobe.api.base.tenant.TenantContext;
 import io.featureprobe.api.dao.entity.AccessToken;
 import io.featureprobe.api.dao.entity.Member;
 import io.featureprobe.api.dao.entity.OperationLog;
+import io.featureprobe.api.dao.entity.OrganizationMember;
 import io.featureprobe.api.service.AccessTokenService;
 import io.featureprobe.api.service.MemberService;
 import io.featureprobe.api.service.OperationLogService;
@@ -52,12 +54,20 @@ public class AccessTokenAuthenticationProvider implements AuthenticationProvider
             memberService.updateVisitedTime(member.get().getAccount());
             accessTokenService.updateVisitedTime(token.getId());
             operationLogService.save(log);
-            return new AccessTokenAuthenticationToken(AuthenticatedMember.create(member.get()),
+            return new AccessTokenAuthenticationToken(
+                    AuthenticatedMember.create(member.get(), null),
                     String.valueOf(token.getOrganizationId()),
                     Collections.emptyList());
         }
         return null;
     }
+
+    private OrganizationMemberModel getDefaultOrganizationMember(Member member) {
+        OrganizationMember organizationMember = member.getOrganizationMembers().get(0);
+        return new OrganizationMemberModel(organizationMember.getOrganization().getId(),
+                organizationMember.getOrganization().getName(), organizationMember.getRole());
+    }
+
 
     @Override
     public boolean supports(Class<?> authentication) {

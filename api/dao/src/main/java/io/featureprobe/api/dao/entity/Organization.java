@@ -37,4 +37,10 @@ public class Organization extends AbstractAuditEntity {
     public Organization(String name) {
         this.name = name;
     }
+
+    public static Organization createDefaultOrganization() {
+        Organization organization = new Organization();
+        organization.setName("Default Organization");
+        return organization;
+    }
 }

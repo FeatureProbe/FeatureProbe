@@ -1,6 +1,6 @@
 package io.featureprobe.api.service
 
-import io.featureprobe.api.component.SpringBeanManager
+import io.featureprobe.api.base.component.SpringBeanManager
 import io.featureprobe.api.dto.EnvironmentCreateRequest
 import io.featureprobe.api.dto.EnvironmentQueryRequest
 import io.featureprobe.api.dto.EnvironmentUpdateRequest

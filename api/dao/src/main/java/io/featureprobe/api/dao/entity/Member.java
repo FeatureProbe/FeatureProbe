@@ -2,6 +2,7 @@ package io.featureprobe.api.dao.entity;
 
 import io.featureprobe.api.base.enums.MemberStatusEnum;
 import io.featureprobe.api.base.enums.OrganizationRoleEnum;
+import io.featureprobe.api.dao.listener.MemberEntityInterceptor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,11 +11,13 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -35,12 +38,13 @@ import java.util.stream.Collectors;
 @FilterDef(name = "deletedFilter", parameters = {@ParamDef(name = "deleted", type = "boolean")})
 @Filter(name = "deletedFilter", condition = "deleted = :deleted")
 @EqualsAndHashCode
+@EntityListeners(MemberEntityInterceptor.class)
 public class Member extends AbstractAuditEntity {
 
+    @Column(nullable = false, updatable = false)
     private String account;
 
-    @Column(name = "account_encrypt")
-    private String accountEncrypt;
+    private String nickname;
 
     private String password;
 
@@ -55,7 +59,7 @@ public class Member extends AbstractAuditEntity {
 
     private String source;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrganizationMember> organizationMembers = new ArrayList<>();
 
     public Member(Long id, String account) {
@@ -91,5 +95,6 @@ public class Member extends AbstractAuditEntity {
         }
         return null;
     }
+
 
 }

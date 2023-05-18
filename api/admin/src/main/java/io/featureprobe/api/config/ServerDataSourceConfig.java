@@ -1,6 +1,7 @@
 package io.featureprobe.api.config;
 
 import io.featureprobe.api.base.cache.MemoryCache;
+import io.featureprobe.api.base.component.SpringBeanManager;
 import io.featureprobe.api.dao.repository.PublishMessageRepository;
 import io.featureprobe.api.server.CacheServerDataSource;
 import io.featureprobe.api.server.DBServerDataSource;
@@ -23,9 +24,12 @@ public class ServerDataSourceConfig {
     AppConfig appConfig;
 
     PublishMessageRepository publishMessageRepository;
+
     BaseServerService baseServerService;
 
     ApplicationEventPublisher eventPublisher;
+
+    SpringBeanManager springBeanManager;
 
     @Bean
     public ServerDataSource serverDataSource() {

@@ -1,12 +1,14 @@
 package io.featureprobe.api.service;
 
 import io.featureprobe.api.auth.TokenHelper;
+import io.featureprobe.api.base.component.SpringBeanManager;
 import io.featureprobe.api.base.constants.MessageKey;
 import io.featureprobe.api.base.db.ExcludeTenant;
 import io.featureprobe.api.base.enums.MemberSourceEnum;
 import io.featureprobe.api.base.enums.OrganizationRoleEnum;
 import io.featureprobe.api.base.enums.ResourceType;
 import io.featureprobe.api.base.exception.ForbiddenException;
+import io.featureprobe.api.base.security.IEncryptionService;
 import io.featureprobe.api.base.tenant.TenantContext;
 import io.featureprobe.api.dao.entity.Member;
 import io.featureprobe.api.dao.entity.Organization;
@@ -23,8 +25,11 @@ import io.featureprobe.api.dto.MemberResponse;
 import io.featureprobe.api.dto.MemberSearchRequest;
 import io.featureprobe.api.dto.MemberUpdateRequest;
 import io.featureprobe.api.mapper.MemberMapper;
-import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,6 +45,7 @@ import javax.persistence.criteria.Predicate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -47,41 +53,48 @@ import java.util.stream.Collectors;
 @ExcludeTenant
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Data
 public class MemberService {
 
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    private MemberIncludeDeletedService memberIncludeDeletedService;
+    private final MemberIncludeDeletedService memberIncludeDeletedService;
 
-    private OrganizationRepository organizationRepository;
+    private final OrganizationRepository organizationRepository;
 
-    private OrganizationMemberRepository organizationMemberRepository;
+    private final OrganizationMemberRepository organizationMemberRepository;
 
     @PersistenceContext
-    public EntityManager entityManager;
+    public final EntityManager entityManager;
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    @Value("${app.security.encryption.impl:plaintext}")
+    private String encryptionName;
+
     @Transactional(rollbackFor = Exception.class)
     public List<MemberResponse> create(MemberCreateRequest createRequest) {
-        List<Member> savedMembers = memberRepository.saveAll(newNumbers(createRequest));
+        List<Member> savedMembers = saveAll(newNumbers(createRequest));
         return savedMembers.stream().map(item -> translateResponse(item)).collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class)
     public MemberResponse update(MemberUpdateRequest updateRequest) {
-        verifyAdminPrivileges();
         Member member = findMemberByAccount(updateRequest.getAccount());
         MemberMapper.INSTANCE.mapEntity(updateRequest, member);
-        OrganizationMember organizationMember = member.getOrganizationMembers()
-                .stream()
-                .filter(it -> it.getOrganization().getId().equals(TenantContext.getCurrentOrganization()
-                        .getOrganizationId())).findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceType.ORGANIZATION_MEMBER,
-                        member.getAccount()));
-        organizationMember.setRole(updateRequest.getRole());
-        return translateResponse(memberRepository.save(member));
+        if (StringUtils.isNotBlank(updateRequest.getPassword()) ||
+                Objects.nonNull(updateRequest.getRole())) {
+            verifyAdminPrivileges();
+            OrganizationMember organizationMember = member.getOrganizationMembers()
+                    .stream()
+                    .filter(it -> it.getOrganization().getId().equals(TenantContext.getCurrentOrganization()
+                            .getOrganizationId())).findFirst()
+                    .orElseThrow(() -> new ResourceNotFoundException(ResourceType.ORGANIZATION_MEMBER,
+                            member.getAccount()));
+            organizationMember.setRole(updateRequest.getRole());
+        }
+        return translateResponse(save(member));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -89,14 +102,14 @@ public class MemberService {
         Member member = findLoggedInMember();
         verifyPassword(modifyPasswordRequest.getOldPassword(), member.getPassword());
         member.setPassword(passwordEncoder.encode(modifyPasswordRequest.getNewPassword()));
-        return MemberMapper.INSTANCE.entityToItemResponse(memberRepository.save(member));
+        return MemberMapper.INSTANCE.entityToItemResponse(save(member));
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void updateVisitedTime(String account) {
         Member member = findMemberByAccount(account);
         member.setVisitedTime(new Date());
-        memberRepository.save(member);
+        save(member);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -105,8 +118,16 @@ public class MemberService {
         Member member = findMemberByAccount(account);
         member.setDeleted(true);
         member.deleteOrganization(Long.parseLong(TenantContext.getCurrentTenant()));
-        memberRepository.save(member);
+        save(member);
         return translateResponse(member);
+    }
+
+    public Member save(Member member) {
+        return memberRepository.save(member);
+    }
+
+    private List<Member> saveAll(Iterable<Member> members) {
+        return memberRepository.saveAll(members);
     }
 
     private MemberResponse translateResponse(Member member) {
@@ -119,7 +140,8 @@ public class MemberService {
     private List<Member> newNumbers(MemberCreateRequest createRequest) {
         return createRequest.getAccounts()
                 .stream()
-                .filter(account -> memberIncludeDeletedService.validateAccountIncludeDeleted(account))
+                .filter(account ->
+                        memberIncludeDeletedService.validateAccountIncludeDeleted(account))
                 .map(account -> newMember(account, createRequest))
                 .collect(Collectors.toList());
     }
@@ -144,7 +166,19 @@ public class MemberService {
     }
 
     public Optional<Member> findByAccount(String account) {
+        IEncryptionService encryptionService = SpringBeanManager.getBeanByName(encryptionName);
+        account = encryptionService.encrypt(account);
         return memberRepository.findByAccount(account);
+    }
+
+    public Optional<Member> findById(Long memberId) {
+        return memberRepository.findById(memberId);
+    }
+
+    public boolean existsByAccount(String account) {
+        IEncryptionService encryptionService = SpringBeanManager.getBeanByName(encryptionName);
+        account = encryptionService.encrypt(account);
+        return memberRepository.existsByAccount(account);
     }
 
     private void verifyAdminPrivileges() {
@@ -168,7 +202,6 @@ public class MemberService {
                 .collect(Collectors.toList());
         Map<Long, Member> idToMember = memberRepository.findAllById(memberIds).stream()
                 .collect(Collectors.toMap(Member::getId, Function.identity()));
-
         return convertToResponse(getOwnerTotalCount(),
                 TokenHelper.isOwner(),
                 organizationMembers, idToMember);
@@ -221,13 +254,12 @@ public class MemberService {
     }
 
     private Member findMemberByAccount(String account, boolean includeDeleted) {
+        IEncryptionService encryptionService = SpringBeanManager.getBeanByName(encryptionName);
+        account = encryptionService.encrypt(account);
         Optional<Member> member = includeDeleted ? memberIncludeDeletedService
                 .queryMemberByAccountIncludeDeleted(account) : memberRepository.findByAccount(account);
-        return member.orElseThrow(() -> new ResourceNotFoundException(ResourceType.MEMBER, account));
-    }
-
-    public Optional<Member> findById(Long memberId) {
-        return memberRepository.findById(memberId);
+        String finalAccount = account;
+        return member.orElseThrow(() -> new ResourceNotFoundException(ResourceType.MEMBER, finalAccount));
     }
 
 }
