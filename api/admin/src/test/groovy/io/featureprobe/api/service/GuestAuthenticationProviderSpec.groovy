@@ -2,7 +2,8 @@ package io.featureprobe.api.service
 
 import io.featureprobe.api.auth.GuestAuthenticationProvider
 import io.featureprobe.api.auth.GuestAuthenticationToken
-import io.featureprobe.api.component.SpringBeanManager
+import io.featureprobe.api.auth.PlaintextEncryptionService
+import io.featureprobe.api.base.component.SpringBeanManager
 import io.featureprobe.api.config.JWTConfig
 import com.featureprobe.sdk.server.FeatureProbe
 import io.featureprobe.api.base.enums.OrganizationRoleEnum
@@ -76,6 +77,7 @@ class GuestAuthenticationProviderSpec extends Specification {
         organizationRepository = Mock(OrganizationRepository)
         organizationMemberRepository = Mock(OrganizationMemberRepository)
         memberService = new MemberService(memberRepository, memberIncludeDeletedService, organizationRepository, organizationMemberRepository, entityManager)
+        memberService.setEncryptionName("plaintext")
         projectRepository = Mock(ProjectRepository)
         environmentRepository = Mock(EnvironmentRepository)
         targetingSketchRepository = Mock(TargetingSketchRepository)
@@ -83,7 +85,7 @@ class GuestAuthenticationProviderSpec extends Specification {
         dictionaryRepository = Mock(DictionaryRepository)
         changeLogService = new ChangeLogService(publishMessageRepository, environmentRepository, dictionaryRepository)
         projectService = new ProjectService(projectRepository, environmentRepository, targetingSketchRepository, changeLogService, entityManager)
-        guestService = new GuestService(jWTConfig, memberRepository, organizationRepository, entityManager, projectService)
+        guestService = new GuestService(jWTConfig, memberService, organizationRepository, entityManager, projectService)
         operationLogRepository = Mock(OperationLogRepository)
         operationLogService = new OperationLogService(operationLogRepository)
         applicationContext = Mock(ApplicationContext)
@@ -98,7 +100,9 @@ class GuestAuthenticationProviderSpec extends Specification {
         when:
         def authenticate = provider.authenticate(authenticationToken)
         then:
-        2 * memberRepository.findByAccount(account) >> Optional.of(new Member(account: account))
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
+        2 * memberRepository.findByAccount(account) >> Optional.of(new Member(account: account,
+                organizationMembers: [new OrganizationMember(new Organization(id: 1, name: ""), new Member(), OrganizationRoleEnum.OWNER)]))
         1 * memberRepository.save(_)
         1 * operationLogRepository.save(_)
     }
@@ -110,10 +114,11 @@ class GuestAuthenticationProviderSpec extends Specification {
         when:
         def authenticate = provider.authenticate(authenticationToken)
         then:
+        applicationContext.getBean("plaintext") >> new PlaintextEncryptionService()
         1 * memberRepository.findByAccount("Admin") >> Optional.empty()
         1 * applicationContext.getBean(_) >> new FeatureProbe("_")
         1 * memberRepository.save(_) >> new Member(id: 1, account: "Admin",
-                organizationMembers: [new OrganizationMember(role: OrganizationRoleEnum.OWNER)])
+                organizationMembers: [new OrganizationMember(new Organization(id: 1, name: ""), new Member(), OrganizationRoleEnum.OWNER)])
         1 * organizationRepository.save(_) >> new Organization(name: "Admin")
         1 * projectRepository.count() >> 2
         1 * projectRepository.save(_) >> new Project(name: "projectName", key: "projectKey",

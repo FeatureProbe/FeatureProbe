@@ -2,10 +2,12 @@ package io.featureprobe.api.dao.listener;
 
 import io.featureprobe.api.base.tenant.TenantContext;
 import io.featureprobe.api.dao.entity.TenantSupport;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
+@Component
 public class TenantEntityListener {
 
     @PrePersist

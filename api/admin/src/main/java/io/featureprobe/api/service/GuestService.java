@@ -37,7 +37,7 @@ public class GuestService {
 
     JWTConfig JWTConfig;
 
-    private MemberRepository memberRepository;
+    private MemberService memberService;
 
     private OrganizationRepository organizationRepository;
 
@@ -69,7 +69,7 @@ public class GuestService {
         member.setPassword(passwordEncoder.encode(JWTConfig.getGuestDefaultPassword()));
         member.setSource(source);
         member.addOrganization(organization, OrganizationRoleEnum.OWNER);
-        return memberRepository.save(member);
+        return memberService.save(member);
     }
 
     private void loginGuestUser(Member member) {

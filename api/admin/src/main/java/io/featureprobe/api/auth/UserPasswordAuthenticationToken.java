@@ -13,13 +13,20 @@ public class UserPasswordAuthenticationToken extends AbstractAuthenticationToken
 
     private String password;
 
+    private String organizationId;
+
+    private boolean initializeOrganization;
+
     private AuthenticatedMember principal;
 
-    public UserPasswordAuthenticationToken(String account, String source, String password) {
+    public UserPasswordAuthenticationToken(String account, String source, String password,
+                                           String organizationId, Boolean initializeOrganization) {
         super(null);
         this.account = account;
         this.source = source;
         this.password = password;
+        this.organizationId = organizationId;
+        this.initializeOrganization = initializeOrganization;
         super.setAuthenticated(false);
     }
 
@@ -53,4 +60,11 @@ public class UserPasswordAuthenticationToken extends AbstractAuthenticationToken
         return password;
     }
 
+    public String getOrganizationId() {
+        return organizationId;
+    }
+
+    public boolean isInitializeOrganization() {
+        return initializeOrganization;
+    }
 }

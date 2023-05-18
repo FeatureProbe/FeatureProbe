@@ -1,7 +1,7 @@
 package io.featureprobe.api.service;
 
 import io.featureprobe.api.auth.TokenHelper;
-import io.featureprobe.api.component.SpringBeanManager;
+import io.featureprobe.api.base.component.SpringBeanManager;
 import io.featureprobe.api.dao.exception.ResourceConflictException;
 import io.featureprobe.api.dao.exception.ResourceNotFoundException;
 import io.featureprobe.api.dao.exception.ResourceOverflowException;

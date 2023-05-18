@@ -1,7 +1,6 @@
 package io.featureprobe.api.service
 
-
-import io.featureprobe.api.component.SpringBeanManager
+import io.featureprobe.api.base.component.SpringBeanManager
 import io.featureprobe.api.dto.ApprovalSettings
 import io.featureprobe.api.dto.PreferenceCreateRequest
 import io.featureprobe.api.dto.ProjectCreateRequest

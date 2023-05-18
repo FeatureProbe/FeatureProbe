@@ -1,4 +1,4 @@
-package io.featureprobe.api.component;
+package io.featureprobe.api.base.component;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.springframework.beans.BeansException;

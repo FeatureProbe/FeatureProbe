@@ -1,6 +1,7 @@
 package io.featureprobe.api.service
 
-
+import io.featureprobe.api.auth.PlaintextEncryptionService
+import io.featureprobe.api.base.component.SpringBeanManager
 import io.featureprobe.api.dto.AccessTokenCreateRequest
 import io.featureprobe.api.dto.AccessTokenSearchRequest
 import io.featureprobe.api.base.enums.AccessTokenType
@@ -17,6 +18,7 @@ import io.featureprobe.api.dao.repository.MemberRepository
 import io.featureprobe.api.dao.repository.OrganizationMemberRepository
 import io.featureprobe.api.dao.repository.OrganizationRepository
 import org.hibernate.internal.SessionImpl
+import org.springframework.context.ApplicationContext
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.core.context.SecurityContextHolder
@@ -45,6 +47,8 @@ class AccessTokenServiceSpec extends Specification {
 
     AccessTokenService accessTokenService
 
+    ApplicationContext applicationContext
+
     def setup() {
         entityManager = Mock(SessionImpl)
         memberRepository = Mock(MemberRepository)
@@ -56,6 +60,8 @@ class AccessTokenServiceSpec extends Specification {
         accessTokenService = new AccessTokenService(accessTokenRepository, entityManager, memberService)
         TenantContext.setCurrentOrganization(new OrganizationMemberModel(1, "organization", OrganizationRoleEnum.OWNER))
         TenantContext.setCurrentTenant("1")
+        applicationContext = Mock(ApplicationContext)
+        SpringBeanManager.applicationContext = applicationContext
     }
 
     def "create a application access token"() {
@@ -66,6 +72,7 @@ class AccessTokenServiceSpec extends Specification {
         when:
         def create = accessTokenService.create(request)
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * accessTokenRepository.existsByNameAndType(name, AccessTokenType.APPLICATION)
         1 * memberRepository.existsByAccount("api:" + name) >> false
         1 * memberRepository.findByAccount("api:" + name) >> Optional.of(new Member(id: 1))
@@ -97,6 +104,7 @@ class AccessTokenServiceSpec extends Specification {
         when:
         def delete = accessTokenService.delete(tokenId)
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * accessTokenRepository.findById(tokenId) >> Optional.of(new AccessToken(id: tokenId, name: name, memberId: memberId, type: AccessTokenType.APPLICATION))
         1 * memberRepository.findById(memberId) >> Optional.of(new Member())
         1 * memberRepository.findByAccount(_) >> Optional.of(new Member())

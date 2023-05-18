@@ -1,7 +1,7 @@
 package io.featureprobe.api.service
 
-
-import io.featureprobe.api.component.SpringBeanManager
+import io.featureprobe.api.auth.PlaintextEncryptionService
+import io.featureprobe.api.base.component.SpringBeanManager
 import io.featureprobe.api.config.JWTConfig
 import com.featureprobe.sdk.server.FeatureProbe
 import io.featureprobe.api.base.enums.OrganizationRoleEnum
@@ -14,6 +14,7 @@ import io.featureprobe.api.dao.entity.Project
 import io.featureprobe.api.dao.repository.DictionaryRepository
 import io.featureprobe.api.dao.repository.EnvironmentRepository
 import io.featureprobe.api.dao.repository.MemberRepository
+import io.featureprobe.api.dao.repository.OrganizationMemberRepository
 import io.featureprobe.api.dao.repository.OrganizationRepository
 import io.featureprobe.api.dao.repository.ProjectRepository
 import io.featureprobe.api.dao.repository.PublishMessageRepository
@@ -32,6 +33,8 @@ class GuestServiceSpec extends Specification {
 
     MemberRepository memberRepository
 
+    MemberService memberService
+
     ProjectRepository projectRepository
 
     EnvironmentRepository environmentRepository
@@ -40,7 +43,11 @@ class GuestServiceSpec extends Specification {
 
     EntityManager entityManager
 
+    MemberIncludeDeletedService memberIncludeDeletedService
+
     OrganizationRepository organizationRepository
+
+    OrganizationMemberRepository organizationMemberRepository
 
     PublishMessageRepository publishMessageRepository
 
@@ -57,7 +64,6 @@ class GuestServiceSpec extends Specification {
     def setup() {
         appConfig = new JWTConfig()
         appConfig.setGuestDefaultPassword("Password")
-        memberRepository = Mock(MemberRepository)
         entityManager = Mock(SessionImpl)
         projectRepository = Mock(ProjectRepository)
         environmentRepository = Mock(EnvironmentRepository)
@@ -65,9 +71,13 @@ class GuestServiceSpec extends Specification {
         targetingSketchRepository = Mock(TargetingSketchRepository)
         publishMessageRepository = Mock(PublishMessageRepository)
         dictionaryRepository = Mock(DictionaryRepository)
+        memberRepository = Mock(MemberRepository)
+        organizationMemberRepository = Mock(OrganizationMemberRepository)
+        memberIncludeDeletedService = new MemberIncludeDeletedService(memberRepository, entityManager)
+        memberService = new MemberService(memberRepository, memberIncludeDeletedService, organizationRepository, organizationMemberRepository, entityManager)
         changeLogService = new ChangeLogService(publishMessageRepository, environmentRepository, dictionaryRepository)
         projectService = new ProjectService(projectRepository, environmentRepository, targetingSketchRepository, changeLogService, entityManager)
-        guestService = new GuestService(appConfig, memberRepository, organizationRepository, entityManager, projectService)
+        guestService = new GuestService(appConfig, memberService, organizationRepository, entityManager, projectService)
         applicationContext = Mock(ApplicationContext)
         SpringBeanManager.applicationContext = applicationContext
     }
@@ -76,13 +86,13 @@ class GuestServiceSpec extends Specification {
         given:
         Query query = Mock(NativeQueryImplementor)
         when:
-        def guest = guestService.initGuest("Admin", "test")
+        guestService.initGuest("Admin", "test")
         then:
-        1 * applicationContext.getBean(_) >> new FeatureProbe("_")
         1 * memberRepository.save(_) >> new Member(id: 1, account: "Admin",
                 organizationMembers: [new OrganizationMember(role: OrganizationRoleEnum.OWNER)])
         1 * organizationRepository.save(_) >> new Organization(name: "Admin")
         1 * projectRepository.count() >> 2
+        applicationContext.getBean(_) >> new FeatureProbe("_")
         1 * projectRepository.save(_) >> new Project(name: "projectName", key: "projectKey",
                 environments: [new Environment()])
         1 * dictionaryRepository.findByKey(_) >> Optional.of(new Dictionary(value: "1"))

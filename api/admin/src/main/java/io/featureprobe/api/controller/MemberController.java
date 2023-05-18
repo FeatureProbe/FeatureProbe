@@ -56,7 +56,6 @@ public class MemberController {
         MemberItemResponse response = new MemberItemResponse(TokenHelper.getAccount(), TokenHelper.getRole());
         response.setOrganizationName(TenantContext.getCurrentOrganization().getOrganizationName());
         response.setOrganizationId(TenantContext.getCurrentOrganization().getOrganizationId());
-
         return response;
     }
 

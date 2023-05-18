@@ -2,8 +2,10 @@ package io.featureprobe.api.auth;
 
 import io.featureprobe.api.base.enums.MemberSourceEnum;
 import io.featureprobe.api.base.enums.OperationType;
+import io.featureprobe.api.base.model.OrganizationMemberModel;
 import io.featureprobe.api.dao.entity.Member;
 import io.featureprobe.api.dao.entity.OperationLog;
+import io.featureprobe.api.dao.entity.OrganizationMember;
 import io.featureprobe.api.service.GuestService;
 import io.featureprobe.api.service.MemberService;
 import io.featureprobe.api.service.OperationLogService;
@@ -41,13 +43,15 @@ public class GuestAuthenticationProvider implements AuthenticationProvider {
             }
             memberService.updateVisitedTime(token.getAccount());
             operationLogService.save(log);
-            return new UserPasswordAuthenticationToken(AuthenticatedMember.create(member.get()),
+            return new UserPasswordAuthenticationToken(
+                    AuthenticatedMember.create(member.get(), getDefaultOrganizationMember(member.get())),
                     Collections.emptyList());
         }
 
         Member newMember = guestService.initGuest(token.getAccount(), token.getSource());
         operationLogService.save(log);
-        return new UserPasswordAuthenticationToken(AuthenticatedMember.create(newMember),
+        return new UserPasswordAuthenticationToken(
+                AuthenticatedMember.create(newMember, getDefaultOrganizationMember(newMember)),
                 Collections.emptyList());
     }
 
@@ -55,6 +59,11 @@ public class GuestAuthenticationProvider implements AuthenticationProvider {
         return StringUtils.equalsIgnoreCase(member.get().getSource(), MemberSourceEnum.ACCESS_TOKEN.name());
     }
 
+    private OrganizationMemberModel getDefaultOrganizationMember(Member member) {
+        OrganizationMember organizationMember = member.getOrganizationMembers().get(0);
+        return new OrganizationMemberModel(organizationMember.getOrganization().getId(),
+                organizationMember.getOrganization().getName(), organizationMember.getRole());
+    }
 
     @Override
     public boolean supports(Class<?> authentication) {

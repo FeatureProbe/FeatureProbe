@@ -15,11 +15,12 @@ public class MemberUpdateRequest {
     private String account;
 
     @Schema(description = "Assign a new password for member to login.")
-    @NotBlank
     private String password;
 
+    @Schema(description = "The nickname to member.")
+    private String nickname;
+
     @Schema(description = "Assign new built-in role to member.")
-    @NotNull
     private OrganizationRoleEnum role;
 
 }

@@ -1,5 +1,6 @@
 package io.featureprobe.api.filter;
 
+import io.featureprobe.api.auth.OrganizationEmptyException;
 import io.featureprobe.api.auth.TokenHelper;
 import io.featureprobe.api.config.JWTConfig;
 import io.featureprobe.api.base.model.BaseResponse;
@@ -23,6 +24,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -52,6 +54,9 @@ public class TenantFilter implements Filter {
                 if (StringUtils.isNotBlank(tenantHeader)) {
                     OrganizationMemberModel organizationMemberModel = organizationService
                             .queryOrganizationMember(Long.parseLong(tenantHeader), TokenHelper.getUserId());
+                    if (Objects.isNull(organizationMemberModel)) {
+                        throw new OrganizationEmptyException("User has no access to the organization.");
+                    }
                     TenantContext.setCurrentTenant(tenantHeader);
                     TenantContext.setCurrentOrganization(organizationMemberModel);
                 } else {

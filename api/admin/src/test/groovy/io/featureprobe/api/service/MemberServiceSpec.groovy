@@ -1,6 +1,7 @@
 package io.featureprobe.api.service
 
-
+import io.featureprobe.api.auth.PlaintextEncryptionService
+import io.featureprobe.api.base.component.SpringBeanManager
 import io.featureprobe.api.dto.MemberCreateRequest
 import io.featureprobe.api.dto.MemberModifyPasswordRequest
 import io.featureprobe.api.dto.MemberSearchRequest
@@ -18,6 +19,7 @@ import io.featureprobe.api.dao.repository.MemberRepository
 import io.featureprobe.api.dao.repository.OrganizationMemberRepository
 import io.featureprobe.api.dao.repository.OrganizationRepository
 import org.hibernate.internal.SessionImpl
+import org.springframework.context.ApplicationContext
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.core.context.SecurityContextHolder
@@ -36,6 +38,7 @@ class MemberServiceSpec extends Specification {
     OrganizationMemberRepository organizationMemberRepository
     MemberService memberService
     EntityManager entityManager
+    ApplicationContext applicationContext
 
 
     def setup() {
@@ -48,6 +51,8 @@ class MemberServiceSpec extends Specification {
                 organizationMemberRepository, entityManager)
         TenantContext.setCurrentOrganization(new OrganizationMemberModel(1, "organization", OrganizationRoleEnum.OWNER))
         TenantContext.setCurrentOrganization(new OrganizationMemberModel(1, "test", OrganizationRoleEnum.OWNER))
+        applicationContext = Mock(ApplicationContext)
+        SpringBeanManager.applicationContext = applicationContext
     }
 
     def "create a member success"() {
@@ -57,6 +62,7 @@ class MemberServiceSpec extends Specification {
         def savedMember = memberService.create(
                 new MemberCreateRequest(accounts: ["root"], password: "root"))
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.existsByAccount("root") >> false
         1 * organizationRepository.findById(_) >> Optional.of(new Organization(id: 1, name: "organization name"))
         1 * memberRepository.saveAll(_) >> [new Member(id: 1,  account: "root", password: "password")]
@@ -70,6 +76,7 @@ class MemberServiceSpec extends Specification {
         memberRepository.existsByAccount("root") >> true
 
         when:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         memberService.create(new MemberCreateRequest(accounts: ["root"], password: "root"))
 
         then:
@@ -84,6 +91,7 @@ class MemberServiceSpec extends Specification {
         def response = memberService.update(new MemberUpdateRequest(account: "root", password: "root"))
 
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.findByAccount("root") >>
                 Optional.of(new Member(account: "root", password: "root",
                         organizationMembers: [new OrganizationMember(organization: new Organization(id: 1))]))
@@ -103,6 +111,7 @@ class MemberServiceSpec extends Specification {
                 oldPassword: "Pass1234"))
 
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.findByAccount("test") >>
                 Optional.of(new Member(account: "test",
                         password: "\$2a\$10\$WO5tC7A/nsPe5qmVmjTIPeKD0R/Tm2YsNiVP0geCerT0hIRLBCxZ6"))
@@ -119,6 +128,7 @@ class MemberServiceSpec extends Specification {
                 new Member(account: "test", password: "abcdefg"))
 
         when:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         memberService.modifyPassword(new MemberModifyPasswordRequest(newPassword: "root", oldPassword: "Pass1234"))
 
         then:
@@ -133,6 +143,7 @@ class MemberServiceSpec extends Specification {
         def response = memberService.delete("root")
 
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.findByAccount("root") >>
                 Optional.of(new Member(id: 1, account: "root", password: "root"))
         1 * memberRepository.save(_) >> new Member(id: 1,  account: "root", password: "root")
@@ -146,6 +157,7 @@ class MemberServiceSpec extends Specification {
         setAuthContext("user", "WRITER")
 
         when:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         memberService.delete("s1")
 
         then:
@@ -157,6 +169,7 @@ class MemberServiceSpec extends Specification {
         memberService.updateVisitedTime("test")
 
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.findByAccount("test") >>
                 Optional.of(new Member(account: "test", password: "test"))
         1 * memberRepository.save(_)
@@ -171,6 +184,7 @@ class MemberServiceSpec extends Specification {
                 pageIndex: 0, pageSize: 10))
 
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * organizationMemberRepository.findAll(_, _) >> new PageImpl<>([new OrganizationMember(member: new Member(id: 1), role: OrganizationRoleEnum.OWNER)],
                 PageRequest.of(1, 10), 1)
         1 * memberRepository.findAllById([1]) >> [new Member(id: 1)]
@@ -184,6 +198,7 @@ class MemberServiceSpec extends Specification {
         def response = memberService.queryByAccount("root")
 
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.findByAccount("root") >> Optional.of(new Member(account: "root"))
         with(response) {
             "root" == account
@@ -195,6 +210,7 @@ class MemberServiceSpec extends Specification {
         memberService.queryByAccount("abc")
 
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.findByAccount("abc") >> Optional.empty()
         thrown(ResourceNotFoundException)
     }
@@ -203,6 +219,7 @@ class MemberServiceSpec extends Specification {
         when:
         def validate = memberIncludeDeletedService.validateAccountIncludeDeleted("Admin")
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.existsByAccount("Admin") >> false
         true == validate
     }
@@ -211,6 +228,7 @@ class MemberServiceSpec extends Specification {
         when:
         def validate = memberIncludeDeletedService.validateAccountIncludeDeleted("Admin")
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.existsByAccount("Admin") >> true
         thrown(ResourceConflictException)
     }
@@ -219,6 +237,7 @@ class MemberServiceSpec extends Specification {
         when:
         def member = memberIncludeDeletedService.queryMemberByAccountIncludeDeleted("Admin")
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.findByAccount("Admin") >> Optional.of(new Member())
         true == member.isPresent()
     }

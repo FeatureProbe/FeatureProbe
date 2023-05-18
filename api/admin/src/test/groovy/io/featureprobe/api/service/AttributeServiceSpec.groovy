@@ -10,7 +10,7 @@ import spock.lang.Title
 @Title("Attribute Unit Test")
 class AttributeServiceSpec extends Specification {
 
-    AttributeService attributeService;
+    AttributeService attributeService
 
     AttributeRepository attributeRepository
 
@@ -36,7 +36,7 @@ class AttributeServiceSpec extends Specification {
     }
 
     def "created attribute"() {
-        def AttributeRequest attributeRequest = createAttributeRequest()
+        AttributeRequest attributeRequest = createAttributeRequest()
         when:
         def ret = attributeService.create(projectKey, attributeRequest)
         then:

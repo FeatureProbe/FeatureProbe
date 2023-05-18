@@ -2,6 +2,8 @@ package io.featureprobe.api.service
 
 import io.featureprobe.api.auth.AccessTokenAuthenticationProvider
 import io.featureprobe.api.auth.AccessTokenAuthenticationToken
+import io.featureprobe.api.auth.PlaintextEncryptionService
+import io.featureprobe.api.base.component.SpringBeanManager
 import io.featureprobe.api.dao.entity.AccessToken
 import io.featureprobe.api.dao.entity.Member
 import io.featureprobe.api.dao.repository.AccessTokenRepository
@@ -10,6 +12,7 @@ import io.featureprobe.api.dao.repository.OperationLogRepository
 import io.featureprobe.api.dao.repository.OrganizationMemberRepository
 import io.featureprobe.api.dao.repository.OrganizationRepository
 import org.hibernate.internal.SessionImpl
+import org.springframework.context.ApplicationContext
 import spock.lang.Specification
 
 import javax.persistence.EntityManager
@@ -27,6 +30,7 @@ class AccessTokenAuthenticationProviderSpec extends Specification {
     OperationLogRepository operationLogRepository
     OperationLogService operationLogService
     AccessTokenAuthenticationProvider provider
+    ApplicationContext applicationContext
 
     def setup() {
         entityManager = Mock(SessionImpl)
@@ -40,6 +44,8 @@ class AccessTokenAuthenticationProviderSpec extends Specification {
         accessTokenService = new AccessTokenService(accessTokenRepository, entityManager, memberService)
         operationLogService = new OperationLogService(operationLogRepository)
         provider = new AccessTokenAuthenticationProvider(memberService, accessTokenService, operationLogService)
+        applicationContext = Mock(ApplicationContext)
+        SpringBeanManager.applicationContext = applicationContext
     }
 
 
@@ -51,6 +57,7 @@ class AccessTokenAuthenticationProviderSpec extends Specification {
         when:
         def authenticate = provider.authenticate(authenticationToken)
         then:
+        applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * accessTokenRepository.findByToken(token) >> Optional.of(new AccessToken(id: 1, memberId: 1, organizationId: 1))
         1 * memberRepository.findById(1) >> Optional.of(new Member(account: "api:test"))
         1 * memberRepository.findByAccount("api:test") >> Optional.of(new Member())
