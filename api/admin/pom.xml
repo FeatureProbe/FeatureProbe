@@ -21,6 +21,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.ldap</groupId>
+            <artifactId>spring-ldap-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.featureprobe</groupId>
             <artifactId>base</artifactId>
         </dependency>

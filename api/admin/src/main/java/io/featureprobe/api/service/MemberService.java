@@ -32,6 +32,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -69,6 +70,17 @@ public class MemberService {
         return savedMembers.stream().map(item -> translateResponse(item)).collect(Collectors.toList());
     }
 
+    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRES_NEW)
+    public List<MemberResponse> createFlush(MemberCreateRequest createRequest) {
+        List<Member> savedMembers = memberRepository.saveAll(newNumbers(createRequest));
+        List<MemberResponse> memberResponse = savedMembers.stream().map(item -> translateResponse(item))
+                .collect(Collectors.toList()
+        );
+        entityManager.flush();
+        return memberResponse;
+    }
+
+
     @Transactional(rollbackFor = Exception.class)
     public MemberResponse update(MemberUpdateRequest updateRequest) {
         verifyAdminPrivileges();
@@ -92,7 +104,7 @@ public class MemberService {
         return MemberMapper.INSTANCE.entityToItemResponse(memberRepository.save(member));
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRES_NEW)
     public void updateVisitedTime(String account) {
         Member member = findMemberByAccount(account);
         member.setVisitedTime(new Date());
@@ -145,6 +157,13 @@ public class MemberService {
 
     public Optional<Member> findByAccount(String account) {
         return memberRepository.findByAccount(account);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Optional<Member> findByAccountFlush(String account) {
+        Optional<Member> member = memberRepository.findByAccount(account);
+        member.ifPresent(value -> entityManager.refresh(value));
+        return member;
     }
 
     private void verifyAdminPrivileges() {

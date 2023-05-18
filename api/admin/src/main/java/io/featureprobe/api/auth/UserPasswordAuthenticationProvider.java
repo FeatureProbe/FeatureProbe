@@ -8,17 +8,24 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Component
 @AllArgsConstructor
 public class UserPasswordAuthenticationProvider implements AuthenticationProvider {
 
-    @Qualifier("${app.security.validator.impl}")
-    AccountValidator validator;
+    List<AccountValidator> validators;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        return validator.authenticate(authentication);
+        for (AccountValidator validator : validators) {
+            Authentication result = validator.authenticate(authentication);
+            if (result != null) {
+                return result;
+            }
+        }
+        return null;
     }
 
     @Override

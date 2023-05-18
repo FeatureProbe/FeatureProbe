@@ -2,6 +2,7 @@ package io.featureprobe.api.service
 
 import io.featureprobe.api.auth.AccountValidator
 import io.featureprobe.api.auth.CommonAccountValidator
+import io.featureprobe.api.auth.LDAPAccountValidator
 import io.featureprobe.api.auth.UserPasswordAuthenticationProvider
 import io.featureprobe.api.auth.UserPasswordAuthenticationToken
 import io.featureprobe.api.base.enums.MemberStatusEnum
@@ -14,6 +15,7 @@ import org.hibernate.internal.SessionImpl
 import spock.lang.Specification
 
 import javax.persistence.EntityManager
+import java.lang.reflect.Array
 
 class UserPasswordAuthenticationProviderSpec extends Specification {
 
@@ -35,7 +37,8 @@ class UserPasswordAuthenticationProviderSpec extends Specification {
 
     UserPasswordAuthenticationProvider provider
 
-    AccountValidator validator
+    List<AccountValidator> validators
+
 
     def setup() {
         entityManager = Mock(SessionImpl)
@@ -47,8 +50,8 @@ class UserPasswordAuthenticationProviderSpec extends Specification {
         memberService = new MemberService(memberRepository, memberIncludeDeletedService, organizationRepository, organizationMemberRepository, entityManager)
         operationLogRepository = Mock(OperationLogRepository)
         operationLogService = new OperationLogService(operationLogRepository)
-        validator = new CommonAccountValidator(memberService, operationLogService)
-        provider = new UserPasswordAuthenticationProvider(validator)
+        validators = Arrays.asList(new CommonAccountValidator(memberService, operationLogService))
+        provider = new UserPasswordAuthenticationProvider(validators)
     }
 
     def "authenticate token"() {
