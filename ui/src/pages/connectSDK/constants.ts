@@ -54,7 +54,7 @@ export const SDK_TYPES = new Map([
   ['Swift', 'Swift'],
   ['Objective-C', 'ObjectiveC'],
   ['Mini Program', 'MiniProgram'],
-  ['Flutter', 'flutter']
+  ['Flutter', 'Flutter']
 ]);
 
 export const SERVER_SIDE_SDKS = [
