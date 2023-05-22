@@ -21,6 +21,7 @@ import {
   getMiniProgramCode,
   getReactCode,
   SdkLanguage,
+  getFlutterCode,
 } from '../../constants';
 import { IRouterParams } from 'interfaces/project';
 import { getApplicationSettings } from 'services/application';
@@ -272,6 +273,22 @@ const SetupCode = (props: IProps) => {
               userWithCode,
               remoteUrl,
             }, eventInfo?.eventName, isTrackValue, isTrackEvent)
+          );
+          break;
+        case 'Flutter':
+          saveLanguage('dart');
+          attributes.forEach(item => {
+            userWithCode += `user.set("${item}", /* ${item} */);\n`;
+          });
+          saveOptions(
+            getFlutterCode({
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }, eventInfo?.eventName, isTrackValue)
           );
           break;
       }

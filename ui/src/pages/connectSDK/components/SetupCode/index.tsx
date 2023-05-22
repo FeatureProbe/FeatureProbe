@@ -24,6 +24,7 @@ import {
   getMiniProgramCode,
   getReactCode,
   SdkLanguage,
+  getFlutterCode,
 } from '../../constants';
 
 import styles from '../../index.module.scss';
@@ -257,6 +258,22 @@ const SetupCode = (props: IProps) => {
           });
           saveOptions(
             getReactCode({
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }
+          ));
+          break;
+        case 'Flutter': 
+          saveLanguage('dart');
+          attributes.forEach(item => {
+            userWithCode += `user.with("${item}", /* ${item} */);\n`;
+          });
+          saveOptions(
+            getFlutterCode({
               clientSdkKey,
               toggleKey,
               returnType,

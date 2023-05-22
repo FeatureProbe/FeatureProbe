@@ -10,6 +10,7 @@ import swift from 'images/swift.svg';
 import apple from 'images/apple.svg';
 import miniprogram from 'images/wechat-miniprogram.png';
 import reactLogo from 'images/react.svg';
+import flutter from 'images/flutter.svg';
 
 export type ToggleReturnType = '' | 'boolean' | 'number' | 'string' | 'json';
 
@@ -24,7 +25,8 @@ export type SdkLanguage =
   | 'Objective-C'
   | 'JavaScript'
   | 'Mini Program'
-  | 'React';
+  | 'React'
+  | 'Flutter';
 
 export const SDK_LOGOS: {[key in SdkLanguage]: string} = {
   'Java': java,
@@ -38,6 +40,7 @@ export const SDK_LOGOS: {[key in SdkLanguage]: string} = {
   'Objective-C': apple,
   'Mini Program': miniprogram,
   'React': reactLogo,
+  'Flutter': flutter,
 };
 
 export const SDK_TYPES = new Map([
@@ -51,6 +54,7 @@ export const SDK_TYPES = new Map([
   ['Swift', 'Swift'],
   ['Objective-C', 'ObjectiveC'],
   ['Mini Program', 'MiniProgram'],
+  ['Flutter', 'flutter']
 ]);
 
 export const SERVER_SIDE_SDKS = [
@@ -100,6 +104,10 @@ export const CLIENT_SIDE_SDKS = [
   {
     name: 'React',
     logo: reactLogo,
+  },
+  {
+    name: 'Flutter',
+    logo: flutter,
   }
 ];
 
@@ -662,4 +670,46 @@ export default withFPConsumer(Home);
 
   return result;
 
+};
+
+export const getFlutterCode =  (options: IOption, eventName?: string, isTrackValue?: boolean) => {
+  const { intl, clientSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
+
+  return [
+    {
+      title: intl.formatMessage({id: 'getstarted.mobile.first.step'}),
+      code:
+`dependencies:
+  featureprobe:
+    git:
+      url: https://github.com/FeatureProbe/client-sdk-flutter.git
+`
+    },
+    {
+      title: intl.formatMessage({id: 'getstarted.mobile.second.step'}),
+      code:
+`import 'package:featureprobe/featureprobe.dart';
+
+var user = FPUser();
+${userWithCode}
+var fp = FeatureProbe(
+  "${remoteUrl}",
+  "${clientSdkKey}",
+  user,
+  10 * 1000,
+  2 * 1000,
+);
+
+await fp.start();
+`
+    },
+    {
+      title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.mobile.third.step'}),
+      code:
+      `${eventName ? (
+        `${isTrackValue ? `fp.track("${eventName}", /* value */);` : `fp.track("${eventName}");`}`
+      ) : 
+      `${returnType === 'boolean' ? `var value = fp.boolValue("${toggleKey}", false);` : ''}${returnType === 'number' ? `var value = fp.numberValue("${toggleKey}", 1.0);` : ''}${returnType === 'string' ? `var value = fp.stringValue("${toggleKey}", "s");` : ''}${returnType === 'json' ? `var value = fp.jsonValue("${toggleKey}", "{}");` : ''}`}`
+    },
+  ];
 };
