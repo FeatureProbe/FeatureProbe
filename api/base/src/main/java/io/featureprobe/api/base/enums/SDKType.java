@@ -13,7 +13,8 @@ public enum SDKType {
     ObjectiveC("iOS"),
     JavaScript("JS"),
     MiniProgram("MINIPROGRAM"),
-    React("REACT");
+    React("REACT"),
+    Flutter("flutter");
 
     private final String value;
 
