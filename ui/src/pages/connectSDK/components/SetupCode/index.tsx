@@ -270,7 +270,7 @@ const SetupCode = (props: IProps) => {
         case 'Flutter': 
           saveLanguage('dart');
           attributes.forEach(item => {
-            userWithCode += `user.with("${item}", /* ${item} */);\n`;
+            userWithCode += `user.set("${item}", /* ${item} */);\n`;
           });
           saveOptions(
             getFlutterCode({
