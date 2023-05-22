@@ -95,6 +95,7 @@ public class CommonAccountValidator implements AccountValidator {
                 return new UserPasswordAuthenticationToken(AuthenticatedMember.create(member,
                         organizationMemberModel), Collections.emptyList());
             }
+            throw new BadCredentialsException("Credentials are incorrect.");
         }
         return null;
     }
