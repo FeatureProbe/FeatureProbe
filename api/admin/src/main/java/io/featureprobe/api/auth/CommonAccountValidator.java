@@ -1,6 +1,5 @@
 package io.featureprobe.api.auth;
 
-import com.google.common.collect.Lists;
 import io.featureprobe.api.base.enums.MemberSourceEnum;
 import io.featureprobe.api.base.enums.MemberStatusEnum;
 import io.featureprobe.api.base.enums.OperationType;
@@ -18,7 +17,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -29,8 +27,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component("common")
 @AllArgsConstructor
@@ -53,6 +49,9 @@ public class CommonAccountValidator implements AccountValidator {
                 throw new UsernameNotFoundException("Account not found.");
             }
             Member member = memberOptional.get();
+            if (!MemberStatusEnum.ACTIVE.name().equals(member.getStatus().name())) {
+                throw new BadCredentialsException("Credentials are incorrect.");
+            }
             if (CollectionUtils.isEmpty(member.getOrganizations())) {
                 if (token.isInitializeOrganization()) {
                     Organization organization = Organization.createDefaultOrganization();
@@ -87,17 +86,15 @@ public class CommonAccountValidator implements AccountValidator {
                 organizationMemberModel = new OrganizationMemberModel(organizationMember.getOrganization().getId(),
                         organizationMember.getOrganization().getName(), organizationMember.getRole());
             }
-            if (organizationChecked && passwordMatched &&
-                    MemberStatusEnum.ACTIVE.name().equals(member.getStatus().name())) {
+            if (organizationChecked && passwordMatched) {
                 member.setVisitedTime(new Date());
                 memberService.save(member);
                 operationLogService.save(log);
                 return new UserPasswordAuthenticationToken(AuthenticatedMember.create(member,
                         organizationMemberModel), Collections.emptyList());
             }
-            throw new BadCredentialsException("Credentials are incorrect.");
         }
-        return null;
+        throw new BadCredentialsException("Credentials are incorrect.");
     }
 
     private boolean isAccessTokenNumber(Optional<Member> member) {
