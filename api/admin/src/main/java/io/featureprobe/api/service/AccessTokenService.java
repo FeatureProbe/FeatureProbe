@@ -71,7 +71,7 @@ public class AccessTokenService {
         memberCreateRequest.setPassword(String.valueOf(System.nanoTime()));
         memberCreateRequest.setSource(MemberSourceEnum.ACCESS_TOKEN.name());
         memberCreateRequest.setRole(createRequest.getRole());
-        memberService.create(memberCreateRequest);
+        memberService.createUserInCurrentOrganization(memberCreateRequest);
         Member member = memberService.findByAccount(account).get();
         return member;
     }

@@ -34,6 +34,10 @@ public class MemberItemResponse {
 
     private Long organizationId;
 
+    private Boolean valid;
+
+    private String organizationMemberCreateBy;
+
     public MemberItemResponse(String account, String role) {
         this.account = account;
         this.role = role;

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -31,4 +33,8 @@ public class OrganizationMember extends AbstractAuditEntity {
 
     @Enumerated(EnumType.STRING)
     private OrganizationRoleEnum role;
+
+    @Column(columnDefinition = "TINYINT")
+    private Boolean valid;
+
 }

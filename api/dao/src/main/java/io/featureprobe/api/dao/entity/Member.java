@@ -74,8 +74,13 @@ public class Member extends AbstractAuditEntity {
     }
 
     public void addOrganization(Organization organization, OrganizationRoleEnum role) {
-        this.organizationMembers.add(new OrganizationMember(organization, this, role));
+        this.addOrganization(organization, role, true);
     }
+
+    public void addOrganization(Organization organization, OrganizationRoleEnum role, boolean valid) {
+        this.organizationMembers.add(new OrganizationMember(organization, this, role, valid));
+    }
+
 
     public void deleteOrganization(Long organizationId) {
         OrganizationMember deleteOrganizationMember = null;
