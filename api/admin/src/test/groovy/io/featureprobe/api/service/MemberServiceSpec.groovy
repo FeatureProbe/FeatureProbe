@@ -185,7 +185,8 @@ class MemberServiceSpec extends Specification {
 
         then:
         applicationContext.getBean(_) >> new PlaintextEncryptionService()
-        1 * organizationMemberRepository.findAll(_, _) >> new PageImpl<>([new OrganizationMember(member: new Member(id: 1), role: OrganizationRoleEnum.OWNER)],
+        1 * organizationMemberRepository.findAll(_, _) >> new PageImpl<>([new OrganizationMember(member: new Member(id: 1),
+                role: OrganizationRoleEnum.OWNER, createdBy: new Member())],
                 PageRequest.of(1, 10), 1)
         1 * memberRepository.findAllById([1]) >> [new Member(id: 1)]
         with(list) {
