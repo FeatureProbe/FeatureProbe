@@ -15,6 +15,7 @@ import io.featureprobe.api.service.OperationLogService;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -49,6 +50,8 @@ public class CommonAccountValidator implements AccountValidator {
                 throw new UsernameNotFoundException("Account not found.");
             }
             Member member = memberOptional.get();
+            Member immutableMember = new Member();
+            BeanUtils.copyProperties(member, immutableMember);
             if (!MemberStatusEnum.ACTIVE.name().equals(member.getStatus().name())) {
                 throw new BadCredentialsException("Credentials are incorrect.");
             }
@@ -90,7 +93,7 @@ public class CommonAccountValidator implements AccountValidator {
                 member.setVisitedTime(new Date());
                 memberService.save(member);
                 operationLogService.save(log);
-                return new UserPasswordAuthenticationToken(AuthenticatedMember.create(member,
+                return new UserPasswordAuthenticationToken(AuthenticatedMember.create(immutableMember,
                         organizationMemberModel), Collections.emptyList());
             }
         }
