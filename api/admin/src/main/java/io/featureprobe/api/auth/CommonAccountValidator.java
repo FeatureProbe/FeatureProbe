@@ -60,7 +60,8 @@ public class CommonAccountValidator implements AccountValidator {
                     Organization organization = Organization.createDefaultOrganization();
                     organization = organizationRepository.save(organization);
                     List<OrganizationMember> organizationMembers = new ArrayList<>(1);
-                    organizationMembers.add(new OrganizationMember(organization, member, OrganizationRoleEnum.OWNER));
+                    organizationMembers.add(
+                            new OrganizationMember(organization, member, OrganizationRoleEnum.OWNER, true));
                     member.setOrganizationMembers(organizationMembers);
                     member = memberService.save(member);
                 } else {

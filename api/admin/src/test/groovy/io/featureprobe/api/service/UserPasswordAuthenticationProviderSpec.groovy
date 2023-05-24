@@ -104,7 +104,7 @@ class UserPasswordAuthenticationProviderSpec extends Specification {
         1 * applicationContext.getBean(_) >> commonAccountValidator
         1 * applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.findByAccount(account) >> Optional.of(new Member(account: account, password: "\$2a\$10\$jeJ25nROU8APkG2ixK6zyecwzIJ8oHz0ZNqBDiwMXcy9lo9S3YGma", status: MemberStatusEnum.ACTIVE,
-                organizationMembers: [new OrganizationMember(new Organization(id: 1, name: ""), new Member(), OrganizationRoleEnum.OWNER)]))
+                organizationMembers: [new OrganizationMember(new Organization(id: 1, name: ""), new Member(), OrganizationRoleEnum.OWNER, true)]))
         1 * memberRepository.save(_)
         1 * operationLogRepository.save(_)
         null != authenticate

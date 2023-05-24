@@ -59,7 +59,7 @@ class MemberServiceSpec extends Specification {
         given:
         TenantContext.setCurrentTenant("1")
         when:
-        def savedMember = memberService.create(
+        def savedMember = memberService.createUserInCurrentOrganization(
                 new MemberCreateRequest(accounts: ["root"], password: "root"))
         then:
         applicationContext.getBean(_) >> new PlaintextEncryptionService()
@@ -77,7 +77,7 @@ class MemberServiceSpec extends Specification {
 
         when:
         applicationContext.getBean(_) >> new PlaintextEncryptionService()
-        memberService.create(new MemberCreateRequest(accounts: ["root"], password: "root"))
+        memberService.createUserInCurrentOrganization(new MemberCreateRequest(accounts: ["root"], password: "root"))
 
         then:
         thrown(ResourceConflictException)

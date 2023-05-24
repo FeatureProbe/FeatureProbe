@@ -65,7 +65,7 @@ public class MemberController {
     @PreAuthorize("hasAuthority('OWNER')")
     @Hook(resource = Resource.MEMBER, action = Action.CREATE)
     public List<MemberResponse> create(@Validated @RequestBody MemberCreateRequest createRequest) {
-        return memberService.create(createRequest);
+        return memberService.createUserInCurrentOrganization(createRequest);
     }
 
     @GetApiResponse

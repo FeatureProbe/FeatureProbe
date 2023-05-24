@@ -102,7 +102,7 @@ class GuestAuthenticationProviderSpec extends Specification {
         then:
         applicationContext.getBean(_) >> new PlaintextEncryptionService()
         2 * memberRepository.findByAccount(account) >> Optional.of(new Member(account: account,
-                organizationMembers: [new OrganizationMember(new Organization(id: 1, name: ""), new Member(), OrganizationRoleEnum.OWNER)]))
+                organizationMembers: [new OrganizationMember(new Organization(id: 1, name: ""), new Member(), OrganizationRoleEnum.OWNER, true)]))
         1 * memberRepository.save(_)
         1 * operationLogRepository.save(_)
     }
@@ -118,7 +118,7 @@ class GuestAuthenticationProviderSpec extends Specification {
         1 * memberRepository.findByAccount("Admin") >> Optional.empty()
         1 * applicationContext.getBean(_) >> new FeatureProbe("_")
         1 * memberRepository.save(_) >> new Member(id: 1, account: "Admin",
-                organizationMembers: [new OrganizationMember(new Organization(id: 1, name: ""), new Member(), OrganizationRoleEnum.OWNER)])
+                organizationMembers: [new OrganizationMember(new Organization(id: 1, name: ""), new Member(), OrganizationRoleEnum.OWNER, true)])
         1 * organizationRepository.save(_) >> new Organization(name: "Admin")
         1 * projectRepository.count() >> 2
         1 * projectRepository.save(_) >> new Project(name: "projectName", key: "projectKey",

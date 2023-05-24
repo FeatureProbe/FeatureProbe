@@ -5,6 +5,7 @@ import io.featureprobe.api.base.component.SpringBeanManager;
 import io.featureprobe.api.base.constants.MessageKey;
 import io.featureprobe.api.base.db.ExcludeTenant;
 import io.featureprobe.api.base.enums.MemberSourceEnum;
+import io.featureprobe.api.base.enums.MemberStatusEnum;
 import io.featureprobe.api.base.enums.OrganizationRoleEnum;
 import io.featureprobe.api.base.enums.ResourceType;
 import io.featureprobe.api.base.exception.ForbiddenException;
@@ -28,6 +29,7 @@ import io.featureprobe.api.mapper.MemberMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -74,8 +76,17 @@ public class MemberService {
     private String encryptionName;
 
     @Transactional(rollbackFor = Exception.class)
-    public List<MemberResponse> create(MemberCreateRequest createRequest) {
-        List<Member> savedMembers = saveAll(newNumbers(createRequest));
+    public List<MemberResponse> createUserInCurrentOrganization(MemberCreateRequest createRequest) {
+        return this.create(TenantContext.getCurrentOrganization().getOrganizationId(), createRequest,
+                MemberStatusEnum.ACTIVE);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public List<MemberResponse> create(Long organizationId,
+                                       MemberCreateRequest createRequest,
+                                       MemberStatusEnum memberStatusEnum) {
+        List<Member> savedMembers = memberRepository.saveAll(
+                newMembers(organizationId, createRequest, memberStatusEnum));
         return savedMembers.stream().map(item -> translateResponse(item)).collect(Collectors.toList());
     }
 
@@ -102,6 +113,16 @@ public class MemberService {
         Member member = findLoggedInMember();
         verifyPassword(modifyPasswordRequest.getOldPassword(), member.getPassword());
         member.setPassword(passwordEncoder.encode(modifyPasswordRequest.getNewPassword()));
+        return MemberMapper.INSTANCE.entityToItemResponse(save(member));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public MemberItemResponse modifyPasswordAndActive(Member member, String password) {
+        if (member == null || StringUtils.isEmpty(password)) {
+            throw new IllegalArgumentException("member or password invalid");
+        }
+        member.setPassword(passwordEncoder.encode(password));
+        member.setStatus(MemberStatusEnum.ACTIVE);
         return MemberMapper.INSTANCE.entityToItemResponse(save(member));
     }
 
@@ -137,24 +158,26 @@ public class MemberService {
         return memberResponse;
     }
 
-    private List<Member> newNumbers(MemberCreateRequest createRequest) {
+    private List<Member> newMembers(Long organizationId, MemberCreateRequest createRequest,
+                                    MemberStatusEnum memberStatusEnum) {
         return createRequest.getAccounts()
                 .stream()
-                .filter(account ->
-                        memberIncludeDeletedService.validateAccountIncludeDeleted(account))
-                .map(account -> newMember(account, createRequest))
+                .filter(account -> memberIncludeDeletedService.validateAccountIncludeDeleted(account))
+                .map(account -> newMember(organizationId, account, createRequest, memberStatusEnum))
                 .collect(Collectors.toList());
     }
 
-    private Member newMember(String account, MemberCreateRequest createRequest) {
+    private Member newMember(Long organizationId, String account, MemberCreateRequest createRequest,
+                             MemberStatusEnum memberStatusEnum) {
         Member member = new Member();
         member.setAccount(account);
+        member.setStatus(memberStatusEnum);
         member.setSource(createRequest.getSource());
         member.setPassword(new BCryptPasswordEncoder().encode(createRequest.getPassword()));
 
-        Organization organization = organizationRepository.findById(TenantContext.getCurrentOrganization()
-                .getOrganizationId()).get();
-        member.addOrganization(organization, createRequest.getRole());
+        Organization organization = organizationRepository.findById(organizationId).get();
+        boolean valid = memberStatusEnum == MemberStatusEnum.ACTIVE;
+        member.addOrganization(organization, createRequest.getRole(), valid);
 
         return member;
     }
@@ -236,6 +259,8 @@ public class MemberService {
                 allowEdit = false;
             }
             response.setAllowEdit(allowEdit);
+            response.setValid(item.getValid());
+            response.setOrganizationMemberCreateBy(item.getCreatedBy().getAccount());
             return response;
         });
     }
