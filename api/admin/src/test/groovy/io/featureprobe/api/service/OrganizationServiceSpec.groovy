@@ -30,7 +30,7 @@ class OrganizationServiceSpec extends Specification {
         def organizationMember = organizationService.queryOrganizationMember(1, 1)
         then:
         1 * organizationMemberRepository.findByOrganizationIdAndMemberId(1, 1) >>
-                Optional.of(new OrganizationMember(new Organization(id: 1), new Member(id: 1), OrganizationRoleEnum.OWNER))
+                Optional.of(new OrganizationMember(new Organization(id: 1), new Member(id: 1), OrganizationRoleEnum.OWNER, true))
         1 * organizationRepository.getById(1) >> new Organization(name: "Admin")
         "Admin" == organizationMember.organizationName
     }
@@ -44,7 +44,7 @@ class OrganizationServiceSpec extends Specification {
 
         then:
         1 * organizationMemberRepository.findByMemberId(100) >> [
-                new OrganizationMember(organization: new Organization(id: 1, name: "test_org"), member: new Member(account: "fp@d.com"))
+                new OrganizationMember(organization: new Organization(id: 1, name: "test_org"), member: new Member(account: "fp@d.com"), valid: true)
         ]
         1 == organizationResponses.size()
     }
