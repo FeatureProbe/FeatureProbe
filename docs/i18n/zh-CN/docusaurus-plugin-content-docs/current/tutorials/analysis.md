@@ -136,7 +136,8 @@ const FEATURE_PROBE_SERVER_SDK_KEY = // Fill in the server SDK key
 
 </Tabs>
 
-5. 加入以下代码，模拟1000个用户访问开关。开关返回值为`true`的用户中，有55%的用户选择上报自定义事件，开关返回值为`false`的用户中，有45%的用户选择上报自定义事件
+5. 加入以下代码，模拟1000个用户访问开关。开关返回值为`true`（variation2）的用户中，有55%的用户发生了转化（例如点击了某个button）因此上了报自定义事件（点击事件），开关返回值为`false`的用户中，有45%的用户完成了转化，上报自定义事件。
+注意，以下的代码只是生成随机数模拟概率，并没有实际的业务代码。实际中这里可能是true的时候跟用户展示新设计的页面，有55%的用户会点击上面的按钮。而false的时候，给用户展示旧的页面，有45%的用户点击了上面的按钮。
 
 <Tabs groupId="language">
    <TabItem value="java" label="Java" default>
