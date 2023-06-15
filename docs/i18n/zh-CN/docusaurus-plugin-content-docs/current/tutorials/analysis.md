@@ -413,7 +413,7 @@ const fpClient = new featureProbe. FeatureProbe({
 });
 ~~~
 
-4. 加入以下代码，通过页面刷新的方式模拟很多用户访问开关。开关返回值为`true`的用户中，有55%的用户选择上报自定义事件，开关返回值为`false`的用户中，有45%的用户选择上报自定义事件
+4. 加入以下代码，通过页面刷新的方式模拟很多用户访问开关。开关返回variation2，值为`true`的用户中，有55%的用户转化，开关返回variation1，值为`false`的用户中，有45%的用户转化。
 
 ~~~js title="example/index.html"
 <script>
