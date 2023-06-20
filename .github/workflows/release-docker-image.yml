@@ -258,7 +258,7 @@ jobs:
         run: |
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
-            --platform linux/amd64 \
+            --platform linux/amd64,linux/arm64 \
             --output "type=image,push=true" \
             --tag featureprobe/server:latest \
             --tag featureprobe/server:$DOCKER_TAG \
