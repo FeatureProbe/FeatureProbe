@@ -38,10 +38,10 @@ public interface EnvironmentRepository extends JpaRepository<Environment, Long> 
 
     @Query(value = "SELECT env.organization_id as organizationId,\n" +
             "                 env.project_key as  projectKey,\n" +
-            "                 env.`key` as envKey,\n" +
+            "                 env.key as envKey,\n" +
             "                 env.client_sdk_key as clientSdkKey,\n" +
             "                 env.server_sdk_key as serverSdkKey,\n" +
-            "                 env.version as envVersion, tg.`key` as toggleKey,\n" +
+            "                 env.version as envVersion, tg.key as toggleKey,\n" +
             "                 tg.return_type as returnType,\n" +
             "                 tg.client_availability as ClientAvailability,\n" +
             "                 ta.version as targetingVersion,\n" +
@@ -51,27 +51,27 @@ public interface EnvironmentRepository extends JpaRepository<Environment, Long> 
             "                 tcc.track_access_events as trackAccessEvents,\n" +
             "                 ta.modified_time as lastModified\n" +
             "          FROM environment env\n" +
-            "              LEFT JOIN (SELECT * FROM toggle WHERE deleted = 0 AND archived = 0) tg\n" +
+            "              LEFT JOIN (SELECT * FROM toggle WHERE deleted = false AND archived = false) tg\n" +
             "                  ON env.organization_id = tg.organization_id AND env.project_key=tg.project_key\n" +
-            "              LEFT JOIN (SELECT * FROM targeting WHERE deleted = 0) ta\n" +
+            "              LEFT JOIN (SELECT * FROM targeting WHERE deleted = false) ta\n" +
             "                   ON tg.organization_id=ta.organization_id AND\n" +
-            "                                         tg.project_key = ta.project_key AND tg.`key`=ta.toggle_key\n" +
+            "                                         tg.project_key = ta.project_key AND tg.key=ta.toggle_key\n" +
             "              LEFT JOIN toggle_control_conf tcc ON ta.organization_id = tcc.organization_id\n" +
             "                                                       AND ta.project_key = tcc.project_key\n" +
             "                                                       AND ta.environment_key=tcc.environment_key\n" +
             "                                                       AND ta.toggle_key = tcc.toggle_key\n" +
-            "                   WHERE env.archived = 0 AND env.deleted = 0",
+            "                   WHERE env.archived = false AND env.deleted = false",
             nativeQuery = true)
     List<ServerToggleEntity> findAllServerToggle();
 
     @Query(value = "SELECT pro.organization_id as organizationId, \n" +
-            "       pro.`key` as projectKey, \n" +
-            "       s.`key` as segmentKey,\n" +
+            "       pro.key as projectKey, \n" +
+            "       s.key as segmentKey,\n" +
             "       s.rules as segmentRules, \n" +
             "       s.version as segmentVersion, \n" +
             "       s.unique_key as segmentUniqueKey\n" +
             "FROM project pro INNER JOIN segment s on pro.organization_id=s.organization_id " +
-            "AND pro.`key` = s.project_key WHERE pro.archived = 0 AND pro.deleted = 0 AND s.deleted = 0",
+            "AND pro.key = s.project_key WHERE pro.archived = false AND pro.deleted = false AND s.deleted = false",
             nativeQuery = true)
     List<ServerSegmentEntity> findAllServerSegment();
 
