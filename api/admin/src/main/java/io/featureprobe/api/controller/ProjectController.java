@@ -79,7 +79,7 @@ public class ProjectController {
     @GetMapping
     @GetApiResponse
     @Operation(summary = "List projects", description = "Fetch a list of all projects.")
-    public List<ProjectResponse> list(ProjectQueryRequest queryRequest) {
+    public Object list(ProjectQueryRequest queryRequest) {
         return projectService.list(queryRequest);
     }
 

@@ -79,7 +79,6 @@ public class MemberController {
     @PatchApiResponse
     @PatchMapping
     @Operation(summary = "Update member", description = "Update a member.")
-    @PreAuthorize("hasAuthority('OWNER')")
     @Hook(resource = Resource.MEMBER, action = Action.UPDATE)
     public MemberResponse update(@Validated @RequestBody MemberUpdateRequest updateRequest) {
         return memberService.update(updateRequest);

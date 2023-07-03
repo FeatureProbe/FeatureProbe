@@ -38,6 +38,10 @@ public class MemberItemResponse {
 
     private String organizationMemberCreateBy;
 
+    private String plan;
+
+    private Object allowFeatures;
+
     public MemberItemResponse(String account, String role) {
         this.account = account;
         this.role = role;

@@ -1,5 +1,6 @@
 package io.featureprobe.api.service;
 
+import io.featureprobe.api.base.db.IncludeDeleted;
 import io.featureprobe.api.dao.entity.Toggle;
 import io.featureprobe.api.dao.exception.ResourceConflictException;
 import io.featureprobe.api.dao.repository.ToggleRepository;
@@ -29,6 +30,7 @@ public class IncludeArchivedToggleService {
     }
 
     @Archived
+    @IncludeDeleted
     public void validateIncludeArchivedToggle(String projectKey, ValidateTypeEnum type, String value) {
         switch (type) {
             case KEY:
