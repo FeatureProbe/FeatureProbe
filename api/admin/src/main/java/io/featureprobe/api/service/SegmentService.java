@@ -1,6 +1,7 @@
 package io.featureprobe.api.service;
 
 import io.featureprobe.api.base.constants.MessageKey;
+import io.featureprobe.api.base.db.Archived;
 import io.featureprobe.api.base.util.JsonMapper;
 import io.featureprobe.api.base.util.ToggleContentLimitChecker;
 import io.featureprobe.api.dao.entity.SegmentVersion;
@@ -183,6 +184,7 @@ public class SegmentService {
         return SegmentMapper.INSTANCE.entityToResponse(segmentRepository.save(segment));
     }
 
+    @Archived
     public Page<ToggleSegmentResponse> usingToggles(String projectKey, String segmentKey,
                                                     PaginationRequest paginationRequest) {
         List<TargetingSegment> targetingSegments = targetingSegmentRepository

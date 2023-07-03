@@ -2,6 +2,8 @@ package io.featureprobe.api.service;
 
 import io.featureprobe.api.auth.TokenHelper;
 import io.featureprobe.api.base.component.SpringBeanManager;
+import io.featureprobe.api.base.db.Archived;
+import io.featureprobe.api.base.db.IncludeDeleted;
 import io.featureprobe.api.dao.exception.ResourceConflictException;
 import io.featureprobe.api.dao.exception.ResourceNotFoundException;
 import io.featureprobe.api.dao.exception.ResourceOverflowException;
@@ -149,7 +151,7 @@ public class ProjectService {
             projects = projectRepository.findAllByNameContainsIgnoreCaseOrDescriptionContainsIgnoreCase(
                     queryRequest.getKeyword(), queryRequest.getKeyword());
         } else {
-            projects = projectRepository.findAll();
+            projects = projectRepository.findAllByOrderByCreatedTimeDesc();
         }
         return projects.stream().map(project ->
                 ProjectMapper.INSTANCE.entityToResponse(project)).collect(Collectors.toList());
@@ -177,6 +179,8 @@ public class ProjectService {
         return onlineEnv;
     }
 
+    @Archived
+    @IncludeDeleted
     public void validateExists(ValidateTypeEnum type, String value) {
 
         switch (type) {

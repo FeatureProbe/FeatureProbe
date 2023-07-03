@@ -21,4 +21,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     List<Project> findAllByNameContainsIgnoreCaseOrDescriptionContainsIgnoreCase(String keywordName,
                                                                                  String keywordDesc);
+
+    List<Project> findAllByOrderByCreatedTimeDesc();
+
 }
