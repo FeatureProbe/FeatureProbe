@@ -60,7 +60,7 @@ public class Project extends AbstractAuditEntity implements TenantSupport, Seria
     private Long organizationId;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST)
-    @Where(clause = "archived = 0")
+    @Where(clause = "archived = false")
     @OrderBy(clause = "created_time asc")
     private List<Environment> environments;
 

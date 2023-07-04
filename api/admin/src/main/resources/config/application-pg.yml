@@ -1,9 +1,9 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    jdbc-url: jdbc:mysql://127.0.0.1:3306/feature_probe?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&rewriteBatchedStatements=TRUE&useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
-    password: root
+    driver-class-name: org.postgresql.Driver
+    jdbc-url: jdbc:postgresql://127.0.0.1:5432/feature_probe
+    username: postgres
+    password: mysecretpassword
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       minimum-idle: 10
@@ -18,10 +18,10 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL57InnoDBDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: true
   flyway:
-    enabled: true
+    enabled: false
 
 
 logging:
@@ -35,10 +35,10 @@ logging:
 
 app:
   toggle-deadline: 30
-  server-data-source: MEMORY # DB
-  server-base-urls: http://127.0.0.1:4007 # , split
-  get-started-server-url: http://127.0.0.1:4007
-  analysis-base-url: http://127.0.0.1:4006
+  server-data-source: MEMORY # DB MEMORY
+  server-base-urls: http://127.0.0.1:4006
+  analysis-base-url: http://10.97.37.21:4006
+  get-started-server-url: https://featureprobe-df.intra.xiaojukeji.com/server
   maximum-dependency-depth: 20
   security:
     jwt:
@@ -55,4 +55,5 @@ app:
         - /api/application/**
       guest-disabled: true
       guest-default-password: Guest_12345
-
+    encryption:
+      impl: plaintext
