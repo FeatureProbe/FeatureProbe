@@ -450,6 +450,7 @@ const Toggle = () => {
                         selection 
                         floating
                         clearable
+                        search
                         selectOnBlur={false}
                         className={styles['dropdown']}
                         placeholder={intl.formatMessage({id: 'common.dropdown.placeholder'})} 
