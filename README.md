@@ -143,6 +143,7 @@ We have SDKs for the following program languages, choose one for your applicatio
 * [iOS SDK](https://github.com/FeatureProbe/client-sdk-mobile)
 * [Mini Program SDK](https://github.com/FeatureProbe/client-sdk-miniprogram)
 * [React SDK](https://github.com/FeatureProbe/client-sdk-react)
+* [Flutter SDK](https://github.com/FeatureProbe/client-sdk-flutter)
 
 > We also provide a online [FeatureProbe Demo](https://featureprobe.io/demo/) application, with FeatureProbe Javascript SDK embeded, controlled by FeatureProbe [online try-out service](https://featureprobe.io), you can try out FeatureProbe functions on this demo website.
 
