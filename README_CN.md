@@ -104,6 +104,7 @@ if (fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)) {
 * [iOS SDK](https://gitee.com/FeatureProbe/client-sdk-mobile)
 * [Mini Program SDK](https://gitee.com/featureprobe/client-sdk-miniprogram)
 * [React SDK](https://gitee.com/featureprobe/client-sdk-react)
+* [Flutter SDK](https://gitee.com/featureprobe/client-sdk-flutter)
 
 各语言SDK都提供example目录和代码，可以直接运行example代码来体验FeatureProbe平台与SDK的交互。
 
