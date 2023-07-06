@@ -234,7 +234,7 @@ export const getGoCode = (options: IOption, eventName?: string, isTrackValue?: b
     {
       title: intl.formatMessage({id: 'getstarted.go.first.step.title'}),
       name: intl.formatMessage({id: 'getstarted.go.first.step.name.one'}),
-      code: 'import "github.com/featureprobe/server-sdk-go"'
+      code: 'import "github.com/featureprobe/server-sdk-go/v2"'
     },
     {
       name: intl.formatMessage({id: 'getstarted.go.first.step.name.two'}),
