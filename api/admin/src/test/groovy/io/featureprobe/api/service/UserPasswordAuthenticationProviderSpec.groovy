@@ -68,7 +68,7 @@ class UserPasswordAuthenticationProviderSpec extends Specification {
         operationLogRepository = Mock(OperationLogRepository)
         operationLogService = new OperationLogService(operationLogRepository)
         commonAccountValidator = new CommonAccountValidator(memberService, organizationRepository, operationLogService)
-        ldapAccountValidator = new LdapAccountValidator(memberService,operationLogService,organizationRepository,ldapTemplate,ldapContextSource);
+        ldapAccountValidator = new LdapAccountValidator(memberService,operationLogService,organizationRepository,ldapTemplate,ldapContextSource,"uid");
         provider = new UserPasswordAuthenticationProvider()
         applicationContext = Mock(ApplicationContext)
         SpringBeanManager.applicationContext = applicationContext

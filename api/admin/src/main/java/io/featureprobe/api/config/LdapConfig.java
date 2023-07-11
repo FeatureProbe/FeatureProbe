@@ -47,6 +47,7 @@ public class LdapConfig {
     public LdapTemplate ldapTemplate()  {
         LdapTemplate ldapTemplate = new LdapTemplate(contextSource());
         ldapTemplate.setDefaultTimeLimit(requestTimeout);
+        ldapTemplate.setIgnorePartialResultException(true);
         return ldapTemplate;
     }
 }

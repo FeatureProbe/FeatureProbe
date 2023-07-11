@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.ldap.core.LdapTemplate;
@@ -50,6 +51,9 @@ public class LdapAccountValidator implements AccountValidator{
     private LdapTemplate ldapTemplate;
 
     private LdapContextSource contextSource;
+
+    @Value("${app.security.ldap.usernameAttribute:uid}")
+    private String ldapUsernameAttribute;
 
     @Override
     public Authentication authenticate(Authentication authentication) {
@@ -91,7 +95,7 @@ public class LdapAccountValidator implements AccountValidator{
 
     private boolean authenticateByLdap(UserPasswordAuthenticationToken token) {
         try {
-            ldapTemplate.authenticate(query().where("uid").is(token.getAccount()),token.getPassword());
+            ldapTemplate.authenticate(query().where(ldapUsernameAttribute).is(token.getAccount()),token.getPassword());
             return true;
         }catch (EmptyResultDataAccessException e) {
             throw new UsernameNotFoundException("Account not find on Ldap Server."+e.getMessage());
