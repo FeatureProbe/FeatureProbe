@@ -29,6 +29,9 @@ public class LdapConfig {
     @Value("${app.security.ldap.request.timeout:5000}")
     private int requestTimeout;
 
+    @Value("${app.security.ldap.usernameAttribute:uid}")
+    private String usernameAttribute;
+
     @Bean
     public LdapContextSource contextSource() {
         LdapContextSource contextSource = new LdapContextSource();
@@ -49,5 +52,10 @@ public class LdapConfig {
         ldapTemplate.setDefaultTimeLimit(requestTimeout);
         ldapTemplate.setIgnorePartialResultException(true);
         return ldapTemplate;
+    }
+
+    @Bean
+    public String ldapUsernameAttribute()  {
+        return usernameAttribute;
     }
 }

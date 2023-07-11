@@ -52,7 +52,6 @@ public class LdapAccountValidator implements AccountValidator{
 
     private LdapContextSource contextSource;
 
-    @Value("${app.security.ldap.usernameAttribute:uid}")
     private String ldapUsernameAttribute;
 
     @Override
