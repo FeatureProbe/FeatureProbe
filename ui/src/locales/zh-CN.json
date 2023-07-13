@@ -138,7 +138,7 @@
   "login.password.minlength": "最少4字符",
   "login.password.maxlength": "最多20字符",
   "login.password.invalid": "无效的密码",
-  "login.password.tips": "密码只能含有字母、数字、'.'、'_' 或 '-'。",
+  "login.password.tips": "密码只能包含字母、数字或特殊字符。",
   "login.signin": "登录",
   "login.error.message": "登录错误，请重试!",
   "login.error.text": "用户名或密码错误, 请重试!",
