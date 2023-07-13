@@ -51,6 +51,8 @@ public class LdapAccountValidator implements AccountValidator{
 
     private LdapContextSource contextSource;
 
+    private String ldapUsernameAttribute;
+
     @Override
     public Authentication authenticate(Authentication authentication) {
         UserPasswordAuthenticationToken token = (UserPasswordAuthenticationToken) authentication;
@@ -91,7 +93,7 @@ public class LdapAccountValidator implements AccountValidator{
 
     private boolean authenticateByLdap(UserPasswordAuthenticationToken token) {
         try {
-            ldapTemplate.authenticate(query().where("uid").is(token.getAccount()),token.getPassword());
+            ldapTemplate.authenticate(query().where(ldapUsernameAttribute).is(token.getAccount()),token.getPassword());
             return true;
         }catch (EmptyResultDataAccessException e) {
             throw new UsernameNotFoundException("Account not find on Ldap Server."+e.getMessage());
