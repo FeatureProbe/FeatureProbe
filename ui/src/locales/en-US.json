@@ -138,7 +138,7 @@
   "login.password.minlength": "at least 4 characters",
   "login.password.maxlength": "at most 20 characters",
   "login.password.invalid": "invalid password",
-  "login.password.tips": "Password can only contain letters, numbers, '.', '_' or '-'.",
+  "login.password.tips": "Password can only contain letters, numbers, and special characters.",
   "login.signin": "Sign in",
   "login.error.message": "Error, please retry!",
   "login.error.text": "Account or password is incorrect, please retry!",
