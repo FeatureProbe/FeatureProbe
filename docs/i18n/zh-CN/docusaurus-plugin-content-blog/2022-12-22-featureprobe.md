@@ -12,10 +12,7 @@ title: 分支管理工具:特性分支 VS 特性开关
 )
 
 软件开发团队的代码分支管理策略会对其发布高质量软件的速度产生重大影响，这篇文章我们将探讨在同一代码库中实现多个并行开发工作流的几种不同方法的利弊。我们将看到两个主要的因素：合并代码冲突的成本以及独立发布功能的能力通常是无法兼得的，但特性开关为我们提供了一种解决这种矛盾思路。
-
-
-![1.jpg](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fa3bbf8937e14bfa97502ba3668eae72~tplv-k3u1fbpfcp-watermark.image?)
-
+![](https://article.biliimg.com/bfs/article/ca4004a9cdb3b305b9ec93766d673f3d37db2ba3.jpg)
 # 一、代码合并冲突问题
 新产品开始时代码库还比较小，通常只有少数几个开发人员在开发，这种情况下不需要太多的正式开发流程规范。然而，即使一个团队只有两个开发人员，在同一时间处理相同的文件时仍需要尽量避免合并冲突。
 
@@ -48,23 +45,18 @@ Alice 和 Bob 是移动应用程序的两个开发人员，他们有两个正在
 为了避免这种工作耦合的问题，开发团队往往会放弃将正在编写的代码推送到共享分支上的方式。有些团队会选择在本地机器 master 分支上工作，在工作完成后再推送到团队的共享仓库。其他团队会选择使用特性分支，在独立的分支上进行独立的工作，只有在开发完成后才合入到主干。
 
 顺便提一下，当使用像 Git 这样的分布式源码控制系统时，这两种方法本质上是等同的；唯一的区别是，未合并的开发中的代码是在远程特性分支中可见，还是隐藏在开发者的本地主干上。因此，我把这两种方式都称为特性分支。
-
-
-![2.jpg](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3e8fdba52bb64bfd8ab9d98a0d44272d~tplv-k3u1fbpfcp-watermark.image?)
+![](https://article.biliimg.com/bfs/article/47fee2176b75de5a4c5397164a5bb648b1744234.jpg@1e_1c.webp)
 
 那么，如果一个团队使用了特性分支，那么他们所有的问题都解决了，对吗？可惜不是，我们重新引入了合并风险。特性分支上进行的工作，在被合并到共享的主干分支之前，并没有与其他的修改集成。每当两个工作同时修改到相同的文件时，无论是无意还是有意，都会存在一个潜在的合并冲突，这个潜在冲突会继续扩大，直到其中一个工作的分支合入主干。有些团队会通过频繁地将主干分支的修改合并到特性分支中来缓解这一问题。
-
-
-![3.jpg](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5a22e5c15db348a9a5889230a6e86e8d~tplv-k3u1fbpfcp-watermark.image?)
+![](https://article.biliimg.com/bfs/article/0742f0b04c3a122bc93322f9f1b58ff4b58eb625.jpg@1e_1c.webp)
 
 然而，当存在并行的开发分支时，这种策略是没有效果的。例如只有当 Bob 的分支合并到主干上之后，Alice 的分支才能合入他的修改。这两个并行分支的潜在冲突只能等到 Alice 下一次合入主干代码的时候去解决了。
 
-![图片4.jpg](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/745621c9ea3b4c418c224afcd2fd97ad~tplv-k3u1fbpfcp-watermark.image?)
+![](https://article.biliimg.com/bfs/article/2b6608dd6ac3fff92f246655f12e648702b217ea.jpg@1e_1c.webp)
 
 有些团队还会尝试 **“交叉合并”** 来解决代码合并冲突的问题，将一个特性分支的代码合并到另一个特性分支代码上，来减少分支之间潜在的合并冲突。然而一旦你将两个特性分支合并后，事实上你还是创建了一个含有进行中工作的共享分支，这和两个团队将进行中的工作合入共享 master 分支是一样的： **两个工作的代码变更内容仍然纠缠在了一起，所有的功能都是耦合在一起的，无法独立发布。**
 
-
-![5.jpg](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f6716b148b248349d9c1a06700b4c91~tplv-k3u1fbpfcp-watermark.image?)
+![](https://article.biliimg.com/bfs/article/049916905df45f37a5791c5e1e7c666beaffa79d.jpg)
 
 总的来说，特性分支允许团队对工作进行解耦，让部分功能可以独立发布。然而，当特性分支做了大量的修改时，它们会带来大量合并冲突的风险。只有在其他并行工作已经完成并合入的情况下，从主干分支拉取代码合入自己的特性分支才会有帮助，而分支之间的交叉合并与在共享主干分支一样，都会将多个特性耦合在一起。
 
