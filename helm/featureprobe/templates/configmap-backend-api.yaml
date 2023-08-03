@@ -1,0 +1,24 @@
+{{- if .Values.backendAPI.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.backendAPI.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}-{{ .Values.backendAPI.name }}
+data:
+  server.port: {{ .Values.backendAPI.ports.http | quote }}
+  spring.datasource.jdbc-url: {{ .Values.backendAPI.database.url | quote }}
+  logging.level.root: {{ .Values.backendAPI.logLevel | quote }}
+  app.analysis-url: {{ .Values.apiEndpoints.analysis_base | default (printf "http://%s-analysis-api:%s" .Release.Name (.Values.analysisAPI.ports.http | print)) | quote }}
+  app.server-base-urls: {{ .Values.apiEndpoints.server_base | default (printf "http://%s-server-api:%s" .Release.Name (.Values.serverAPI.ports.http | print)) | quote }}
+  {{- if .Values.ldap.enabled }}
+  app.security.ldap.url: {{ .Values.ldap.url | quote }}
+  app.security.ldap.usernameAttribute: {{ .Values.ldap.usernameAttribute | quote }}
+  app.security.ldap.base: {{ .Values.ldap.searchBase | quote }}
+  app.security.validator.impl: "ldap"
+  {{- if .Values.ldap.truststoreConfigmapName }}
+  JVM_ARGS: "-Djavax.net.ssl.trustStore=/truststore/ldap-cacerts -Djavax.net.ssl.trustStorePassword={{ .Values.ldap.truststorePassword }} -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true"
+  {{- end -}}
+  {{- end -}}
+{{- end }}
