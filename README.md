@@ -33,7 +33,7 @@ through the acceleration of daily development tasks. It also supports our millio
 
 Now we are making this project open source to help more developers and operation people and contribute to the programming society. 
 
-[Get started](https://app.featureprobe.com/login) using FeatureProbe today!
+[Get started](https://app.featureprobe.com) using FeatureProbe today!
 
 ## 🚀 Why you should use FeatureProbe
 
