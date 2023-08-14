@@ -21,7 +21,7 @@
 
 # 💎 FeatureProbe 
 
-FeatureProbe is an open source **feature management service**. 
+[FeatureProbe](https://featureprobe.com/) is an open source **feature management service**. 
 It allows R&D, SRE and operation teams to launch new features or switch software implementations with confidence and lower risk.
 FeatureProbe eliminates manual delays through its practice in continuous delivery and is not hindered by the size of a 
 team or the complexity of a product, which allows developers to maintain their velocity. 
