@@ -33,6 +33,8 @@ through the acceleration of daily development tasks. It also supports our millio
 
 Now we are making this project open source to help more developers and operation people and contribute to the programming society. 
 
+[Get started](https://app.featureprobe.com/login) using FeatureProbe today!
+
 ## 🚀 Why you should use FeatureProbe
 
 FeatureProbe brings about value to our daily development and operations in these aspects:
@@ -95,7 +97,7 @@ The overall architecture of FeatureProbe is shown in the following figure
 
 ## 1️⃣ Start FeatureProbe Central Service
 
-1. We provide a online try-out FeatureProbe Service, so you don't have to deploy by yourself, just visit it [Here](https://featureprobe.io).
+1. We provide a online FeatureProbe Service, so you don't have to deploy by yourself, just visit it [Here](https://app.featureprobe.com).
 
 1. Or you can use docker composer to set your own FeatureProbe service
 
@@ -144,8 +146,6 @@ We have SDKs for the following program languages, choose one for your applicatio
 * [Mini Program SDK](https://github.com/FeatureProbe/client-sdk-miniprogram)
 * [React SDK](https://github.com/FeatureProbe/client-sdk-react)
 * [Flutter SDK](https://github.com/FeatureProbe/client-sdk-flutter)
-
-> We also provide a online [FeatureProbe Demo](https://featureprobe.io/demo/) application, with FeatureProbe Javascript SDK embeded, controlled by FeatureProbe [online try-out service](https://featureprobe.io), you can try out FeatureProbe functions on this demo website.
 
 
 # 📚 More information
