@@ -1,0 +1,18 @@
+{{- if .Values.serverAPI.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.serverAPI.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}-{{ .Values.serverAPI.name }}
+data:
+  RUST_LOG: info
+  FP_SERVER_PORT: {{ .Values.serverAPI.ports.http | quote }}
+  FP_REALTIME_PORT: {{ .Values.serverAPI.ports.realtime | quote }}
+  FP_TOGGLES_URL: {{ .Values.apiEndpoints.toggles | default (printf "http://%s-backend-api:%s/internal/server/toggles" .Release.Name (.Values.backendAPI.ports.http | print)) | quote }}
+  FP_EVENTS_URL: {{ .Values.apiEndpoints.events | default (printf "http://%s-backend-api:%s/internal/server/events" .Release.Name (.Values.backendAPI.ports.http | print )) | quote }}
+  FP_KEYS_URL: {{ .Values.apiEndpoints.keys | default (printf "http://%s-backend-api:%s/internal/server/sdk_keys" .Release.Name (.Values.backendAPI.ports.http | print )) | quote }}
+  FP_ANALYSIS_URL: {{ .Values.apiEndpoints.analysis | default (printf "http://%s-analysis-api:%s/events" .Release.Name (.Values.analysisAPI.ports.http | print )) | quote }}
+  FP_REFRESH_SECONDS: {{ .Values.serverAPI.refreshSeconds | quote }}
+{{- end }}

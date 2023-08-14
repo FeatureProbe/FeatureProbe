@@ -1,0 +1,157 @@
+timezone: America/Chicago # Timezone for containers in pods
+
+ingress: [] # The list of Ingress resources to create
+    # - name: internal # Ingress name
+    #   enable_internal_endpoints: false # Enables exposure of internal endpoints
+    #   annotations: { } # Ingress annotations
+    #     kubernetes.io/ingress.class: nginx
+    #   labels: { } # Ingress labels
+    #     hosts: [ ] # List of ingress hosts
+    #     tls: { } # Ingress TLS configuration
+    #   tls:
+    #     - secretName: chart-example-tls
+    #       hosts:
+    #         - chart-example.local
+
+apiEndpoints:
+  toggles: # Allows to set custom API endpoint for toggles
+  events: # Allows to set custom API endpoint for events
+  keys: # Allows to set custom API endpoint for keys
+  analysis: # Allows to set custom API endpoint for analysis
+  analysis_base: # Allows to set custom value for analysis base URL
+  server_base: # Allows to set custom value for server base URL
+
+ldap:
+  enabled: false # Enable or disable LDAP setup
+  url: "ldaps://ldap.example.com:389" # LDAP server URI
+  credentialsSecretName: "featureprobe-credentials" # The name of Kubernetes secret with LDAP credentials
+  credentialsManagerDnSecretKey: "ldap-username" # The name of the key with manager DN value
+  credentialsPasswordSecretKey: "ldap-password" # The name of the key with manager password
+  usernameAttribute: "sAMAccountName" # User name attribute value
+  searchBase: "ou=Users,dc=example,dc=com" # LDAP users search base
+  truststoreConfigmapName: # The name of Kubernetes ConfigMap name for LDAP trusted certificate
+  truststorePassword: "changeit"
+
+backendAPI:
+  name: backend-api # Always "backend-api"
+  enabled: true # Enables or disables backend API service deployment
+  replicaCount: 2 # The number of replicas for backend API service
+  logLevel: INFO # Backend API service logging level
+  ports:
+    http: 4008 # Backend API service HTTP port number
+  image:
+    repository: featureprobe/api # Container repository to pull the image from
+    tag: # Image tag to use
+    pullPolicy: IfNotPresent # Container image pull policy
+  readinessProbe:
+    httpGet: # Backend API service readiness probe
+      path: /actuator/health # Health check path
+      port: http # Health check port
+    initialDelaySeconds: 10 # Health check initial delay, seconds
+  resources:
+    requests:
+      memory: "64Mi" # Backend API service memory resources requests
+      cpu: "250m" # Backend API service CPU resources requests
+    limits:
+      memory: "2Gi" # Backend API service memory resources limits
+      cpu: 2 # Backend API service CPU resources limits
+  service:
+    labels: { } # Backend API service labels
+    type: ClusterIP # Backend API service type
+  database:
+    url: "jdbc:mysql://localhost:3306/featureprobe" # Backend API database connection URL
+    secret_name: featureprobe-database-credentials # The name of Kubernetes secret that holds database credentials
+    username_secret_key: featureprobe_user # Kubernetes secret key for MySQL user name
+    password_secret_key: featureprobe_password # Kubernetes secret key for MySQL password
+
+serverAPI:
+  name: server-api # Always "server-api"
+  enabled: true # Enables or disables Server API service deployment
+  replicaCount: 2 # The number of replicas for Server API service
+  refreshSeconds: 3 # Refresh interval
+  ports:
+    http: 4007 # Server API service HTTP port number
+    realtime: 4011 # Server API service "realtime" HTTP port number
+  image:
+    repository: featureprobe/server # Container repository to pull the image from
+    tag: # Image tag to use
+    pullPolicy: IfNotPresent # Container image pull policy
+  resources:
+    requests:
+      memory: "64Mi" # Server API service memory resources requests
+      cpu: "250m" # Server API service CPU resources requests
+    limits:
+      memory: "2Gi" # Server API service memory resources limits
+      cpu: 2 # Server API service CPU resources limits
+  readinessProbe:
+    httpGet:
+      path: / # Health check path
+      port: http # Health check port
+  service:
+    labels: { } # Server API service labels
+    type: ClusterIP # Server API service type
+
+ui:
+  name: ui # Always "ui"
+  enabled: true # Enables or disables UI deployment
+  replicaCount: 2 # The number of replicas for UI service
+  ports:
+    http: 4009 # UI service HTTP port number
+  image:
+    repository: featureprobe/ui # Container repository to pull the image from
+    tag: # Image tag to use
+    pullPolicy: IfNotPresent # Container image pull policy
+  resources:
+    requests:
+      memory: "64Mi" # UI service memory resources requests
+      cpu: "250m" # UI service CPU resources requests
+    limits:
+      memory: "512Mi" # UI service memory resources limits
+      cpu: 1 # UI service CPU resources limits
+  readinessProbe:
+    httpGet:
+      path: / # Health check path
+      port: http # Health check port
+  service:
+    labels: { } # UI service labels
+    type: ClusterIP # UI service type
+
+analysisAPI:
+  name: analysis-api # Always "analysis-api"
+  enabled: true # Enables or disables analysis API service deployment
+  replicaCount: 2 # The number of replicas for analysis API service
+  jvmArgs: "-Xmx2048m -Xms2048m" # Analysis API JVM arguments
+  ports:
+    http: 4006 # Analysis API service HTTP port number
+  image:
+    repository: featureprobe/analysis # Container repository to pull the image from
+    tag: # Image tag to use
+    pullPolicy: IfNotPresent # Container image pull policy
+  resources:
+    requests:
+      memory: "1024Mi" # Analysis API service memory resources requests
+      cpu: "1" # Analysis API service CPU resources requests
+    limits:
+      memory: "4Gi" # Analysis API service memory resources limits
+      cpu: 2 # Analysis API service CPU resources limits
+  readinessProbe:
+    tcpSocket:
+      port: http # Health check port
+    initialDelaySeconds: 30
+  service:
+    labels: { } # Analysis API service labels
+    type: ClusterIP # Analysis API service type
+  database:
+    url: "jdbc:mysql://localhost:3306/featureprobe-events" # Analysis API database connection URL
+    secret_name: featureprobe-database-credentials # The name of Kubernetes secret that holds database credentials
+    username_secret_key: featureprobe_events_user # Kubernetes secret key for MySQL user name
+    password_secret_key: featureprobe_events_password # Kubernetes secret key for MySQL password
+
+databaseSecret:
+  create: false # Creates a Kubernetes secret with database credentials. If the secret already exists, leave it `false`.
+  namePostfix: database-credentials # Name postfix for database Kubernetes secret
+  secrets:
+    featureprobe_user: featureprobe # Kubernetes secret key for Backend API MySQL user name
+    featureprobe_password: # Kubernetes secret key for Backend API MySQL user password
+    featureprobe_events_user: featureprobe_events # Kubernetes secret key for Analysis API MySQL user name
+    featureprobe_events_password: # Kubernetes secret key for Analysis API MySQL user password

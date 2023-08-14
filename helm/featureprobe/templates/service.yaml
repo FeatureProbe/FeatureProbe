@@ -1,0 +1,35 @@
+{{- $top := . -}}
+{{- range $service := tuple .Values.analysisAPI .Values.backendAPI .Values.serverAPI .Values.ui -}}
+{{- if .enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $top.Release.Name }}-{{ .name }}
+  labels:
+    app.kubernetes.io/name: {{ $top.Release.Name }}-{{ .name }}
+    app.kubernetes.io/instance: {{ $top.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $top.Release.Service }}
+    {{- range $key, $value := .service.labels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  annotations:
+  {{- range $key, $value := .service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+spec:
+  type: {{ .service.type }}
+  {{- with .ports }}
+  ports:
+    {{- range $name, $port := . }}
+    - port: {{ $port }}
+      targetPort: {{ $port }}
+      protocol: TCP
+      name: {{ $name }}
+    {{- end }}
+  {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ $top.Release.Name }}-{{ .name }}
+    app.kubernetes.io/instance: {{ $top.Release.Name }}
+{{ end }}
+{{ end }}

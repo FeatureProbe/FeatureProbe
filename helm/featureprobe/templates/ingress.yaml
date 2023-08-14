@@ -1,0 +1,98 @@
+{{- range $ingress := .Values.ingress }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $.Release.Name }}-{{ $ingress.name }}
+{{- with $ingress.labels }}
+  labels:
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- with $ingress.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+{{- if $ingress.tls }}
+  tls:
+  {{- range $ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . | quote }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+    {{- range $ingress.hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+          {{- if $.Values.ui.enabled }}
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $.Release.Name }}-ui
+                port:
+                  name: http
+          {{- end }}
+          {{- if $.Values.backendAPI.enabled }}
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $.Release.Name }}-backend-api
+                port:
+                  name: http
+          {{- if $ingress.enable_internal_endpoints }}
+          - path: /internal/server/events
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $.Release.Name }}-backend-api
+                port:
+                  name: http
+          - path: /internal/server/sdk_keys
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $.Release.Name }}-backend-api
+                port:
+                  name: http
+          - path: /internal/server/toggles
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $.Release.Name }}-backend-api
+                port:
+                  name: http
+          {{- end }}
+          {{- end }}
+          {{- if $.Values.serverAPI.enabled }}
+          - path: /server/api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $.Release.Name }}-server-api
+                port:
+                  name: http
+          - path: /server/realtime
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $.Release.Name }}-server-api
+                port:
+                  name: realtime
+          {{- end }}
+          {{- if $.Values.analysisAPI.enabled }}
+          - path: /events
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $.Release.Name }}-analysis-api
+                port:
+                  name: http
+          {{- end }}
+    {{- end }}
+{{- end }}
