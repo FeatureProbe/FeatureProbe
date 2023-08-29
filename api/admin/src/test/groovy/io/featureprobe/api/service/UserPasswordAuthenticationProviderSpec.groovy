@@ -47,13 +47,13 @@ class UserPasswordAuthenticationProviderSpec extends Specification {
 
     ApplicationContext applicationContext
 
-    LdapTemplate ldapTemplate;
+    LdapTemplate ldapTemplate
 
-    LdapContextSource ldapContextSource;
+    LdapContextSource ldapContextSource
 
-    LdapAccountValidator ldapAccountValidator;
+    LdapAccountValidator ldapAccountValidator
 
-    CommonAccountValidator commonAccountValidator;
+    CommonAccountValidator commonAccountValidator
 
     def setup() {
         entityManager = Mock(SessionImpl)
@@ -61,14 +61,14 @@ class UserPasswordAuthenticationProviderSpec extends Specification {
         memberIncludeDeletedService = new MemberIncludeDeletedService(memberRepository, entityManager)
         organizationRepository = Mock(OrganizationRepository)
         organizationMemberRepository = Mock(OrganizationMemberRepository)
-        ldapContextSource = Mock(LdapContextSource);
-        ldapTemplate = Mock(LdapTemplate);
+        ldapContextSource = Mock(LdapContextSource)
+        ldapTemplate = Mock(LdapTemplate)
         memberIncludeDeletedService = new MemberIncludeDeletedService(memberRepository, entityManager)
         memberService = new MemberService(memberRepository, memberIncludeDeletedService, organizationRepository, organizationMemberRepository, entityManager)
         operationLogRepository = Mock(OperationLogRepository)
         operationLogService = new OperationLogService(operationLogRepository)
         commonAccountValidator = new CommonAccountValidator(memberService, organizationRepository, operationLogService)
-        ldapAccountValidator = new LdapAccountValidator(memberService,operationLogService,organizationRepository,ldapTemplate,ldapContextSource);
+        ldapAccountValidator = new LdapAccountValidator(memberService,operationLogService,organizationRepository,ldapTemplate,ldapContextSource)
         provider = new UserPasswordAuthenticationProvider()
         applicationContext = Mock(ApplicationContext)
         SpringBeanManager.applicationContext = applicationContext

@@ -71,7 +71,7 @@ public class OrganizationService {
         if (organizationMember != null) {
             throw new ResourceConflictException(ResourceType.ORGANIZATION_MEMBER);
         }
-        organizationMemberRepository.save(new OrganizationMember(organization, member, role, valid));
+        organizationMemberRepository.save(new OrganizationMember(organization, member, role, valid, null));
     }
 
     private Organization getOrganization(Long id) {

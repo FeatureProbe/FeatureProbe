@@ -41,7 +41,7 @@ public class GuestAuthenticationProvider implements AuthenticationProvider {
             if (isAccessTokenMember(member)) {
                 return null;
             }
-            memberService.updateVisitedTime(token.getAccount());
+            memberService.updateLoginTime(member.get(), getDefaultOrganizationMember(member.get()).getOrganizationId());
             operationLogService.save(log);
             return new UserPasswordAuthenticationToken(
                     AuthenticatedMember.create(member.get(), getDefaultOrganizationMember(member.get())),

@@ -14,6 +14,9 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,11 +26,11 @@ import javax.persistence.Table;
 @DynamicInsert
 public class OrganizationMember extends AbstractAuditEntity {
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id")
     Organization organization;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -37,4 +40,7 @@ public class OrganizationMember extends AbstractAuditEntity {
     @Column(columnDefinition = "TINYINT")
     private Boolean valid;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "login_time")
+    private Date loginTime;
 }
