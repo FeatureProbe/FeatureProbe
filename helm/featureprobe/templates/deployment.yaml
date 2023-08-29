@@ -1,0 +1,153 @@
+{{- $top := . -}}
+{{- range $service := tuple .Values.analysisAPI .Values.backendAPI .Values.serverAPI .Values.ui -}}
+{{- if .enabled -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $top.Release.Name }}-{{ .name }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    app.kubernetes.io/name: {{ $top.Release.Name }}-{{ .name }}
+    app.kubernetes.io/instance: {{ $top.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $top.Release.Service }}
+     {{- with .labels }}
+       {{- toYaml . | nindent 4 }}
+     {{- end }}
+spec:
+  replicas: {{ .replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $top.Release.Name }}-{{ .name }}
+      app.kubernetes.io/instance: {{ $top.Release.Name }}
+  template:
+    metadata:
+      annotations:
+        {{- with .podAnnotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        app.kubernetes.io/name: {{ $top.Release.Name }}-{{ .name }}
+        app.kubernetes.io/instance: {{ $top.Release.Name }}
+        {{- with .podLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if $top.imagePullSecrets }}
+      imagePullSecrets:
+        {{ toYaml $top.imagePullSecrets | indent 8 }}
+      {{- end }}
+      {{- if .securityContext }}
+      securityContext:
+        {{ toYaml .securityContext | nindent 8 }}
+      {{- end }}
+      {{- if .serviceAccountName }}
+      serviceAccountName: {{ .serviceAccountName }}
+      {{- end }}
+      containers:
+        - name: {{ .name }}
+          image: "{{ .image.repository }}:{{ .image.tag | default $top.Chart.AppVersion }}"
+          imagePullPolicy: {{ .image.pullPolicy }}
+          {{- if .containerSecurityContext }}
+          securityContext:
+            {{ toYaml .containerSecurityContext | nindent 12 }}
+          {{- end }}
+          env:
+            - name: TZ
+              value: {{ $top.Values.timezone }}
+            {{- if eq .name $top.Values.backendAPI.name }}
+            - name: spring.datasource.username
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .database.secret_name | quote }}
+                  key: {{ .database.username_secret_key | quote }}
+            - name: spring.datasource.password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .database.secret_name | quote }}
+                  key: {{ .database.password_secret_key | quote }}
+            {{- if $top.Values.ldap.enabled }}
+            - name: app.security.ldap.userDn
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $top.Values.ldap.credentialsSecretName | quote }}
+                  key: {{ $top.Values.ldap.credentialsManagerDnSecretKey | quote }}
+            - name: app.security.ldap.password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $top.Values.ldap.credentialsSecretName | quote }}
+                  key: {{ $top.Values.ldap.credentialsPasswordSecretKey | quote }}
+            {{- end }}
+            {{- end }}
+            {{- if eq .name $top.Values.analysisAPI.name }}
+            - name: app.datasource.username
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .database.secret_name | quote }}
+                  key: {{ .database.username_secret_key | quote }}
+            - name: app.datasource.password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .database.secret_name | quote }}
+                  key: {{ .database.password_secret_key | quote }}
+            {{- end }}
+          {{- if not (eq .name $top.Values.ui.name) }}
+          envFrom:
+            - configMapRef:
+                name: {{ $top.Release.Name }}-{{ .name }}
+          {{- end }}
+          {{- with .ports }}
+          ports:
+            {{- range $name, $port := . }}
+            - name: {{ $name }}
+              containerPort: {{ $port }}
+              protocol: TCP
+            {{- end }}
+          {{- end }}
+          readinessProbe:
+            {{- toYaml .readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .resources | nindent 12 }}
+          {{- if eq .name $top.Values.ui.name }}
+          volumeMounts:
+            - name: nginx-default-config
+              mountPath: "/etc/nginx/conf.d/default.conf"
+              subPath: default.conf
+              readOnly: true
+          {{- end }}
+          {{- if and (eq .name $top.Values.backendAPI.name) ($top.Values.ldap.truststoreConfigmapName) }}
+          volumeMounts:
+            - name: ldap-cacerts
+              mountPath: "/truststore/ldap-cacerts"
+              subPath: ldap-cacerts
+              readOnly: true
+          {{- end }}
+      {{- with .nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if eq .name $top.Values.ui.name }}
+      volumes:
+        - name: nginx-default-config
+          configMap:
+            name: {{ $top.Release.Name }}-{{ $top.Values.ui.name }}
+      {{- end }}
+      {{- if and (eq .name $top.Values.backendAPI.name) $top.Values.ldap.truststoreConfigmapName }}
+      volumes:
+        - name: ldap-cacerts
+          configMap:
+            name: {{ $top.Values.ldap.truststoreConfigmapName }}
+      {{- end }}
+{{ end }}
+{{ end }}

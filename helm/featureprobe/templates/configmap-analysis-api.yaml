@@ -1,0 +1,14 @@
+{{- if .Values.analysisAPI.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.analysisAPI.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}-{{ .Values.analysisAPI.name }}
+data:
+  server.port: {{ .Values.analysisAPI.ports.http | quote }}
+  app.datasource.jdbcUrl: {{ .Values.analysisAPI.database.url | quote }}
+  spring.profiles.active: "online"
+  JVM_ARGS: {{ .Values.analysisAPI.jvmArgs | quote }}
+{{- end }}

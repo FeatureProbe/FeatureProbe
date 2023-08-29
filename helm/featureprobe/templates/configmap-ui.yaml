@@ -1,0 +1,20 @@
+{{- if .Values.ui.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.ui.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}-{{ .Values.ui.name }}
+data:
+  default.conf: |
+    server {
+      listen 4009;
+
+      location / {
+        index  index.html index.htm;
+        root /usr/share/nginx/html;
+        try_files $uri /index.html;
+      }
+    }
+{{- end }}
