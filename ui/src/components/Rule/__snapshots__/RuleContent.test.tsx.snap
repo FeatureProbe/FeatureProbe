@@ -486,6 +486,19 @@ exports[`RuleContent opt 2`] = `
                                 &gt;=
                               </span>
                             </div>
+                            <div
+                              aria-checked="false"
+                              aria-selected="false"
+                              class="item"
+                              role="option"
+                              style="pointer-events: all;"
+                            >
+                              <span
+                                class="text"
+                              >
+                                between
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -495,7 +508,7 @@ exports[`RuleContent opt 2`] = `
                         <div
                           aria-expanded="false"
                           class="ui floating multiple search selection dropdown"
-                          name="test-name-3193"
+                          name="test-name-3336"
                           role="combobox"
                         >
                           <input
@@ -570,7 +583,7 @@ exports[`RuleContent opt 2`] = `
                         <div
                           aria-expanded="false"
                           class="ui floating search selection dropdown rule-item-subject-dropdown"
-                          name="test-name-4188"
+                          name="test-name-4331"
                           role="combobox"
                         >
                           <input
@@ -601,7 +614,7 @@ exports[`RuleContent opt 2`] = `
                         <div
                           aria-expanded="false"
                           class="ui floating selection dropdown rule-item-operator-dropdown"
-                          name="test-name-4685"
+                          name="test-name-4828"
                           role="listbox"
                           tabindex="0"
                         >
@@ -708,7 +721,7 @@ exports[`RuleContent opt 2`] = `
                         <div
                           aria-expanded="false"
                           class="ui floating multiple search selection dropdown"
-                          name="test-name-6013"
+                          name="test-name-6156"
                           role="combobox"
                         >
                           <input
@@ -779,7 +792,7 @@ exports[`RuleContent opt 2`] = `
                           aria-disabled="true"
                           aria-expanded="false"
                           class="ui disabled floating search selection dropdown rule-item-subject-dropdown"
-                          name="test-name-6915"
+                          name="test-name-7058"
                           role="combobox"
                         >
                           <input
@@ -824,7 +837,7 @@ exports[`RuleContent opt 2`] = `
                         <div
                           aria-expanded="false"
                           class="ui floating selection dropdown rule-item-operator-dropdown"
-                          name="test-name-7578"
+                          name="test-name-7721"
                           role="listbox"
                           tabindex="0"
                         >
@@ -879,7 +892,7 @@ exports[`RuleContent opt 2`] = `
                         <div
                           aria-expanded="true"
                           class="ui active visible floating multiple search selection dropdown"
-                          name="test-name-8373"
+                          name="test-name-8516"
                           role="combobox"
                         >
                           <input
@@ -961,7 +974,7 @@ exports[`RuleContent opt 2`] = `
                         <div
                           aria-expanded="false"
                           class="ui floating selection dropdown serve-dropdown"
-                          name="test-name-9510"
+                          name="test-name-9653"
                           role="listbox"
                           style="width: 308px;"
                           tabindex="0"

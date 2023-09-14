@@ -25,6 +25,9 @@ export interface ICondition {
   objects?: string[];
   datetime?: string;
   timezone?: string;
+  leftPredicate?: string;
+  rightPredicate?: string;
+  rightObjects?: string[];
 }
 
 export interface IServe {
