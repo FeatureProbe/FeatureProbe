@@ -5,6 +5,7 @@ import com.featureprobe.sdk.server.model.Serve;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
@@ -16,7 +17,7 @@ public class ToggleRule extends BaseRule {
 
     public Rule toRule() {
         Serve sdkServe = serve.toServe();
-        return new Rule(sdkServe, getConditions().stream()
-                .map(condition -> condition.toCondition()).collect(Collectors.toList()));
+        return new Rule(sdkServe, getConditions().stream().map(condition -> condition.toCondition())
+                .flatMap(List::stream).collect(Collectors.toList()));
     }
 }
