@@ -60,7 +60,6 @@ class AccessTokenAuthenticationProviderSpec extends Specification {
         applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * accessTokenRepository.findByToken(token) >> Optional.of(new AccessToken(id: 1, memberId: 1, organizationId: 1))
         1 * memberRepository.findById(1) >> Optional.of(new Member(account: "api:test"))
-        1 * memberRepository.findByAccount("api:test") >> Optional.of(new Member())
         1 * memberRepository.save(_)
         1 * accessTokenRepository.findById(1) >> Optional.of(new AccessToken())
         1 * accessTokenRepository.save(_)

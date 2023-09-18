@@ -50,7 +50,7 @@ public class ConditionValue {
         if ("between".equals(predicate)) {
             return betweenConditionTranslate();
         } else {
-            List<Condition> conditions = Collections.emptyList();
+            List<Condition> conditions = new ArrayList<>(1);
             Condition condition = new Condition();
             condition.setType(ConditionType.forValue(type));
             condition.setSubject(subject);
