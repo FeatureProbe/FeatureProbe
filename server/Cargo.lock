@@ -387,6 +387,8 @@ dependencies = [
 [[package]]
 name = "feature-probe-event"
 version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7b67f319a69b42c5fc57fe692a19f5f846f0a9f56f8d488748c0992884676113"
 dependencies = [
  "axum",
  "headers",
@@ -432,7 +434,9 @@ dependencies = [
 
 [[package]]
 name = "feature-probe-server-sdk"
-version = "2.1.1"
+version = "2.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c1efe622c5318977628a90861801dbbee7a9b854124b755b297739da7454e7b7"
 dependencies = [
  "anyhow",
  "byteorder",
@@ -2142,9 +2146,9 @@ dependencies = [
 
 [[package]]
 name = "webpki"
-version = "0.22.0"
+version = "0.22.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f095d78192e208183081cc07bc5515ef55216397af48b873e5edcd72637fa1bd"
+checksum = "f0e74f82d49d545ad128049b7e88f6576df2da6b02e9ce565c6f533be576957e"
 dependencies = [
  "ring",
  "untrusted",
