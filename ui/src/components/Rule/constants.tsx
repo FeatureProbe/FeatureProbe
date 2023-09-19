@@ -37,7 +37,17 @@ export const getAttrOptions = (intl: IntlShape, type?:string) => {
       { key: '1', text: intl.formatMessage({id: 'targeting.rule.subject.segment.in'}), value: 'is in' },
       { key: '2', text: intl.formatMessage({id: 'targeting.rule.subject.segment.notin'}), value: 'is not in' },
     ];
-  } else if (type === 'number' || type === 'semver') {
+  } else if (type === 'number') {
+    return [
+      { key: '1', text: '=', value: '=' },
+      { key: '2', text: '!=', value: '!=' },
+      { key: '3', text: '<', value: '<' },
+      { key: '4', text: '<=', value: '<=' },
+      { key: '5', text: '>', value: '>' },
+      { key: '6', text: '>=', value: '>=' },
+      { key: '7', text: intl.formatMessage({id: 'targeting.rule.condition.between'}), value: 'between' },
+    ];
+  } else if (type === 'semver') {
     return [
       { key: '1', text: '=', value: '=' },
       { key: '2', text: '!=', value: '!=' },

@@ -11,7 +11,7 @@ import useResizeObserver from 'use-resize-observer';
 import message from 'components/MessageBox';
 import EventTracker from 'components/EventTracker';
 import Modal from 'components/Modal';
-import { DATETIME_TYPE } from 'components/Rule/constants';
+import { DATETIME_TYPE, NUMBER_TYPE } from 'components/Rule/constants';
 import TextLimit from 'components/TextLimit';
 import History from 'components/History';
 import Icon from 'components/Icon';
@@ -197,7 +197,17 @@ const Info = () => {
             setValue(`rule_${rule.id}_condition_${condition.id}_datetime`, moment().format().slice(0, 19));
             setValue(`rule_${rule.id}_condition_${condition.id}_timezone`, moment().format().slice(19));
           }
-        } else {
+        } else if (condition.type === NUMBER_TYPE) {
+          if (condition.predicate === 'between') {
+            setValue(`rule_${rule.id}_condition_${condition.id}_objects`, condition.objects);
+            setValue(`rule_${rule.id}_condition_${condition.id}_rightObjects`, condition.rightObjects);
+            setValue(`rule_${rule.id}_condition_${condition.id}_leftPredicate`, condition.leftPredicate);
+            setValue(`rule_${rule.id}_condition_${condition.id}_rightPredicate`, condition.rightPredicate);
+          } else {
+            setValue(`rule_${rule.id}_condition_${condition.id}_objects`, condition.objects);
+          }
+        } 
+        else {
           setValue(`rule_${rule.id}_condition_${condition.id}_objects`, condition.objects);
         }
       });

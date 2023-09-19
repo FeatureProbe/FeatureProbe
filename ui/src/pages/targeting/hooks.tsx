@@ -119,6 +119,11 @@ export const useRule = () => {
     saveRules([...rules]);
   };
 
+  const handleChangeRightValue = (ruleIndex: number, conditionIndex: number, value: string[]) => {
+    rules[ruleIndex].conditions[conditionIndex].rightObjects = value;
+    saveRules([...rules]);
+  };
+
   const handleChangeDateTime = (ruleIndex: number, conditionIndex: number, value: string) => {
     rules[ruleIndex].conditions[conditionIndex].datetime = value;
     saveRules([...rules]);
@@ -146,6 +151,17 @@ export const useRule = () => {
     });
   };
 
+  const handleChangePredict = (ruleIndex: number, conditionIndex: number, value: string) => {
+    rules[ruleIndex].conditions[conditionIndex].leftPredicate = value;
+    saveRules([...rules]);
+  };
+
+  const handleChangeRightPredict = (ruleIndex: number, conditionIndex: number, value: string) => {
+    rules[ruleIndex].conditions[conditionIndex].rightPredicate = value;
+    saveRules([...rules]);
+  };
+
+
   return { 
     rules,
     saveRules,
@@ -162,6 +178,9 @@ export const useRule = () => {
     handleChangeTimeZone,
     handleChangeServe,
     handleChangeActive,
+    handleChangeRightValue,
+    handleChangePredict,
+    handleChangeRightPredict,
   };
 };
 

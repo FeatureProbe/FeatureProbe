@@ -1721,6 +1721,19 @@ exports[`RuleContent number input 1`] = `
                   &gt;=
                 </span>
               </div>
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  between
+                </span>
+              </div>
             </div>
           </div>
         </div>

@@ -17,6 +17,13 @@ export type DiffResult = ChangeItem[];
 
 export type ChangeType = 'remove' | 'add' | 'modify' | 'same';
 
+export const displayMap = new Map([
+  ['>=', '['],
+  ['>', '('],
+  ['<', ')'],
+  ['<=', ']'],
+]);
+
 export interface ChangeItem {
   type: ChangeType;
   value?: unknown;
@@ -49,14 +56,46 @@ function diffObj(left: unknown, right: unknown): ArrayChange<ArrayObj | DiffObj>
   } else {
     const leftArr = Object.keys(left as object)
       .map((key) => {
-        return { __key: key, __value: (left as DiffObj)[key] };
+        if (key === 'objects' && (left as DiffObj)['leftPredicate'] ) {
+          return { 
+            __key: key, 
+            __value: 
+              '' + 
+              displayMap.get((left as DiffObj)['leftPredicate'] as string) + 
+              (left as DiffObj)['objects'] + 
+              ', ' + 
+              (left as DiffObj)['rightObjects'] + 
+              displayMap.get((left as DiffObj)['rightPredicate'] as string)
+            };
+        } else {
+          return { __key: key, __value: (left as DiffObj)[key] };
+        }
+      })
+      .filter((item) => {
+        return item.__key !== 'leftPredicate' && item.__key !== 'rightPredicate' && item.__key !== 'rightObjects';
       })
       .sort((a, b) => {
         return a.__key > b.__key ? 1 : -1;
       });
     const rightArr = Object.keys(right as object)
       .map((key) => {
-        return { __key: key, __value: (right as DiffObj)[key] };
+        if (key === 'objects' && (right as DiffObj)['leftPredicate']) {
+          return { 
+            __key: key, 
+            __value: 
+              '' + 
+              displayMap.get((right as DiffObj)['leftPredicate'] as string) + 
+              (right as DiffObj)['objects'] + 
+              ', ' + 
+              (right as DiffObj)['rightObjects'] + 
+              displayMap.get((right as DiffObj)['rightPredicate'] as string)
+            };
+        } else {
+          return { __key: key, __value: (right as DiffObj)[key] };
+        }
+      })
+      .filter((item) => {
+        return item.__key !== 'leftPredicate' && item.__key !== 'rightPredicate' && item.__key !== 'rightObjects';
       })
       .sort((a, b) => {
         return a.__key > b.__key ? 1 : -1;
