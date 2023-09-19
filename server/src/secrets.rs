@@ -54,7 +54,7 @@ impl SecretMapping {
     }
 
     pub fn server_sdk_keys(&self) -> Vec<&String> {
-        self.reverse.keys().into_iter().collect()
+        self.reverse.keys().collect()
     }
 
     pub fn mapping_clone(&self) -> HashMap<String, String> {
