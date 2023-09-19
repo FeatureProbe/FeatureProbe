@@ -40,19 +40,6 @@ async fn main() -> Result<()> {
 
 async fn start(server_config: ServerConfig) -> Result<()> {
     init_log();
-    info!("FeatureProbe Server Commit: {}", env!("VERGEN_GIT_SHA"));
-    info!(
-        "FeatureProbe Server BuildTs: {}",
-        env!("VERGEN_BUILD_TIMESTAMP")
-    );
-    info!(
-        "FeatureProbe Server CommitTs: {}",
-        env!("VERGEN_GIT_COMMIT_TIMESTAMP")
-    );
-    info!(
-        "FeatureProbe Server Cargo Profile: {}",
-        env!("VERGEN_CARGO_PROFILE")
-    );
     info!("FeatureProbe Server Config: {}", server_config);
 
     #[cfg(feature = "realtime")]
