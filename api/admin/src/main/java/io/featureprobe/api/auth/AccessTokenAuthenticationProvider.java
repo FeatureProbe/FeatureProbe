@@ -51,7 +51,7 @@ public class AccessTokenAuthenticationProvider implements AuthenticationProvider
         OperationLog log = new OperationLog(OperationType.LOGIN.name() + "_" + "AccessToken", token.getName());
         if (member.isPresent()) {
             TenantContext.setCurrentTenant(token.getOrganizationId().toString());
-            memberService.updateVisitedTime(member.get().getAccount());
+            memberService.updateLoginTime(member.get(), token.getOrganizationId());
             accessTokenService.updateVisitedTime(token.getId());
             operationLogService.save(log);
             return new AccessTokenAuthenticationToken(

@@ -47,13 +47,13 @@ class UserPasswordAuthenticationProviderSpec extends Specification {
 
     ApplicationContext applicationContext
 
-    LdapTemplate ldapTemplate;
+    LdapTemplate ldapTemplate
 
-    LdapContextSource ldapContextSource;
+    LdapContextSource ldapContextSource
 
-    LdapAccountValidator ldapAccountValidator;
+    LdapAccountValidator ldapAccountValidator
 
-    CommonAccountValidator commonAccountValidator;
+    CommonAccountValidator commonAccountValidator
 
     def setup() {
         entityManager = Mock(SessionImpl)
@@ -61,14 +61,14 @@ class UserPasswordAuthenticationProviderSpec extends Specification {
         memberIncludeDeletedService = new MemberIncludeDeletedService(memberRepository, entityManager)
         organizationRepository = Mock(OrganizationRepository)
         organizationMemberRepository = Mock(OrganizationMemberRepository)
-        ldapContextSource = Mock(LdapContextSource);
-        ldapTemplate = Mock(LdapTemplate);
+        ldapContextSource = Mock(LdapContextSource)
+        ldapTemplate = Mock(LdapTemplate)
         memberIncludeDeletedService = new MemberIncludeDeletedService(memberRepository, entityManager)
         memberService = new MemberService(memberRepository, memberIncludeDeletedService, organizationRepository, organizationMemberRepository, entityManager)
         operationLogRepository = Mock(OperationLogRepository)
         operationLogService = new OperationLogService(operationLogRepository)
         commonAccountValidator = new CommonAccountValidator(memberService, organizationRepository, operationLogService)
-        ldapAccountValidator = new LdapAccountValidator(memberService,operationLogService,organizationRepository,ldapTemplate,ldapContextSource,"uid");
+        ldapAccountValidator = new LdapAccountValidator(memberService,operationLogService,organizationRepository,ldapTemplate,ldapContextSource, "account")
         provider = new UserPasswordAuthenticationProvider()
         applicationContext = Mock(ApplicationContext)
         SpringBeanManager.applicationContext = applicationContext
@@ -83,13 +83,13 @@ class UserPasswordAuthenticationProviderSpec extends Specification {
         then:
         assert ldapTemplate == ldapAccountValidator.ldapTemplate
         1 * applicationContext.getBean(_) >> ldapAccountValidator
-        1 * applicationContext.getBean(_) >> new PlaintextEncryptionService()
+        2 * applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * ldapTemplate.authenticate(_, _) >> { query,password ->
             String uid = query.filter().toString().split("=")[1]
             return uid == "Test" && password == "abc12345"
         }
         1 * memberRepository.findByAccount(account) >> Optional.of(new Member(account: account, password: "\$2a\$10\$jeJ25nROU8APkG2ixK6zyecwzIJ8oHz0ZNqBDiwMXcy9lo9S3YGma", status: MemberStatusEnum.ACTIVE,
-                organizationMembers: [new OrganizationMember(new Organization(id: 1, name: ""), new Member(), OrganizationRoleEnum.OWNER, true)]))
+                organizationMembers: [new OrganizationMember(new Organization(id: 1, name: ""), new Member(), OrganizationRoleEnum.OWNER, true, new Date())]))
         1 * operationLogRepository.save(_)
         null != authenticate
     }
@@ -102,9 +102,9 @@ class UserPasswordAuthenticationProviderSpec extends Specification {
         def authenticate = provider.authenticate(authenticationToken)
         then:
         1 * applicationContext.getBean(_) >> commonAccountValidator
-        1 * applicationContext.getBean(_) >> new PlaintextEncryptionService()
+        2 * applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.findByAccount(account) >> Optional.of(new Member(account: account, password: "\$2a\$10\$jeJ25nROU8APkG2ixK6zyecwzIJ8oHz0ZNqBDiwMXcy9lo9S3YGma", status: MemberStatusEnum.ACTIVE,
-                organizationMembers: [new OrganizationMember(new Organization(id: 1, name: ""), new Member(), OrganizationRoleEnum.OWNER, true)]))
+                organizationMembers: [new OrganizationMember(new Organization(id: 1, name: ""), new Member(), OrganizationRoleEnum.OWNER, true, new Date())]))
         1 * memberRepository.save(_)
         1 * operationLogRepository.save(_)
         null != authenticate

@@ -248,6 +248,7 @@ public class MemberService {
         return organizationMembers.map(item -> {
             MemberItemResponse response = MemberMapper.INSTANCE
                     .entityToItemResponse(idToMember.get(item.getMember().getId()));
+            response.setVisitedTime(item.getLoginTime());
             if (item.getRole() == null) {
                 response.setAllowEdit(false);
                 return response;
@@ -285,6 +286,15 @@ public class MemberService {
                 .queryMemberByAccountIncludeDeleted(account) : memberRepository.findByAccount(account);
         String finalAccount = account;
         return member.orElseThrow(() -> new ResourceNotFoundException(ResourceType.MEMBER, finalAccount));
+    }
+
+    public void updateLoginTime(Member member, Long organizationId) {
+        member.getOrganizationMembers().forEach(organizationMember -> {
+            if (organizationId == organizationMember.getOrganization().getId()) {
+                organizationMember.setLoginTime(new Date());
+            }
+        });
+        memberRepository.save(member);
     }
 
 }

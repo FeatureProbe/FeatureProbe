@@ -30,7 +30,7 @@ class OrganizationServiceSpec extends Specification {
         def organizationMember = organizationService.queryOrganizationMember(1, 1)
         then:
         1 * organizationMemberRepository.findByOrganizationIdAndMemberId(1, 1) >>
-                Optional.of(new OrganizationMember(new Organization(id: 1), new Member(id: 1), OrganizationRoleEnum.OWNER, true))
+                Optional.of(new OrganizationMember(new Organization(id: 1), new Member(id: 1), OrganizationRoleEnum.OWNER, true, new Date()))
         1 * organizationRepository.getById(1) >> new Organization(name: "Admin")
         "Admin" == organizationMember.organizationName
     }

@@ -59,7 +59,7 @@ public class Member extends AbstractAuditEntity {
 
     private String source;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrganizationMember> organizationMembers = new ArrayList<>();
 
     public Member(Long id, String account) {
@@ -78,7 +78,7 @@ public class Member extends AbstractAuditEntity {
     }
 
     public void addOrganization(Organization organization, OrganizationRoleEnum role, boolean valid) {
-        this.organizationMembers.add(new OrganizationMember(organization, this, role, valid));
+        this.organizationMembers.add(new OrganizationMember(organization, this, role, valid, null));
     }
 
 
