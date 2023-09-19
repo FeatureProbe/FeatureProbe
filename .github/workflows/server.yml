@@ -46,7 +46,7 @@ jobs:
 
       - name: generate code coverage
         run: |
-          cargo +nightly tarpaulin --verbose --workspace --timeout 120 --out Xml
+          cargo +nightly tarpaulin --verbose --workspace --timeout 120 --out xml
         working-directory: ./server
         
       - name: Upload coverage reports to Codecov
