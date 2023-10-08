@@ -101,6 +101,15 @@ For Asp.NET applications, place the configuration in `appsettings.json`:
 | RefreshInterval | data synchronization frequency（s）                         |                                               N |
 | StartWait       | block waiting while starting the application (milli second) |                                               N |
 
+Register the FeatureProbe service:
+
+```csharp
+// Program.cs
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddFeatureProbe(builder.Configuration.GetSection("FeatureProbe"));
+```
+
 Then obtain a `FPClient` by dependency injection.
 :::
 

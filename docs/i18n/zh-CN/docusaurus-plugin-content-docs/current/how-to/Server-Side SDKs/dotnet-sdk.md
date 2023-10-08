@@ -98,6 +98,15 @@ public class Program
 | RefreshInterval | 开关数据同步频率（s）                                           |                                               N |
 | StartWait       | 程序启动时初始化阻塞时间（毫秒）                                  |                                               N |
 
+注册 FeatureProbe 服务：
+
+```csharp
+// Program.cs
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddFeatureProbe(builder.Configuration.GetSection("FeatureProbe"));
+```
+
 并通过依赖注入获取 `FPClient` 实例。
 :::
 
