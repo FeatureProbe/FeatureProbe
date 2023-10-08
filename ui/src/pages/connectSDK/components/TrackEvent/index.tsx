@@ -16,6 +16,7 @@ import {
   getNodeCode,
   getObjCCode,
   getPythonCode,
+  getDotNetCode,
   getRustCode,
   getSwiftCode,
   getMiniProgramCode,
@@ -62,8 +63,8 @@ const SetupCode = (props: IProps) => {
     clientSdkKey,
     returnType,
     attributes,
-    saveStep, 
-    goBackToStep 
+    saveStep,
+    goBackToStep
   } = props;
 
   const [ options, saveOptions ] = useState<ICodeOption[]>([]);
@@ -101,11 +102,11 @@ const SetupCode = (props: IProps) => {
           });
           saveOptions(
             getJavaCode({
-              sdkVersion, 
-              serverSdkKey, 
-              toggleKey, 
-              returnType, 
-              intl, 
+              sdkVersion,
+              serverSdkKey,
+              toggleKey,
+              returnType,
+              intl,
               userWithCode,
               remoteUrl,
             }, eventInfo?.eventName, isTrackValue)
@@ -128,7 +129,24 @@ const SetupCode = (props: IProps) => {
             }, eventInfo?.eventName, isTrackValue)
           );
           break;
-        case 'Rust': 
+        case 'DotNet':
+          saveLanguage('dotnet');
+          attributes.forEach(item => {
+            userWithCode += `.With("${item}", "value for ${item}")`;
+          });
+          saveOptions(
+            getDotNetCode({
+              sdkVersion,
+              serverSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            }, eventInfo?.eventName, isTrackValue)
+          );
+          break;
+        case 'Rust':
           saveLanguage('rust');
           attributes.forEach(item => {
             userWithCode += `let user = user.with("${item}", /* ${item} */);\n`;
@@ -145,7 +163,7 @@ const SetupCode = (props: IProps) => {
             }, eventInfo?.eventName, isTrackValue)
           );
           break;
-        case 'Go': 
+        case 'Go':
           saveLanguage('go');
           attributes.forEach(item => {
             userWithCode += `user.With("${item}", /* ${item} */)\n`;
@@ -178,24 +196,24 @@ const SetupCode = (props: IProps) => {
           );
           break;
 
-        case 'Android': 
+        case 'Android':
           saveLanguage('java');
           attributes.forEach(item => {
             userWithCode += `user.with("${item}", /* ${item} */)\n`;
           });
           saveOptions(
             getAndroidCode({
-              sdkVersion, 
-              clientSdkKey, 
-              toggleKey, 
-              returnType, 
-              intl, 
+              sdkVersion,
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
               userWithCode,
               remoteUrl,
             }, eventInfo?.eventName, isTrackValue)
           );
           break;
-        case 'Swift': 
+        case 'Swift':
           saveLanguage('swift');
           attributes.forEach(item => {
             userWithCode += `user.with("${item}", /* ${item} */)\n`;
