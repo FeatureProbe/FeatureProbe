@@ -302,7 +302,14 @@ impl Inner {
             .map(|(key, toggle)| {
                 (
                     key.to_owned(),
-                    toggle.eval(user, &repo.segments, &repo.toggles, true, prerequisite_deep, debug_until_time),
+                    toggle.eval(
+                        user,
+                        &repo.segments,
+                        &repo.toggles,
+                        true,
+                        prerequisite_deep,
+                        debug_until_time,
+                    ),
                 )
             })
             .collect();

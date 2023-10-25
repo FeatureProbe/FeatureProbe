@@ -40,8 +40,35 @@ interface RowFieldsProps {
   empty?: boolean;
 }
 
-type StringField = {
-  [key: string]: unknown;
+// type StringField = {
+//   [key: string]: unknown;
+// };
+
+const KEYS = ['type', 'subject', 'predicate', 'leftPredicate', 'objects', 'timezone', 'datetime', 'rightPredicate', 'rightObjects'];
+
+export const displayMap = new Map([
+  ['>=', '['],
+  ['>', '('],
+  ['<', ')'],
+  ['<=', ']'],
+]);
+
+	// @ts-ignore value type
+const makeBetween = (value) => {
+  if (value['leftPredicate']) {
+    value.objects = [(
+      '' + 
+      displayMap.get(value['leftPredicate'] as string) + 
+      value['objects'] + 
+      ', ' + 
+      value['rightObjects'] + 
+      displayMap.get(value['rightPredicate'] as string)
+    )];
+    delete value['leftPredicate'];
+    delete value['rightPredicate'];
+    delete value['rightObjects'];
+  }
+  return value;
 };
 
 export const RowFields: React.FC<RowFieldsProps> = (props) => {
@@ -125,12 +152,10 @@ interface ConditiondiffRemoveItemProps {
 const ConditiondiffRemoveItem: React.FC<ConditiondiffRemoveItemProps> = (props) => {
   const { value, type, first } = props;
 
-  const keys = ['type', 'subject', 'predicate', 'objects', 'timezone', 'datetime'];
-
   return (
     <Table.Row className={`${fieldStyles['diff-item-remove']} ${styles['condition-diff-item']}`}>
       <RowFields
-        values={keys.reduce<FieldValue[]>((pre, current) => {
+        values={KEYS.reduce<FieldValue[]>((pre, current) => {
           if (value[current] !== undefined) {
             return [
               ...pre,
@@ -153,12 +178,10 @@ const ConditiondiffRemoveItem: React.FC<ConditiondiffRemoveItemProps> = (props) 
 const ConditiondiffAddItem: React.FC<ConditiondiffRemoveItemProps> = (props) => {
   const { value, first } = props;
 
-  const keys = ['type', 'subject', 'predicate', 'objects', 'timezone', 'datetime'];
-
   return (
     <Table.Row className={`${fieldStyles['diff-item-add']} ${styles['condition-diff-item']}`}>
       <RowFields
-        values={keys.reduce<FieldValue[]>((pre, current) => {
+        values={KEYS.reduce<FieldValue[]>((pre, current) => {
           if (value[current] !== undefined) {
             return [
               ...pre,
@@ -186,12 +209,10 @@ interface ConditiondiffSameItemProps {
 const ConditiondiffSameItem: React.FC<ConditiondiffSameItemProps> = (props) => {
   const { value, first } = props;
 
-  const keys = ['type', 'subject', 'predicate', 'objects', 'timezone', 'datetime'];
-
   return (
     <Table.Row className={`${fieldStyles['diff-item-normal']} ${styles['condition-diff-item']}`}>
       <RowFields
-        values={keys.reduce<FieldValue[]>((pre, current) => {
+        values={KEYS.reduce<FieldValue[]>((pre, current) => {
           if (value[current] !== undefined) {
             return [
               ...pre,
@@ -214,13 +235,11 @@ const ConditiondiffSameItem: React.FC<ConditiondiffSameItemProps> = (props) => {
 const ConditiondiffEmptyItem: React.FC<ConditiondiffSameItemProps> = (props) => {
   const { value, first } = props;
 
-  const keys = ['type', 'subject', 'predicate', 'objects', 'timezone', 'datetime'];
-
   return (
     <Table.Row className={`${fieldStyles['diff-item-normal']} ${styles['condition-diff-item']}`}>
       <RowFields
         empty
-        values={keys.reduce<FieldValue[]>((pre, current) => {
+        values={KEYS.reduce<FieldValue[]>((pre, current) => {
           if (value[current] !== undefined) {
             return [
               ...pre,
@@ -249,14 +268,12 @@ interface ConditiondiffModifyItemProps {
 const ConditiondiffModifyItem: React.FC<ConditiondiffModifyItemProps> = (props) => {
   const { value, type, first } = props;
 
-  const keys = ['type', 'subject', 'predicate', 'objects', 'timezone', 'datetime'];
-
   return (
     <Table.Row className={`${fieldStyles['diff-item-normal']} ${styles['condition-diff-item']}`}>
       {renderField(value, type, (map) => {
         return (
           <RowFields
-            values={keys.reduce<FieldValue[]>((pre, current) => {
+            values={KEYS.reduce<FieldValue[]>((pre, current) => {
               if (map.get(current) !== undefined) {
                 return [...pre, map.get(current) as FieldValue];
               } else {
@@ -291,7 +308,7 @@ const ConditionModifyContent: React.FC<ConditionContentProps> = (props) => {
           <ConditiondiffRemoveItem
             key={index}
             type={type}
-            value={value as ICondition & StringField}
+            value={makeBetween(value)}
             first={index - emptyCount === 0}
           />
         );
@@ -300,7 +317,7 @@ const ConditionModifyContent: React.FC<ConditionContentProps> = (props) => {
           <ConditiondiffAddItem
             key={index}
             type={type}
-            value={value as ICondition & StringField}
+            value={makeBetween(value)}
             first={index - emptyCount === 0}
           />
         );
@@ -317,7 +334,7 @@ const ConditionModifyContent: React.FC<ConditionContentProps> = (props) => {
         return (
           <ConditiondiffSameItem
             key={index}
-            value={value as ICondition & StringField}
+            value={makeBetween(value)}
             first={index - emptyCount === 0}
           />
         );
@@ -325,7 +342,7 @@ const ConditionModifyContent: React.FC<ConditionContentProps> = (props) => {
         if (emptyCount >= 0) {
           emptyCount++;
         }
-        return <ConditiondiffEmptyItem key={index} value={value as ICondition & StringField} first={index === 0} />;
+        return <ConditiondiffEmptyItem key={index} value={makeBetween(value)} first={index === 0} />;
       }
     });
   };
@@ -355,6 +372,7 @@ interface ConditionRemoveContentProps {
 
 const ConditionRemoveContent: React.FC<ConditionRemoveContentProps> = (props) => {
   const { content, serve, title } = props;
+  const newContent: ICondition[] = makeBetween(content);
 
   return (
     <div>
@@ -365,13 +383,13 @@ const ConditionRemoveContent: React.FC<ConditionRemoveContentProps> = (props) =>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {content &&
-            content.map((item, index) => {
+          {newContent &&
+            newContent.map((item, index) => {
               return (
                 <ConditiondiffRemoveItem
                   key={index}
                   first={index === 0}
-                  value={item as ICondition & StringField}
+                  value={makeBetween(item)}
                   type="before"
                 />
               );
@@ -385,6 +403,7 @@ const ConditionRemoveContent: React.FC<ConditionRemoveContentProps> = (props) =>
 
 const ConditionAddContent: React.FC<ConditionRemoveContentProps> = (props) => {
   const { content, serve, title } = props;
+  const newContent: ICondition[] = makeBetween(content);
 
   return (
     <div>
@@ -395,13 +414,13 @@ const ConditionAddContent: React.FC<ConditionRemoveContentProps> = (props) => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {content &&
-            content.map((item, index) => {
+          {newContent &&
+            newContent.map((item, index) => {
               return (
                 <ConditiondiffAddItem
                   key={index}
                   first={index === 0}
-                  value={item as ICondition & StringField}
+                  value={makeBetween(item)}
                   type="after"
                 />
               );
@@ -419,6 +438,7 @@ interface ConditionSameContentProps extends ConditionRemoveContentProps {
 
 const ConditionSameContent: React.FC<ConditionSameContentProps> = (props) => {
   const { content, serve, type, title } = props;
+  const newContent: ICondition[] = makeBetween(content);
 
   return (
     <div>
@@ -429,9 +449,9 @@ const ConditionSameContent: React.FC<ConditionSameContentProps> = (props) => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {content &&
-            content.map((item, index) => {
-              return <ConditiondiffSameItem key={index} first={index === 0} value={item as ICondition & StringField} />;
+          {newContent &&
+            newContent.map((item, index) => {
+              return <ConditiondiffSameItem key={index} first={index === 0} value={makeBetween(item)} />;
             })}
           {serve && <DiffServeContent diffType="same" type={type} content={serve} />}
         </Table.Body>
@@ -442,6 +462,7 @@ const ConditionSameContent: React.FC<ConditionSameContentProps> = (props) => {
 
 const ConditionEmptyContent: React.FC<ConditionSameContentProps> = (props) => {
   const { content, serve, type } = props;
+  const newContent: ICondition[] = makeBetween(content);
 
   return (
     <div className={styles['empty']}>
@@ -452,9 +473,9 @@ const ConditionEmptyContent: React.FC<ConditionSameContentProps> = (props) => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {content &&
-            content.map((item, index) => {
-              return <ConditiondiffEmptyItem key={index} value={item as ICondition & StringField} />;
+          {newContent &&
+            newContent.map((item, index) => {
+              return <ConditiondiffEmptyItem key={index} value={makeBetween(item)} />;
             })}
           {serve && <DiffServeContent diffType="same" type={type} content={serve} />}
         </Table.Body>

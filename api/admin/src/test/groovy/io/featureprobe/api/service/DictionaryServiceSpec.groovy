@@ -25,7 +25,7 @@ class DictionaryServiceSpec extends Specification {
         when:
         def dictionary = dictionaryService.create("key", "value")
         then:
-        1 * dictionaryRepository.findByAccountAndKey("Admin", "key") >>
+        1 * dictionaryRepository.findByAccountAndKey(_, "key") >>
                 Optional.of(new Dictionary())
         1 * dictionaryRepository.save(_) >> new Dictionary(key: "key", value: "value")
         "key" == dictionary.key
@@ -38,7 +38,7 @@ class DictionaryServiceSpec extends Specification {
         when:
         def dictionary = dictionaryService.create("key", "value")
         then:
-        1 * dictionaryRepository.findByAccountAndKey("Admin", "key") >>
+        1 * dictionaryRepository.findByAccountAndKey(_, "key") >>
                 Optional.empty()
         1 * dictionaryRepository.save(_) >> new Dictionary(key: "key", value: "value")
         "key" == dictionary.key
@@ -51,7 +51,7 @@ class DictionaryServiceSpec extends Specification {
         when:
         def dictionary = dictionaryService.query("key")
         then:
-        1 * dictionaryRepository.findByAccountAndKey(TokenHelper.getAccount(), "key") >> Optional.of(new Dictionary(key: "key", value: "value"))
+        1 * dictionaryRepository.findByAccountAndKey(_, "key") >> Optional.of(new Dictionary(key: "key", value: "value"))
         "key" == dictionary.key
         "value" == dictionary.value
     }

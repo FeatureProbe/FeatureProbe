@@ -336,3 +336,26 @@
   color: #556ee6;
   cursor: pointer;
 }
+
+.rule-number-range {
+  width: 24px;
+  margin: 0 4px;
+  font-size: 18px;
+
+  :global {
+    .ui.active.dropdown {
+      border: none !important;
+    }
+  }
+}
+
+.range-angle-down {
+  position: absolute;
+  right: -20px;
+  color: #74788d;
+  top: 6px;
+}
+
+.range-comma {
+  align-self: center;
+}

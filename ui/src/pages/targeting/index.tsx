@@ -46,7 +46,7 @@ import {
   IVariation,
 } from 'interfaces/targeting';
 import { ISegmentList } from 'interfaces/segment';
-import { DATETIME_TYPE, SEGMENT_TYPE } from 'components/Rule/constants';
+import { DATETIME_TYPE, NUMBER_TYPE, SEGMENT_TYPE } from 'components/Rule/constants';
 import SizeTips from 'components/SizeTips';
 import UserGuide from './components/UserGuide';
 import PublishModal from './components/PublishModal';
@@ -164,6 +164,15 @@ const Targeting = forwardRef((props: IProps, ref: any) => {
           } else {
             setValue(`rule_${rule.id}_condition_${condition.id}_datetime`, moment().format().slice(0, 19));
             setValue(`rule_${rule.id}_condition_${condition.id}_timezone`, moment().format().slice(19));
+          }
+        } else if (condition.type === NUMBER_TYPE) {
+          if (condition.predicate === 'between') {
+            setValue(`rule_${rule.id}_condition_${condition.id}_objects`, condition.objects);
+            setValue(`rule_${rule.id}_condition_${condition.id}_rightObjects`, condition.rightObjects);
+            setValue(`rule_${rule.id}_condition_${condition.id}_leftPredicate`, condition.leftPredicate);
+            setValue(`rule_${rule.id}_condition_${condition.id}_rightPredicate`, condition.rightPredicate);
+          } else {
+            setValue(`rule_${rule.id}_condition_${condition.id}_objects`, condition.objects);
           }
         } else {
           setValue(`rule_${rule.id}_condition_${condition.id}_objects`, condition.objects);

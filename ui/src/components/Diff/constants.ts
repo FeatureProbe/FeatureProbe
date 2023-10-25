@@ -20,5 +20,6 @@ export const rulesI18NMap = new Map([
     ['before', 'targeting.rule.subject.datetime.before'],
     ['after', 'targeting.rule.subject.datetime.after'],
     ['is in', 'targeting.rule.subject.segment.in'],
-    ['is not in', 'targeting.rule.subject.segment.notin']
+    ['is not in', 'targeting.rule.subject.segment.notin'],
+    ['between', 'targeting.rule.condition.between']
 ]);

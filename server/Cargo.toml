@@ -5,7 +5,6 @@ version = "2.0.1"
 license = "Apache-2.0"
 authors = ["maintain@featureprobe.com"]
 description = "FeatureProbe Server for evaluating feature toggles"
-build = "build.rs"
 
 [[bin]]
 name = "feature_probe_server"
@@ -15,15 +14,10 @@ path = "src/main.rs"
 name = "feature_probe_server"
 path = "src/lib.rs"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [features]
 default = ["realtime"]
 unstable = []
 realtime = ["socketio-rs"]
-
-[build-dependencies]
-vergen = "7"
 
 [dependencies]
 anyhow = "1.0"
@@ -51,7 +45,7 @@ tracing-subscriber = { version = "0.3", features = [
 ] }
 url = "2.3"
 socketio-rs = { optional = true, version = "0.1.7", default-features = false, features = ["server"] }
-feature-probe-server-sdk = { version = "2.2.0", features = [
+feature-probe-server-sdk = { version = "2.3.0", features = [
   "internal",
 ], default-features = false }
 feature-probe-event = { version="1.2.0", features = [
