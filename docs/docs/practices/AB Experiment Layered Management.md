@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# FeatureProbe的AB实验分层管理实现方式
+# AB Experiment Layered Management in FeatureProbe
 
 ### 1、背景
 
