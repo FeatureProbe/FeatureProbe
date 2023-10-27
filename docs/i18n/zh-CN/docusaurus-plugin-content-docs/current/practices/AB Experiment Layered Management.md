@@ -28,15 +28,15 @@ AB 实验是 **“特性管理”** 的主要应用场景之一。随着业务�
 FeatureProbe 的功能设计注重通用性和最小化，因此它当前不直接提供实验层的页面配置和管理。不过，我们可以通过使用前置开关（Prerequisite flag）功能来实现实验层的设置与管理。
 假设一个场景：我们现在需要一个流量层，其中一部分流量需要被隔离用于两个相互不影响的实验，而剩余的流量需要被保留以备未来可能需要上线的实验。以下是如何进行配置的介绍：
 
-![9](https://github.com/FeatureProbe/FeatureProbe/assets/20610466/3177f8f0-84ce-40a6-a367-67697b1af1cd)
+![9](/practice-ab-pic1.png)
 
 首先，我们需要创建一个名为 **"Experiment_layer"** 的前置开关，以作为实验层的配置。在这里，我们选择使用百分比流量来对用户进行分组，当然也可以选择不同的用户特征来进行分组，比如按城市来分组等。在这个配置中，我们将 **10%** 的流量分配给实验甲，另外 **10%** 的流量分配给实验乙，而剩下的 **80%** 的流量将被预留以供将来使用。我们会使用三个不同的 variation 来代表这三个分组，分别是 **"甲"、"乙"和"预留"** 。
 
-![拼接图 (1)](https://github.com/FeatureProbe/FeatureProbe/assets/20610466/f6432020-d4b0-44f8-99c9-03139b0b15a3)
+![拼接图 (1)](/practice-ab-pic2.jpeg)
 
 **现在我们来配置实验甲，新建一个实验开关，例如取名 “Exp1“。配置前置开关为 "Experiment_layer" 的返回为实验甲，之后将 “Exp1“ 的 2 个 variation 配成 “A组” 和 "B组"，将 default 的 variation 设置为“A组”，将 disable 的 variation 设置为“未进入实验”。**
 
-![拼接图 (2)](https://github.com/FeatureProbe/FeatureProbe/assets/20610466/7c72cc22-ba95-4e98-9d6d-add925a95f4d)
+![拼接图 (2)](/practice-ab-pic3.jpeg)
 
 这时，我们可以编写我们的业务代码如下：
 
@@ -61,7 +61,7 @@ FPUser fpUser = new FPUser(userId);
 
 以上的场景假设每个实验都有自己的 A组 和 B组（control组 和 treatment组），在更简化的形势下，层内实验可以复用同一个 control组，如下图所示：
 
-![6](https://github.com/FeatureProbe/FeatureProbe/assets/20610466/d70cc79e-d696-41b8-a147-f8ea0b628b2d)
+![6](/practice-ab-pic4.png)
 
 这种情况下，就可以直接使用 "Experiment_layer" 控制流量，而不用嵌套前置开关。相应的代码示例如下：
 
@@ -101,22 +101,14 @@ FeatureProbe 中所有开关的按流量分割算法参数都是不同的，也�
  
 **例如建立实验 "Exp1" 和 "Exp2"，分别都是 50%，50% 返回两个 variation。那么拿同一组用户 id 去请求两个实验结果，进入 "Exp1" 的 A 组用户，一定是打散进入 "Exp2" 的两个 variation 组。**
 
-![10](https://github.com/FeatureProbe/FeatureProbe/assets/20610466/abf0ad38-7d95-4203-9a1d-e695f07b8179)
+![10](/practice-ab-pic5.png)
 
 
 ### 4、混合方案
 
 在 Google 的原论文中，还介绍了更复杂的组和实验层，以及正交实验的实验流量规划方法，如下图所示：
 
-![8](https://github.com/FeatureProbe/FeatureProbe/assets/20610466/383bc9e3-0df7-4fb6-a03c-c6a923bbfeed)
+![8](/practice-ab-pic6.png)
 
 在 FeatureProbe 中，我们可以通过级联使用前置开关来实现类似的实验层配置，具体示例不一一列举。
-
-
-
-
-
-
-
-
 
