@@ -105,6 +105,10 @@ public class MemberService {
                             member.getAccount()));
             organizationMember.setRole(updateRequest.getRole());
         }
+        if (StringUtils.isNotBlank(updateRequest.getNickname()) &&
+                !updateRequest.getAccount().equals(TokenHelper.getAccount())) {
+            throw new ForbiddenException();
+        }
         return translateResponse(save(member));
     }
 
