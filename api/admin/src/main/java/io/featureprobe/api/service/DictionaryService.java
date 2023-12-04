@@ -10,11 +10,8 @@ import io.featureprobe.api.dao.repository.DictionaryRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.codec.digest.Md5Crypt;
-import org.apache.tomcat.util.security.MD5Encoder;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -25,7 +22,10 @@ public class DictionaryService {
     private DictionaryRepository dictionaryRepository;
 
     public DictionaryResponse create(String key, String value) {
-        String accountHash = DigestUtils.md5Hex(TokenHelper.getAccount());
+        String accountHash = "";
+        if (StringUtils.isNotBlank(TokenHelper.getAccount())) {
+            accountHash = DigestUtils.md5Hex(TokenHelper.getAccount());
+        }
         Optional<Dictionary> dictionaryOptional = dictionaryRepository
                 .findByAccountAndKey(accountHash, key);
         if (dictionaryOptional.isPresent()) {

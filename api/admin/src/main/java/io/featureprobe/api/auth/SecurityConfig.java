@@ -107,8 +107,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(((httpServletRequest, httpServletResponse, e) ->
                         httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value())))
                 .authenticationEntryPoint(authenticationEntryPoint());
+
         http.addFilterBefore(userPasswordAuthenticationProcessingFilter(authenticationManager()),
                 UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new RemoteAddrFilter(), UsernamePasswordAuthenticationFilter.class);
         if (!jwtConfig.isGuestDisabled()) {
             http.addFilterBefore(guestAuthenticationProcessingFilter(authenticationManager()),
                     UserPasswordAuthenticationProcessingFilter.class);
