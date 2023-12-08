@@ -6,8 +6,8 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/featureprobe/api)](https://hub.docker.com/u/featureprobe)
 [![Apache-2.0 license](https://img.shields.io/github/license/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe/blob/main/LICENSE)
 [![Join FeatureProbe on Slack](https://img.shields.io/badge/slack-join-blue?logo=slack)](https://join.slack.com/t/featureprobe/shared_invite/zt-1qjcgy22s-1eeqZLs~RpoyovG8hMZu4w)
-[![EN doc](https://img.shields.io/badge/Docs-English-blue.svg)](https://docs.featureprobe.io/)
-[![CN doc](https://img.shields.io/badge/文档-中文版-blue.svg)](https://docs.featureprobe.io/zh-CN/)
+[![EN doc](https://img.shields.io/badge/Docs-English-blue.svg)](https://docs.featureprobe.com/)
+[![CN doc](https://img.shields.io/badge/文档-中文版-blue.svg)](https://docs.featureprobe.com/zh-CN/)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/FeatureProbe.svg?style=social&label=FeatureProbe)](https://twitter.com/FeatureProbe)
 
 ![TS](https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white)
@@ -150,7 +150,7 @@ We have SDKs for the following program languages, choose one for your applicatio
 
 # 📚 More information
 
-Please visit our [Documentation](https://docs.featureprobe.io/)
+Please visit our [Documentation](https://docs.featureprobe.com/)
 
 # 🙌 Contributing
 
