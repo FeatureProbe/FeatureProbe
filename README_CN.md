@@ -4,8 +4,8 @@
 [![Last Release](https://img.shields.io/github/v/release/featureprobe/featureprobe)](https://github.com/FeatureProbe/FeatureProbe/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/featureprobe/api)](https://hub.docker.com/u/featureprobe)
 [![Apache-2.0 license](https://img.shields.io/github/license/FeatureProbe/FeatureProbe)](https://github.com/FeatureProbe/FeatureProbe/blob/main/LICENSE)
-[![EN doc](https://img.shields.io/badge/Docs-English-blue.svg)](https://docs.featureprobe.io/)
-[![CN doc](https://img.shields.io/badge/文档-中文版-blue.svg)](https://docs.featureprobe.io/zh-CN/)
+[![EN doc](https://img.shields.io/badge/Docs-English-blue.svg)](https://docs.featureprobe.com/)
+[![CN doc](https://img.shields.io/badge/文档-中文版-blue.svg)](https://docs.featureprobe.com/zh-CN/)
 
 
 # 💎 FeatureProbe
@@ -18,9 +18,9 @@ FeatureProbe 是一个开源的 **『特性』管理** 服务。它包含灰度�
 
 由于本项目社区目前活跃度不高，我们决定暂停新功能的规划和发布。目前仅安排安全漏洞修复的更新，以及处理社区贡献代码的合入。后续视用户量和反馈情况再决定是否安排重启功能迭代。
 
-## 📚 [文档服务](https://docs.featureprobe.io/zh-CN/)
+## 📚 [文档服务](https://docs.featureprobe.com/zh-CN/)
 
-我们提供一个独立的文档服务，最新的文档将会更新在[这里](https://docs.featureprobe.io/zh-CN/)
+我们提供一个独立的文档服务，最新的文档将会更新在[这里](https://docs.featureprobe.com/zh-CN/)
 
 ## 🚀 FeatureProbe适用于哪些场景
 
@@ -76,7 +76,7 @@ FeatureProbe 的总体架构如下图所示：
 
 1. 我们提供一个在线的FeatureProbe体验核心服务[FeatureProbe](https://featureprobe.io)，您可以直接访问，省去自己部署服务的步骤。
 
-2. 您也可以在自己服务器使用docker composer来部署一套自己的FeatureProbe服务：详见[教程](https://docs.featureprobe.io/zh-CN/tutorials/setup_own_env)
+2. 您也可以在自己服务器使用docker composer来部署一套自己的FeatureProbe服务：详见[教程](https://docs.featureprobe.com/zh-CN/tutorials/setup_own_env)
 
 ## 2️⃣ 在你自己服务代码中调用FeatureProbe SDK
 
@@ -111,8 +111,6 @@ if (fpClient.boolValue(YOUR_TOGGLE_KEY, user, false)) {
 * [Flutter SDK](https://gitee.com/featureprobe/client-sdk-flutter)
 
 各语言SDK都提供example目录和代码，可以直接运行example代码来体验FeatureProbe平台与SDK的交互。
-
-> 我们提供了一个受FeatureProbe控制的模拟网站应用（通过使用JS SDK）。你可以在线体验通过FeatureProbe控制网站应用的展示。见[教程](https://docs.featureprobe.io/zh-CN/tutorials/try_demo/)
 
 # 🙌 Contributing
 
