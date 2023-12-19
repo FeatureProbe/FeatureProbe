@@ -376,7 +376,7 @@ public class TargetingService {
                 .entityToResponse(targetingVersion);
         if (Objects.nonNull(targetingVersion.getApprovalId())) {
             Optional<ApprovalRecord> approvalRecord = approvalRecordRepository
-                    .findById(targetingVersion.getApprovalId());
+                    .findOneById(targetingVersion.getApprovalId());
             targetingVersionResponse.setApprovalStatus(approvalRecord.get().getStatus());
             targetingVersionResponse.setApprovalTime(approvalRecord.get().getModifiedTime());
             targetingVersionResponse.setApprovalBy(approvalRecord.get().getApprovedBy());

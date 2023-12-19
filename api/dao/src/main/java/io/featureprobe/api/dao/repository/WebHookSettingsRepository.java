@@ -21,4 +21,14 @@ public interface WebHookSettingsRepository extends JpaRepository<WebHookSettings
 
     List<WebHookSettings> findByUrl(String url);
 
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    Optional<WebHookSettings> findOneById(Long id);
+
+
 }

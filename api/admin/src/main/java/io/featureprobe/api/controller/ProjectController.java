@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +73,7 @@ public class ProjectController {
     @DeleteApiResponse
     @Operation(summary = "Delete project", description = "Delete a project.")
     @Hook(resource = Resource.PROJECT, action = Action.DELETE)
+    @PreAuthorize("hasAnyAuthority('OWNER')")
     public ProjectResponse delete(@PathVariable("projectKey") String projectKey) {
         return projectService.delete(projectKey);
     }

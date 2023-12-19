@@ -6,9 +6,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ApprovalRecordRepository extends JpaRepository<ApprovalRecord, Long>,
         JpaSpecificationExecutor<ApprovalRecord> {
 
     long countByStatusAndReviewersIsContaining(ApprovalStatusEnum status, String account);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    Optional<ApprovalRecord> findOneById(Long id);
 }
