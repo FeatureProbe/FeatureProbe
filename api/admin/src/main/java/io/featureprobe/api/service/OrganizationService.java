@@ -75,7 +75,7 @@ public class OrganizationService {
     }
 
     private Organization getOrganization(Long id) {
-        Organization organization = organizationRepository.findById(id)
+        Organization organization = organizationRepository.findOneById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceType.ORGANIZATION,
                         String.valueOf(id)));
         return organization;

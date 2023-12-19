@@ -76,7 +76,7 @@ class AccessTokenServiceSpec extends Specification {
         1 * accessTokenRepository.existsByNameAndType(name, AccessTokenType.APPLICATION)
         1 * memberRepository.existsByAccount("api:" + name) >> false
         1 * memberRepository.findByAccount("api:" + name) >> Optional.of(new Member(id: 1))
-        1 * organizationRepository.findById(1) >> Optional.of(new Organization(name: "organization"))
+        1 * organizationRepository.findOneById(1) >> Optional.of(new Organization(name: "organization"))
         1 * memberRepository.saveAll(_) >> [new Member(account: "api:" + name)]
         1 * accessTokenRepository.save(_) >> new AccessToken(token: token)
         token == create.token
@@ -105,8 +105,8 @@ class AccessTokenServiceSpec extends Specification {
         def delete = accessTokenService.delete(tokenId)
         then:
         applicationContext.getBean(_) >> new PlaintextEncryptionService()
-        1 * accessTokenRepository.findById(tokenId) >> Optional.of(new AccessToken(id: tokenId, name: name, memberId: memberId, type: AccessTokenType.APPLICATION))
-        1 * memberRepository.findById(memberId) >> Optional.of(new Member())
+        1 * accessTokenRepository.findOneById(tokenId) >> Optional.of(new AccessToken(id: tokenId, name: name, memberId: memberId, type: AccessTokenType.APPLICATION))
+        1 * memberRepository.findOneById(memberId) >> Optional.of(new Member())
         1 * memberRepository.findByAccount(_) >> Optional.of(new Member())
         1 * memberRepository.save(_)
         1 * accessTokenRepository.save(_) >> new AccessToken(name: name, id: tokenId)
@@ -134,7 +134,7 @@ class AccessTokenServiceSpec extends Specification {
         when:
         def accessToken = accessTokenService.queryById(id)
         then:
-        1 * accessTokenRepository.findById(id) >> Optional.of(new AccessToken(id: id, name: name, token: token))
+        1 * accessTokenRepository.findOneById(id) >> Optional.of(new AccessToken(id: id, name: name, token: token))
         name == accessToken.name
     }
 
@@ -164,7 +164,7 @@ class AccessTokenServiceSpec extends Specification {
         when:
         accessTokenService.updateVisitedTime(id)
         then:
-        1 * accessTokenRepository.findById(id) >> Optional.of(new AccessToken())
+        1 * accessTokenRepository.findOneById(id) >> Optional.of(new AccessToken())
         1 * accessTokenRepository.save(_)
     }
 
@@ -174,7 +174,7 @@ class AccessTokenServiceSpec extends Specification {
         when:
         accessTokenService.updateVisitedTime(id)
         then:
-        1 * accessTokenRepository.findById(id) >> Optional.empty()
+        1 * accessTokenRepository.findOneById(id) >> Optional.empty()
         thrown(ResourceNotFoundException.class)
     }
 
