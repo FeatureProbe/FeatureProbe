@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TargetingVersionRepository extends JpaRepository<TargetingVersion, Long>,
@@ -42,5 +43,17 @@ public interface TargetingVersionRepository extends JpaRepository<TargetingVersi
             Date start);
 
     long countByProjectKeyAndEnvironmentKeyAndToggleKey(String projectKey, String environmentKey, String toggleKey);
+
+    Optional<TargetingVersion> findOneById(Long id);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    default Optional<TargetingVersion> findById(Long id) {
+        return findOneById(id);
+    }
 
 }

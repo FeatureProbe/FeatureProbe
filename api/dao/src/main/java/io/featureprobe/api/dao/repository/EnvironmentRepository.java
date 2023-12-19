@@ -107,4 +107,17 @@ public interface EnvironmentRepository extends JpaRepository<Environment, Long> 
             "INNER JOIN event e on me.event_id = e.id WHERE env.server_sdk_key=?1", nativeQuery = true)
     List<ServerEventEntity> findAllServerEventBySdkKey(String sdkKey);
 
+
+    Optional<Environment> findOneById(Long id);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    default Optional<Environment> findById(Long id) {
+        return findOneById(id);
+    }
+
 }

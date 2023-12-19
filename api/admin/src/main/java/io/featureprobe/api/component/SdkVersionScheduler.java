@@ -32,7 +32,7 @@ public class SdkVersionScheduler {
 
     private static final OkHttpClient httpClient =
             new OkHttpClient.Builder().connectionPool(new ConnectionPool()).callTimeout(10, TimeUnit.SECONDS)
-                    .retryOnConnectionFailure(true).build();
+                    .retryOnConnectionFailure(false).build();
 
     private static final ObjectMapper mapper = new ObjectMapper();
 

@@ -390,7 +390,7 @@ class TargetingServiceSpec extends Specification {
         1 * targetingVersionRepository
                 .findAllByProjectKeyAndEnvironmentKeyAndToggleKeyAndVersionGreaterThanEqualOrderByVersionDesc(
                         projectKey, environmentKey, toggleKey, 10) >> [new TargetingVersion( approvalId: 1)]
-        1 * approvalRecordRepository.findOneById(1) >> Optional.of(
+        1 * approvalRecordRepository.findById(1) >> Optional.of(
                 new ApprovalRecord(status: ApprovalStatusEnum.PASS, modifiedBy: new Member(account: "Admin"), approvedBy: "Admin", comment: ""))
         1 * targetingVersionRepository.countByProjectKeyAndEnvironmentKeyAndToggleKey(projectKey,
                 environmentKey, toggleKey) >> 2

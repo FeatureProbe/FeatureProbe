@@ -37,4 +37,16 @@ public interface ToggleRepository extends JpaRepository<Toggle, Long>, JpaSpecif
 
     List<Toggle> findByNameLike(String name);
 
+    Optional<Toggle> findOneById(Long id);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    default Optional<Toggle> findById(Long id) {
+        return findOneById(id);
+    }
+
 }

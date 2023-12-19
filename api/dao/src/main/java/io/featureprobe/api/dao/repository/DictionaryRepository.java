@@ -13,4 +13,16 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Long>, J
 
     Optional<Dictionary> findByKey(String key);
 
+    Optional<Dictionary> findOneById(Long id);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    default Optional<Dictionary> findById(Long id) {
+        return findOneById(id);
+    }
+
 }

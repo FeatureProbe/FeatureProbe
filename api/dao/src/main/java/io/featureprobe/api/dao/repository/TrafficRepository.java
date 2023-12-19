@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -31,5 +32,17 @@ public interface TrafficRepository extends JpaRepository<Traffic, Long>, JpaSpec
             "AND end_date >= ?3 GROUP BY toggle_key", nativeQuery = true)
     Set<String> findAllAccessedToggleKeyGreaterThanOrEqualToEndDate(String serverSdkKey, String clientSdkKey,
                                                                     Date time);
+
+    Optional<Traffic> findOneById(Long id);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    default Optional<Traffic> findById(Long id) {
+        return findOneById(id);
+    }
 
 }

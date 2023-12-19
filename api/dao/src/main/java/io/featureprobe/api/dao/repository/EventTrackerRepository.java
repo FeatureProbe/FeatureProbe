@@ -13,4 +13,18 @@ public interface EventTrackerRepository extends JpaRepository<EventTracker, Long
 
     Optional<EventTracker> findByProjectKeyAndEnvironmentKeyAndUuid(String projectKey, String environmentKey,
                                                                     String uuid);
+
+    Optional<EventTracker> findOneById(Long id);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    default Optional<EventTracker> findById(Long id) {
+        return findOneById(id);
+    }
+
 }
+

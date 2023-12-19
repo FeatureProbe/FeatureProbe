@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface PrerequisiteRepository extends JpaRepository<Prerequisite, Long>,
         JpaSpecificationExecutor<Prerequisite> {
@@ -16,5 +18,17 @@ public interface PrerequisiteRepository extends JpaRepository<Prerequisite, Long
 
     void deleteAllByProjectKeyAndEnvironmentKeyAndToggleKey(String projectKey, String environmentKey,
                                                             String toggleKey);
+
+    Optional<Prerequisite> findOneById(Long id);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    default Optional<Prerequisite> findById(Long id) {
+        return findOneById(id);
+    }
 
 }
