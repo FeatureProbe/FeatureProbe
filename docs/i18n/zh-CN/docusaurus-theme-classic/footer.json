@@ -34,5 +34,13 @@
   "link.item.label.GitHub": {
     "message": "GitHub",
     "description": "The label of footer link with label=GitHub linking to https://github.com/FeatureProbe/FeatureProbe"
+  },
+  "link.item.label.Demo": {
+    "message": "Demo",
+    "description": "The label of footer link with label=Demo linking to https://featureprobe.io"
+  },
+  "link.item.label.Gitee": {
+    "message": "Gitee",
+    "description": "The label of footer link with label=Gitee linking to https://gitee.com/featureprobe"
   }
 }

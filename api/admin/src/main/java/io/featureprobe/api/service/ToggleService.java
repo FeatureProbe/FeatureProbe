@@ -465,7 +465,8 @@ public class ToggleService {
             return query.where(cb.and(p0, p3), cb.or(p1, p2)).getRestriction();
         };
         List<TrafficCache> trafficCaches = trafficCacheRepository.findAll(spec);
-        return trafficCaches.stream().collect(Collectors.toMap(TrafficCache::getToggleKey, Function.identity()));
+        return trafficCaches.stream().collect(Collectors.toMap(TrafficCache::getToggleKey, Function.identity(),
+            (existingValue, newValue) -> newValue));
     }
 
     @Archived

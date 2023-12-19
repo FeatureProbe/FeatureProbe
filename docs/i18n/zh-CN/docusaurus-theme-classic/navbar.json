@@ -10,5 +10,13 @@
   "item.label.Blog": {
     "message": "博客",
     "description": "Navbar item with label Blog"
+  },
+  "item.label.Gitee": {
+    "message": "Gitee",
+    "description": "Navbar item with label Gitee"
+  },
+  "item.label.Demo": {
+    "message": "Demo",
+    "description": "Navbar item with label Demo"
   }
 }
