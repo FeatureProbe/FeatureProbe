@@ -43,7 +43,7 @@ public class AccessTokenAuthenticationProvider implements AuthenticationProvider
             return null;
         }
         AccessToken token = accessToken.get();
-        Optional<Member> member = memberService.findOneById(token.getMemberId());
+        Optional<Member> member = memberService.findById(token.getMemberId());
         if (!member.isPresent()) {
             log.warn("API Access token member not exists, userid: {}", token.getMemberId());
             return null;

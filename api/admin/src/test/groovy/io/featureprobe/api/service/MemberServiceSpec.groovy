@@ -64,7 +64,7 @@ class MemberServiceSpec extends Specification {
         then:
         applicationContext.getBean(_) >> new PlaintextEncryptionService()
         1 * memberRepository.existsByAccount("root") >> false
-        1 * organizationRepository.findOneById(_) >> Optional.of(new Organization(id: 1, name: "organization name"))
+        1 * organizationRepository.findById(_) >> Optional.of(new Organization(id: 1, name: "organization name"))
         1 * memberRepository.saveAll(_) >> [new Member(id: 1,  account: "root", password: "password")]
         with(savedMember) {
             1 == savedMember.size()

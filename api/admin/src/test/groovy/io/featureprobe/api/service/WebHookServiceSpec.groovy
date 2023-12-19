@@ -74,7 +74,7 @@ class WebHookServiceSpec extends Specification {
         when:
         def update = webHookService.update(1, updateRequest)
         then:
-        1 * webHookSettingsRepository.findOneById(1) >> Optional.of(new WebHookSettings(id: 1, name: "Demo WebHook",
+        1 * webHookSettingsRepository.findById(1) >> Optional.of(new WebHookSettings(id: 1, name: "Demo WebHook",
                 status: HookSettingsStatus.DISABLE,  url: "http://127.0.0.1:8080/demo", description: "This is a demo WenHook"))
         1 * webHookSettingsRepository.findByName("Test WebHook") >> Optional.empty()
         1 * webHookSettingsRepository.save(_) >> new WebHookSettings(id: 1, name: "Test WebHook", status: HookSettingsStatus.ENABLE,
@@ -91,7 +91,7 @@ class WebHookServiceSpec extends Specification {
         when:
         def update = webHookService.update(1, updateRequest)
         then:
-        1 * webHookSettingsRepository.findOneById(1) >> Optional.of(new WebHookSettings(id: 1, name: "Demo WebHook",
+        1 * webHookSettingsRepository.findById(1) >> Optional.of(new WebHookSettings(id: 1, name: "Demo WebHook",
                 status: HookSettingsStatus.DISABLE,  url: "http://127.0.0.1:8080/demo", description: "This is a demo WenHook"))
         1 * webHookSettingsRepository.findByName("Test WebHook") >> Optional.of(new WebHookSettings(name: "Test WebHook"))
         thrown(ResourceConflictException)
@@ -104,7 +104,7 @@ class WebHookServiceSpec extends Specification {
         when:
         def update = webHookService.update(1, updateRequest)
         then:
-        1 * webHookSettingsRepository.findOneById(1) >> Optional.of(new WebHookSettings(id: 1, name: "Demo WebHook",
+        1 * webHookSettingsRepository.findById(1) >> Optional.of(new WebHookSettings(id: 1, name: "Demo WebHook",
                 status: HookSettingsStatus.DISABLE,  url: "http://127.0.0.1:8080/demo", description: "This is a demo WenHook"))
         1 * webHookSettingsRepository.findByName("Test WebHook") >> Optional.empty()
         thrown(IllegalArgumentException)
@@ -114,7 +114,7 @@ class WebHookServiceSpec extends Specification {
         when:
         def delete = webHookService.delete(1)
         then:
-        1 * webHookSettingsRepository.findOneById(1) >> Optional.of(new WebHookSettings(id: 1, name: "Demo WebHook",
+        1 * webHookSettingsRepository.findById(1) >> Optional.of(new WebHookSettings(id: 1, name: "Demo WebHook",
                 status: HookSettingsStatus.DISABLE,  url: "http://127.0.0.1:8080/demo", description: "This is a demo WenHook"))
         1 * webHookSettingsRepository.deleteById(1)
     }
@@ -123,7 +123,7 @@ class WebHookServiceSpec extends Specification {
         when:
         def query = webHookService.query(1)
         then:
-        1 * webHookSettingsRepository.findOneById(1) >> Optional.of(new WebHookSettings(id: 1, name: "Test WebHook",
+        1 * webHookSettingsRepository.findById(1) >> Optional.of(new WebHookSettings(id: 1, name: "Test WebHook",
                 status: HookSettingsStatus.ENABLE,  url: "http://127.0.0.1:8080/test", description: "This is a demo WenHook"))
         HookSettingsStatus.ENABLE == query.status
         "Test WebHook" == query.name

@@ -14,7 +14,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     Optional<Organization> findOneById(Long id);
 
     /**
-     * Provide this method as an alternative to findOneById(), as the findById()
+     * Provide this method as an alternative to findById(), as the findById()
      * method provided by JpaRepository can render the @Filter ineffective
      * @param id
      * @return
