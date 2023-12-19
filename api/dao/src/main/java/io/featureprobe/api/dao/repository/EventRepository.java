@@ -12,4 +12,16 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
 
     Optional<Event> findByName(String name);
 
+    Optional<Event> findOneById(Long id);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    default Optional<Event> findById(Long id) {
+        return findOneById(id);
+    }
+
 }

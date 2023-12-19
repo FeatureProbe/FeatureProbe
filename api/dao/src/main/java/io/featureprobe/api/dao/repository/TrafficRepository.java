@@ -1,7 +1,6 @@
 package io.featureprobe.api.dao.repository;
 
 import io.featureprobe.api.dao.entity.Traffic;
-import io.featureprobe.api.dao.entity.VariationHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

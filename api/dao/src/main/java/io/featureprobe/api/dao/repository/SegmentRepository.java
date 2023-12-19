@@ -20,4 +20,16 @@ public interface SegmentRepository extends JpaRepository<Segment, Long>, JpaSpec
 
     boolean existsByProjectKeyAndName(String projectKey, String name);
 
+    Optional<Segment> findOneById(Long id);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    default Optional<Segment> findById(Long id) {
+        return findOneById(id);
+    }
+
 }

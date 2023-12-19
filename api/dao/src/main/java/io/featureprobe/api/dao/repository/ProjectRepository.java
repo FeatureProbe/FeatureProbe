@@ -24,4 +24,16 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     List<Project> findAllByOrderByCreatedTimeDesc();
 
+    Optional<Project> findOneById(Long id);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    default Optional<Project> findById(Long id) {
+        return findOneById(id);
+    }
+
 }

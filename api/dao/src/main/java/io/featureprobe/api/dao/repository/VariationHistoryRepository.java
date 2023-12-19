@@ -1,7 +1,6 @@
 package io.featureprobe.api.dao.repository;
 
 import io.featureprobe.api.dao.entity.VariationHistory;
-import io.featureprobe.api.dao.entity.WebHookSettings;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

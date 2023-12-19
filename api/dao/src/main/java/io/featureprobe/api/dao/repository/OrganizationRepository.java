@@ -11,12 +11,16 @@ import java.util.Optional;
 public interface OrganizationRepository extends JpaRepository<Organization, Long>,
         JpaSpecificationExecutor<Organization> {
 
+    Optional<Organization> findOneById(Long id);
+
     /**
      * Provide this method as an alternative to findOneById(), as the findById()
      * method provided by JpaRepository can render the @Filter ineffective
      * @param id
      * @return
      */
-    Optional<Organization> findOneById(Long id);
+    default Optional<Organization> findById(Long id) {
+        return findOneById(id);
+    }
 
 }

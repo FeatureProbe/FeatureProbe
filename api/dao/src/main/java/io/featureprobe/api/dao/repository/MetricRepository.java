@@ -14,4 +14,17 @@ public interface MetricRepository extends JpaRepository<Metric, Long>, JpaSpecif
                                                                    String environmentKey,
                                                                    String toggleKey);
 
+    Optional<Metric> findOneById(Long id);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    default Optional<Metric> findById(Long id) {
+        return findOneById(id);
+    }
+
+
 }

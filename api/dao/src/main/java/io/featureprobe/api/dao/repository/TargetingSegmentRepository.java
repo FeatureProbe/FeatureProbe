@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TargetingSegmentRepository extends JpaRepository<TargetingSegment, Long>,
@@ -17,5 +18,16 @@ public interface TargetingSegmentRepository extends JpaRepository<TargetingSegme
 
     int countByProjectKeyAndSegmentKey(String projectKey, String segmentKey);
 
+    Optional<TargetingSegment> findOneById(Long id);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    default Optional<TargetingSegment> findById(Long id) {
+        return findOneById(id);
+    }
 
 }
