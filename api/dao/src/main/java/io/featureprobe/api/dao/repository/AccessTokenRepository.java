@@ -15,4 +15,12 @@ public interface AccessTokenRepository extends JpaRepository<AccessToken, Long>,
     boolean existsByNameAndType(String name, AccessTokenType type);
 
     Optional<AccessToken> findByToken(String token);
+
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    Optional<AccessToken> findOneById(Long id);
 }

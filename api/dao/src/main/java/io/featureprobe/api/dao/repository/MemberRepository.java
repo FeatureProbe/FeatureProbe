@@ -15,4 +15,12 @@ public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecif
 
     boolean existsByAccount(String account);
 
+    /**
+     * Provide this method as an alternative to findOneById(), as the findById()
+     * method provided by JpaRepository can render the @Filter ineffective
+     * @param id
+     * @return
+     */
+    Optional<Member> findOneById(Long id);
+
 }
