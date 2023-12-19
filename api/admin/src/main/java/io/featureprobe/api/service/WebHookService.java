@@ -83,8 +83,8 @@ public class WebHookService {
     }
 
     public WebHookItemResponse query(Long id) {
-        WebHookSettings webHookSettings = webHookSettingsRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceType.WEBHOOK, String.valueOf(id)));
+        WebHookSettings webHookSettings = webHookSettingsRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(ResourceType.WEBHOOK, String.valueOf(id)));
         return WebHookMapper.INSTANCE.entityToItemResponse(webHookSettings);
     }
 
