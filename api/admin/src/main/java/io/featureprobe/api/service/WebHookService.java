@@ -59,7 +59,7 @@ public class WebHookService {
 
     @Transactional(rollbackFor = Exception.class)
     public WebHookResponse update(Long id, WebHookUpdateRequest updateRequest) {
-        WebHookSettings webHookSettings = webHookSettingsRepository.findOneById(id).orElseThrow(() ->
+        WebHookSettings webHookSettings = webHookSettingsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(ResourceType.WEBHOOK, String.valueOf(id)));
         if (!webHookSettings.getName().equals(updateRequest.getName())) {
             checkName(updateRequest.getName());
@@ -76,14 +76,14 @@ public class WebHookService {
 
     @Transactional(rollbackFor = Exception.class)
     public WebHookResponse delete(Long id) {
-        WebHookSettings webHookSettings = webHookSettingsRepository.findOneById(id).orElseThrow(() ->
+        WebHookSettings webHookSettings = webHookSettingsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(ResourceType.WEBHOOK, String.valueOf(id)));
         webHookSettingsRepository.deleteById(id);
         return WebHookMapper.INSTANCE.entityToResponse(webHookSettings);
     }
 
     public WebHookItemResponse query(Long id) {
-        WebHookSettings webHookSettings = webHookSettingsRepository.findOneById(id)
+        WebHookSettings webHookSettings = webHookSettingsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceType.WEBHOOK, String.valueOf(id)));
         return WebHookMapper.INSTANCE.entityToItemResponse(webHookSettings);
     }

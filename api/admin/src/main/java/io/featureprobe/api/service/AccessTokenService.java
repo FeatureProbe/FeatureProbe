@@ -81,7 +81,7 @@ public class AccessTokenService {
         AccessToken accessToken = getAccessTokenById(tokenId);
         accessToken.setDeleted(true);
         if (accessToken.getMemberId() != null && accessToken.getType() == AccessTokenType.APPLICATION) {
-            Member member = memberService.findOneById(accessToken.getMemberId()).orElse(null);
+            Member member = memberService.findById(accessToken.getMemberId()).orElse(null);
             if (member != null) {
                 memberService.delete(member.getAccount());
             }
@@ -107,7 +107,7 @@ public class AccessTokenService {
     }
 
     private AccessToken getAccessTokenById(Long tokenId) {
-        AccessToken accessToken = accessTokenRepository.findOneById(tokenId)
+        AccessToken accessToken = accessTokenRepository.findById(tokenId)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceType.ACCESS_TOKEN, String.valueOf(tokenId)));
         return accessToken;
     }

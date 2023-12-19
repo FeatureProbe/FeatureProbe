@@ -179,7 +179,7 @@ public class MemberService {
         member.setSource(createRequest.getSource());
         member.setPassword(new BCryptPasswordEncoder().encode(createRequest.getPassword()));
 
-        Organization organization = organizationRepository.findOneById(organizationId).get();
+        Organization organization = organizationRepository.findById(organizationId).get();
         boolean valid = memberStatusEnum == MemberStatusEnum.ACTIVE;
         member.addOrganization(organization, createRequest.getRole(), valid);
 
@@ -198,8 +198,8 @@ public class MemberService {
         return memberRepository.findByAccount(account);
     }
 
-    public Optional<Member> findOneById(Long memberId) {
-        return memberRepository.findOneById(memberId);
+    public Optional<Member> findById(Long memberId) {
+        return memberRepository.findById(memberId);
     }
 
     public boolean existsByAccount(String account) {

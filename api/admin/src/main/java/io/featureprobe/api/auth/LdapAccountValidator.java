@@ -65,7 +65,7 @@ public class LdapAccountValidator implements AccountValidator{
             if (!memberOptional.isPresent() && ldapAuthPassCheck) {
                 OrganizationMemberModel defaultOrganizeMemberModel =
                         new OrganizationMemberModel(1L, "Default Organize", OrganizationRoleEnum.WRITER);
-                Organization organization = organizationRepository.findOneById(1L).get();
+                Organization organization = organizationRepository.findById(1L).get();
                 Member member = new Member();
                 member.setAccount(token.getAccount());
                 member.setPassword(new BCryptPasswordEncoder().encode(UUID.randomUUID().toString()));
