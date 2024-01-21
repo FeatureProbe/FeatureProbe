@@ -102,7 +102,7 @@ import TabItem from '@theme/TabItem';
   
   ~~~python title="demo.py"
   config = fp.Config(remote_uri=remote_url,
-                     sync_mode='pooling',
+                     sync_mode='polling',
                     # highlight-start
                      refresh_interval=5) #seconds
    									# highlight-end
