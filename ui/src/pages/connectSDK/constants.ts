@@ -285,7 +285,7 @@ export const getPythonCode = (options: IOption, eventName?: string, isTrackValue
       code:
 `import featureprobe as fp
 
-config = fp.Config(remote_uri='${remoteUrl}', sync_mode='pooling', refresh_interval=3)
+config = fp.Config(remote_uri='${remoteUrl}', sync_mode='polling', refresh_interval=3)
 client = fp.Client('${serverSdkKey}', config)
 `
     },

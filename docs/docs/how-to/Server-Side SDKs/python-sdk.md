@@ -64,7 +64,7 @@ After you install the SDK, import it, then create a single, shared instance of t
 ```python
 import featureprobe as fp
 
-config = fp.Config(remote_uri=/* FeatureProbe Server URI */, sync_mode='pooling', refresh_interval=3)
+config = fp.Config(remote_uri=/* FeatureProbe Server URI */, sync_mode='polling', refresh_interval=3)
 client = fp.Client(/* FeatureProbe Server SDK Key */, config)
 
 if not client.initialized():

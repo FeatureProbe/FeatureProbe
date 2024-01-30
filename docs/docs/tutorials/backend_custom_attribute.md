@@ -282,7 +282,7 @@ if __name__ == '__main__':
     FEATURE_PROBE_SERVER_SDK_KEY = # Fill in the server SDK key
 
     config = fp.Config(remote_uri=FEATURE_PROBE_SERVER_URL,  # FeatureProbe server URL
-                       sync_mode='pooling',
+                       sync_mode='polling',
                        refresh_interval=3)
 
     with fp.Client(FEATURE_PROBE_SERVER_SDK_KEY, config) as client:
