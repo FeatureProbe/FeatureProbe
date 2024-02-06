@@ -36,6 +36,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -249,25 +250,33 @@ public class MemberService {
                                                        boolean currentIsOwner,
                                                        Page<OrganizationMember> organizationMembers,
                                                        Map<Long, Member> idToMember) {
-        return organizationMembers.map(item -> {
-            MemberItemResponse response = MemberMapper.INSTANCE
-                    .entityToItemResponse(idToMember.get(item.getMember().getId()));
-            response.setVisitedTime(item.getLoginTime());
-            if (item.getRole() == null) {
-                response.setAllowEdit(false);
-                return response;
-            }
-            response.setRole(item.getRole().name());
-            boolean allowEdit = currentIsOwner;
+        List<MemberItemResponse> responseList = organizationMembers.stream()
+                // filter member who is already deleted.
+                .filter(item -> idToMember.get(item.getMember().getId()) != null)
+                .map(item -> {
+                    MemberItemResponse response = MemberMapper.INSTANCE
+                            .entityToItemResponse(idToMember.get(item.getMember().getId()));
+                    response.setVisitedTime(item.getLoginTime());
+                    if (item.getRole() == null) {
+                        response.setAllowEdit(false);
+                        return response;
+                    }
+                    response.setRole(item.getRole().name());
+                    boolean allowEdit = currentIsOwner;
 
-            if (allowEdit && item.getRole().isOwner() && ownerCount == 1) {
-                allowEdit = false;
-            }
-            response.setAllowEdit(allowEdit);
-            response.setValid(item.getValid());
-            response.setOrganizationMemberCreateBy(item.getCreatedBy().getAccount());
-            return response;
-        });
+                    if (allowEdit && item.getRole().isOwner() && ownerCount == 1) {
+                        allowEdit = false;
+                    }
+                    response.setAllowEdit(allowEdit);
+                    response.setValid(item.getValid());
+                    response.setOrganizationMemberCreateBy(item.getCreatedBy().getAccount());
+                    return response;
+                })
+                .collect(Collectors.toList());
+
+        return PageableExecutionUtils.getPage(responseList,
+                organizationMembers.getPageable(),
+                organizationMembers::getTotalElements);
     }
 
     public MemberItemResponse queryByAccount(String account) {
