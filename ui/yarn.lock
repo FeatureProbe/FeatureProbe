@@ -5209,8 +5209,8 @@ intl-messageformat@9.13.0:
     tslib "^2.1.0"
 
 ip@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.npmjs.org/ip/-/ip-2.0.0.tgz"
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/ip/-/ip-2.0.1.tgz#e8f3595d33a3ea66490204234b77636965307105"
 
 ipaddr.js@1.9.1:
   version "1.9.1"
