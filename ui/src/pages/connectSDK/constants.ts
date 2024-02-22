@@ -192,21 +192,21 @@ export const getRustCode = (options: IOption, eventName?: string, isTrackValue?:
   return [
     {
       title: intl.formatMessage({id: 'getstarted.rust.first.step'}),
-      code: `feature-probe-server-sdk = ${sdkVersion}`
+      code: `feature-probe-server-sdk = "${sdkVersion}"`
     },
     {
       title: intl.formatMessage({id: 'getstarted.common.second.step'}),
       code:
 `use feature_probe_server_sdk::{FPConfig, FPUser, FeatureProbe};
 let config = FPConfig {
-    remote_url: "${remoteUrl}".to_owned(),
+    remote_url: Url::parse("${remoteUrl}").expect("invalid url"),
     server_sdk_key: "${serverSdkKey}".to_owned(),
     refresh_interval: Duration::from_secs(1),
-    start_wait: Some(Duration::from_secs(1))
+    start_wait: Some(Duration::from_secs(1)),
     ..Default::default()
 };
 
-let fp = match FeatureProbe::new(config).unwrap(); //should check result in production
+let fp = FeatureProbe::new(config);
 `
     },
     {
