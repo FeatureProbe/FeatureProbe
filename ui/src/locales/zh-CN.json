@@ -124,7 +124,7 @@
   "common.all.text": "全部",
   "common.toggle.event.text": "开关事件",
   "common.metric.event.text": "指标事件",
-  
+
   "header.getuser.error.text": "无法获取用户信息!",
 
   "sidebar.modal.title": "离开当前页面?",
@@ -415,7 +415,7 @@
   "segments.delete.error": "人群组删除失败，请重试",
   "segments.label.name.text": "人群组名称",
   "segments.card.tips": "常用人群规则可以设立为单独的人群组，方便在多个开关中共享。",
-  
+
   "toggle.connect": "连接SDK",
   "connect.description": "将应用程序连接到FeatureProbe！",
   "connect.track.description": "使用FeatureProbe上报事件",
@@ -458,6 +458,7 @@
   "getstarted.go.first.step.name.one": "将FeatureProbe的SDK添加到您的代码中",
   "getstarted.go.first.step.name.two": "在go.mod文件中将FeatureProbe SDK添加成为依赖",
   "getstarted.python.first.step": "第一步：安装服务端SDK库",
+  "getstarted.dotnet.first.step": "第一步：从Nuget添加SDK依赖",
   "getstarted.node.first.step": "第一步：将SDK添加为您的应用依赖项",
   "getstarted.mobile.first.step": "第一步：将SDK添加到您的应用",
   "getstarted.mobile.second.step": "第二步：初始化SDK的实例",
@@ -511,7 +512,7 @@
   "approvals.published.by": "发布人",
   "approvals.reviewed.by": "审批人",
   "approvals.skipped.by": "跳过人",
-  
+
   "guide.global.step1.title": "项目",
   "guide.global.step1.project": "管理「项目」及项目下「环境」信息",
   "guide.global.step1.env": "可快速拷贝“环境密钥”，填入SDK初始化代码",
@@ -519,14 +520,14 @@
   "guide.global.step2.title": "切换环境",
   "guide.global.step2.env": "点击可切换环境，查看不同环境下的开关信息",
   "guide.global.step3.title": "人群组",
-  
+
   "guide.creat.toggle.step1.title": "客户端SDK",
   "guide.creat.toggle.step1.sdk1": "如果开关后通过客户端SDK访问，请选择“使用”",
   "guide.creat.toggle.step2.title": "返回类型",
   "guide.creat.toggle.step2.type1": "决定了代码通过SDK读取开关使用的返回值类型",
   "guide.creat.toggle.step2.type2": "一旦创建，不可更改",
   "guide.creat.toggle.step3.type": "开关状态为『未生效』时，返回以下分组",
-  
+
   "guide.toggle.targeting.step1.title": "切换开关状态",
   "guide.toggle.targeting.step1.off": "“关闭”时返回“当开关未生效”的返回分组",
   "guide.toggle.targeting.step1.on": "“打开”时返回所命中“规则”的返回分组",
@@ -644,7 +645,7 @@
   "analysis.result.tip": "请先保存“指标信息”，并点击【收集数据】。",
   "analysis.result.collect.time": "数据统计周期：",
   "analysis.result.collect.end": "当前",
-  "analysis.result.collect.start": "收集数据", 
+  "analysis.result.collect.start": "收集数据",
   "analysis.result.collect.stop": "停止收集",
   "analysis.result.collect.tip": "重新收集数据，会清空指标分析的数据，并重新开始计算。",
   "analysis.ongoing": "分析数据收集中",
