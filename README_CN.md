@@ -74,9 +74,7 @@ FeatureProbe 的总体架构如下图所示：
 
 ## 1️⃣ 启动FeatureProbe核心服务
 
-1. 我们提供一个在线的FeatureProbe体验核心服务[FeatureProbe](https://featureprobe.io)，您可以直接访问，省去自己部署服务的步骤。
-
-2. 您也可以在自己服务器使用docker composer来部署一套自己的FeatureProbe服务：详见[教程](https://docs.featureprobe.com/zh-CN/tutorials/setup_own_env)
+您可以在自己服务器使用docker composer来部署一套自己的FeatureProbe服务：详见[教程](https://docs.featureprobe.com/zh-CN/tutorials/setup_own_env)
 
 ## 2️⃣ 在你自己服务代码中调用FeatureProbe SDK
 
