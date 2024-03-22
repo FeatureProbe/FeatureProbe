@@ -21,7 +21,7 @@
 
 # 💎 FeatureProbe 
 
-[FeatureProbe](https://featureprobe.com/) is an open source **feature management service**. 
+**FeatureProbe** is an open source **feature management service**. 
 It allows R&D, SRE and operation teams to launch new features or switch software implementations with confidence and lower risk.
 FeatureProbe eliminates manual delays through its practice in continuous delivery and is not hindered by the size of a 
 team or the complexity of a product, which allows developers to maintain their velocity. 
@@ -33,7 +33,6 @@ through the acceleration of daily development tasks. It also supports our millio
 
 Now we are making this project open source to help more developers and operation people and contribute to the programming society. 
 
-[Get started](https://app.featureprobe.com) using FeatureProbe today!
 
 ## 🚀 Why you should use FeatureProbe
 
@@ -97,9 +96,7 @@ The overall architecture of FeatureProbe is shown in the following figure
 
 ## 1️⃣ Start FeatureProbe Central Service
 
-1. We provide a online FeatureProbe Service, so you don't have to deploy by yourself, just visit it [Here](https://app.featureprobe.com).
-
-1. Or you can use docker composer to set your own FeatureProbe service
+1. You can use docker composer to set your own FeatureProbe service
 
    * Make sure you have [`git`](https://git-scm.com/) and [`docker`](https://www.docker.com/) installed. 。
    * Clone the repository to your server and boot up the services. Change the ports defined in docker-compose.yml as needed.
