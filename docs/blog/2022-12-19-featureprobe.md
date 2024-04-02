@@ -19,7 +19,7 @@ title: 怎么做到零风险迁移数据库？
 
 先在eatureProbe 上创建四个 Boolean 类型功能开关来独立控制对 MySQL 和 HBase 的读写，以其中一个开关（**messages-mysql-write**）为例配置如下所示：
 
-![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c444e0daa1964e0b987668f84c70d8e8~tplv-k3u1fbpfcp-watermark.image?)
+![image.png](https://gift-pypu-cdn.didistatic.com/static/featureprobe/do1_d6U2jVKLQ5BQGhbBjcnn)
 
 
 接下来我们对外统一提供 **saveMessage** 方法保存一个消息，代码如下所示：
@@ -78,6 +78,4 @@ public Message findMessageById(Long id, FPUser fpUser)  {
 
 在 FeatureProbe 开关管理也很简单，由于以上四个开关已经完成了数据库迁移的使命，对于已经过期、已完成工作的开关都可以使用下线操作进行管理。
 
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7f6188d3d6f540a48ae49df8ef7c00c1~tplv-k3u1fbpfcp-watermark.image?)
-
-FeatureProbe 就是一个高效的功能管理 **（Feature management）** 开源服务，它提供了灰度放量、AB实验、实时配置变更等针对功能粒度的一系列管理能力。目前 FeatureProbe 使用 Apache 2.0 License 协议已经完全开源, 开源地址：https://github.com/FeatureProbe/FeatureProbe。 
+![image.png](https://gift-pypu-cdn.didistatic.com/static/featureprobe/do1_eHJxT3bHeTKIpzTgM4iI)

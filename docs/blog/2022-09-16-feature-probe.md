@@ -1,5 +1,5 @@
 ---
-slug: FeatureProbe Rust
+slug: FeatureProbe rust
 title: 用 Rust 开发跨平台 SDK 探索和实践
 ---
 
@@ -91,7 +91,7 @@ uniffi_macros::include_scaffolding!("arithmetic");
 ```
 下图是一张 uniffi-rs 各个文件示意图，我们一起来看下，上面的 udl 和 lib.rs 属于图中的哪个部分：
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/32c38a3310aa4a6fa393db1c718d91d0~tplv-k3u1fbpfcp-zoom-1.image)
+![1](https://gift-pypu-cdn.didistatic.com/static/featureprobe/do1_eKKZntSQvTg3AQpfny4b)
 图中最左边 Interface Definition File 对应 arithmetic.udl 文件，图中最下面红色的 Rust Business Logic 对应到 example 中的 lib.rs，test/bindings/ 目录下的各平台的调用文件对应最上面绿色的方块，那方框中蓝色的绑定文件去哪里了呢， 我们发现 lib.rs 最下面有这样一行代码 uniffi_macros::include_scaffolding!("arithmetic"); 这句代码会在编译的时候引入生成的代码做依赖，我们这就执行一下测试用例，看看编译出来的文件是什么：
 ```
 cargo test
@@ -167,7 +167,8 @@ pub extern "C" fn r#arithmetic_77d6_add(
 
 现在，我们知道如何用 uniffi-rs 生成对应平台的代码，并通过命令行可以调用执行，但是我们还不知道如何集成到具体的 Android 或者 Xcode 的项目中。在 uniffi-rs 的帮助文档中，有 Gradle 和 XCode 的集成文档，但是读过之后，还是很难操作。
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/196d0f91b87a4da090954a2ddbe7efe5~tplv-k3u1fbpfcp-zoom-1.image)
+![2](https://gift-pypu-cdn.didistatic.com/static/featureprobe/do1_CJe748w3RXnLTSYQtpve)
+
 简单来说，就是有个 Rust 的壳工程作为唯一生成二进制的 crate，其他组件如 autofill, logins, sync_manager 作为壳工程的依赖，把 udl 文件统一生成到一个路径，最终统一生成绑定文件和二进制。好处是避免了多个 rust crate 之间的调用消耗，只生成一个二进制文件，编译发布集成会更容易。
 
 **安卓平台**：是生成一个 aar 的包，Mozilla 团队提供了一个 org.mozilla.rust-android-gradle.rust-android 的 gradle 插件，可以在 [Mozilla](https://github.com/mozilla/application-services/blob/main/megazords/full/android/build.gradle "Mozilla/application-service") 找到具体使用。
@@ -184,7 +185,3 @@ pub extern "C" fn r#arithmetic_77d6_add(
 - [rust-ios ](https://github.com/FeatureProbe/client-sdk-mobile/tree/main/sdk-ios "rust-ios") 是生成 xcframework 的苹果项目，通过 build-xcframewok.sh 脚本集成
 
 这里大家也可以参考 [Github Actions](https://github.com/FeatureProbe/client-sdk-mobile/actions "Github Actions") 编译和构建。
-
-###  七、总结
-本文主要介绍了如何使用 Rust 来开发跨平台 App，你可以在 [GitHub](https://github.com/FeatureProbe "GitHub") 或 [Gitee](https://gitee.com/featureprobe "Gitee") 获取到我们用 Rust 实现跨平台开发的所有代码。
-

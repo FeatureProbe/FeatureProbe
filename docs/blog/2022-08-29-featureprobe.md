@@ -44,8 +44,8 @@ title: FeatureProbe：功能管理对软件交付的影响
 传统的软件交付方式依赖于研发人员，只能由研发人员来操作设置发布。功能管理可以将产品发布授权给运营、产品、销售等非研发技术人员。相比较研发人员来说，产品、销售、运营等工作人员接触到前端的真实用户，可以更了解用户的真实需求，但由于缺乏技术能力，导致他们无法控制发布，也缺乏验证需求以及商业可行性的手段与工具。功能管理可以赋予他们这些应有的能力。他们不需要掌握研发技术，只需要极少的学习成本即可快速上手将产品功能发布给特定条件下的用户，并获取到用户反馈。
 
 FeatureProbe 是为功能管理量身打造的产品，我们的使命是让产品功能发布更有价值，推动行业软件工程能力的提升，由被动的软件交付方式转为主动规划、功能粒度控制的发布模式。
-
-目前 FeatureProbe 使用 Apache 2.0 License 协议已经完全开源。你可以在 [GitHub](https://github.com/FeatureProbe) 或 [Gitee](https://gitee.com/featureprobe) 获取到所有代码。与此同时，我们提供了无需部署的[在线试用环境](https://featureprobe.io/) 和一个仅需5分钟即可体验的[示例项目](https://featureprobe.io/demo/).
+<!-- 
+目前 FeatureProbe 使用 Apache 2.0 License 协议已经完全开源。你可以在 [GitHub](https://github.com/FeatureProbe) 或 [Gitee](https://gitee.com/featureprobe) 获取所有 代码。与此同时，我们提供了无需部署的[在线试用环境](https://featureprobe.io/) 和一个仅需5分钟即可体验的[示例项目](https://featureprobe.io/demo/).
 
 
 ![image](https://user-images.githubusercontent.com/20610466/187380002-adf03a11-96ba-4232-a5a2-02697a633df4.png)
@@ -57,3 +57,6 @@ FeatureProbe 是为功能管理量身打造的产品，我们的使命是让产�
 如以上二维码失效，可扫描以下二维码，添加我们的工作人员。
 
 <img src="https://user-images.githubusercontent.com/20610466/184836044-fc5396aa-8ac9-4a95-b8eb-70050caa686f.png" width = "220" height = "200" />
+
+
+ -->

@@ -7,7 +7,7 @@ title: 长连接实践方案（上）
 
 长连接可以指 HTTP 持久连接 ([persistent connection](https://zh.m.wikipedia.org/zh-hans/HTTP%E6%8C%81%E4%B9%85%E8%BF%9E%E6%8E%A5))，也可以指基于 TCP / UDP / QUIC / WebSocket 等一个或多个协议建立后可以持续收发消息的数据通路。本文主要介绍的是后者，其中以微信2017年初开源的 Mars 被大家熟知。从 [Mars](https://github.com/Tencent/mars) 的 [issue](https://github.com/Tencent/mars/issues/11) 中我们可以看到 Longlink 这个国内长连接的直译，目前还没有特别好的英文术语。实际上 Mars 只是长链接架构中的客户端，还需要一个服务端来配合。
 
-![long1.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5d7acfa50d3348658401afa53d29ba12~tplv-k3u1fbpfcp-watermark.image?)
+![long1.png](https://gift-pypu-cdn.didistatic.com/static/featureprobe/do1_3Sh1TYpXWgWQ4ZqKm782)
 
 ## 二、国内长连接现状
 
@@ -34,7 +34,7 @@ title: 长连接实践方案（上）
 可以推测手机厂商给 APP 提供的离线消息推送的通道，如果想做到最好的实时性，也需要维护一个手机和厂商服务的连接，在 APP 后端发送推送后，厂商转发给手机，展示给用户。
 
 
-![long2.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/820decf4f52c40bd982d4f6ae6055f19~tplv-k3u1fbpfcp-watermark.image?)
+![long2.png](https://gift-pypu-cdn.didistatic.com/static/featureprobe/do1_TNESurn6Bt8UkfH8nw6z)
 
 
 ### 2、请求优化
@@ -45,7 +45,7 @@ title: 长连接实践方案（上）
 
 一次完整的 HTTPS 请求的步骤包括：
 
-![long3.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd4b843c690149c483dfb5c7725ca039~tplv-k3u1fbpfcp-watermark.image?)
+![long3.png](https://gift-pypu-cdn.didistatic.com/static/featureprobe/do1_JmMLmsQ22NRDwZ7g4nww)
 
 在海量用户请求的情况下，任何一个环节都可能出错，导致请求失败。如 DNS 污染，错配导致解析错误，或者返回慢。用户在山区或者海外，数据包来回（RTT）延迟大，握手环节过于复杂，证书过大，超时配置不合理，包过小导致慢启动阶段过慢，数据带宽利用不足等。
 
@@ -54,19 +54,10 @@ title: 长连接实践方案（上）
 -   使用更高版本的 TLS 协议，或者使用 QUIC 协议，可以减少建立连接的握手次数。
 
 
-![long4.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3a238af1332142eab14ea0a16dff82a8~tplv-k3u1fbpfcp-watermark.image?)
+![long4.png](https://gift-pypu-cdn.didistatic.com/static/featureprobe/do1_DbCQHUNkttP6erZSVzEh)
 
 我们以 RTT 为 200ms 举例，采用 TCP + TLS 1.2 的请求首次需要至少 600ms 才能建立连接，打开TLS会话复用需要 400ms，采用 TCP + TLS 1.3 的首次请求 400ms 就可以连接上，复用是200ms，采用 QUIC 协议的话首次是 200ms，复用是 0ms，具体协议的细节超过了本文的范围，当用户处于弱网环境，这个 RTT 可能更差，可见协议的优化就可以带来更好的响应。 
 
 本文是长连接介绍的上篇，主要介绍了网上公开的业界长连接技术方案。下篇将会介绍如何针对自己的业务选择合适的技术方案。
 
 目前我们实现长链接的方案已经完全开源。你可以从 [GitHub](https://github.com/socket-iox/socket-io) 获取到所有源代码。
-
-**关于FeatureProbe**
-
-我们一款新型交付功能管理发布平台，通过FeatureProbe的功能管理平台可以对产品功能粒度进行精细化验证和交付。
-
-目前 FeatureProbe 使用 Apache 2.0 License 协议已经完全在[GitHub](https://github.com/FeatureProbe "GitHub")和[Gitee](https://gitee.com/featureprobe "Gitee")开源。
-
-如果大家喜欢我们的项目，欢迎在GitHub 和 Gitee 上给我们点个小星星，需要你们的支持和鼓励。
-

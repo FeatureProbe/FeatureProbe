@@ -25,7 +25,7 @@ if degradeRpcService {
 实现降级开关通常会考虑使用配置中心、Redis 或数据库等来存储开关值，并用对应的 client 端获取开关结果。但这些通用工具的使用界面对开关场景的用户来说并不十分友好。FeatureProbe 作为专门的开关管理服务，不仅提供了 client 实时获取开关状态的功能，同时还能让你在统一的平台上可视化管理开关和控制开关状态，让开关控制更加高效、安全。
 
 降级开关通常是一个 boolean 类型的开关，对应的返回（分组）值也只有两种情况，如下图所示：
-![](https://oscimg.oschina.net/oscnet/up-2c04d5d8c55c1f9f95b9a879391999c1a39.jpg)
+![](https://gift-pypu-cdn.didistatic.com/static/featureprobe/do1_1ZLwmgzXBeGIaHuMC5XD)
 
 应用程序可通过接入 FeatureProbe SDK 来获取该降级开关返回值，以 Java 代码为例：
 ```final FeatureProbe fpClient = new FeatureProbe(FEATURE_PROBE_SERVER_SDK_KEY, config);
@@ -43,7 +43,7 @@ if (isDegrade) {
 
 ##### 1、基于规则的自动降级
 FeatureProbe 提供了灵活规则配置，让你实现自动降级。例如双十一大促开始时，需要关闭退款服务，以满足大部分消费者在平台上获得稳定的交易体验。如下图所示，提前配置好降级规则后，将在 11.10 23:59:59 时自动执行对服务降级而不需要人工干预。
-![](https://oscimg.oschina.net/oscnet/up-a86813b743b791c7b1cf380682b41852393.jpg)
+![](https://gift-pypu-cdn.didistatic.com/static/featureprobe/do1_5wcJ87f1rstEsvkcePzn)
 
 对于上述降级规则在接入 SDK 的代码也无须特殊处理，FeatureProbe SDK 将自动根据服务器时间来决定是否降级。
 
@@ -71,12 +71,3 @@ curl 'https://featureprobe.io/api/projects/{PROJECT KEY}/environments/{ENV KEY}/
     }
 }'
 ```
-更多关于 OpenAPI 使用介绍可以查看[文档](https://featureprobe.io/api-docs "文档")。
-
-本文主要介绍了什么是降级开关，同时分别演示了手动和自动开关降级使用方式，以及如何通过 FeatureProbe 的规则配置实现自动降级以及如何由外部触发 FeatureProbe 的 OpenAPI 来实现自动降级。关于更多开关降级的使用场景欢迎来和我们一起共同探讨和分享。
-
-目前 FeatureProbe 使用 Apache 2.0 License 协议已经完全开源。你可以从 [GitHub ](https://github.com/FeatureProbe) 或 [Gitee](https://gitee.com/featureprobe "Gitee") 上获取到所有代码。
-
-与此同时，我们提供了无需部署的在线[试用环境](https://featureprobe.io/  "试用环境")和一个仅需5分钟即可体验的[示例项目](https://featureprobe.io/demo/  "示例项目")
-
-如果你对功能（特性）管理感兴趣，欢迎加入到我们的开源项目中来，共同推动软件开发行业的效能。

@@ -7,7 +7,7 @@ title: 功能管理（Feature management）中的 Keystone 模式
 
 对软件研发团队来说，越是频繁地集成他们的代码，工作就越轻松。同时，越频繁发布功能迭代，产品就越有价值。但是团队并不想把开发了一半的功能暴露给用户。对这种矛盾的一个有效的处理机制就是先构建所有的后端代码，集成到产品，但不提供用户界面。这个功能可以在用户端无感知的情况下被集成和测试，直到全部完成上线后，再将这个功能展现给用户。就像是 Keystone（拱顶石，建筑学术语，通常引申为确保其他部件就位的核心关键点）。
 
-![keystone.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3cf1178c16534b89a2837976caf2e528~tplv-k3u1fbpfcp-watermark.image?)
+![keystone.png](https://gift-pypu-cdn.didistatic.com/static/featureprobe/do1_qJRJwZDgptJUlJHMLxw6)
 
 ## 二、限时特价促销活动
 
@@ -18,7 +18,7 @@ title: 功能管理（Feature management）中的 Keystone 模式
 在这个项目中，可以让选择框作为 Keystone。研发团队可以跨多个产品发布周期进行内部系统的业务逻辑和接口开发。用户感知不到这些代码改动。最后一步是让用户看到这个特价推送的选择框 UI 界面，通常这用不了多少开发时间。这种模式下，所有中间代码都能够参与集成，并随着产品发布周期部署在线上，这样就避免了长时间使用 feature branch（特性分支——一种分支管理模式）带来的风险。
 
 
-![图片 1.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/436e514e73de4dc9b434d4344574bb09~tplv-k3u1fbpfcp-watermark.image?)
+![图片 1.png](https://gift-pypu-cdn.didistatic.com/static/featureprobe/do1_Ws1QWBmn4TVQEPqnItbE)
 
 ## 三、中间代码和UI界面的测试方式
 
@@ -37,7 +37,3 @@ title: 功能管理（Feature management）中的 Keystone 模式
 在这里我只是举例了一个用户界面的小例子，但同样的方法适用于任何界面变化，例如 API。通过最后再提供用户界面，并且保持简洁的方式，即使是很大的功能升级，我们也可以通过逐个部分增量构建、集成来完成。
 
 在 FeatureProbe  就可以实现 Keystone 模式，做到后端代码与UI 界面分开部署测试。研发团队可以先开发后端代码部署，用户侧无感知这一块功能核心功能已经部署到系统上了，确保新功能后端代码没有问题后，在 FeatureProbe 后台操作页面，可以一键开启 UI 界面功能，测试 UI 界面功能没有问题后，再将这个新功能开放给用户。
-
-目前 FeatureProbe 使用 Apache 2.0 License 协议已经完全开源。你可以从 [GitHub](https://github.com/FeatureProbe) 或 [Gitee](https://gitee.com/featureprobe) 获取到所有源码。
-
-与此同时，我们提供了无需部署的在线[试用环境](https://featureprobe.io)和一个仅需5分钟即可体验的[示例项目](https://featureprobe.io/demo/)。
