@@ -37,7 +37,7 @@ public class ServerToggleBuilder {
     static {
         converters.put("string", value -> value);
         converters.put("boolean", value -> Boolean.valueOf(value));
-        converters.put("json", value -> JsonMapper.toObject(value, Map.class));
+        converters.put("json", value -> JsonMapper.toJsonNode(value));
         converters.put("number", value -> new BigDecimal(value));
     }
 
