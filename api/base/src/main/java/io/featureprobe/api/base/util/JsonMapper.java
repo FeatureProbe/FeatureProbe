@@ -1,7 +1,9 @@
 package io.featureprobe.api.base.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 
@@ -47,6 +49,23 @@ public class JsonMapper {
             }
             return mapper.readValue(content, mapper.getTypeFactory().constructCollectionType(List.class, valueType));
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 将 JSON 字符串反序列化为 JsonNode，以处理所有可能的 JSON 格式
+     *
+     * @param content JSON 字符串
+     * @return 反序列化后的 JsonNode
+     */
+    public static JsonNode toJsonNode(String content) {
+        try {
+            if (StringUtils.isBlank(content)) {
+                return null;
+            }
+            return mapper.readTree(content);
+        } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
