@@ -119,7 +119,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-check-file": "^1.2.2",
     "eslint-plugin-import": "^2.26.0",
-    "http-proxy-middleware": "^2.0.6",
+    "http-proxy-middleware": "^2.0.7",
     "prettier": "^2.7.1",
     "react-scripts": "^5.0.1",
     "react-test-renderer": "17.0.2",
