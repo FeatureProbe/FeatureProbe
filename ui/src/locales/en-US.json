@@ -109,8 +109,8 @@
   "common.success.text": "Success",
   "common.fail.text": "Fail",
   "common.user.text": "user",
-  "common.tokens.text": "Access tokens", 
-  "common.token.text": "Access token", 
+  "common.tokens.text": "Access tokens",
+  "common.token.text": "Access token",
   "common.secret.key.text": "Secret key",
   "common.secret.required": "Please input secret key",
   "common.diff.tips": "The following is a before and after comparison of this change.",
@@ -445,7 +445,7 @@
   "connect.fourth.event.failed.left": "You have no ",
   "connect.fourth.event.failed.right": " applications listening for {eventName} event in the {environment} environment.",
   "connect.fourth.event.success": " SDK tracked events successfully.",
-  
+
   "getstarted.java.first.step": "Step 1: Install the Java SDK to your project",
   "getstarted.java.first.step.name.one": "Use your exist project, or create a new one as follow:",
   "getstarted.java.first.step.name.two": "Add FeatureProbe Java SDK to dependency",
@@ -458,6 +458,7 @@
   "getstarted.go.first.step.name.one": "Import the FeatureProbe SDK in your application code",
   "getstarted.go.first.step.name.two": "Fetch the FeatureProbe SDK as a dependency in go.mod",
   "getstarted.python.first.step": "Step 1: Install the server-sdk package",
+  "getstarted.dotnet.first.step": "Step 1：Install the SDK from Nuget",
   "getstarted.node.first.step": "Step 1: Install the Node.js SDK as dependency",
   "getstarted.mobile.first.step": "Step 1: Install SDK",
   "getstarted.mobile.second.step": "Step 2: Create a FeatureProbe instance",
@@ -511,7 +512,7 @@
   "approvals.published.by": "Published by",
   "approvals.reviewed.by": "Reviewed by",
   "approvals.skipped.by": "Skipped by",
-  
+
   "guide.global.step1.title": "Project",
   "guide.global.step1.project": "Manage the [project] and the [environments] information of the project",
   "guide.global.step1.env": "Quickly copy the [environment key] for SDK initialization",
@@ -519,17 +520,17 @@
   "guide.global.step2.title": "Switch environment",
   "guide.global.step2.env": "Click to switch the environment and view the toggles information in different environments",
   "guide.global.step3.title": "Segment",
-  
+
   "guide.creat.toggle.step1.title": "Client SDK",
   "guide.creat.toggle.step1.sdk1": "If client SDK will be used in this toggle later, please select [Yes]",
   "guide.creat.toggle.step2.title": "Return Type",
   "guide.creat.toggle.step2.type1": "[Return Type] determines the type of toggle return value that can be read in the code corresponding to the toggle",
   "guide.creat.toggle.step2.type2": "After the toggle is created, it cannot be changed",
   "guide.creat.toggle.step3.type": "Return variation when the toggle is disabled",
-  
+
   "guide.toggle.targeting.step1.title": "Click to switch toggle status",
-  "guide.toggle.targeting.step1.off": "Disabled status, the return variation depends on the [When toggle is disabled]", 
-  "guide.toggle.targeting.step1.on": "Enabled status, the return variation depends on the [Rules] and [Default Rule] below", 
+  "guide.toggle.targeting.step1.off": "Disabled status, the return variation depends on the [When toggle is disabled]",
+  "guide.toggle.targeting.step1.on": "Enabled status, the return variation depends on the [Rules] and [Default Rule] below",
   "guide.toggle.targeting.step2.title": "Set the default return variation",
   "guide.toggle.targeting.step2.default": "If all the above [rules] of a user fail to hit, the [default return variation] will be returned",
 

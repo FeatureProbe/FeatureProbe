@@ -19,6 +19,7 @@ import {
   getNodeCode,
   getObjCCode,
   getPythonCode,
+  getDotNetCode,
   getRustCode,
   getSwiftCode,
   getMiniProgramCode,
@@ -52,14 +53,14 @@ const CURRENT = 2;
 const SetupCode = (props: IProps) => {
   const {
     attributes,
-    currentStep, 
-    currentSDK, 
-    serverSdkKey, 
-    clientSdkKey, 
-    returnType, 
-    sdkVersion, 
-    saveStep, 
-    goBackToStep 
+    currentStep,
+    currentSDK,
+    serverSdkKey,
+    clientSdkKey,
+    returnType,
+    sdkVersion,
+    saveStep,
+    goBackToStep
   } = props;
 
   const [ options, saveOptions ] = useState<ICodeOption[]>([]);
@@ -95,11 +96,11 @@ const SetupCode = (props: IProps) => {
           });
           saveOptions(
             getJavaCode({
-              sdkVersion, 
-              serverSdkKey, 
-              toggleKey, 
-              returnType, 
-              intl, 
+              sdkVersion,
+              serverSdkKey,
+              toggleKey,
+              returnType,
+              intl,
               userWithCode,
               remoteUrl,
             })
@@ -122,34 +123,51 @@ const SetupCode = (props: IProps) => {
             })
           );
           break;
-        case 'Rust': 
+        case 'DotNet':
+          saveLanguage('dotnet');
+          attributes.forEach(item => {
+            userWithCode += `.With("${item}", "value for ${item}")`;
+          });
+          saveOptions(
+            getDotNetCode({
+              sdkVersion,
+              serverSdkKey,
+              toggleKey,
+              returnType,
+              intl,
+              userWithCode,
+              remoteUrl,
+            })
+          );
+          break;
+        case 'Rust':
           saveLanguage('rust');
           attributes.forEach(item => {
             userWithCode += `let user = user.with("${item}", /* ${item} */);\n`;
           });
           saveOptions(
             getRustCode({
-              sdkVersion, 
-              serverSdkKey, 
-              toggleKey, 
-              returnType, 
-              intl, 
+              sdkVersion,
+              serverSdkKey,
+              toggleKey,
+              returnType,
+              intl,
               userWithCode,
               remoteUrl,
             })
           );
           break;
-        case 'Go': 
+        case 'Go':
           saveLanguage('go');
           attributes.forEach(item => {
             userWithCode += `user.With("${item}", /* ${item} */)\n`;
           });
           saveOptions(
             getGoCode({
-              serverSdkKey, 
-              toggleKey, 
-              returnType, 
-              intl, 
+              serverSdkKey,
+              toggleKey,
+              returnType,
+              intl,
               userWithCode,
               remoteUrl,
             })
@@ -172,33 +190,33 @@ const SetupCode = (props: IProps) => {
           );
           break;
 
-        case 'Android': 
+        case 'Android':
           saveLanguage('java');
           attributes.forEach(item => {
             userWithCode += `user.with("${item}", /* ${item} */)\n`;
           });
           saveOptions(
             getAndroidCode({
-              sdkVersion, 
-              clientSdkKey, 
-              toggleKey, 
-              returnType, 
-              intl, 
+              sdkVersion,
+              clientSdkKey,
+              toggleKey,
+              returnType,
+              intl,
               userWithCode,
               remoteUrl,
             })
           );
           break;
-        case 'Swift': 
+        case 'Swift':
           saveLanguage('swift');
           attributes.forEach(item => {
             userWithCode += `user.with("${item}", /* ${item} */)\n`;
           });
           saveOptions(getSwiftCode({
-            clientSdkKey, 
-            toggleKey, 
-            returnType, 
-            intl, 
+            clientSdkKey,
+            toggleKey,
+            returnType,
+            intl,
             userWithCode,
             remoteUrl,
           }));
@@ -267,7 +285,7 @@ const SetupCode = (props: IProps) => {
             }
           ));
           break;
-        case 'Flutter': 
+        case 'Flutter':
           saveLanguage('dart');
           attributes.forEach(item => {
             userWithCode += `user.set("${item}", /* ${item} */);\n`;

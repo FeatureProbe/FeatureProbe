@@ -3,6 +3,7 @@ import java from 'images/java.svg';
 import rust from 'images/rust.svg';
 import go from 'images/go.svg';
 import python from 'images/python.svg';
+import dotnet from 'images/dotnet.svg';
 import node from 'images/nodejs.svg';
 import javascript from 'images/javascript.svg';
 import android from 'images/android.svg';
@@ -14,9 +15,10 @@ import flutter from 'images/flutter.svg';
 
 export type ToggleReturnType = '' | 'boolean' | 'number' | 'string' | 'json';
 
-export type SdkLanguage = 
+export type SdkLanguage =
   'Java'
   | 'Python'
+  | 'DotNet'
   | 'Rust'
   | 'Go'
   | 'Node.js'
@@ -33,6 +35,7 @@ export const SDK_LOGOS: {[key in SdkLanguage]: string} = {
   'Rust': rust,
   'Go': go,
   'Python': python,
+  'DotNet': dotnet,
   'Node.js': node,
   'JavaScript': javascript,
   'Android': android,
@@ -48,6 +51,7 @@ export const SDK_TYPES = new Map([
   ['Rust', 'Rust'],
   ['Go', 'Go'],
   ['Python', 'Python'],
+  ['DotNet', 'DotNet'],
   ['Node.js', 'NodeJS'],
   ['JavaScript', 'JavaScript'],
   ['Android', 'Android'],
@@ -69,6 +73,10 @@ export const SERVER_SIDE_SDKS = [
   {
     name: 'Python',
     logo: python,
+  },
+  {
+    name: 'DotNet',
+    logo: dotnet,
   },
   {
     name: 'Rust',
@@ -291,7 +299,7 @@ client = fp.Client('${serverSdkKey}', config)
     },
     {
       title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.common.third.step'}),
-      code: 
+      code:
 `user = fp.User()
 ${userWithCode}
 ${eventName ? (
@@ -303,6 +311,44 @@ ${eventName ? (
     {
       title: eventName ? intl.formatMessage({id: 'getstarted.track.event.close.title'}) : intl.formatMessage({id: 'getstarted.common.fourth.step'}),
       code: 'client.close()'
+    }
+  ];
+};
+
+export const getDotNetCode = (options: IOption, eventName?: string, isTrackValue?: boolean) => {
+  const { intl, serverSdkKey, userWithCode, returnType, toggleKey, remoteUrl } = options;
+
+  return [
+    {
+      title: intl.formatMessage({id: 'getstarted.dotnet.first.step'}),
+      code: 'dotnet add package FeatureProbe.Server.Sdk'
+    },
+    {
+      title: intl.formatMessage({id: 'getstarted.common.second.step'}),
+      code:
+        `using FeatureProbe.Server.Sdk;
+        
+var config = new FPConfig.Builder()
+    .ServerSdkKey("${serverSdkKey}")
+    .RemoteUrl("${remoteUrl}")
+    .StreamingMode()
+    .Build();
+
+var fp = new FPClient(config, startWait: -1);
+`
+    },
+    {
+      title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.common.third.step'}),
+      code:
+        `var user = new FPUser()${userWithCode};
+${eventName ? (
+            `${isTrackValue ? `fp.Track("${eventName}", user, /* value */)` : `fp.Track("${eventName}", user)`}`
+          ):
+          `${returnType === 'boolean' ? `var boolValue = fp.BoolValue("${toggleKey}", user, false);` : ''}${returnType === 'string' ? `var stringValue = fp.StringValue("${toggleKey}", user, "Test");` : ''}${returnType === 'number' ? `var numberValue = fp.NumberValue("${toggleKey}", user, 500);` : ''}${returnType === 'json' ? `var jsonValue = fp.JsonValue<SomeType>("${toggleKey}", user, null);` : ''}`}`
+    },
+    {
+      title: eventName ? intl.formatMessage({id: 'getstarted.track.event.close.title'}) : intl.formatMessage({id: 'getstarted.common.fourth.step'}),
+      code: 'fp.Dispose()'
     }
   ];
 };
@@ -419,7 +465,7 @@ let fp = FeatureProbe(config: config, user: user)
     {
       title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.mobile.third.step'}),
       name: '',
-      code: 
+      code:
         `${eventName 
           ? `${isTrackValue ? `fp.track("${eventName}", /* value */)` : `fp.track("${eventName}")`}`
           : `${returnType === 'boolean' ? `let value = fp.boolValue("${toggleKey}", false)` : ''}${returnType === 'number' ? `let value = fp.numberValue("${toggleKey}", 1.0)` : ''}${returnType === 'string' ? `let value = fp.stringValue("${toggleKey}", "s")` : ''}${returnType === 'json' ? `let value = fp.jsonValue("${toggleKey}", "{}")` : ''}`
@@ -460,7 +506,7 @@ FeatureProbe *fp = [[FeatureProbe alloc] initWithConfig:config user:user];`
     {
       title: eventName ? intl.formatMessage({id: 'getstarted.common.third.step.track'}) : intl.formatMessage({id: 'getstarted.mobile.third.step'}),
       name: '',
-      code: 
+      code:
         `${eventName 
           ? `${isTrackValue ? `[fp trackWithEvent:@"${eventName}" value:/* value */];` : `[fp trackWithEvent:@"${eventName}"];`}`
           : `${returnType === 'boolean' ? `bool value = [fp boolValueWithKey: @"${toggleKey}" defaultValue: false];` : ''}${returnType === 'number' ? `double value = [fp numberValueWithKey: @"${toggleKey}" defaultValue: 1.0];` : ''}${returnType === 'string' ? `NSString* value = [fp stringValueWithKey: @"${toggleKey}" defaultValue: @"s"];` : ''}${returnType === 'json' ? `NSString* value = [fp jsonValueWithKey: @"${toggleKey}" defaultValue: @"{}"];` : ''}`
